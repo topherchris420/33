@@ -9,6 +9,8 @@ from collections import deque
 import time
 import numpy as np
 
+from telemetry_log import TelemetryCsvLogger
+
 # --- Configuration ---
 UDP_IP = "0.0.0.0"  
 UDP_PORT = 4444
@@ -47,6 +49,7 @@ class TelemetryApp:
 
         self.rocket_ip = None
         self.running = True
+        self.telemetry_logger = TelemetryCsvLogger()
 
         self.build_gui()
         
@@ -90,6 +93,13 @@ class TelemetryApp:
         ttk.Label(control_frame, text="Status:", font=self.f(10, "bold")).pack(side=tk.LEFT)
         self.status_label = ttk.Label(control_frame, text="Connecting to Launcher AP...", foreground="red", font=self.f(10))
         self.status_label.pack(side=tk.LEFT, padx=self.s(10))
+        self.log_label = ttk.Label(
+            control_frame,
+            text=f"CSV: {self.telemetry_logger.path.name}",
+            foreground="gray",
+            font=self.f(8),
+        )
+        self.log_label.pack(side=tk.LEFT, padx=self.s(10))
 
         scale_frame = ttk.Frame(control_frame)
         scale_frame.pack(side=tk.RIGHT, padx=self.s(10))
@@ -241,6 +251,7 @@ class TelemetryApp:
             try:
                 data, addr = sock.recvfrom(BUFFER_SIZE)
                 message = data.decode('utf-8').strip()
+                self.telemetry_logger.log_packet(message)
                 if self.rocket_ip != addr[0]:
                     self.rocket_ip = addr[0]
                     self.root.after(0, lambda: self.status_label.config(text=f"Connected: {self.rocket_ip}", foreground="green"))
@@ -402,6 +413,7 @@ class TelemetryApp:
 
     def on_close(self):
         self.running = False
+        self.telemetry_logger.close()
         self.root.destroy()
 
 if __name__ == "__main__":

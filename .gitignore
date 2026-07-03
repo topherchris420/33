@@ -1,0 +1,11 @@
+.pio/
+.pytest_cache/
+__pycache__/
+*.pyc
+
+Firmware/TelemetryLogs/
+*.log
+
+.venv/
+venv/
+env/

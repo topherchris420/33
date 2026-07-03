@@ -225,7 +225,13 @@ void processUDP() {
         if (msg == "HELLO") {
             dashboardIP = udp.remoteIP(); 
         } else if (msg == "launch") {
-            udpLaunchTriggered = true;
+            if (currentState == READY) {
+                udpLaunchTriggered = true;
+                sendToDashboard("CMD_ACK:launch_ready");
+            } else {
+                udpLaunchTriggered = false;
+                sendToDashboard("CMD_REJECT:launch_not_ready");
+            }
         } else if (msg == "calibrate") {
             Serial2.println("CALIBRATE");
         } else if (msg.startsWith("PID,")) {
@@ -438,6 +444,9 @@ void updateAndPrintFusion() {
 }
 
 void abortSequence(String reason) {
+    Serial.print("ABORT: ");
+    Serial.println(reason);
+    sendToDashboard("ABORT:" + reason);
     launcherServo.write(SERVO_OFF);
     digitalWrite(LED_PIN, LOW);
     errorTone();
