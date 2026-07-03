@@ -1,0 +1,411 @@
+import tkinter as tk
+from tkinter import ttk, filedialog, messagebox
+import socket
+import threading
+import matplotlib.pyplot as plt
+from matplotlib.animation import FuncAnimation
+from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
+from collections import deque
+import time
+import numpy as np
+
+# --- Configuration ---
+UDP_IP = "0.0.0.0"  
+UDP_PORT = 4444
+BUFFER_SIZE = 1024
+VIEW_POINTS = 100   
+RATE_SCALE = 0.25   
+
+LAUNCHER_GATEWAY = "192.168.4.1" 
+
+class TelemetryApp:
+    def __init__(self, root):
+        self.root = root
+        self.root.title("Rocket Telemetry Dashboard - Ground Control")
+        self.root.geometry("1100x850") 
+
+        self.zoom_levels = [1.0, 1.5, 2.0, 2.5]
+        self.ui_scale = 1.0 
+
+        self.time_data = deque()
+        self.roll_data = deque()
+        self.rate_data = deque()
+        self.output_data = deque()
+        
+        self.current_values = {
+            "Time": 0, "Roll": 0.0, "Rate": 0.0, "Output": 0.0, 
+            "State": "DISCONNECTED", "ActiveKp": 0.0, "ActiveKd": 0.0,
+            "Skew": 0.0,
+            "Lat": 0.0, "Lon": 0.0, "Alt": 0.0, "GPS_State": 0
+        }
+        
+        self.mission_events = [] 
+        self.last_state = "DISCONNECTED"
+
+        self.kp_var = tk.StringVar(value="0.5")
+        self.kd_var = tk.StringVar(value="0.2")
+
+        self.rocket_ip = None
+        self.running = True
+
+        self.build_gui()
+        
+        self.listener_thread = threading.Thread(target=self.udp_listener, daemon=True)
+        self.listener_thread.start()
+
+        self.watchdog_thread = threading.Thread(target=self.connection_watchdog, daemon=True)
+        self.watchdog_thread.start()
+        
+        self.gui_update_loop()
+
+    def s(self, val): return int(val * self.ui_scale)
+    def f(self, size, weight="normal"): return ("Helvetica", self.s(size), weight)
+    def fm(self, size): return ("Courier New", self.s(size), "bold")
+
+    def build_gui(self):
+        style = ttk.Style()
+        style.configure('TButton', font=('Helvetica', self.s(10)))
+        style.configure('TLabelframe.Label', font=('Helvetica', self.s(10), 'bold'))
+
+        for widget in self.root.winfo_children(): widget.destroy()
+        if hasattr(self, 'anim') and self.anim and self.anim.event_source:
+            self.anim.event_source.stop()
+
+        self.setup_ui()
+        self.setup_plot()
+
+    def update_scale_val(self, val): pass
+
+    def trigger_redraw(self, event):
+        val = self.scale_slider.get()
+        idx = int(round(val))
+        self.scale_slider.set(idx)
+        self.ui_scale = self.zoom_levels[idx]
+        self.build_gui()
+
+    def setup_ui(self):
+        control_frame = ttk.Frame(self.root, padding=self.s(10))
+        control_frame.pack(side=tk.TOP, fill=tk.X)
+        
+        ttk.Label(control_frame, text="Status:", font=self.f(10, "bold")).pack(side=tk.LEFT)
+        self.status_label = ttk.Label(control_frame, text="Connecting to Launcher AP...", foreground="red", font=self.f(10))
+        self.status_label.pack(side=tk.LEFT, padx=self.s(10))
+
+        scale_frame = ttk.Frame(control_frame)
+        scale_frame.pack(side=tk.RIGHT, padx=self.s(10))
+        ttk.Label(scale_frame, text="Zoom:", font=self.f(8)).pack(side=tk.LEFT)
+        
+        current_idx = self.zoom_levels.index(self.ui_scale) if self.ui_scale in self.zoom_levels else 0
+        self.scale_slider = ttk.Scale(scale_frame, from_=0, to=len(self.zoom_levels)-1, value=current_idx, command=self.update_scale_val)
+        self.scale_slider.pack(side=tk.LEFT, padx=5)
+        self.scale_slider.bind("<ButtonRelease-1>", self.trigger_redraw)
+
+        ttk.Button(control_frame, text="Save Graph", command=self.save_graph).pack(side=tk.RIGHT, padx=self.s(10))
+        ttk.Button(control_frame, text="Reset Data", command=self.reset_dashboard).pack(side=tk.RIGHT, padx=self.s(10))
+
+        mission_frame = ttk.LabelFrame(self.root, text="Mission Control", padding=self.s(10))
+        mission_frame.pack(side=tk.TOP, fill=tk.X, padx=self.s(10), pady=self.s(5))
+
+        state_container = ttk.Frame(mission_frame)
+        state_container.pack(side=tk.LEFT, fill=tk.Y)
+        ttk.Label(state_container, text="Rocket State:", font=self.f(11)).pack(side=tk.LEFT, padx=(0, self.s(10)))
+        
+        dot_size = self.s(24)
+        self.state_canvas = tk.Canvas(state_container, width=dot_size, height=dot_size, bg=self.root.cget("bg"), highlightthickness=0)
+        self.state_canvas.pack(side=tk.LEFT)
+        self.state_dot = self.state_canvas.create_oval(self.s(4), self.s(4), dot_size-self.s(4), dot_size-self.s(4), fill="gray", outline="gray")
+        
+        self.lbl_state_text = ttk.Label(state_container, text="---", font=self.f(12, "bold"))
+        self.lbl_state_text.pack(side=tk.LEFT, padx=self.s(10))
+
+        btn_frame = ttk.Frame(mission_frame)
+        btn_frame.pack(side=tk.RIGHT)
+        
+        ttk.Button(btn_frame, text="CALIBRATE GYRO", command=self.send_calibrate_command, width=int(20)).pack(side=tk.LEFT, padx=self.s(5))
+        ttk.Button(btn_frame, text="DIGITAL LAUNCH", command=self.send_launch_command, width=int(20)).pack(side=tk.LEFT, padx=self.s(5))
+
+        tuning_frame = ttk.LabelFrame(self.root, text="PID Controller Tuning", padding=self.s(10))
+        tuning_frame.pack(side=tk.TOP, fill=tk.X, padx=self.s(10), pady=self.s(5))
+
+        controls_frame = ttk.Frame(tuning_frame)
+        controls_frame.pack(side=tk.LEFT, fill=tk.Y)
+        ttk.Label(controls_frame, text="Kp (Proportional):", font=self.f(10)).grid(row=0, column=0, sticky="e", padx=(0, self.s(5)), pady=self.s(2))
+        ttk.Spinbox(controls_frame, textvariable=self.kp_var, from_=0.0, to=10.0, increment=0.1, width=int(6*self.ui_scale), font=self.f(10, "bold")).grid(row=0, column=1, sticky="w", padx=(0, self.s(15)), pady=self.s(2))
+        ttk.Label(controls_frame, text="Kd (Derivative):", font=self.f(10)).grid(row=1, column=0, sticky="e", padx=(0, self.s(5)), pady=self.s(2))
+        ttk.Spinbox(controls_frame, textvariable=self.kd_var, from_=0.0, to=10.0, increment=0.05, width=int(6*self.ui_scale), font=self.f(10, "bold")).grid(row=1, column=1, sticky="w", padx=(0, self.s(15)), pady=self.s(2))
+        ttk.Button(controls_frame, text="UPLOAD\nNEW PID", command=self.send_pid_command, width=int(12*self.ui_scale)).grid(row=0, column=2, rowspan=2, sticky="ns", padx=self.s(10), pady=self.s(2))
+
+        ttk.Separator(tuning_frame, orient=tk.VERTICAL).pack(side=tk.LEFT, fill=tk.Y, padx=self.s(20))
+
+        active_frame = ttk.Frame(tuning_frame)
+        active_frame.pack(side=tk.LEFT, padx=self.s(10)) 
+        ttk.Label(active_frame, text="ACTIVE HARDWARE SETTINGS:", font=self.f(8, "bold"), foreground="gray").pack(side=tk.TOP, anchor="w")
+        display_container = tk.Frame(active_frame, bg="white", bd=1, relief=tk.SOLID, padx=self.s(10), pady=self.s(5))
+        display_container.pack(side=tk.TOP, anchor="w", pady=(self.s(5), 0))
+        self.lbl_active_pid = tk.Label(display_container, text="Kp: --.---  |  Kd: --.---", font=self.fm(13), fg="#004488", bg="white")
+        self.lbl_active_pid.pack(side=tk.LEFT)
+
+        # --- ENVIRONMENT & LOCATION FRAME ---
+        env_frame = ttk.LabelFrame(self.root, text="Environment & Location", padding=self.s(10))
+        env_frame.pack(side=tk.TOP, fill=tk.X, padx=self.s(10), pady=self.s(5))
+        
+        # New GPS State Bubble
+        gps_status_frame = ttk.Frame(env_frame)
+        gps_status_frame.grid(row=0, column=0, padx=self.s(15), sticky="ew")
+        ttk.Label(gps_status_frame, text="GPS Status", font=self.f(9)).pack(side=tk.TOP)
+        bubble_frame = ttk.Frame(gps_status_frame)
+        bubble_frame.pack(side=tk.TOP, pady=self.s(5))
+        
+        gps_dot_size = self.s(18)
+        self.gps_canvas = tk.Canvas(bubble_frame, width=gps_dot_size, height=gps_dot_size, bg=self.root.cget("bg"), highlightthickness=0)
+        self.gps_canvas.pack(side=tk.LEFT)
+        self.gps_dot = self.gps_canvas.create_oval(self.s(2), self.s(2), gps_dot_size-self.s(2), gps_dot_size-self.s(2), fill="red", outline="gray")
+        
+        self.lbl_gps_text = ttk.Label(bubble_frame, text="NO NMEA", font=self.f(10, "bold"), foreground="red")
+        self.lbl_gps_text.pack(side=tk.LEFT, padx=self.s(5))
+
+        self.lbl_alt = self.create_stat_label(env_frame, "Altitude (m ASL)", 1)
+        self.lbl_lat = self.create_stat_label(env_frame, "Latitude", 2)
+        self.lbl_lon = self.create_stat_label(env_frame, "Longitude", 3)
+
+        # --- LIVE TELEMETRY FRAME ---
+        stats_frame = ttk.LabelFrame(self.root, text="Live Telemetry", padding=self.s(10))
+        stats_frame.pack(side=tk.TOP, fill=tk.X, padx=self.s(10), pady=self.s(5))
+        self.lbl_time = self.create_stat_label(stats_frame, "Time (ms)", 0)
+        self.lbl_roll = self.create_stat_label(stats_frame, "Roll (°)", 1)
+        self.lbl_rate = self.create_stat_label(stats_frame, "Rate (°/s)", 2)
+        self.lbl_out = self.create_stat_label(stats_frame, "Servo Output", 3)
+        self.lbl_skew = self.create_stat_label(stats_frame, "Skew (°)", 4)
+
+    def create_stat_label(self, parent, title, col):
+        frame = ttk.Frame(parent)
+        frame.grid(row=0, column=col, padx=self.s(15), sticky="ew")
+        ttk.Label(frame, text=title, font=self.f(9)).pack()
+        value_label = ttk.Label(frame, text="---", font=self.fm(14))
+        value_label.pack()
+        return value_label
+
+    def setup_plot(self):
+        plt.rcParams.update({'font.size': 10 * self.ui_scale})
+        self.fig, self.ax = plt.subplots(figsize=(8, 4), dpi=100)
+        self.fig.patch.set_facecolor('#f0f0f0')
+        self.line_roll, = self.ax.plot([], [], label='Roll Angle', color='tab:blue', linewidth=2)
+        self.line_rate, = self.ax.plot([], [], label=f'Roll Rate (x{RATE_SCALE})', color='tab:orange', linewidth=1.5)
+        self.ax.set_title("Rocket Stability Telemetry")
+        self.ax.set_xlabel("Time (ms)")
+        self.ax.set_ylabel("Value")
+        self.ax.grid(True, linestyle=':', alpha=0.6)
+        
+        from matplotlib.patches import Patch
+        self.ax.legend(handles=[self.line_roll, self.line_rate, Patch(facecolor='green', alpha=0.3, label='Servo +'), Patch(facecolor='red', alpha=0.3, label='Servo -')], loc='upper left')
+
+        self.canvas = FigureCanvasTkAgg(self.fig, master=self.root)
+        self.canvas.draw()
+        self.canvas.get_tk_widget().pack(side=tk.TOP, fill=tk.BOTH, expand=True, padx=self.s(10), pady=self.s(10))
+        self.anim = FuncAnimation(self.fig, self.update_plot, interval=100, blit=False, cache_frame_data=False)
+
+    def _send_udp_command(self, cmd):
+        target_ip = self.rocket_ip if self.rocket_ip else LAUNCHER_GATEWAY
+        try:
+            sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+            sock.sendto(cmd.encode('utf-8'), (target_ip, UDP_PORT))
+        except Exception as e:
+            messagebox.showerror("Error", f"Failed to send '{cmd}':\n{e}")
+
+    def send_launch_command(self):
+        if messagebox.askyesno("CONFIRM LAUNCH", "WARNING: This bypasses the physical launch button.\nEnsure Launcher is Armed and READY.\n\nProceed to IGNITE?"):
+            self._send_udp_command("launch")
+
+    def send_calibrate_command(self):
+        if messagebox.askyesno("Confirm", "Keep rocket STILL. Zeroing Gyro. Proceed?"):
+            self._send_udp_command("calibrate")
+
+    def send_pid_command(self):
+        try:
+            self._send_udp_command(f"PID,{float(self.kp_var.get())},{float(self.kd_var.get())}")
+        except ValueError:
+            messagebox.showerror("Error", "Kp and Kd must be valid numbers.")
+
+    def connection_watchdog(self):
+        while self.running:
+            try:
+                sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+                sock.sendto(b"HELLO", (LAUNCHER_GATEWAY, UDP_PORT))
+            except: pass
+            time.sleep(2)
+
+    def udp_listener(self):
+        sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+        sock.bind((UDP_IP, UDP_PORT))
+        while self.running:
+            try:
+                data, addr = sock.recvfrom(BUFFER_SIZE)
+                message = data.decode('utf-8').strip()
+                if self.rocket_ip != addr[0]:
+                    self.rocket_ip = addr[0]
+                    self.root.after(0, lambda: self.status_label.config(text=f"Connected: {self.rocket_ip}", foreground="green"))
+                self.parse_data(message)
+            except: pass
+
+    def parse_data(self, message):
+        try:
+            if message.startswith("STATUS:"):
+                parts = message.split(":", 1)[1].strip().split(",")
+                self.current_values["State"] = parts[0]
+                if len(parts) >= 4:
+                    self.current_values["ActiveKp"] = float(parts[1])
+                    self.current_values["ActiveKd"] = float(parts[2])
+                    self.current_values["Skew"] = float(parts[3])
+
+            elif message.startswith("ENV,"):
+                parts = message.split(',')
+                if len(parts) >= 4:
+                    self.current_values["Lat"] = float(parts[1])
+                    self.current_values["Lon"] = float(parts[2])
+                    self.current_values["Alt"] = float(parts[3])
+                if len(parts) >= 5: # Safely get the new GPS state variable
+                    self.current_values["GPS_State"] = int(parts[4])
+
+            elif message.startswith("T,") or message.startswith("[FUSION]"):
+                if message.startswith("[FUSION]"): return 
+                parts = message.split(',')
+                if len(parts) >= 5:
+                    t, r, rt, o = float(parts[1]), float(parts[2]), float(parts[3]), float(parts[4])
+                    self.time_data.append(t)
+                    self.roll_data.append(r)
+                    self.rate_data.append(rt)
+                    self.output_data.append(o)
+                    self.current_values.update({"Time": t, "Roll": r, "Rate": rt, "Output": o})
+                    
+                    state = self.current_values.get("State", "DISCONNECTED")
+                    if state != self.last_state:
+                        if self.last_state != "DISCONNECTED" and t > 0:
+                            self.mission_events.append({"time": t, "state": state})
+                        self.last_state = state
+        except: pass
+
+    def gui_update_loop(self):
+        if self.running:
+            self.update_stats()
+            self.root.after(100, self.gui_update_loop)
+
+    def update_stats(self):
+        if not hasattr(self, 'lbl_time') or not self.lbl_time.winfo_exists(): return
+        vals = self.current_values
+        self.lbl_time.config(text=f"{int(vals['Time'])}")
+        self.lbl_roll.config(text=f"{vals['Roll']:.2f}")
+        self.lbl_rate.config(text=f"{vals['Rate']:.2f}")
+        self.lbl_out.config(text=f"{vals['Output']:.2f}")
+        self.lbl_skew.config(text=f"{vals['Skew']:.2f}")
+        
+        # New Environment UI Updates
+        if hasattr(self, 'lbl_alt'):
+            self.lbl_alt.config(text=f"{vals['Alt']:.1f}")
+            self.lbl_lat.config(text=f"{vals['Lat']:.6f}")
+            self.lbl_lon.config(text=f"{vals['Lon']:.6f}")
+            
+            # Update GPS Status Bubble
+            gps_state = vals.get("GPS_State", 0)
+            if gps_state == 0:
+                self.gps_canvas.itemconfig(self.gps_dot, fill="red", outline="red")
+                self.lbl_gps_text.config(text="NO NMEA", foreground="red")
+            elif gps_state == 1:
+                self.gps_canvas.itemconfig(self.gps_dot, fill="orange", outline="orange")
+                self.lbl_gps_text.config(text="SEARCHING", foreground="orange")
+            elif gps_state == 2:
+                self.gps_canvas.itemconfig(self.gps_dot, fill="green", outline="green")
+                self.lbl_gps_text.config(text="FIX ACQUIRED", foreground="green")
+        
+        state = vals["State"]
+        self.lbl_state_text.config(text=state)
+        self.lbl_active_pid.config(text=f"Kp: {vals['ActiveKp']:.3f}  |  Kd: {vals['ActiveKd']:.3f}")
+
+        color_map = {"IDLE": "gray", "ARMED": "#F4D03F", "IGNITING": "#FF8C00", "FLIGHT": "green", "DISCONNECTED": "gray"}
+        dot_color = color_map.get(state, "gray")
+        self.state_canvas.itemconfig(self.state_dot, fill=dot_color, outline=dot_color)
+
+    def update_plot(self, frame):
+        if not self.time_data: return self.line_roll, self.line_rate
+        
+        t, roll, rate = list(self.time_data)[-VIEW_POINTS:], list(self.roll_data)[-VIEW_POINTS:], list(self.rate_data)[-VIEW_POINTS:]
+        out = np.array(list(self.output_data)[-VIEW_POINTS:])
+        rate_plot = [r * RATE_SCALE for r in rate]
+
+        self.line_roll.set_data(t, roll)
+        self.line_rate.set_data(t, rate_plot)
+        for collection in self.ax.collections: collection.remove()
+        self.ax.fill_between(t, out, 0, where=(out >= 0), interpolate=True, color='green', alpha=0.3)
+        self.ax.fill_between(t, out, 0, where=(out < 0), interpolate=True, color='red', alpha=0.3)
+        self.ax.set_xlim(min(t), max(t) + 1)
+        
+        limit = 10.0
+        all_y = roll + rate_plot + list(out)
+        if all_y and max(abs(y) for y in all_y) > limit: limit = max(abs(y) for y in all_y) * 1.1
+        self.ax.set_ylim(-limit, limit)
+        return self.line_roll, self.line_rate
+
+    def reset_dashboard(self):
+        self.time_data.clear(); self.roll_data.clear(); self.rate_data.clear(); self.output_data.clear()
+        self.mission_events.clear()
+        self.current_values = {"Time": 0, "Roll": 0.0, "Rate": 0.0, "Output": 0.0, "State": "DISCONNECTED", "ActiveKp": 0.0, "ActiveKd": 0.0, "Skew": 0.0, "Lat": 0.0, "Lon": 0.0, "Alt": 0.0, "GPS_State": 0}
+        self.last_state = "DISCONNECTED"
+        self.update_stats()
+
+    def save_graph(self):
+        if hasattr(self, 'anim') and self.anim.event_source:
+            self.anim.event_source.stop()
+
+        file_path = filedialog.asksaveasfilename(
+            defaultextension=".png",
+            filetypes=[("PNG Image", "*.png"), ("All Files", "*.*")],
+            title="Save Telemetry Graph"
+        )
+
+        if file_path:
+            try:
+                data_len = len(self.time_data)
+                width = max(12, min(200, data_len / 50)) if data_len > 0 else 12
+                save_fig, save_ax = plt.subplots(figsize=(width, 4), dpi=100)
+                
+                t = list(self.time_data)
+                roll = list(self.roll_data)
+                rate = [r * RATE_SCALE for r in self.rate_data]
+                out = np.array(self.output_data)
+
+                save_ax.plot(t, roll, label='Roll Angle', color='tab:blue', linewidth=2)
+                save_ax.plot(t, rate, label=f'Roll Rate (x{RATE_SCALE})', color='tab:orange', linewidth=1.5)
+                
+                save_ax.fill_between(t, out, 0, where=(out >= 0), interpolate=True, color='green', alpha=0.3)
+                save_ax.fill_between(t, out, 0, where=(out < 0), interpolate=True, color='red', alpha=0.3)
+                
+                y_max = max(max(roll) if roll else 10, max(rate) if rate else 10) * 0.9
+                for event in self.mission_events:
+                    ev_time = event["time"]
+                    ev_name = event["state"]
+                    save_ax.axvline(x=ev_time, color='black', linestyle='--', alpha=0.6)
+                    save_ax.text(ev_time, y_max, f" {ev_name}", rotation=90, verticalalignment='top', fontsize=9, fontweight='bold', color='black')
+
+                save_ax.set_title(f"Rocket Flight Data - {len(t)} points")
+                save_ax.legend()
+                
+                if t: save_ax.set_xlim(min(t), max(t) + 1)
+
+                save_fig.savefig(file_path, dpi=100, bbox_inches='tight')
+                plt.close(save_fig)
+                messagebox.showinfo("Success", "Graph saved successfully.")
+                
+            except Exception as e:
+                print(f"Error saving graph: {e}")
+        
+        if hasattr(self, 'anim') and self.anim.event_source:
+            self.anim.event_source.start()
+
+    def on_close(self):
+        self.running = False
+        self.root.destroy()
+
+if __name__ == "__main__":
+    root = tk.Tk()
+    app = TelemetryApp(root)
+    root.protocol("WM_DELETE_WINDOW", app.on_close)
+    root.mainloop()

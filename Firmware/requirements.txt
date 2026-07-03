@@ -1,0 +1,8 @@
+# Rocket Telemetry Dashboard - Python Dependencies
+# Install with: pip install -r requirements.txt
+#
+# Note: tkinter is included with most Python installations.
+# On Debian/Ubuntu, install it via: sudo apt install python3-tk
+
+matplotlib>=3.5.0
+numpy>=1.21.0
