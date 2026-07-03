@@ -32,7 +32,7 @@ flowchart LR
 
 The detailed architecture and state machines are documented in [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md).
 
-## Repository Map
+## Map
 
 | Path | Purpose |
 |------|---------|
