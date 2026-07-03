@@ -8,10 +8,19 @@ from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 from collections import deque
 import time
 import numpy as np
+import logging
+import atexit
 
 from analyze_pid import write_pid_report
 from session_artifacts import TestSessionArtifacts
 from telemetry_log import TelemetryCsvLogger
+
+# Configure logging
+logging.basicConfig(
+    level=logging.WARNING,
+    format='%(asctime)s - %(levelname)s - %(message)s'
+)
+logger = logging.getLogger(__name__)
 
 # --- Configuration ---
 UDP_IP = "0.0.0.0"  
@@ -26,11 +35,13 @@ class TelemetryApp:
     def __init__(self, root):
         self.root = root
         self.root.title("Rocket Telemetry Dashboard - Ground Control")
-        self.root.geometry("1100x850") 
+        self.root.geometry("1100x850")
 
         self.zoom_levels = [1.0, 1.5, 2.0, 2.5]
-        self.ui_scale = 1.0 
+        self.ui_scale = 1.0
 
+        # Thread-safe data access
+        self._data_lock = threading.Lock()
         self.time_data = deque()
         self.roll_data = deque()
         self.rate_data = deque()
@@ -221,9 +232,13 @@ class TelemetryApp:
     def _send_udp_command(self, cmd):
         target_ip = self.rocket_ip if self.rocket_ip else LAUNCHER_GATEWAY
         try:
-            sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-            sock.sendto(cmd.encode('utf-8'), (target_ip, UDP_PORT))
+            with socket.socket(socket.AF_INET, socket.SOCK_DGRAM) as sock:
+                sock.sendto(cmd.encode('utf-8'), (target_ip, UDP_PORT))
+        except OSError as e:
+            logger.warning("UDP send failed to %s: %s", target_ip, e)
+            messagebox.showerror("Error", f"Network error sending '{cmd}':\n{e}")
         except Exception as e:
+            logger.error("Unexpected error sending UDP: %s", e)
             messagebox.showerror("Error", f"Failed to send '{cmd}':\n{e}")
 
     def send_launch_command(self):
@@ -239,16 +254,28 @@ class TelemetryApp:
 
     def send_pid_command(self):
         try:
-            self._send_udp_command(f"PID,{float(self.kp_var.get())},{float(self.kd_var.get())}")
-        except ValueError:
-            messagebox.showerror("Error", "Kp and Kd must be valid numbers.")
+            kp = float(self.kp_var.get())
+            kd = float(self.kd_var.get())
+            if kp < 0 or kd < 0:
+                raise ValueError("PID values must be non-negative")
+            if kp > 10 or kd > 10:
+                raise ValueError("PID values must not exceed 10.0")
+            self._send_udp_command(f"PID,{kp},{kd}")
+        except ValueError as e:
+            messagebox.showerror("Error", str(e))
+        except Exception as e:
+            logger.error("Error sending PID command: %s", e)
+            messagebox.showerror("Error", f"Failed to send PID: {e}")
 
     def connection_watchdog(self):
         while self.running:
             try:
-                sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-                sock.sendto(b"HELLO", (LAUNCHER_GATEWAY, UDP_PORT))
-            except: pass
+                with socket.socket(socket.AF_INET, socket.SOCK_DGRAM) as sock:
+                    sock.sendto(b"HELLO", (LAUNCHER_GATEWAY, UDP_PORT))
+            except OSError as e:
+                logger.warning("Watchdog UDP failed: %s", e)
+            except Exception as e:
+                logger.error("Unexpected watchdog error: %s", e)
             time.sleep(2)
 
     def udp_listener(self):
@@ -263,7 +290,12 @@ class TelemetryApp:
                     self.rocket_ip = addr[0]
                     self.root.after(0, lambda: self.status_label.config(text=f"Connected: {self.rocket_ip}", foreground="green"))
                 self.parse_data(message)
-            except: pass
+            except UnicodeDecodeError as e:
+                logger.warning("Invalid UTF-8 from %s: %s", addr[0] if 'addr' in locals() else "unknown", e)
+            except OSError as e:
+                logger.warning("UDP socket error: %s", e)
+            except Exception as e:
+                logger.error("Unexpected UDP listener error: %s", e)
 
     def parse_data(self, message):
         try:
@@ -285,14 +317,15 @@ class TelemetryApp:
                     self.current_values["GPS_State"] = int(parts[4])
 
             elif message.startswith("T,") or message.startswith("[FUSION]"):
-                if message.startswith("[FUSION]"): return 
+                if message.startswith("[FUSION]"): return
                 parts = message.split(',')
                 if len(parts) >= 5:
                     t, r, rt, o = float(parts[1]), float(parts[2]), float(parts[3]), float(parts[4])
-                    self.time_data.append(t)
-                    self.roll_data.append(r)
-                    self.rate_data.append(rt)
-                    self.output_data.append(o)
+                    with self._data_lock:
+                        self.time_data.append(t)
+                        self.roll_data.append(r)
+                        self.rate_data.append(rt)
+                        self.output_data.append(o)
                     self.current_values.update({"Time": t, "Roll": r, "Rate": rt, "Output": o})
                     
                     state = self.current_values.get("State", "DISCONNECTED")
@@ -300,7 +333,10 @@ class TelemetryApp:
                         if self.last_state != "DISCONNECTED" and t > 0:
                             self.mission_events.append({"time": t, "state": state})
                         self.last_state = state
-        except: pass
+        except ValueError as e:
+            logger.warning("Failed to parse telemetry value: %s", e)
+        except Exception as e:
+            logger.error("Unexpected parse error: %s", e)
 
     def gui_update_loop(self):
         if self.running:
@@ -343,51 +379,66 @@ class TelemetryApp:
         self.state_canvas.itemconfig(self.state_dot, fill=dot_color, outline=dot_color)
 
     def update_plot(self, frame):
-        if not self.time_data: return self.line_roll, self.line_rate
-        
-        t, roll, rate = list(self.time_data)[-VIEW_POINTS:], list(self.roll_data)[-VIEW_POINTS:], list(self.rate_data)[-VIEW_POINTS:]
-        out = np.array(list(self.output_data)[-VIEW_POINTS:])
+        with self._data_lock:
+            if not self.time_data:
+                return self.line_roll, self.line_rate
+            t = list(self.time_data)[-VIEW_POINTS:]
+            roll = list(self.roll_data)[-VIEW_POINTS:]
+            rate = list(self.rate_data)[-VIEW_POINTS:]
+            out = list(self.output_data)[-VIEW_POINTS:]
+
+        if not t:
+            return self.line_roll, self.line_rate
+
         rate_plot = [r * RATE_SCALE for r in rate]
 
         self.line_roll.set_data(t, roll)
         self.line_rate.set_data(t, rate_plot)
-        for collection in self.ax.collections: collection.remove()
+        for collection in self.ax.collections:
+            collection.remove()
         self.ax.fill_between(t, out, 0, where=(out >= 0), interpolate=True, color='green', alpha=0.3)
         self.ax.fill_between(t, out, 0, where=(out < 0), interpolate=True, color='red', alpha=0.3)
         self.ax.set_xlim(min(t), max(t) + 1)
-        
+
         limit = 10.0
-        all_y = roll + rate_plot + list(out)
-        if all_y and max(abs(y) for y in all_y) > limit: limit = max(abs(y) for y in all_y) * 1.1
+        all_y = roll + rate_plot + out
+        if all_y and max(abs(y) for y in all_y) > limit:
+            limit = max(abs(y) for y in all_y) * 1.1
         self.ax.set_ylim(-limit, limit)
         return self.line_roll, self.line_rate
 
     def reset_dashboard(self):
-        self.time_data.clear(); self.roll_data.clear(); self.rate_data.clear(); self.output_data.clear()
+        with self._data_lock:
+            self.time_data.clear()
+            self.roll_data.clear()
+            self.rate_data.clear()
+            self.output_data.clear()
         self.mission_events.clear()
         self.current_values = {"Time": 0, "Roll": 0.0, "Rate": 0.0, "Output": 0.0, "State": "DISCONNECTED", "ActiveKp": 0.0, "ActiveKd": 0.0, "Skew": 0.0, "Lat": 0.0, "Lon": 0.0, "Alt": 0.0, "GPS_State": 0}
         self.last_state = "DISCONNECTED"
         self.update_stats()
 
     def _save_graph_to_path(self, file_path, notify=False):
-        if not self.time_data:
-            return False
+        with self._data_lock:
+            if not self.time_data:
+                return False
+            data_len = len(self.time_data)
+            t = list(self.time_data)
+            roll = list(self.roll_data)
+            rate = list(self.rate_data)
+            out = list(self.output_data)
 
-        data_len = len(self.time_data)
         width = max(12, min(200, data_len / 50))
         save_fig, save_ax = plt.subplots(figsize=(width, 4), dpi=100)
 
-        t = list(self.time_data)
-        roll = list(self.roll_data)
-        rate = [r * RATE_SCALE for r in self.rate_data]
-        out = np.array(self.output_data)
+        rate_plot = [r * RATE_SCALE for r in rate]
 
         save_ax.plot(t, roll, label='Roll Angle', color='tab:blue', linewidth=2)
-        save_ax.plot(t, rate, label=f'Roll Rate (x{RATE_SCALE})', color='tab:orange', linewidth=1.5)
-        save_ax.fill_between(t, out, 0, where=(out >= 0), interpolate=True, color='green', alpha=0.3)
-        save_ax.fill_between(t, out, 0, where=(out < 0), interpolate=True, color='red', alpha=0.3)
+        save_ax.plot(t, rate_plot, label=f'Roll Rate (x{RATE_SCALE})', color='tab:orange', linewidth=1.5)
+        save_ax.fill_between(t, out, 0, where=(np.array(out) >= 0), interpolate=True, color='green', alpha=0.3)
+        save_ax.fill_between(t, out, 0, where=(np.array(out) < 0), interpolate=True, color='red', alpha=0.3)
 
-        y_max = max(max(roll) if roll else 10, max(rate) if rate else 10) * 0.9
+        y_max = max(max(roll) if roll else 10, max(rate_plot) if rate_plot else 10) * 0.9
         for event in self.mission_events:
             ev_time = event["time"]
             ev_name = event["state"]
