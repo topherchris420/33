@@ -2,7 +2,7 @@
 
 **Vers3Dynamics | Applied Aerospace Research**
 
-Project 33 is a college aerospace prototype showing that useful aerospace engineering practice - simulation, CAD, embedded control, telemetry, safety gates, and evidence capture - can be done with low-cost desktop tools instead of a billion-dollar lab.
+Project 33 is an aerospace prototype showing that useful aerospace engineering practice - simulation, CAD, embedded control, telemetry, safety gates, and evidence capture - can be done with low-cost desktop tools instead of a billion-dollar lab.
 
 [Live project page](https://topherchris420.github.io/33/) | [Architecture](docs/ARCHITECTURE.md) | [Wiring](docs/WIRING.md) | [Testing](docs/TESTING.md) | [Safety](docs/SAFETY.md) | [BOM](docs/BOM.md)
 
