@@ -9,6 +9,8 @@ from collections import deque
 import time
 import numpy as np
 
+from analyze_pid import write_pid_report
+from session_artifacts import TestSessionArtifacts
 from telemetry_log import TelemetryCsvLogger
 
 # --- Configuration ---
@@ -49,7 +51,8 @@ class TelemetryApp:
 
         self.rocket_ip = None
         self.running = True
-        self.telemetry_logger = TelemetryCsvLogger()
+        self.session = TestSessionArtifacts()
+        self.telemetry_logger = TelemetryCsvLogger(self.session.telemetry_csv)
 
         self.build_gui()
         
@@ -95,7 +98,7 @@ class TelemetryApp:
         self.status_label.pack(side=tk.LEFT, padx=self.s(10))
         self.log_label = ttk.Label(
             control_frame,
-            text=f"CSV: {self.telemetry_logger.path.name}",
+            text=f"Session: {self.session.session_id}",
             foreground="gray",
             font=self.f(8),
         )
@@ -132,6 +135,7 @@ class TelemetryApp:
         btn_frame.pack(side=tk.RIGHT)
         
         ttk.Button(btn_frame, text="CALIBRATE GYRO", command=self.send_calibrate_command, width=int(20)).pack(side=tk.LEFT, padx=self.s(5))
+        ttk.Button(btn_frame, text="DUMP LOG", command=self.send_dump_log_command, width=int(14)).pack(side=tk.LEFT, padx=self.s(5))
         ttk.Button(btn_frame, text="DIGITAL LAUNCH", command=self.send_launch_command, width=int(20)).pack(side=tk.LEFT, padx=self.s(5))
 
         tuning_frame = ttk.LabelFrame(self.root, text="PID Controller Tuning", padding=self.s(10))
@@ -229,6 +233,9 @@ class TelemetryApp:
     def send_calibrate_command(self):
         if messagebox.askyesno("Confirm", "Keep rocket STILL. Zeroing Gyro. Proceed?"):
             self._send_udp_command("calibrate")
+
+    def send_dump_log_command(self):
+        self._send_udp_command("dumplog")
 
     def send_pid_command(self):
         try:
@@ -362,11 +369,47 @@ class TelemetryApp:
         self.last_state = "DISCONNECTED"
         self.update_stats()
 
+    def _save_graph_to_path(self, file_path, notify=False):
+        if not self.time_data:
+            return False
+
+        data_len = len(self.time_data)
+        width = max(12, min(200, data_len / 50))
+        save_fig, save_ax = plt.subplots(figsize=(width, 4), dpi=100)
+
+        t = list(self.time_data)
+        roll = list(self.roll_data)
+        rate = [r * RATE_SCALE for r in self.rate_data]
+        out = np.array(self.output_data)
+
+        save_ax.plot(t, roll, label='Roll Angle', color='tab:blue', linewidth=2)
+        save_ax.plot(t, rate, label=f'Roll Rate (x{RATE_SCALE})', color='tab:orange', linewidth=1.5)
+        save_ax.fill_between(t, out, 0, where=(out >= 0), interpolate=True, color='green', alpha=0.3)
+        save_ax.fill_between(t, out, 0, where=(out < 0), interpolate=True, color='red', alpha=0.3)
+
+        y_max = max(max(roll) if roll else 10, max(rate) if rate else 10) * 0.9
+        for event in self.mission_events:
+            ev_time = event["time"]
+            ev_name = event["state"]
+            save_ax.axvline(x=ev_time, color='black', linestyle='--', alpha=0.6)
+            save_ax.text(ev_time, y_max, f" {ev_name}", rotation=90, verticalalignment='top', fontsize=9, fontweight='bold', color='black')
+
+        save_ax.set_title(f"Rocket Flight Data - {len(t)} points")
+        save_ax.legend()
+        save_ax.set_xlim(min(t), max(t) + 1)
+        save_fig.savefig(file_path, dpi=100, bbox_inches='tight')
+        plt.close(save_fig)
+        if notify:
+            messagebox.showinfo("Success", f"Graph saved to:\n{file_path}")
+        return True
+
     def save_graph(self):
         if hasattr(self, 'anim') and self.anim.event_source:
             self.anim.event_source.stop()
 
         file_path = filedialog.asksaveasfilename(
+            initialdir=str(self.session.session_dir),
+            initialfile=self.session.graph_png.name,
             defaultextension=".png",
             filetypes=[("PNG Image", "*.png"), ("All Files", "*.*")],
             title="Save Telemetry Graph"
@@ -374,48 +417,26 @@ class TelemetryApp:
 
         if file_path:
             try:
-                data_len = len(self.time_data)
-                width = max(12, min(200, data_len / 50)) if data_len > 0 else 12
-                save_fig, save_ax = plt.subplots(figsize=(width, 4), dpi=100)
-                
-                t = list(self.time_data)
-                roll = list(self.roll_data)
-                rate = [r * RATE_SCALE for r in self.rate_data]
-                out = np.array(self.output_data)
-
-                save_ax.plot(t, roll, label='Roll Angle', color='tab:blue', linewidth=2)
-                save_ax.plot(t, rate, label=f'Roll Rate (x{RATE_SCALE})', color='tab:orange', linewidth=1.5)
-                
-                save_ax.fill_between(t, out, 0, where=(out >= 0), interpolate=True, color='green', alpha=0.3)
-                save_ax.fill_between(t, out, 0, where=(out < 0), interpolate=True, color='red', alpha=0.3)
-                
-                y_max = max(max(roll) if roll else 10, max(rate) if rate else 10) * 0.9
-                for event in self.mission_events:
-                    ev_time = event["time"]
-                    ev_name = event["state"]
-                    save_ax.axvline(x=ev_time, color='black', linestyle='--', alpha=0.6)
-                    save_ax.text(ev_time, y_max, f" {ev_name}", rotation=90, verticalalignment='top', fontsize=9, fontweight='bold', color='black')
-
-                save_ax.set_title(f"Rocket Flight Data - {len(t)} points")
-                save_ax.legend()
-                
-                if t: save_ax.set_xlim(min(t), max(t) + 1)
-
-                save_fig.savefig(file_path, dpi=100, bbox_inches='tight')
-                plt.close(save_fig)
-                messagebox.showinfo("Success", "Graph saved successfully.")
-                
+                self._save_graph_to_path(file_path, notify=True)
             except Exception as e:
                 print(f"Error saving graph: {e}")
-        
+
         if hasattr(self, 'anim') and self.anim.event_source:
             self.anim.event_source.start()
+
+    def write_session_artifacts(self):
+        try:
+            self._save_graph_to_path(self.session.graph_png, notify=False)
+            write_pid_report(self.session.telemetry_csv, self.session.pid_markdown)
+            self.session.write_summary(packet_count=self.telemetry_logger.packet_count)
+        except Exception as e:
+            print(f"Error writing session artifacts: {e}")
 
     def on_close(self):
         self.running = False
         self.telemetry_logger.close()
+        self.write_session_artifacts()
         self.root.destroy()
-
 if __name__ == "__main__":
     root = tk.Tk()
     app = TelemetryApp(root)

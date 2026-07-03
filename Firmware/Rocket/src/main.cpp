@@ -8,6 +8,7 @@
 #include <Adafruit_MPU6050.h>
 #include <Adafruit_Sensor.h>
 #include <ESP32Servo.h>
+#include "../../shared/Project33Protocol.h"
 
 const int RX2_PIN = 16;
 const int TX2_PIN = 17;
@@ -31,10 +32,10 @@ Servo igniteServo;
 Servo leftServo, rightServo, upServo, downServo;
 Adafruit_MPU6050 mpu;
 
-String sysState = "IDLE"; 
+String sysState = "IDLE";
 float Kp = 0.5;
 float Kd = 0.2;
-String cmdBuffer = ""; 
+String cmdBuffer = "";
 
 float roll = 0;
 float gyroX_offset = 0;
@@ -45,6 +46,63 @@ unsigned long lastTelemetrySent = 0;
 unsigned long lastReadySent = 0;
 unsigned long igniteStartTime = 0;
 
+const int FLIGHT_LOG_CAPACITY = 240;
+const int LOG_STATE_LEN = 12;
+
+struct FlightLogSample {
+    unsigned long timeMs;
+    float rollDeg;
+    float rateDegS;
+    int servoOffset;
+    float kp;
+    float kd;
+    float skewDeg;
+    char state[LOG_STATE_LEN];
+};
+
+FlightLogSample flightLog[FLIGHT_LOG_CAPACITY];
+int flightLogHead = 0;
+int flightLogCount = 0;
+
+void recordFlightSample(unsigned long timeMs, float rollDeg, float rateDegS, int servoOffset) {
+    FlightLogSample &sample = flightLog[flightLogHead];
+    sample.timeMs = timeMs;
+    sample.rollDeg = rollDeg;
+    sample.rateDegS = rateDegS;
+    sample.servoOffset = servoOffset;
+    sample.kp = Kp;
+    sample.kd = Kd;
+    sample.skewDeg = physical_skew_angle;
+    sysState.toCharArray(sample.state, LOG_STATE_LEN);
+
+    flightLogHead = (flightLogHead + 1) % FLIGHT_LOG_CAPACITY;
+    if (flightLogCount < FLIGHT_LOG_CAPACITY) flightLogCount++;
+}
+
+String formatFlightLogSample(const FlightLogSample &sample) {
+    return String(Project33Protocol::LOG_PREFIX) + "," +
+           String(sample.timeMs) + "," +
+           String(sample.rollDeg, 2) + "," +
+           String(sample.rateDegS, 2) + "," +
+           String(sample.servoOffset) + "," +
+           String(sample.state) + "," +
+           String(sample.kp, 2) + "," +
+           String(sample.kd, 2) + "," +
+           String(sample.skewDeg, 2);
+}
+
+void dumpFlightLog() {
+    Serial2.print(Project33Protocol::LOG_START);
+    Serial2.print(",");
+    Serial2.println(flightLogCount);
+
+    for (int i = 0; i < flightLogCount; i++) {
+        int idx = (flightLogHead - flightLogCount + i + FLIGHT_LOG_CAPACITY) % FLIGHT_LOG_CAPACITY;
+        Serial2.println(formatFlightLogSample(flightLog[idx]));
+    }
+
+    Serial2.println(Project33Protocol::LOG_END);
+}
 void calibrateGyro() {
     float sumGyroX = 0, sumAccY = 0, sumAccZ = 0;
     int samples = 200;
@@ -59,16 +117,16 @@ void calibrateGyro() {
     gyroX_offset = sumGyroX / samples;
     float avgY = sumAccY / samples;
     float avgZ = sumAccZ / samples;
-    physical_skew_angle = atan2(avgY, avgZ) * 180.0 / PI; 
-    roll = 0.0; 
-    last_time = millis(); 
+    physical_skew_angle = atan2(avgY, avgZ) * 180.0 / PI;
+    roll = 0.0;
+    last_time = millis();
 }
 
 void setup() {
-    Serial.begin(115200); 
-    Serial2.begin(115200, SERIAL_8N1, RX2_PIN, TX2_PIN); 
-    Serial2.setTimeout(20); 
-    delay(1500); 
+    Serial.begin(115200);
+    Serial2.begin(115200, SERIAL_8N1, RX2_PIN, TX2_PIN);
+    Serial2.setTimeout(20);
+    delay(1500);
     Wire.begin(21, 22);
     if (mpu.begin()) {
         mpu.setAccelerometerRange(MPU6050_RANGE_8_G);
@@ -79,7 +137,7 @@ void setup() {
     ESP32PWM::allocateTimer(1);
     igniteServo.setPeriodHertz(50);
     igniteServo.attach(IGNITE_SERVO_PIN);
-    igniteServo.write(IGNITE_SERVO_OFF); 
+    igniteServo.write(IGNITE_SERVO_OFF);
     leftServo.setPeriodHertz(50);   leftServo.attach(LEFT_SERVO_PIN, 500, 2400);
     rightServo.setPeriodHertz(50);  rightServo.attach(RIGHT_SERVO_PIN, 500, 2400);
     upServo.setPeriodHertz(50);     upServo.attach(UP_SERVO_PIN, 500, 2400);
@@ -94,7 +152,7 @@ void setup() {
 void loop() {
     unsigned long current_time = millis();
     float dt = (current_time - last_time) / 1000.0;
-    if (dt <= 0) dt = 0.001; 
+    if (dt <= 0) dt = 0.001;
     last_time = current_time;
 
     sensors_event_t a, g, temp;
@@ -117,44 +175,46 @@ void loop() {
         rightServo.write(RIGHT_CENTER);
         upServo.write(UP_CENTER);
         downServo.write(DOWN_CENTER);
-        servo_offset = 0; 
+        servo_offset = 0;
     }
 
     if (sysState == "IGNITING" && (current_time - igniteStartTime > 2500)) {
         igniteServo.write(IGNITE_SERVO_OFF);
-        sysState = "FLIGHT";          
-        Serial2.println("IGNITED");   
+        sysState = "FLIGHT";
+        Serial2.println(Project33Protocol::IGNITED);
     }
 
     if (current_time - lastTelemetrySent >= 50) {
         // Telemetry payload including Skew Angle
-        String payload = "DATA," + String(a.acceleration.x, 2) + "," + 
+        String payload = String(Project33Protocol::DATA_PREFIX) + String(a.acceleration.x, 2) + "," +
                          String(a.acceleration.y, 2) + "," + String(a.acceleration.z, 2) + "," +
-                         String(roll, 2) + "," + String(rate_deg_s, 2) + "," + 
-                         String(servo_offset) + "," + sysState + "," + 
-                         String(Kp, 2) + "," + String(Kd, 2) + "," + 
+                         String(roll, 2) + "," + String(rate_deg_s, 2) + "," +
+                         String(servo_offset) + "," + sysState + "," +
+                         String(Kp, 2) + "," + String(Kd, 2) + "," +
                          String(physical_skew_angle, 2);
         Serial2.println(payload);
+        recordFlightSample(current_time, roll, rate_deg_s, servo_offset);
         lastTelemetrySent = current_time;
     }
 
     if (sysState == "IDLE" && (current_time - lastReadySent >= 1000)) {
-        Serial2.println("READY");
+        Serial2.println(Project33Protocol::READY);
         lastReadySent = current_time;
     }
 
     while (Serial2.available()) {
         char c = Serial2.read();
         if (c == '\n') {
-            cmdBuffer.trim(); 
-            if (cmdBuffer == "ARM" && sysState == "IDLE") { sysState = "ARMED"; calibrateGyro(); }
-            else if (cmdBuffer == "IGNITE" && sysState == "ARMED") { sysState = "IGNITING"; igniteStartTime = millis(); igniteServo.write(IGNITE_SERVO_ON); }
-            else if (cmdBuffer == "CALIBRATE") { calibrateGyro(); }
+            cmdBuffer.trim();
+            if (cmdBuffer == Project33Protocol::CMD_ARM && sysState == "IDLE") { sysState = "ARMED"; calibrateGyro(); }
+            else if (cmdBuffer == Project33Protocol::CMD_IGNITE && sysState == "ARMED") { sysState = "IGNITING"; igniteStartTime = millis(); igniteServo.write(IGNITE_SERVO_ON); }
+            else if (cmdBuffer == Project33Protocol::CMD_CALIBRATE) { calibrateGyro(); }
+            else if (cmdBuffer == Project33Protocol::CMD_DUMPLOG) { dumpFlightLog(); }
             else if (cmdBuffer.startsWith("PID,")) {
                 int c1 = cmdBuffer.indexOf(','), c2 = cmdBuffer.indexOf(',', c1 + 1);
                 if (c1 > 0 && c2 > 0) { Kp = cmdBuffer.substring(c1 + 1, c2).toFloat(); Kd = cmdBuffer.substring(c2 + 1).toFloat(); }
             }
-            cmdBuffer = ""; 
+            cmdBuffer = "";
         } else if (c != '\r') { cmdBuffer += c; }
     }
 }

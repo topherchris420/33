@@ -57,5 +57,20 @@ class TelemetryCsvLoggerTests(unittest.TestCase):
         self.assertEqual(rows[0]["raw"], "[FUSION] Hdg: 123.4 | Pitch: +01.2")
 
 
+    def test_writes_onboard_log_dump_rows_to_csv(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            path = Path(tmp) / "flight.csv"
+            logger = TelemetryCsvLogger(path)
+
+            logger.log_packet("LOG,1234,5.2,-3.1,4,FLIGHT,0.50,0.20,1.30")
+            logger.close()
+
+            rows = list(csv.DictReader(path.open(newline="", encoding="utf-8")))
+
+        self.assertEqual(rows[0]["message_type"], "LOG")
+        self.assertEqual(rows[0]["time_ms"], "1234")
+        self.assertEqual(rows[0]["roll_deg"], "5.2")
+        self.assertEqual(rows[0]["state"], "FLIGHT")
+        self.assertEqual(rows[0]["kp"], "0.50")
 if __name__ == "__main__":
     unittest.main()

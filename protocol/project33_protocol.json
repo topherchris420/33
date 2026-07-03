@@ -1,0 +1,70 @@
+{
+  "name": "Project33Protocol",
+  "firmware_constants": {
+    "READY": "READY",
+    "IGNITED": "IGNITED",
+    "CMD_ARM": "ARM",
+    "CMD_IGNITE": "IGNITE",
+    "CMD_CALIBRATE": "CALIBRATE",
+    "CMD_DUMPLOG": "DUMPLOG",
+    "DASHBOARD_LAUNCH": "launch",
+    "DASHBOARD_CALIBRATE": "calibrate",
+    "DASHBOARD_DUMPLOG": "dumplog",
+    "DATA_PREFIX": "DATA,",
+    "STATUS_PREFIX": "STATUS:",
+    "ENV_PREFIX": "ENV,",
+    "LOG_PREFIX": "LOG",
+    "LOG_START": "LOG_START",
+    "LOG_END": "LOG_END",
+    "CMD_ACK_LAUNCH_READY": "CMD_ACK:launch_ready",
+    "CMD_REJECT_LAUNCH_NOT_READY": "CMD_REJECT:launch_not_ready",
+    "ABORT_PREFIX": "ABORT:"
+  },
+  "messages": [
+    {
+      "direction": "Rocket -> Launcher",
+      "format": "READY",
+      "purpose": "Rocket idle heartbeat"
+    },
+    {
+      "direction": "Rocket -> Launcher",
+      "format": "IGNITED",
+      "purpose": "Rocket-side ignition acknowledgement"
+    },
+    {
+      "direction": "Rocket -> Launcher",
+      "format": "DATA,<ax>,<ay>,<az>,<roll>,<rate>,<output>,<state>,<Kp>,<Kd>,<skew>",
+      "purpose": "Live rocket telemetry packet"
+    },
+    {
+      "direction": "Rocket -> Launcher",
+      "format": "LOG,<ms>,<roll>,<rate>,<output>,<state>,<Kp>,<Kd>,<skew>",
+      "purpose": "Onboard ring-buffer log dump sample"
+    },
+    {
+      "direction": "Launcher -> Rocket",
+      "format": "ARM",
+      "purpose": "Arm rocket flight computer"
+    },
+    {
+      "direction": "Launcher -> Rocket",
+      "format": "IGNITE",
+      "purpose": "Start rocket ignition state"
+    },
+    {
+      "direction": "Launcher -> Rocket",
+      "format": "DUMPLOG",
+      "purpose": "Request rocket onboard ring-buffer dump"
+    },
+    {
+      "direction": "Dashboard -> Launcher",
+      "format": "dumplog",
+      "purpose": "Ask launcher to request rocket onboard log dump"
+    },
+    {
+      "direction": "Launcher -> Dashboard",
+      "format": "CMD_REJECT:launch_not_ready",
+      "purpose": "Dashboard launch command rejected outside READY"
+    }
+  ]
+}

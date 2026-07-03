@@ -34,17 +34,19 @@ class TelemetryCsvLogger:
         self._file = self.path.open("w", newline="", encoding="utf-8")
         self._writer = csv.DictWriter(self._file, fieldnames=FIELDNAMES)
         self._writer.writeheader()
+        self.packet_count = 0
         self._file.flush()
 
     @staticmethod
     def default_path():
         stamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-        return Path(__file__).resolve().parent / "TelemetryLogs" / f"flight_{stamp}.csv"
+        return Path(__file__).resolve().parent / "TestSessions" / f"bench_{stamp}" / "telemetry.csv"
 
     def log_packet(self, message, source="udp"):
         row = self._parse_packet(message, source)
         with self._lock:
             self._writer.writerow(row)
+            self.packet_count += 1
             self._file.flush()
 
     def close(self):
@@ -97,6 +99,24 @@ class TelemetryCsvLogger:
                         "longitude": parts[2],
                         "altitude_m": parts[3],
                         "gps_state": parts[4],
+                    }
+                )
+            return row
+
+        if message.startswith("LOG,"):
+            parts = message.split(",")
+            row["message_type"] = "LOG"
+            if len(parts) >= 9:
+                row.update(
+                    {
+                        "time_ms": parts[1],
+                        "roll_deg": parts[2],
+                        "rate_deg_s": parts[3],
+                        "servo_output": parts[4],
+                        "state": parts[5],
+                        "kp": parts[6],
+                        "kd": parts[7],
+                        "skew_deg": parts[8],
                     }
                 )
             return row

@@ -9,3 +9,4 @@ Firmware/TelemetryLogs/
 .venv/
 venv/
 env/
+Firmware/TestSessions/

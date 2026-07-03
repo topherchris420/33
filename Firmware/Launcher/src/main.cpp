@@ -12,6 +12,7 @@
 #include <QMC5883LCompass.h>
 #include <TinyGPS++.h>
 #include <Adafruit_BMP085.h>
+#include "../../shared/Project33Protocol.h"
 
 const char* ssid = "ROCKET_LAUNCHER";
 const char* password = "launch_secure"; 
@@ -171,16 +172,19 @@ void processSerial2() {
         String msg = Serial2.readStringUntil('\n');
         msg.trim();
 
-        if (msg.indexOf("READY") != -1) {
+        if (msg.indexOf(Project33Protocol::READY) != -1) {
             rocketReady = true; 
         }
-        else if (msg.indexOf("IGNITED") != -1) {
+        else if (msg.indexOf(Project33Protocol::IGNITED) != -1) {
             rocketIgnited = true;
         }
-        else if (msg.startsWith("DATA,") || msg.startsWith("ALIVE")) {
+        else if (msg.startsWith(Project33Protocol::LOG_PREFIX)) {
+            sendToDashboard(msg);
+        }
+        else if (msg.startsWith(Project33Protocol::DATA_PREFIX) || msg.startsWith("ALIVE")) {
             lastHeartbeatTime = millis();
             
-            if (msg.startsWith("DATA,")) {
+            if (msg.startsWith(Project33Protocol::DATA_PREFIX)) {
                 int c[10]; // 10 commas for the new skew array
                 c[0] = msg.indexOf(',');
                 for(int i=1; i<10; i++) c[i] = msg.indexOf(',', c[i-1] + 1);
@@ -199,7 +203,7 @@ void processSerial2() {
                     String skew = msg.substring(c[9]+1);
 
                     sendToDashboard("T," + String(millis()) + "," + roll + "," + rate + "," + out);
-                    sendToDashboard("STATUS:" + state + "," + kp + "," + kd + "," + skew);
+                    sendToDashboard(String(Project33Protocol::STATUS_PREFIX) + state + "," + kp + "," + kd + "," + skew);
                 }
             }
         }
@@ -224,16 +228,18 @@ void processUDP() {
 
         if (msg == "HELLO") {
             dashboardIP = udp.remoteIP(); 
-        } else if (msg == "launch") {
+        } else if (msg == Project33Protocol::DASHBOARD_LAUNCH) {
             if (currentState == READY) {
                 udpLaunchTriggered = true;
-                sendToDashboard("CMD_ACK:launch_ready");
+                sendToDashboard(Project33Protocol::CMD_ACK_LAUNCH_READY);
             } else {
                 udpLaunchTriggered = false;
-                sendToDashboard("CMD_REJECT:launch_not_ready");
+                sendToDashboard(Project33Protocol::CMD_REJECT_LAUNCH_NOT_READY);
             }
-        } else if (msg == "calibrate") {
-            Serial2.println("CALIBRATE");
+        } else if (msg == Project33Protocol::DASHBOARD_CALIBRATE) {
+            Serial2.println(Project33Protocol::CMD_CALIBRATE);
+        } else if (msg == Project33Protocol::DASHBOARD_DUMPLOG) {
+            Serial2.println(Project33Protocol::CMD_DUMPLOG);
         } else if (msg.startsWith("PID,")) {
             Serial2.println(msg); 
         }
@@ -305,7 +311,7 @@ void loop() {
             lastHeartbeatTime = millis(); 
             digitalWrite(LED_PIN, HIGH); 
             
-            Serial2.println("ARM");
+            Serial2.println(Project33Protocol::CMD_ARM);
             successTone(); 
             break;
         }
@@ -338,9 +344,9 @@ void loop() {
 
             if (triggered) {
                 currentState = IGNITING;
-                Serial2.println("CALIBRATE");
+                Serial2.println(Project33Protocol::CMD_CALIBRATE);
                 delay(20);                    
-                Serial2.println("IGNITE");
+                Serial2.println(Project33Protocol::CMD_IGNITE);
                 Serial.println("IGNITION COMMAND SENT");
             }
             break;
@@ -399,7 +405,7 @@ void loop() {
         
         // Send: ENV,lat,lon,alt,gpsState
         char envMsg[128];
-        snprintf(envMsg, sizeof(envMsg), "ENV,%.6f,%.6f,%.1f,%d", lat, lon, filteredAlt, gpsState);
+        snprintf(envMsg, sizeof(envMsg), "%s%.6f,%.6f,%.1f,%d", Project33Protocol::ENV_PREFIX, lat, lon, filteredAlt, gpsState);
         sendToDashboard(String(envMsg));
     }
 }
@@ -446,7 +452,7 @@ void updateAndPrintFusion() {
 void abortSequence(String reason) {
     Serial.print("ABORT: ");
     Serial.println(reason);
-    sendToDashboard("ABORT:" + reason);
+    sendToDashboard(String(Project33Protocol::ABORT_PREFIX) + reason);
     launcherServo.write(SERVO_OFF);
     digitalWrite(LED_PIN, LOW);
     errorTone();

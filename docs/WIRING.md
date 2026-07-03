@@ -102,6 +102,8 @@ Connects to the launcher's WiFi AP and communicates with the launcher over UDP.
 | Launcher <-> Rocket | UART2, 115200 baud | Rocket arming, ignition command, rocket telemetry |
 
 ### Dashboard UDP Protocol
+
+The generated protocol reference is [PROTOCOL.md](PROTOCOL.md).
 | Direction | Format | Example |
 |-----------|--------|---------|
 | Launcher -> Dashboard | `T,<ms>,<roll>,<rate>,<output>` | `T,1234,5.2,-3.1,4` |
