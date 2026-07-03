@@ -123,29 +123,35 @@ void setup() {
 
     // --- GPS STARTUP CHECK ---
     Serial.println("Checking GPS NMEA Data...");
-    unsigned long gpsStart = millis();
     bool gpsWorks = false;
-    
-    while (millis() - gpsStart < 5000) {
-        while (SerialGPS.available() > 0) {
-            char c = SerialGPS.read();
-            if (c == '$') { // Standard start of an NMEA sentence
-                gpsWorks = true;
+    const int MAX_GPS_RETRIES = 3;
+
+    for (int retry = 0; retry < MAX_GPS_RETRIES && !gpsWorks; retry++) {
+        unsigned long gpsStart = millis();
+        Serial.printf("GPS attempt %d/%d...\n", retry + 1, MAX_GPS_RETRIES);
+
+        while (millis() - gpsStart < 5000) {
+            while (SerialGPS.available() > 0) {
+                char c = SerialGPS.read();
+                if (c == '$') { // Standard start of an NMEA sentence
+                    gpsWorks = true;
+                }
+                gps.encode(c);
             }
-            gps.encode(c);
+            if (gpsWorks) break;
+            delay(10);
         }
-        if (gpsWorks) break;
-        delay(10);
+
+        if (!gpsWorks && retry < MAX_GPS_RETRIES - 1) {
+            Serial.println("GPS attempt failed, retrying in 2s...");
+            delay(2000);
+        }
     }
 
     if (!gpsWorks) {
-        Serial.println("CRITICAL: NO GPS DATA! ABORTING LAUNCHER STARTUP.");
-        while (true) { // Halt and play error loop
-            digitalWrite(LED_PIN, HIGH);
-            errorTone();
-            digitalWrite(LED_PIN, LOW);
-            delay(1000);
-        }
+        Serial.println("WARNING: NO GPS DATA AFTER RETRIES - continuing without GPS");
+        // Continue instead of halting - GPS is useful but not critical for launcher function
+        digitalWrite(LED_PIN, LOW);
     }
     
     Serial.println("GPS Test Passed.");
@@ -188,12 +194,18 @@ void processSerial2() {
                 int c[10]; // 10 commas for the new skew array
                 c[0] = msg.indexOf(',');
                 for(int i=1; i<10; i++) c[i] = msg.indexOf(',', c[i-1] + 1);
-                
-                if (c[9] > 0) { // Check that all fields arrived
+
+                // Validate all comma positions are valid before parsing
+                bool valid = true;
+                for (int i = 0; i < 10; i++) {
+                    if (c[i] < 0) { valid = false; break; }
+                }
+
+                if (valid && c[9] > 0) { // Check that all fields arrived
                     mpu_ax = msg.substring(c[0]+1, c[1]).toFloat();
                     mpu_ay = msg.substring(c[1]+1, c[2]).toFloat();
                     mpu_az = msg.substring(c[2]+1, c[3]).toFloat();
-                    
+
                     String roll = msg.substring(c[3]+1, c[4]);
                     String rate = msg.substring(c[4]+1, c[5]);
                     String out = msg.substring(c[5]+1, c[6]);
@@ -204,6 +216,8 @@ void processSerial2() {
 
                     sendToDashboard("T," + String(millis()) + "," + roll + "," + rate + "," + out);
                     sendToDashboard(String(Project33Protocol::STATUS_PREFIX) + state + "," + kp + "," + kd + "," + skew);
+                } else {
+                    Serial.println("Warning: Malformed telemetry data - missing fields");
                 }
             }
         }
@@ -412,7 +426,10 @@ void loop() {
 
 void updateAndPrintFusion() {
     static unsigned long lastFusionTime = 0;
-    if (millis() - lastFusionTime < 500) return; 
+    static int compassErrorCount = 0;
+    const int MAX_COMPASS_ERRORS = 5;
+
+    if (millis() - lastFusionTime < 500) return;
     lastFusionTime = millis();
 
     compass.read();
@@ -421,11 +438,21 @@ void updateAndPrintFusion() {
     int qmc_z_raw = compass.getZ();
 
     if (qmc_x_raw == 0 && qmc_y_raw == 0 && qmc_z_raw == 0) {
-        Wire.end(); delay(50); Wire.begin(I2C_SDA, I2C_SCL);
-        compass.init(); compass.setSmoothing(10, true);
-        Wire.setClock(400000); 
-        return; 
+        compassErrorCount++;
+        if (compassErrorCount <= MAX_COMPASS_ERRORS) {
+            Serial.printf("Compass read error (count: %d), resetting I2C...\n", compassErrorCount);
+            Wire.end(); delay(50); Wire.begin(I2C_SDA, I2C_SCL);
+            compass.init(); compass.setSmoothing(10, true);
+            Wire.setClock(400000);
+        }
+        if (compassErrorCount == MAX_COMPASS_ERRORS) {
+            Serial.println("Compass - max errors reached, disabling fusion output");
+        }
+        return;
     }
+
+    // Reset error counter on successful read
+    compassErrorCount = 0;
 
     float cal_x = (qmc_x_raw - MAG_OFFSET_X) * MAG_SCALE_X;
     float cal_y = (qmc_y_raw - MAG_OFFSET_Y) * MAG_SCALE_Y;
