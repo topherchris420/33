@@ -1,4 +1,6 @@
 title: Project 33
 description: Low-cost folding-fin rocket system with ESP32 firmware, telemetry, CAD, and OpenRocket simulation artifacts.
 theme: jekyll-theme-primer
+baseurl: "/33"
+url: "https://topherchris420.github.io"
 # Force rebuild - updated 2026-07-03
