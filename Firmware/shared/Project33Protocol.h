@@ -19,5 +19,8 @@ namespace Project33Protocol {
     static constexpr const char* LOG_END = "LOG_END";
     static constexpr const char* CMD_ACK_LAUNCH_READY = "CMD_ACK:launch_ready";
     static constexpr const char* CMD_REJECT_LAUNCH_NOT_READY = "CMD_REJECT:launch_not_ready";
+    static constexpr const char* CMD_REJECT_DASHBOARD_LAUNCH_DISABLED = "CMD_REJECT:dashboard_launch_disabled";
+    static constexpr const char* CMD_REJECT_PID_INVALID = "CMD_REJECT:pid_invalid";
+    static constexpr const char* CMD_REJECT_UNKNOWN_COMMAND = "CMD_REJECT:unknown_command";
     static constexpr const char* ABORT_PREFIX = "ABORT:";
 }

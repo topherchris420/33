@@ -33,14 +33,14 @@ stateDiagram-v2
     SAFE --> ARMING: arm switch active
     ARMING --> READY: rocket READY received
     ARMING --> SAFE: timeout or switch reset
-    READY --> IGNITING: physical hold or accepted dashboard launch
+    READY --> IGNITING: physical hold or explicitly enabled dashboard launch
     READY --> SAFE: switch reset or heartbeat timeout
     IGNITING --> SAFE: rocket IGNITED ack or timeout
 ```
 
 Safety behavior:
 
-- UDP `launch` is accepted only in `READY`.
+- UDP `launch` is rejected by default. If `ENABLE_DASHBOARD_LAUNCH` is intentionally set true for an inert test, it is still accepted only in `READY`.
 - The arming switch must stay active after leaving `SAFE`.
 - Launcher aborts on rocket heartbeat timeout.
 - Abort reasons are relayed to the dashboard as raw log rows.

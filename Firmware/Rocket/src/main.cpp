@@ -8,6 +8,8 @@
 #include <Adafruit_MPU6050.h>
 #include <Adafruit_Sensor.h>
 #include <ESP32Servo.h>
+#include <math.h>
+#include <stdlib.h>
 #include "../../shared/Project33Protocol.h"
 
 const int RX2_PIN = 16;
@@ -31,6 +33,7 @@ const int MAX_DEFLECTION = 12;
 Servo igniteServo;
 Servo leftServo, rightServo, upServo, downServo;
 Adafruit_MPU6050 mpu;
+bool mpuHealthy = false;
 
 String sysState = "IDLE";
 float Kp = 0.5;
@@ -103,7 +106,24 @@ void dumpFlightLog() {
 
     Serial2.println(Project33Protocol::LOG_END);
 }
-void calibrateGyro() {
+
+void centerControlSurfaces() {
+    leftServo.write(LEFT_CENTER);
+    rightServo.write(RIGHT_CENTER);
+    upServo.write(UP_CENTER);
+    downServo.write(DOWN_CENTER);
+}
+
+bool calibrateGyro() {
+    if (!mpuHealthy) {
+        gyroX_offset = 0.0;
+        physical_skew_angle = 0.0;
+        roll = 0.0;
+        last_time = millis();
+        Serial.println("CALIBRATE skipped: MPU6050 unavailable");
+        return false;
+    }
+
     float sumGyroX = 0, sumAccY = 0, sumAccZ = 0;
     int samples = 200;
     for (int i = 0; i < samples; i++) {
@@ -120,6 +140,66 @@ void calibrateGyro() {
     physical_skew_angle = atan2(avgY, avgZ) * 180.0 / PI;
     roll = 0.0;
     last_time = millis();
+    return true;
+}
+
+bool parseBoundedFloat(const String &text, float &value) {
+    if (text.length() == 0 || text.length() >= 24) return false;
+
+    char buffer[24];
+    text.toCharArray(buffer, sizeof(buffer));
+    char *end = nullptr;
+    value = strtof(buffer, &end);
+
+    return end != buffer && *end == '\0' && isfinite(value) && value >= 0.0 && value <= 10.0;
+}
+
+bool isValidPidCommand(const String &command, float &newKp, float &newKd) {
+    int c1 = command.indexOf(',');
+    int c2 = command.indexOf(',', c1 + 1);
+    if (c1 <= 0 || c2 <= c1 + 1 || command.indexOf(',', c2 + 1) != -1) return false;
+
+    return parseBoundedFloat(command.substring(c1 + 1, c2), newKp) &&
+           parseBoundedFloat(command.substring(c2 + 1), newKd);
+}
+
+void processSerialCommands() {
+    while (Serial2.available()) {
+        char c = Serial2.read();
+        if (c == '\n') {
+            cmdBuffer.trim();
+            if (cmdBuffer == Project33Protocol::CMD_ARM && sysState == "IDLE" && mpuHealthy) {
+                sysState = "ARMED";
+                calibrateGyro();
+            }
+            else if (cmdBuffer == Project33Protocol::CMD_IGNITE && sysState == "ARMED" && mpuHealthy) {
+                sysState = "IGNITING";
+                igniteStartTime = millis();
+                igniteServo.write(IGNITE_SERVO_ON);
+            }
+            else if (cmdBuffer == Project33Protocol::CMD_CALIBRATE) {
+                calibrateGyro();
+            }
+            else if (cmdBuffer == Project33Protocol::CMD_DUMPLOG) {
+                dumpFlightLog();
+            }
+            else if (cmdBuffer.startsWith("PID,")) {
+                float newKp = 0.0;
+                float newKd = 0.0;
+                if (isValidPidCommand(cmdBuffer, newKp, newKd)) {
+                    Kp = newKp;
+                    Kd = newKd;
+                    Serial.printf("PID updated: Kp=%.2f, Kd=%.2f\n", Kp, Kd);
+                } else {
+                    Serial.printf("PID validation failed: %s\n", cmdBuffer.c_str());
+                    Serial2.println(Project33Protocol::CMD_REJECT_PID_INVALID);
+                }
+            }
+            cmdBuffer = "";
+        } else if (c != '\r') {
+            cmdBuffer += c;
+        }
+    }
 }
 
 void setup() {
@@ -129,13 +209,14 @@ void setup() {
     delay(1500);
     Wire.begin(21, 22);
     if (mpu.begin()) {
+        mpuHealthy = true;
         Serial.println("MPU6050 initialized successfully");
         mpu.setAccelerometerRange(MPU6050_RANGE_8_G);
         mpu.setGyroRange(MPU6050_RANGE_500_DEG);
         mpu.setFilterBandwidth(MPU6050_BAND_10_HZ);
     } else {
-        Serial.println("ERROR: MPU6050 not found - check wiring!");
-        // Continue anyway - might work with uncalibrated values
+        mpuHealthy = false;
+        Serial.println("ERROR: MPU6050 not found - staying IDLE and suppressing READY.");
     }
     ESP32PWM::allocateTimer(0);
     ESP32PWM::allocateTimer(1);
@@ -146,15 +227,21 @@ void setup() {
     rightServo.setPeriodHertz(50);  rightServo.attach(RIGHT_SERVO_PIN, 500, 2400);
     upServo.setPeriodHertz(50);     upServo.attach(UP_SERVO_PIN, 500, 2400);
     downServo.setPeriodHertz(50);   downServo.attach(DOWN_SERVO_PIN, 500, 2400);
-    leftServo.write(LEFT_CENTER);
-    rightServo.write(RIGHT_CENTER);
-    upServo.write(UP_CENTER);
-    downServo.write(DOWN_CENTER);
+    centerControlSurfaces();
     calibrateGyro();
 }
 
 void loop() {
     unsigned long current_time = millis();
+    processSerialCommands();
+
+    if (!mpuHealthy) {
+        centerControlSurfaces();
+        igniteServo.write(IGNITE_SERVO_OFF);
+        delay(20);
+        return;
+    }
+
     float dt = (current_time - last_time) / 1000.0;
     if (dt <= 0) dt = 0.001;
     last_time = current_time;
@@ -175,10 +262,7 @@ void loop() {
         upServo.write(UP_CENTER + servo_offset);
         downServo.write(DOWN_CENTER + servo_offset);
     } else {
-        leftServo.write(LEFT_CENTER);
-        rightServo.write(RIGHT_CENTER);
-        upServo.write(UP_CENTER);
-        downServo.write(DOWN_CENTER);
+        centerControlSurfaces();
         servo_offset = 0;
     }
 
@@ -201,35 +285,8 @@ void loop() {
         lastTelemetrySent = current_time;
     }
 
-    if (sysState == "IDLE" && (current_time - lastReadySent >= 1000)) {
+    if (sysState == "IDLE" && mpuHealthy && (current_time - lastReadySent >= 1000)) {
         Serial2.println(Project33Protocol::READY);
         lastReadySent = current_time;
-    }
-
-    while (Serial2.available()) {
-        char c = Serial2.read();
-        if (c == '\n') {
-            cmdBuffer.trim();
-            if (cmdBuffer == Project33Protocol::CMD_ARM && sysState == "IDLE") { sysState = "ARMED"; calibrateGyro(); }
-            else if (cmdBuffer == Project33Protocol::CMD_IGNITE && sysState == "ARMED") { sysState = "IGNITING"; igniteStartTime = millis(); igniteServo.write(IGNITE_SERVO_ON); }
-            else if (cmdBuffer == Project33Protocol::CMD_CALIBRATE) { calibrateGyro(); }
-            else if (cmdBuffer == Project33Protocol::CMD_DUMPLOG) { dumpFlightLog(); }
-            else if (cmdBuffer.startsWith("PID,")) {
-                int c1 = cmdBuffer.indexOf(','), c2 = cmdBuffer.indexOf(',', c1 + 1);
-                if (c1 > 0 && c2 > 0) {
-                    float newKp = cmdBuffer.substring(c1 + 1, c2).toFloat();
-                    float newKd = cmdBuffer.substring(c2 + 1).toFloat();
-                    // Validate PID values are reasonable
-                    if (newKp >= 0 && newKp <= 10 && newKd >= 0 && newKd <= 10) {
-                        Kp = newKp;
-                        Kd = newKd;
-                        Serial.printf("PID updated: Kp=%.2f, Kd=%.2f\n", Kp, Kd);
-                    } else {
-                        Serial.printf("PID validation failed: Kp=%.2f, Kd=%.2f (must be 0-10)\n", newKp, newKd);
-                    }
-                }
-            }
-            cmdBuffer = "";
-        } else if (c != '\r') { cmdBuffer += c; }
     }
 }

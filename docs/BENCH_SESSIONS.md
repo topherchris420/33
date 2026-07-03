@@ -14,6 +14,8 @@ Firmware/TestSessions/bench_YYYYMMDD_HHMMSS/
 
 These folders are ignored by git because they are raw lab output. For reports, copy the selected CSV, graph, and summary into a dated evidence folder or attach them directly to the project submission.
 
+Use [BENCH_EVIDENCE_TEMPLATE.md](BENCH_EVIDENCE_TEMPLATE.md) when promoting a local bench run into shareable evidence. The template is deliberately explicit about inert hardware, command rejections, and raw-file provenance so the repo does not accidentally imply unverified flight or live-propulsion results.
+
 ## Session Workflow
 
 1. Connect to the launcher WiFi AP.

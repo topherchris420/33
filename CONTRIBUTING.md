@@ -25,13 +25,12 @@ Thank you for your interest in contributing! This project demonstrates aerospace
    # OR
    .venv\Scripts\activate     # Windows
 
-   pip install -r Firmware/requirements.txt
-   pip install pytest
+   pip install -r Firmware/requirements-test.txt
    ```
 
 3. **Set up PlatformIO** (if building firmware)
    ```bash
-   pip install platformio
+   pip install -r Firmware/requirements-platformio.txt
    ```
 
 ## Running Tests

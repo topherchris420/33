@@ -6,13 +6,13 @@ The authoritative CAD source files are the Fusion 360 archives in `CAD Files/`. 
 
 | Assembly | CAD Source | Current Visual Evidence | Render Export Target |
 |----------|------------|-------------------------|----------------------|
-| Folding rocket | `CAD Files/Folding Rocket.f3z` | `Simulation/OpenRocket_3D_View.png`, `Simulation/Side View.png` | Add Fusion render of full folded/deployed assembly |
+| Folding rocket | `CAD Files/Folding Rocket.f3z` | `Simulation/OpenRocket_3D_View.png`, `Simulation/Side_View.png` | Add Fusion render of full folded/deployed assembly |
 | Launcher platform | `CAD Files/Launcher Platform.f3z` | CAD archive metadata confirms platform components | Add top/isometric Fusion render of switch, ESP32, and platform layout |
 | Rocket nozzle | `CAD Files/Rocket Nozzle.f3z` | CAD archive metadata confirms nozzle body files | Add sectioned Fusion render with throat/exit dimensions |
 
 ![OpenRocket 3D view](../Simulation/OpenRocket_3D_View.png)
 
-![OpenRocket side view](../Simulation/Side%20View.png)
+![OpenRocket side view](../Simulation/Side_View.png)
 
 ## Assembly Metadata Extracted From Fusion Archives
 
