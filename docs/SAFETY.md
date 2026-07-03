@@ -9,7 +9,7 @@ Project 33 is intended for inert bench validation, simulation, and supervised ed
 | Physical arming switch | Launcher firmware | Leaving `SAFE` requires the switch to be armed; switch reset aborts the sequence |
 | Rocket readiness handshake | Launcher + rocket firmware | Launcher waits for `READY` before entering `READY` state |
 | Heartbeat timeout | Launcher firmware | Launcher aborts if rocket telemetry stops in `READY` |
-| Dashboard launch gate | Launcher firmware | UDP `launch` is rejected unless launcher is already `READY` |
+| Dashboard launch gate | Launcher firmware | UDP `launch` is rejected by default; if firmware opt-in is enabled for an inert test, launcher must still be `READY` |
 | Rocket ignition gate | Rocket firmware | `IGNITE` is ignored unless rocket is already `ARMED` |
 | Abort logging | Launcher + dashboard | Abort reasons are sent to dashboard and captured in CSV logs |
 
@@ -32,5 +32,5 @@ Project 33 is intended for inert bench validation, simulation, and supervised ed
 6. Flip arming switch and verify launcher reaches `READY`.
 7. Confirm switch reset returns the system to `SAFE`.
 8. Run calibration with the rocket held still.
-9. Trigger a digital launch only with inert hardware connected.
+9. Confirm digital launch is rejected by default with inert hardware connected; enable it only for a separately reviewed inert test.
 10. Save the graph and keep the CSV file with the test notes.

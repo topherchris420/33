@@ -4,5 +4,5 @@
 # Note: tkinter is included with most Python installations.
 # On Debian/Ubuntu, install it via: sudo apt install python3-tk
 
-matplotlib>=3.5.0
-numpy>=1.21.0
+matplotlib==3.10.9
+numpy==2.2.6

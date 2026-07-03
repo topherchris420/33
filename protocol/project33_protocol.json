@@ -18,6 +18,9 @@
     "LOG_END": "LOG_END",
     "CMD_ACK_LAUNCH_READY": "CMD_ACK:launch_ready",
     "CMD_REJECT_LAUNCH_NOT_READY": "CMD_REJECT:launch_not_ready",
+    "CMD_REJECT_DASHBOARD_LAUNCH_DISABLED": "CMD_REJECT:dashboard_launch_disabled",
+    "CMD_REJECT_PID_INVALID": "CMD_REJECT:pid_invalid",
+    "CMD_REJECT_UNKNOWN_COMMAND": "CMD_REJECT:unknown_command",
     "ABORT_PREFIX": "ABORT:"
   },
   "messages": [
@@ -65,6 +68,21 @@
       "direction": "Launcher -> Dashboard",
       "format": "CMD_REJECT:launch_not_ready",
       "purpose": "Dashboard launch command rejected outside READY"
+    },
+    {
+      "direction": "Launcher -> Dashboard",
+      "format": "CMD_REJECT:dashboard_launch_disabled",
+      "purpose": "Dashboard launch command rejected because remote launch is disabled in firmware"
+    },
+    {
+      "direction": "Launcher -> Dashboard",
+      "format": "CMD_REJECT:pid_invalid",
+      "purpose": "Dashboard PID command rejected because values were malformed or outside the allowed range"
+    },
+    {
+      "direction": "Launcher -> Dashboard",
+      "format": "CMD_REJECT:unknown_command",
+      "purpose": "Dashboard command was not recognized by the launcher"
     }
   ]
 }

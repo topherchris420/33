@@ -12,11 +12,15 @@
 #include <QMC5883LCompass.h>
 #include <TinyGPS++.h>
 #include <Adafruit_BMP085.h>
+#include <math.h>
+#include <stdlib.h>
 #include "../../shared/Project33Protocol.h"
 
 const char* ssid = "ROCKET_LAUNCHER";
 const char* password = "launch_secure"; 
 const int udpPort = 4444;
+const int UDP_COMMAND_BUFFER_SIZE = 192;
+const bool ENABLE_DASHBOARD_LAUNCH = false;
 WiFiUDP udp;
 IPAddress dashboardIP;
 bool dashboardConnected = false;
@@ -43,6 +47,7 @@ QMC5883LCompass compass;
 TinyGPSPlus gps;
 HardwareSerial SerialGPS(1); // Use Hardware Serial 1 for GPS
 Adafruit_BMP085 bmp;
+bool bmpHealthy = false;
 
 // Environment Filter Variables
 float filteredAlt = 0.0;
@@ -115,10 +120,13 @@ void setup() {
     launcherServo.write(SERVO_OFF); 
 
     if (bmp.begin()) {
+        bmpHealthy = true;
         filteredAlt = bmp.readAltitude(); // Seed the filter
         Serial.println("BMP180 initialized.");
     } else {
-        Serial.println("Warning: BMP180 not found.");
+        bmpHealthy = false;
+        filteredAlt = 0.0;
+        Serial.println("Warning: BMP180 not found - altitude telemetry disabled.");
     }
 
     // --- GPS STARTUP CHECK ---
@@ -187,6 +195,9 @@ void processSerial2() {
         else if (msg.startsWith(Project33Protocol::LOG_PREFIX)) {
             sendToDashboard(msg);
         }
+        else if (msg.startsWith("CMD_REJECT:") || msg.startsWith(Project33Protocol::ABORT_PREFIX)) {
+            sendToDashboard(msg);
+        }
         else if (msg.startsWith(Project33Protocol::DATA_PREFIX) || msg.startsWith("ALIVE")) {
             lastHeartbeatTime = millis();
             
@@ -224,26 +235,51 @@ void processSerial2() {
     }
 }
 
+bool parseBoundedFloat(const String &text, float &value) {
+    if (text.length() == 0 || text.length() >= 24) return false;
+
+    char buffer[24];
+    text.toCharArray(buffer, sizeof(buffer));
+    char *end = nullptr;
+    value = strtof(buffer, &end);
+
+    return end != buffer && *end == '\0' && isfinite(value) && value >= 0.0 && value <= 10.0;
+}
+
+bool isValidPidCommand(const String &command) {
+    float kp = 0.0;
+    float kd = 0.0;
+    int c1 = command.indexOf(',');
+    int c2 = command.indexOf(',', c1 + 1);
+    if (c1 <= 0 || c2 <= c1 + 1 || command.indexOf(',', c2 + 1) != -1) return false;
+
+    return parseBoundedFloat(command.substring(c1 + 1, c2), kp) &&
+           parseBoundedFloat(command.substring(c2 + 1), kd);
+}
 void processUDP() {
     int packetSize = udp.parsePacket();
     if (packetSize) {
-        char buffer[packetSize + 1];
-        udp.read(buffer, packetSize);
-        buffer[packetSize] = '\0';
-        
+        char buffer[UDP_COMMAND_BUFFER_SIZE];
+        int bytesRead = udp.read(buffer, min(packetSize, UDP_COMMAND_BUFFER_SIZE - 1));
+        buffer[bytesRead] = '\0';
+
         String msg = String(buffer);
         msg.trim();
-        
+
+        IPAddress remote = udp.remoteIP();
         if (!dashboardConnected) {
-            dashboardIP = udp.remoteIP();
-            dashboardConnected = true;
             Serial.println("Dashboard Connected via WiFi!");
         }
+        dashboardIP = remote;
+        dashboardConnected = true;
 
         if (msg == "HELLO") {
-            dashboardIP = udp.remoteIP(); 
+            return;
         } else if (msg == Project33Protocol::DASHBOARD_LAUNCH) {
-            if (currentState == READY) {
+            if (!ENABLE_DASHBOARD_LAUNCH) {
+                udpLaunchTriggered = false;
+                sendToDashboard(Project33Protocol::CMD_REJECT_DASHBOARD_LAUNCH_DISABLED);
+            } else if (currentState == READY) {
                 udpLaunchTriggered = true;
                 sendToDashboard(Project33Protocol::CMD_ACK_LAUNCH_READY);
             } else {
@@ -255,7 +291,13 @@ void processUDP() {
         } else if (msg == Project33Protocol::DASHBOARD_DUMPLOG) {
             Serial2.println(Project33Protocol::CMD_DUMPLOG);
         } else if (msg.startsWith("PID,")) {
-            Serial2.println(msg); 
+            if (isValidPidCommand(msg)) {
+                Serial2.println(msg);
+            } else {
+                sendToDashboard(Project33Protocol::CMD_REJECT_PID_INVALID);
+            }
+        } else {
+            sendToDashboard(Project33Protocol::CMD_REJECT_UNKNOWN_COMMAND);
         }
     }
 }
@@ -398,8 +440,10 @@ void loop() {
         lastEnvSend = millis();
         
         // Simple EMA Filter for BMP Altitude
-        float newAlt = bmp.readAltitude();
-        filteredAlt = (ALT_ALPHA * newAlt) + ((1.0 - ALT_ALPHA) * filteredAlt);
+        if (bmpHealthy) {
+            float newAlt = bmp.readAltitude();
+            filteredAlt = (ALT_ALPHA * newAlt) + ((1.0 - ALT_ALPHA) * filteredAlt);
+        }
         
         float lat = 0.0, lon = 0.0;
         int gpsState = 0; // 0=Red(No NMEA), 1=Orange(Searching), 2=Green(Fix)

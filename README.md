@@ -13,9 +13,9 @@ Project 33 is an aerospace prototype showing that useful aerospace engineering p
 - Folding-fin / canard rocket concept modeled in OpenRocket and Fusion 360.
 - ESP32 rocket flight computer for MPU6050 roll sensing and servo output.
 - ESP32 launcher ground station with WiFi AP, UART relay, GPS, compass, barometer, arming controls, LED, buzzer, and launch interlock.
-- Python dashboard for telemetry plots, PID tuning, calibration commands, launch commands, automatic per-session CSV logs, graph exports, summaries, and PID comparison reports.
+- Python dashboard for telemetry plots, PID tuning, calibration commands, a disabled-by-default launch command path, automatic per-session CSV logs, graph exports, summaries, and PID comparison reports.
 - Reproducible tests that keep wiring docs synchronized with firmware constants.
-- Safety gates that reject dashboard launch commands unless the launcher is already READY and reject rocket ignition unless the rocket is ARMED.
+- Safety gates that reject dashboard launch commands by default, require an intentional firmware opt-in plus launcher READY for remote launch, and reject rocket ignition unless the rocket is ARMED.
 - Rocket-side RAM ring-buffer logging that can be dumped after RF/dashboard telemetry interruptions.
 
 ## System Architecture
@@ -81,9 +81,9 @@ GitHub Actions runs the Python checks and both PlatformIO builds on push and pul
 
 ## Current Evidence
 
-![Side view](Simulation/Side%20View.png)
+![Side view](Simulation/Side_View.png)
 
-![Stability graph](Simulation/Stability%20Graph.png)
+![Stability graph](Simulation/Stability_Graph.png)
 
 The repo currently includes simulation artifacts, CAD archives, firmware, dashboard code, and automated checks. The next grading-quality evidence to add is selected bench-test output from `Firmware/TestSessions/`, plus Fusion render exports/photos listed in [docs/CAD_ASSEMBLIES.md](docs/CAD_ASSEMBLIES.md).
 

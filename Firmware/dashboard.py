@@ -242,7 +242,7 @@ class TelemetryApp:
             messagebox.showerror("Error", f"Failed to send '{cmd}':\n{e}")
 
     def send_launch_command(self):
-        if messagebox.askyesno("CONFIRM LAUNCH", "WARNING: This bypasses the physical launch button.\nEnsure Launcher is Armed and READY.\n\nProceed to IGNITE?"):
+        if messagebox.askyesno("CONFIRM LAUNCH", "Firmware rejects dashboard launch by default unless ENABLE_DASHBOARD_LAUNCH is intentionally enabled for an inert test.\nEnsure launcher is Armed and READY.\n\nSend launch request?"):
             self._send_udp_command("launch")
 
     def send_calibrate_command(self):
