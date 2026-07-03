@@ -1,0 +1,42 @@
+name: Safety-impacting change
+description: Request review for changes touching arming, launch, ignition, actuator, or command-gate behavior.
+title: "[Safety Review]: "
+labels: ["safety", "review"]
+body:
+  - type: textarea
+    id: change
+    attributes:
+      label: Change summary
+      description: What safety-critical behavior would change?
+    validations:
+      required: true
+  - type: textarea
+    id: hazard
+    attributes:
+      label: Hazard analysis
+      description: Describe the unsafe states considered and how the design fails closed.
+    validations:
+      required: true
+  - type: textarea
+    id: evidence
+    attributes:
+      label: Required evidence before merge
+      description: List automated tests, firmware builds, inert bench checks, and documentation updates.
+    validations:
+      required: true
+  - type: textarea
+    id: rollback
+    attributes:
+      label: Rollback path
+      description: How can this be disabled or reverted if bench behavior is wrong?
+    validations:
+      required: true
+  - type: checkboxes
+    id: boundary
+    attributes:
+      label: Boundary acknowledgement
+      options:
+        - label: This review is for inert bench validation unless separately approved under qualified supervision and local rules.
+          required: true
+        - label: Dashboard launch remains disabled by default unless this review explicitly argues otherwise.
+          required: true

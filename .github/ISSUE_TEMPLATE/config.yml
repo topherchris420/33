@@ -1,0 +1,8 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Safety and responsible disclosure
+    url: https://github.com/topherchris420/33/security
+    about: Use private disclosure for safety-critical bypasses or security-sensitive command paths.
+  - name: Project status
+    url: https://github.com/topherchris420/33/blob/main/docs/PROJECT_STATUS.md
+    about: Check current readiness, limitations, and evidence gaps before opening a broad request.

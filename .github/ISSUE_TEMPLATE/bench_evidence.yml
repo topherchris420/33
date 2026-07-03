@@ -1,0 +1,57 @@
+name: Bench evidence submission
+description: Propose adding or updating inert bench-session evidence.
+title: "[Evidence]: "
+labels: ["evidence", "documentation"]
+body:
+  - type: input
+    id: session
+    attributes:
+      label: Session ID
+      description: Use the dashboard session folder name when available.
+      placeholder: bench_YYYYMMDD_HHMMSS
+    validations:
+      required: true
+  - type: textarea
+    id: objective
+    attributes:
+      label: Test objective
+      description: What engineering question did this session answer?
+    validations:
+      required: true
+  - type: textarea
+    id: inert_config
+    attributes:
+      label: Inert hardware configuration
+      description: Describe propulsion/ignition state, disconnected actuators, power limits, and reset method.
+    validations:
+      required: true
+  - type: textarea
+    id: files
+    attributes:
+      label: Evidence files
+      description: List telemetry CSV, graph, PID report, summary, photos, or video stills.
+      placeholder: |
+        - telemetry.csv:
+        - graph.png:
+        - pid-comparison.md:
+        - session-summary.md:
+    validations:
+      required: true
+  - type: textarea
+    id: results
+    attributes:
+      label: Results and limitations
+      description: Include what happened, what did not happen, anomalies, and anything not measured.
+    validations:
+      required: true
+  - type: checkboxes
+    id: required_checks
+    attributes:
+      label: Required checks
+      options:
+        - label: Evidence uses docs/BENCH_EVIDENCE_TEMPLATE.md.
+          required: true
+        - label: The run was inert and does not imply a flight-test result.
+          required: true
+        - label: Raw-file provenance is included.
+          required: true

@@ -1,0 +1,58 @@
+name: Bug report
+description: Report a reproducible firmware, dashboard, docs, or CI issue.
+title: "[Bug]: "
+labels: ["bug"]
+body:
+  - type: dropdown
+    id: area
+    attributes:
+      label: Area
+      options:
+        - Rocket firmware
+        - Launcher firmware
+        - Dashboard / Python tools
+        - CAD / simulation
+        - Documentation
+        - CI / tests
+    validations:
+      required: true
+  - type: textarea
+    id: summary
+    attributes:
+      label: Summary
+      description: What failed, and what did you expect instead?
+    validations:
+      required: true
+  - type: textarea
+    id: reproduce
+    attributes:
+      label: Reproduction steps
+      placeholder: |
+        1. Run ...
+        2. Observe ...
+        3. Expected ...
+    validations:
+      required: true
+  - type: textarea
+    id: evidence
+    attributes:
+      label: Evidence
+      description: Attach command output, log rows, screenshots, photos, or CSV snippets. Redact anything sensitive.
+    validations:
+      required: false
+  - type: textarea
+    id: environment
+    attributes:
+      label: Environment
+      placeholder: OS, Python version, PlatformIO version, board, firmware commit.
+    validations:
+      required: true
+  - type: checkboxes
+    id: safety
+    attributes:
+      label: Safety check
+      options:
+        - label: This report does not provide unsafe live-propulsion instructions.
+          required: true
+        - label: Hardware tests, if any, were inert bench tests.
+          required: false

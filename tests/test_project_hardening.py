@@ -91,3 +91,74 @@ def test_bench_evidence_template_is_checked_in():
     assert "Inert hardware configuration" in text
     assert "Dashboard command rejection" in text
     assert "Do not fabricate" in text
+
+
+def test_public_docs_present_professional_status_and_boundaries():
+    readme = _read("README.md")
+    index = _read("index.md")
+    status = _read("docs/PROJECT_STATUS.md")
+    roadmap = _read("docs/ROADMAP.md")
+
+    assert "bench-validation prototype" in readme
+    assert "[Project Status](docs/PROJECT_STATUS.md)" in readme
+    assert "[Roadmap](docs/ROADMAP.md)" in readme
+    assert "not a flight-tested system" in index
+    assert "No flight-test claim" in status
+    assert "Do not fabricate or imply flight" in status
+    assert "Stage 2: Inert Bench Evidence" in roadmap
+
+
+def test_github_templates_collect_safety_and_evidence_context():
+    pr_template = _read(".github/PULL_REQUEST_TEMPLATE.md")
+    assert "Safety Impact" in pr_template
+    assert "Evidence Added or Updated" in pr_template
+    assert "Not Tested" in pr_template
+
+    expected_templates = [
+        ".github/ISSUE_TEMPLATE/bug_report.yml",
+        ".github/ISSUE_TEMPLATE/bench_evidence.yml",
+        ".github/ISSUE_TEMPLATE/engineering_proposal.yml",
+        ".github/ISSUE_TEMPLATE/safety_review.yml",
+    ]
+    for path in expected_templates:
+        assert (ROOT / path).exists(), f"Missing issue form: {path}"
+
+    config = _read(".github/ISSUE_TEMPLATE/config.yml")
+    bench = _read(".github/ISSUE_TEMPLATE/bench_evidence.yml")
+    safety = _read(".github/ISSUE_TEMPLATE/safety_review.yml")
+
+    assert "blank_issues_enabled: false" in config
+    assert "Inert hardware configuration" in bench
+    assert "Raw-file provenance" in bench
+    assert "safety-critical behavior" in safety
+    assert "Dashboard launch remains disabled by default" in safety
+
+
+def test_security_policy_routes_sensitive_safety_reports():
+    security = _read("SECURITY.md")
+
+    assert "Responsible Disclosure and Safety Reports" in security
+    assert "bypass arming, launch, ignition, actuator, or interlock gates" in security
+    assert "does not authorize live propulsion or flight activity" in security
+
+
+def test_front_facing_docs_avoid_informal_placeholder_language():
+    public_paths = [
+        "README.md",
+        "index.md",
+        "CONTRIBUTING.md",
+        "SECURITY.md",
+        "docs/CAD_ASSEMBLIES.md",
+        "docs/PROJECT_STATUS.md",
+        "docs/ROADMAP.md",
+    ]
+    informal_terms = ["billion-dollar", "knockoff", " lol", "-_-", "one-off demo"]
+    failures = []
+
+    for path in public_paths:
+        text = _read(path).lower()
+        for term in informal_terms:
+            if term in text:
+                failures.append(f"{path}: {term}")
+
+    assert failures == []
