@@ -20,9 +20,9 @@ The authoritative CAD source files are the Fusion 360 archives in `CAD Files/`. 
 
 Archive: `CAD Files/Folding Rocket.f3z`
 
-Fusion metadata names these referenced components:
+Fusion metadata identifies these referenced components:
 
-- `Folding Rocket REDO -_-`
+- Folding rocket assembly
 - `MPU6050 v2`
 - `mg996R_v2`
 - `SG90 - Micro Servo 9g - Tower Pro.1`
@@ -51,11 +51,11 @@ Material plan:
 
 Archive: `CAD Files/Launcher Platform.f3z`
 
-Fusion metadata names these referenced components:
+Fusion metadata identifies these referenced components:
 
 - `ESP32 WROOM WIth Socket Headers`
 - `Microswitch_P-B1729`
-- `Stinger knockoff lol`
+- Launcher rail/stinger component
 - `Tactal Switch -THru (6mmx 6mmx5mm)-Red`
 - `XL601 Power Switch v4`
 

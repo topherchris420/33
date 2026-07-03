@@ -1,34 +1,39 @@
-## Description
+## Purpose
 
-Please include a summary of the change and which issue is fixed (if applicable).
+Explain why this change is needed and what reviewer-facing claim it supports.
 
-## Type of change
+## Scope
 
-- [ ] Bug fix (non-breaking change which fixes an issue)
-- [ ] New feature (non-breaking change which adds functionality)
-- [ ] Documentation update
-- [ ] Refactoring (no functional changes)
-- [ ] Other: [describe]
+- [ ] Firmware
+- [ ] Dashboard / Python tools
+- [ ] CAD / simulation assets
+- [ ] Documentation
+- [ ] CI / tests
+- [ ] Safety boundary or command gating
 
-## Testing
+## Safety Impact
 
-Please describe the testing you performed:
+- Does this alter arming, launch, ignition, servo motion, command validation, or interlock behavior?
+- If yes, describe the changed gate, the failure mode considered, and the rollback path.
+- If no, write `No safety-impacting behavior changed`.
 
-- [ ] Python tests pass: `python -m pytest tests Firmware/tests -q`
-- [ ] Protocol check passes: `python tools/generate_protocol.py --check`
-- [ ] Firmware builds: `pio run -d Firmware/Rocket && pio run -d Firmware/Launcher`
-- [ ] Manual testing on hardware (if applicable)
+## Evidence Added or Updated
 
-## Checklist
+List the source, test, CI, bench-session, image, CAD, or documentation artifacts that support this change.
 
-- [ ] My code follows the style guidelines of this project
-- [ ] I have performed a self-review of my own code
-- [ ] I have commented my code, particularly in hard-to-understand areas
-- [ ] I have made corresponding changes to the documentation
-- [ ] My changes generate no new warnings
-- [ ] I have added tests that prove my fix is effective or that my feature works
-- [ ] New and existing unit tests pass locally with my changes
+## Verification
 
-## Additional context
+- [ ] Protocol check: `python tools/generate_protocol.py --check`
+- [ ] Python tests: `python -m pytest tests Firmware/tests -q`
+- [ ] Rocket firmware build: `pio run -d Firmware/Rocket`
+- [ ] Launcher firmware build: `pio run -d Firmware/Launcher`
+- [ ] Manual inert bench test, if applicable
+- [ ] Documentation links and images checked
 
-Add any other context about the pull request here.
+## Not Tested
+
+List known gaps honestly. Use `None` only when every relevant check above was performed.
+
+## Reviewer Notes
+
+Call out anything that deserves extra attention: assumptions, risk, hardware dependency, generated files, or evidence that should not be over-interpreted.
