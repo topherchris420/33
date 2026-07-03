@@ -129,9 +129,13 @@ void setup() {
     delay(1500);
     Wire.begin(21, 22);
     if (mpu.begin()) {
+        Serial.println("MPU6050 initialized successfully");
         mpu.setAccelerometerRange(MPU6050_RANGE_8_G);
         mpu.setGyroRange(MPU6050_RANGE_500_DEG);
         mpu.setFilterBandwidth(MPU6050_BAND_10_HZ);
+    } else {
+        Serial.println("ERROR: MPU6050 not found - check wiring!");
+        // Continue anyway - might work with uncalibrated values
     }
     ESP32PWM::allocateTimer(0);
     ESP32PWM::allocateTimer(1);
@@ -212,7 +216,18 @@ void loop() {
             else if (cmdBuffer == Project33Protocol::CMD_DUMPLOG) { dumpFlightLog(); }
             else if (cmdBuffer.startsWith("PID,")) {
                 int c1 = cmdBuffer.indexOf(','), c2 = cmdBuffer.indexOf(',', c1 + 1);
-                if (c1 > 0 && c2 > 0) { Kp = cmdBuffer.substring(c1 + 1, c2).toFloat(); Kd = cmdBuffer.substring(c2 + 1).toFloat(); }
+                if (c1 > 0 && c2 > 0) {
+                    float newKp = cmdBuffer.substring(c1 + 1, c2).toFloat();
+                    float newKd = cmdBuffer.substring(c2 + 1).toFloat();
+                    // Validate PID values are reasonable
+                    if (newKp >= 0 && newKp <= 10 && newKd >= 0 && newKd <= 10) {
+                        Kp = newKp;
+                        Kd = newKd;
+                        Serial.printf("PID updated: Kp=%.2f, Kd=%.2f\n", Kp, Kd);
+                    } else {
+                        Serial.printf("PID validation failed: Kp=%.2f, Kd=%.2f (must be 0-10)\n", newKp, newKd);
+                    }
+                }
             }
             cmdBuffer = "";
         } else if (c != '\r') { cmdBuffer += c; }
