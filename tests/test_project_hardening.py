@@ -73,6 +73,20 @@ def test_launcher_rejects_invalid_or_unknown_dashboard_commands():
     assert "Project33Protocol::CMD_REJECT_UNKNOWN_COMMAND" in launcher
 
 
+def test_launcher_udp_requires_shared_secret_dashboard_hello():
+    launcher = _read("Firmware/Launcher/src/main.cpp")
+    dashboard = _read("Firmware/dashboard.py")
+
+    assert "DASHBOARD_AUTH_TOKEN" in launcher
+    assert "DASHBOARD_AUTH_TOKEN" in dashboard
+    assert "HELLO," in launcher
+    assert 'f"HELLO,{DASHBOARD_AUTH_TOKEN}"' in dashboard
+    assert "isAuthenticatedDashboard(remote)" in launcher
+    assert "if (!isAuthenticatedDashboard(remote))" in launcher
+    assert 'msg == "HELLO"' not in launcher
+    assert "ENABLE_DASHBOARD_LAUNCH = false" in launcher
+
+
 def test_firmware_fails_closed_when_sensors_are_missing():
     rocket = _read("Firmware/Rocket/src/main.cpp")
     launcher = _read("Firmware/Launcher/src/main.cpp")
