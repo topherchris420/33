@@ -274,6 +274,8 @@ void loop() {
 
     if (sysState == "IGNITING" && (current_time - igniteStartTime > 2500)) {
         igniteServo.write(IGNITE_SERVO_OFF);
+        // Bench note: FLIGHT state reflects actuation commanded, not confirmed ignition;
+        // do not treat this timer-only transition as live propulsion telemetry.
         sysState = "FLIGHT";
         Serial2.println(Project33Protocol::IGNITED);
     }

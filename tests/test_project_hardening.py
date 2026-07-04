@@ -93,6 +93,13 @@ def test_rocket_serial_command_buffer_is_bounded():
     assert "cmdBuffer = \"\";" in rocket
 
 
+def test_rocket_ignition_transition_documents_bench_semantics():
+    rocket = _read("Firmware/Rocket/src/main.cpp")
+
+    assert "FLIGHT state reflects actuation commanded, not confirmed ignition" in rocket
+    assert "live propulsion" in rocket
+
+
 def test_bench_evidence_template_is_checked_in():
     template = ROOT / "docs" / "BENCH_EVIDENCE_TEMPLATE.md"
     assert template.exists()
