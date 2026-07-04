@@ -6,7 +6,78 @@ Generates true airfoil profiles for CFD preparation, replacing flat-plate geomet
 Target Environment: Autodesk Fusion 360 Python API
 """
 
-import adsk.core, adsk.fusion, traceback, math
+import math
+import traceback
+
+try:
+    import adsk.core
+    import adsk.fusion
+except ImportError:  # Allows CI to test the geometry without Fusion 360.
+    adsk = None
+
+
+def naca_4digit_coordinates(m, p, t, c, num_points=50):
+    """
+    Return upper/lower NACA 4-digit profile coordinates in millimeters.
+
+    m: Max camber as a fraction of chord (0.0 for symmetric stabilizer)
+    p: Location of max camber as a fraction of chord
+    t: Max thickness as a fraction of chord (0.12 for NACA 0012)
+    c: Chord length in meters (0.060 for 60 mm)
+    """
+    if num_points < 2:
+        raise ValueError("num_points must be at least 2")
+    if c <= 0:
+        raise ValueError("chord length must be positive")
+    if t <= 0:
+        raise ValueError("thickness must be positive")
+    if m < 0 or p < 0 or p >= 1:
+        raise ValueError("camber parameters must be within valid NACA bounds")
+    if m > 0 and p == 0:
+        raise ValueError("non-zero camber requires a positive camber location")
+
+    upper, lower = [], []
+    for i in range(num_points + 1):
+        # Cosine spacing for higher point density near the leading and trailing edges.
+        x_norm = (1 - math.cos(math.pi * i / num_points)) / 2
+        x_chord = x_norm * c
+
+        yt = 5 * t * c * (
+            0.2969 * math.sqrt(x_norm)
+            - 0.1260 * x_norm
+            - 0.3516 * x_norm**2
+            + 0.2843 * x_norm**3
+            - 0.1015 * x_norm**4
+        )
+
+        if m > 0 and p > 0:
+            if x_norm < p:
+                yc = (m * c / p**2) * (2 * p * x_norm - x_norm**2)
+                dyc_dx = (2 * m / p**2) * (p - x_norm)
+            else:
+                yc = (m * c / (1 - p) ** 2) * ((1 - 2 * p) + 2 * p * x_norm - x_norm**2)
+                dyc_dx = (2 * m / (1 - p) ** 2) * (p - x_norm)
+        else:
+            yc = 0.0
+            dyc_dx = 0.0
+
+        theta = math.atan(dyc_dx)
+        upper.append(
+            (
+                (x_chord - yt * math.sin(theta)) * 1000,
+                (yc + yt * math.cos(theta)) * 1000,
+                0,
+            )
+        )
+        lower.append(
+            (
+                (x_chord + yt * math.sin(theta)) * 1000,
+                (yc - yt * math.cos(theta)) * 1000,
+                0,
+            )
+        )
+
+    return upper, lower
 
 def naca_4digit_airfoil(m, p, t, c, num_points=50):
     """
@@ -15,23 +86,12 @@ def naca_4digit_airfoil(m, p, t, c, num_points=50):
     t: Max thickness as a fraction of chord (e.g., 0.12 for NACA 0012)
     c: Chord length in meters (e.g., 0.060 for 60mm)
     """
-    upper, lower = [], []
-    for i in range(num_points + 1):
-        # Cosine spacing for CFD boundary layer accuracy
-        x = (1 - math.cos(math.pi * i / num_points)) / 2 
-        
-        # Standard NACA 4-digit thickness distribution
-        yt = 5 * t * c * (0.2969 * math.sqrt(x) - 0.1260 * x - 0.3516 * x**2 + 0.2843 * x**3 - 0.1015 * x**4)
-        
-        # Camber calculations (kept minimal for tail fins, but structurally included)
-        yc = 0
-        if p > 0 and m > 0:
-            yc = m * c * ((1/p**2) * (2*p*x - x**2)) if x < p else m * c * ((1-2*p) + 2*p*x - x**2) / ((1-p)**2)
-            
-        # Scale to mm for Fusion 360
-        upper.append(adsk.core.Point3D.create(x * 1000, (yc + yt) * 1000, 0))
-        lower.append(adsk.core.Point3D.create(x * 1000, (yc - yt) * 1000, 0))
-        
+    if adsk is None:
+        raise RuntimeError("Autodesk Fusion 360 API is required to create Point3D objects")
+
+    upper_coords, lower_coords = naca_4digit_coordinates(m, p, t, c, num_points)
+    upper = [adsk.core.Point3D.create(x / 10.0, y / 10.0, z / 10.0) for x, y, z in upper_coords]
+    lower = [adsk.core.Point3D.create(x / 10.0, y / 10.0, z / 10.0) for x, y, z in lower_coords]
     return upper, lower
 
 def run(context):

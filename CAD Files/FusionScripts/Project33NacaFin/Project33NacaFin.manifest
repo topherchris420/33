@@ -1,0 +1,12 @@
+{
+  "autodeskProduct": "Fusion",
+  "type": "script",
+  "id": "3c516224-bcd4-4e68-b898-9d6ffdb3a62b",
+  "author": "Vers3Dynamics",
+  "description": {
+    "": "Generate a Project 33 NACA 0012 fin profile sketch for CAD review."
+  },
+  "version": "1.0.0",
+  "supportedOS": "windows|mac",
+  "editEnabled": true
+}

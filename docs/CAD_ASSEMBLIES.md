@@ -34,10 +34,19 @@ Known dimensions from repository artifacts:
 
 | Dimension | Value | Source |
 |-----------|-------|--------|
-| NACA fin chord | 60 mm | `CAD Files/naca_fin_generator.py` |
-| Airfoil family | NACA 0012 | `CAD Files/naca_fin_generator.py` |
+| NACA fin chord | 60 mm | `CAD Files/naca_fin_generator.py`, `tests/test_naca_fin_generator.py` |
+| Airfoil family | NACA 0012 | `CAD Files/naca_fin_generator.py`, `tests/test_naca_fin_generator.py` |
 | Servo center range | 80-115 degrees by axis | `docs/WIRING.md` |
 | Control deflection limit | +/-12 degrees | `Firmware/Rocket/src/main.cpp` |
+
+Fusion script package:
+
+| Item | Path | Purpose |
+|------|------|---------|
+| Script package | `CAD Files/FusionScripts/Project33NacaFin/` | Fusion-discoverable script folder with matching `.py` and `.manifest` names |
+| Install helper | `tools/install_fusion_script.py` | Copies `Project33NacaFin` and the tested geometry module into Fusion's API Scripts folder |
+
+Run `python tools/install_fusion_script.py`, then open Fusion and run `Project33NacaFin` from **Utilities -> Scripts and Add-Ins**. The script creates a CAD-only NACA 0012, 60 mm fin profile sketch for review.
 
 Material plan:
 

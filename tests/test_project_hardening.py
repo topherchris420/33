@@ -108,6 +108,28 @@ def test_public_docs_present_professional_status_and_boundaries():
     assert "Stage 2: Inert Bench Evidence" in roadmap
 
 
+def test_paper_alignment_keeps_research_claims_inside_safety_boundary():
+    readme = _read("README.md")
+    index = _read("index.md")
+    paper_alignment = _read("docs/PAPER_ALIGNMENT.md")
+
+    assert "[Paper Alignment](docs/PAPER_ALIGNMENT.md)" in readme
+    assert "[Paper integration and evidence traceability](docs/PAPER_ALIGNMENT.md)" in index
+    assert "inert bench-validation prototype" in paper_alignment
+    assert "does not create a flight-readiness or live-propulsion claim" in paper_alignment
+    assert "enable dashboard launch by default" in paper_alignment
+    assert "NACA 4-digit fin profile generation" in paper_alignment
+
+
+def test_docs_explain_fusion_script_install_path():
+    readme = _read("README.md")
+    cad_docs = _read("docs/CAD_ASSEMBLIES.md")
+
+    assert "tools/install_fusion_script.py" in readme
+    assert "Project33NacaFin" in cad_docs
+    assert "Scripts and Add-Ins" in cad_docs
+
+
 def test_github_templates_collect_safety_and_evidence_context():
     pr_template = _read(".github/PULL_REQUEST_TEMPLATE.md")
     assert "Safety Impact" in pr_template

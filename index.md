@@ -52,6 +52,7 @@ Shareable evidence should use [the bench evidence template](docs/BENCH_EVIDENCE_
 ## Project Documents
 
 - [Project status and readiness matrix](docs/PROJECT_STATUS.md)
+- [Paper integration and evidence traceability](docs/PAPER_ALIGNMENT.md)
 - [Validation roadmap](docs/ROADMAP.md)
 - [Architecture](docs/ARCHITECTURE.md)
 - [Generated protocol reference](docs/PROTOCOL.md)

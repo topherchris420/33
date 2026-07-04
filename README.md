@@ -9,7 +9,7 @@ Project 33 is a low-cost aerospace engineering testbed for a folding-fin/canard 
 
 Current status: **bench-validation prototype**. The repository documents simulation, CAD, firmware, dashboard tooling, and safety gates; it does not claim flight-test results.
 
-[Live project page](https://topherchris420.github.io/33/) | [Project Status](docs/PROJECT_STATUS.md) | [Architecture](docs/ARCHITECTURE.md) | [Protocol](docs/PROTOCOL.md) | [Wiring](docs/WIRING.md) | [Bench Sessions](docs/BENCH_SESSIONS.md) | [Roadmap](docs/ROADMAP.md) | [Safety](docs/SAFETY.md) | [BOM](docs/BOM.md)
+[Live project page](https://topherchris420.github.io/33/) | [Project Status](docs/PROJECT_STATUS.md) | [Paper Alignment](docs/PAPER_ALIGNMENT.md) | [Architecture](docs/ARCHITECTURE.md) | [Protocol](docs/PROTOCOL.md) | [Wiring](docs/WIRING.md) | [Bench Sessions](docs/BENCH_SESSIONS.md) | [Roadmap](docs/ROADMAP.md) | [Safety](docs/SAFETY.md) | [BOM](docs/BOM.md)
 
 ![OpenRocket 3D model](Simulation/OpenRocket_3D_View.png)
 
@@ -99,6 +99,16 @@ python Firmware/dashboard.py
 ```
 
 When the dashboard starts, it creates a session folder in `Firmware/TestSessions/` containing `telemetry.csv`, `graph.png`, `pid-comparison.md`, and `session-summary.md`. That folder is ignored by git so raw bench runs do not pollute commits.
+
+### Fusion 360 CAD Script
+
+Install the Project 33 NACA fin script into Fusion's API Scripts folder:
+
+```bash
+python tools/install_fusion_script.py
+```
+
+Then open Fusion 360 and run `Project33NacaFin` from **Utilities -> Scripts and Add-Ins**.
 
 GitHub Actions runs the Python checks and both PlatformIO builds on push and pull request.
 
