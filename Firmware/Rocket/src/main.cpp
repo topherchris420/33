@@ -39,6 +39,7 @@ String sysState = "IDLE";
 float Kp = 0.5;
 float Kd = 0.2;
 String cmdBuffer = "";
+const size_t MAX_SERIAL_COMMAND_LENGTH = 64;
 
 float roll = 0;
 float gyroX_offset = 0;
@@ -197,6 +198,11 @@ void processSerialCommands() {
             }
             cmdBuffer = "";
         } else if (c != '\r') {
+            if (cmdBuffer.length() >= MAX_SERIAL_COMMAND_LENGTH) {
+                Serial.println("WARNING: Serial command buffer exceeded; dropping partial command.");
+                cmdBuffer = "";
+                continue;
+            }
             cmdBuffer += c;
         }
     }

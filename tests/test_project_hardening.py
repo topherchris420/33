@@ -84,6 +84,15 @@ def test_firmware_fails_closed_when_sensors_are_missing():
     assert "if (bmpHealthy)" in launcher
 
 
+def test_rocket_serial_command_buffer_is_bounded():
+    rocket = _read("Firmware/Rocket/src/main.cpp")
+
+    assert "MAX_SERIAL_COMMAND_LENGTH = 64" in rocket
+    assert "cmdBuffer.length() >= MAX_SERIAL_COMMAND_LENGTH" in rocket
+    assert "Serial.println(\"WARNING: Serial command buffer exceeded; dropping partial command.\")" in rocket
+    assert "cmdBuffer = \"\";" in rocket
+
+
 def test_bench_evidence_template_is_checked_in():
     template = ROOT / "docs" / "BENCH_EVIDENCE_TEMPLATE.md"
     assert template.exists()
