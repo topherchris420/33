@@ -74,11 +74,13 @@ Pin assignments are aligned with the current firmware constants in `Firmware/Roc
 | Ignition Servo | 19       | SG90 Micro Servo   | Launcher-side interlock   |
 
 ### WiFi Configuration
+Launcher AP credentials are read from `Firmware/Launcher/src/wifi_config.h`. Create it by copying `Firmware/Launcher/src/wifi_config.h.example`, then set the local bench SSID and password before building Launcher firmware. The local header is ignored by git.
+
 | Parameter  | Value                 |
 |------------|-----------------------|
 | Mode       | SoftAP (Access Point) |
-| SSID       | `ROCKET_LAUNCHER`     |
-| Password   | `launch_secure`       |
+| SSID       | `WIFI_AP_SSID`        |
+| Password   | `WIFI_AP_PASSWORD`    |
 | IP Address | 192.168.4.1           |
 | UDP Port   | 4444                  |
 
@@ -110,7 +112,7 @@ The generated protocol reference is [PROTOCOL.md](PROTOCOL.md).
 | Launcher -> Dashboard | `STATUS:<state>,<Kp>,<Kd>,<skew>` | `STATUS:FLIGHT,0.5,0.2,1.3` |
 | Launcher -> Dashboard | `ENV,<lat>,<lon>,<alt>,<gps_state>` | `ENV,34.1467,-118.3885,200.5,2` |
 | Launcher -> Dashboard | `[FUSION] Hdg: <deg> \| Pitch: <deg>` | `[FUSION] Hdg: 104.5 \| Pitch: +02.1` |
-| Dashboard -> Launcher | `HELLO` | `HELLO` |
+| Dashboard -> Launcher | `HELLO,<token>` | `HELLO,<DASHBOARD_AUTH_TOKEN>` |
 | Dashboard -> Launcher | `PID,<Kp>,<Kd>` | `PID,0.8,0.3` |
 | Dashboard -> Launcher | `launch` | `launch` |
 | Dashboard -> Launcher | `calibrate` | `calibrate` |

@@ -15,11 +15,12 @@
 #include <math.h>
 #include <stdlib.h>
 #include "../../shared/Project33Protocol.h"
+#include "wifi_config.h"
 
-const char* ssid = "ROCKET_LAUNCHER";
-const char* password = "launch_secure"; 
 const int udpPort = 4444;
 const int UDP_COMMAND_BUFFER_SIZE = 192;
+const char* DASHBOARD_AUTH_TOKEN = "project33_bench_token";
+const char* DASHBOARD_HELLO_PREFIX = "HELLO,";
 const bool ENABLE_DASHBOARD_LAUNCH = false;
 WiFiUDP udp;
 IPAddress dashboardIP;
@@ -97,7 +98,7 @@ void setup() {
     SerialGPS.begin(9600, SERIAL_8N1, GPS_RX_PIN, -1);
 
     Serial.println("Starting WiFi Access Point...");
-    WiFi.softAP(ssid, password);
+    WiFi.softAP(WIFI_AP_SSID, WIFI_AP_PASSWORD);
     IPAddress IP = WiFi.softAPIP();
     Serial.print("AP IP address: ");
     Serial.println(IP);
@@ -256,6 +257,15 @@ bool isValidPidCommand(const String &command) {
     return parseBoundedFloat(command.substring(c1 + 1, c2), kp) &&
            parseBoundedFloat(command.substring(c2 + 1), kd);
 }
+
+bool isAuthenticatedDashboard(IPAddress remote) {
+    return dashboardConnected && remote == dashboardIP;
+}
+
+bool isValidDashboardHello(const String &msg) {
+    return msg == String(DASHBOARD_HELLO_PREFIX) + DASHBOARD_AUTH_TOKEN;
+}
+
 void processUDP() {
     int packetSize = udp.parsePacket();
     if (packetSize) {
@@ -267,15 +277,26 @@ void processUDP() {
         msg.trim();
 
         IPAddress remote = udp.remoteIP();
-        if (!dashboardConnected) {
-            Serial.println("Dashboard Connected via WiFi!");
-        }
-        dashboardIP = remote;
-        dashboardConnected = true;
 
-        if (msg == "HELLO") {
+        if (msg.startsWith(DASHBOARD_HELLO_PREFIX)) {
+            if (isValidDashboardHello(msg)) {
+                if (!isAuthenticatedDashboard(remote)) {
+                    Serial.println("Dashboard Connected via WiFi!");
+                }
+                dashboardIP = remote;
+                dashboardConnected = true;
+            } else {
+                Serial.println("Rejected UDP dashboard HELLO with invalid token.");
+            }
             return;
-        } else if (msg == Project33Protocol::DASHBOARD_LAUNCH) {
+        }
+
+        if (!isAuthenticatedDashboard(remote)) {
+            Serial.println("Ignoring UDP packet from unauthenticated dashboard source.");
+            return;
+        }
+
+        if (msg == Project33Protocol::DASHBOARD_LAUNCH) {
             if (!ENABLE_DASHBOARD_LAUNCH) {
                 udpLaunchTriggered = false;
                 sendToDashboard(Project33Protocol::CMD_REJECT_DASHBOARD_LAUNCH_DISABLED);

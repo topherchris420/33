@@ -51,5 +51,7 @@ jobs:
           python -m pip install -r Firmware/requirements-platformio.txt
       - name: Build rocket firmware
         run: pio run -d Firmware/Rocket
+      - name: Prepare launcher WiFi config
+        run: cp Firmware/Launcher/src/wifi_config.h.example Firmware/Launcher/src/wifi_config.h
       - name: Build launcher firmware
         run: pio run -d Firmware/Launcher

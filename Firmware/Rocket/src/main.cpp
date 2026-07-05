@@ -29,6 +29,8 @@ const int RIGHT_CENTER = 80;
 const int UP_CENTER = 80;
 const int DOWN_CENTER = 115;
 const int MAX_DEFLECTION = 12;
+const float ROLL_COMPLEMENTARY_GYRO_WEIGHT = 0.98;
+const float ROLL_COMPLEMENTARY_ACCEL_WEIGHT = 0.02;
 
 Servo igniteServo;
 Servo leftServo, rightServo, upServo, downServo;
@@ -39,6 +41,7 @@ String sysState = "IDLE";
 float Kp = 0.5;
 float Kd = 0.2;
 String cmdBuffer = "";
+const size_t MAX_SERIAL_COMMAND_LENGTH = 64;
 
 float roll = 0;
 float gyroX_offset = 0;
@@ -197,6 +200,11 @@ void processSerialCommands() {
             }
             cmdBuffer = "";
         } else if (c != '\r') {
+            if (cmdBuffer.length() >= MAX_SERIAL_COMMAND_LENGTH) {
+                Serial.println("WARNING: Serial command buffer exceeded; dropping partial command.");
+                cmdBuffer = "";
+                continue;
+            }
             cmdBuffer += c;
         }
     }
@@ -251,7 +259,9 @@ void loop() {
 
     float raw_rate_rad = g.gyro.x - gyroX_offset;
     float rate_deg_s = raw_rate_rad * 180.0 / PI;
-    roll += rate_deg_s * dt;
+    float accel_roll_deg = atan2(a.acceleration.y, a.acceleration.z) * 180.0 / PI - physical_skew_angle;
+    float gyro_roll_deg = roll + (rate_deg_s * dt);
+    roll = (ROLL_COMPLEMENTARY_GYRO_WEIGHT * gyro_roll_deg) + (ROLL_COMPLEMENTARY_ACCEL_WEIGHT * accel_roll_deg);
 
     float output = (Kp * roll) + (Kd * rate_deg_s);
     int servo_offset = constrain((int)output, -MAX_DEFLECTION, MAX_DEFLECTION);
@@ -268,6 +278,8 @@ void loop() {
 
     if (sysState == "IGNITING" && (current_time - igniteStartTime > 2500)) {
         igniteServo.write(IGNITE_SERVO_OFF);
+        // Bench note: FLIGHT state reflects actuation commanded, not confirmed ignition;
+        // do not treat this timer-only transition as live propulsion telemetry.
         sysState = "FLIGHT";
         Serial2.println(Project33Protocol::IGNITED);
     }

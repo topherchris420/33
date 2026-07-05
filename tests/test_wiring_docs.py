@@ -15,12 +15,6 @@ def _int_constant(source: str, name: str) -> int:
     return int(match.group(1))
 
 
-def _string_constant(source: str, name: str) -> str:
-    match = re.search(rf'const\s+char\*\s+{name}\s*=\s*"([^"]+)"\s*;', source)
-    assert match, f"Missing string constant {name}"
-    return match.group(1)
-
-
 def test_wiring_reference_matches_launcher_source():
     launcher = _read("Firmware/Launcher/src/main.cpp")
     wiring = _read("docs/WIRING.md")
@@ -39,7 +33,7 @@ def test_wiring_reference_matches_launcher_source():
             f"{label} should document GPIO {pin}"
         )
 
-    assert f"| Password   | `{_string_constant(launcher, 'password')}`" in wiring
+    assert "Firmware/Launcher/src/wifi_config.h" in wiring
 
 
 def test_wiring_reference_matches_rocket_source():

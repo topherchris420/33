@@ -48,6 +48,7 @@ def test_ci_uses_pinned_python_and_platformio_requirements():
     assert "Firmware/requirements-test.txt" in workflow
     assert "Firmware/requirements-platformio.txt" in workflow
     assert "actions/cache@v4" in workflow
+    assert "cp Firmware/Launcher/src/wifi_config.h.example Firmware/Launcher/src/wifi_config.h" in workflow
 
     assert "pytest==" in _read("Firmware/requirements-test.txt")
     assert "platformio==" in _read("Firmware/requirements-platformio.txt")
@@ -73,6 +74,41 @@ def test_launcher_rejects_invalid_or_unknown_dashboard_commands():
     assert "Project33Protocol::CMD_REJECT_UNKNOWN_COMMAND" in launcher
 
 
+def test_launcher_udp_requires_shared_secret_dashboard_hello():
+    launcher = _read("Firmware/Launcher/src/main.cpp")
+    dashboard = _read("Firmware/dashboard.py")
+
+    assert "DASHBOARD_AUTH_TOKEN" in launcher
+    assert "DASHBOARD_AUTH_TOKEN" in dashboard
+    assert "HELLO," in launcher
+    assert 'f"HELLO,{DASHBOARD_AUTH_TOKEN}"' in dashboard
+    assert "isAuthenticatedDashboard(remote)" in launcher
+    assert "if (!isAuthenticatedDashboard(remote))" in launcher
+    assert 'msg == "HELLO"' not in launcher
+    assert "ENABLE_DASHBOARD_LAUNCH = false" in launcher
+
+
+def test_launcher_wifi_credentials_use_ignored_config_header():
+    launcher = _read("Firmware/Launcher/src/main.cpp")
+    gitignore = _read(".gitignore")
+    readme = _read("README.md")
+    wiring = _read("docs/WIRING.md")
+    example_path = ROOT / "Firmware" / "Launcher" / "src" / "wifi_config.h.example"
+
+    assert '#include "wifi_config.h"' in launcher
+    assert "WIFI_AP_SSID" in launcher
+    assert "WIFI_AP_PASSWORD" in launcher
+    assert "launch_secure" not in launcher
+    assert "Firmware/Launcher/src/wifi_config.h" in gitignore
+    assert example_path.exists()
+
+    example = example_path.read_text(encoding="utf-8")
+    assert "const char* WIFI_AP_SSID" in example
+    assert "const char* WIFI_AP_PASSWORD" in example
+    assert "wifi_config.h.example" in readme
+    assert "wifi_config.h" in wiring
+
+
 def test_firmware_fails_closed_when_sensors_are_missing():
     rocket = _read("Firmware/Rocket/src/main.cpp")
     launcher = _read("Firmware/Launcher/src/main.cpp")
@@ -82,6 +118,33 @@ def test_firmware_fails_closed_when_sensors_are_missing():
     assert 'cmdBuffer == Project33Protocol::CMD_ARM && sysState == "IDLE" && mpuHealthy' in rocket
     assert "bool bmpHealthy = false;" in launcher
     assert "if (bmpHealthy)" in launcher
+
+
+def test_rocket_serial_command_buffer_is_bounded():
+    rocket = _read("Firmware/Rocket/src/main.cpp")
+
+    assert "MAX_SERIAL_COMMAND_LENGTH = 64" in rocket
+    assert "cmdBuffer.length() >= MAX_SERIAL_COMMAND_LENGTH" in rocket
+    assert "Serial.println(\"WARNING: Serial command buffer exceeded; dropping partial command.\")" in rocket
+    assert "cmdBuffer = \"\";" in rocket
+
+
+def test_rocket_ignition_transition_documents_bench_semantics():
+    rocket = _read("Firmware/Rocket/src/main.cpp")
+
+    assert "FLIGHT state reflects actuation commanded, not confirmed ignition" in rocket
+    assert "live propulsion" in rocket
+
+
+def test_rocket_roll_estimate_uses_complementary_filter():
+    rocket = _read("Firmware/Rocket/src/main.cpp")
+
+    assert "ROLL_COMPLEMENTARY_GYRO_WEIGHT = 0.98" in rocket
+    assert "ROLL_COMPLEMENTARY_ACCEL_WEIGHT = 0.02" in rocket
+    assert "float accel_roll_deg = atan2(a.acceleration.y, a.acceleration.z) * 180.0 / PI - physical_skew_angle;" in rocket
+    assert "float gyro_roll_deg = roll + (rate_deg_s * dt);" in rocket
+    assert "roll = (ROLL_COMPLEMENTARY_GYRO_WEIGHT * gyro_roll_deg) + (ROLL_COMPLEMENTARY_ACCEL_WEIGHT * accel_roll_deg);" in rocket
+    assert "roll += rate_deg_s * dt;" not in rocket
 
 
 def test_bench_evidence_template_is_checked_in():

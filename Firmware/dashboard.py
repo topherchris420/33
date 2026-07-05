@@ -28,6 +28,7 @@ UDP_PORT = 4444
 BUFFER_SIZE = 1024
 VIEW_POINTS = 100   
 RATE_SCALE = 0.25   
+DASHBOARD_AUTH_TOKEN = "project33_bench_token"
 
 LAUNCHER_GATEWAY = "192.168.4.1" 
 
@@ -271,7 +272,7 @@ class TelemetryApp:
         while self.running:
             try:
                 with socket.socket(socket.AF_INET, socket.SOCK_DGRAM) as sock:
-                    sock.sendto(b"HELLO", (LAUNCHER_GATEWAY, UDP_PORT))
+                    sock.sendto(f"HELLO,{DASHBOARD_AUTH_TOKEN}".encode('utf-8'), (LAUNCHER_GATEWAY, UDP_PORT))
             except OSError as e:
                 logger.warning("Watchdog UDP failed: %s", e)
             except Exception as e:
