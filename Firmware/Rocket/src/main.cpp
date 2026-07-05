@@ -29,6 +29,8 @@ const int RIGHT_CENTER = 80;
 const int UP_CENTER = 80;
 const int DOWN_CENTER = 115;
 const int MAX_DEFLECTION = 12;
+const float ROLL_COMPLEMENTARY_GYRO_WEIGHT = 0.98;
+const float ROLL_COMPLEMENTARY_ACCEL_WEIGHT = 0.02;
 
 Servo igniteServo;
 Servo leftServo, rightServo, upServo, downServo;
@@ -257,7 +259,9 @@ void loop() {
 
     float raw_rate_rad = g.gyro.x - gyroX_offset;
     float rate_deg_s = raw_rate_rad * 180.0 / PI;
-    roll += rate_deg_s * dt;
+    float accel_roll_deg = atan2(a.acceleration.y, a.acceleration.z) * 180.0 / PI - physical_skew_angle;
+    float gyro_roll_deg = roll + (rate_deg_s * dt);
+    roll = (ROLL_COMPLEMENTARY_GYRO_WEIGHT * gyro_roll_deg) + (ROLL_COMPLEMENTARY_ACCEL_WEIGHT * accel_roll_deg);
 
     float output = (Kp * roll) + (Kd * rate_deg_s);
     int servo_offset = constrain((int)output, -MAX_DEFLECTION, MAX_DEFLECTION);

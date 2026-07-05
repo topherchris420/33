@@ -135,6 +135,17 @@ def test_rocket_ignition_transition_documents_bench_semantics():
     assert "live propulsion" in rocket
 
 
+def test_rocket_roll_estimate_uses_complementary_filter():
+    rocket = _read("Firmware/Rocket/src/main.cpp")
+
+    assert "ROLL_COMPLEMENTARY_GYRO_WEIGHT = 0.98" in rocket
+    assert "ROLL_COMPLEMENTARY_ACCEL_WEIGHT = 0.02" in rocket
+    assert "float accel_roll_deg = atan2(a.acceleration.y, a.acceleration.z) * 180.0 / PI - physical_skew_angle;" in rocket
+    assert "float gyro_roll_deg = roll + (rate_deg_s * dt);" in rocket
+    assert "roll = (ROLL_COMPLEMENTARY_GYRO_WEIGHT * gyro_roll_deg) + (ROLL_COMPLEMENTARY_ACCEL_WEIGHT * accel_roll_deg);" in rocket
+    assert "roll += rate_deg_s * dt;" not in rocket
+
+
 def test_bench_evidence_template_is_checked_in():
     template = ROOT / "docs" / "BENCH_EVIDENCE_TEMPLATE.md"
     assert template.exists()
