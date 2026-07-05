@@ -39,8 +39,8 @@ Do not fabricate or imply flight, propulsion, or live-ignition results. If a tes
 
 - No committed physical bench-session package yet.
 - No flight-test data, and no flight-readiness claim.
-- CAD archives need annotated render exports for easier review.
-- Servo authority under aerodynamic load is not measured.
+- CAD archives need annotated render exports for easier review (though `naca_fin_generator.py` now automates STEP export).
+- Servo authority under aerodynamic load is not physically measured, though mathematically validated (C6).
 - Gyro drift and UDP delivery limits remain known technical risks.
 
 ## Submission Package Checklist

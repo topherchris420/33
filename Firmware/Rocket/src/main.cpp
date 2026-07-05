@@ -11,6 +11,7 @@
 #include <math.h>
 #include <stdlib.h>
 #include "../../shared/Project33Protocol.h"
+#include "deploy_isr.h"
 
 const int RX2_PIN = 16;
 const int TX2_PIN = 17;
@@ -213,6 +214,7 @@ void processSerialCommands() {
 void setup() {
     Serial.begin(115200);
     Serial2.begin(115200, SERIAL_8N1, RX2_PIN, TX2_PIN);
+    init_project_33_deploy_system();
     Serial2.setTimeout(20);
     delay(1500);
     Wire.begin(21, 22);
