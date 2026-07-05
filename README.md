@@ -79,6 +79,14 @@ python -m pytest tests Firmware/tests -q
 
 ### Firmware
 
+Before building the Launcher firmware, create the local WiFi AP config header:
+
+```bash
+cp Firmware/Launcher/src/wifi_config.h.example Firmware/Launcher/src/wifi_config.h
+```
+
+Edit `Firmware/Launcher/src/wifi_config.h` with the bench AP SSID and password for your hardware. The local header is ignored by git.
+
 ```bash
 pio run -d Firmware/Rocket
 pio run -d Firmware/Launcher

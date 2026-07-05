@@ -10,3 +10,4 @@ Firmware/TelemetryLogs/
 venv/
 env/
 Firmware/TestSessions/
+Firmware/Launcher/src/wifi_config.h

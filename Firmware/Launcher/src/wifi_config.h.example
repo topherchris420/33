@@ -1,0 +1,4 @@
+#pragma once
+
+const char* WIFI_AP_SSID = "ROCKET_LAUNCHER";
+const char* WIFI_AP_PASSWORD = "change_me_for_bench";

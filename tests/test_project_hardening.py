@@ -87,6 +87,27 @@ def test_launcher_udp_requires_shared_secret_dashboard_hello():
     assert "ENABLE_DASHBOARD_LAUNCH = false" in launcher
 
 
+def test_launcher_wifi_credentials_use_ignored_config_header():
+    launcher = _read("Firmware/Launcher/src/main.cpp")
+    gitignore = _read(".gitignore")
+    readme = _read("README.md")
+    wiring = _read("docs/WIRING.md")
+    example_path = ROOT / "Firmware" / "Launcher" / "src" / "wifi_config.h.example"
+
+    assert '#include "wifi_config.h"' in launcher
+    assert "WIFI_AP_SSID" in launcher
+    assert "WIFI_AP_PASSWORD" in launcher
+    assert "launch_secure" not in launcher
+    assert "Firmware/Launcher/src/wifi_config.h" in gitignore
+    assert example_path.exists()
+
+    example = example_path.read_text(encoding="utf-8")
+    assert "const char* WIFI_AP_SSID" in example
+    assert "const char* WIFI_AP_PASSWORD" in example
+    assert "wifi_config.h.example" in readme
+    assert "wifi_config.h" in wiring
+
+
 def test_firmware_fails_closed_when_sensors_are_missing():
     rocket = _read("Firmware/Rocket/src/main.cpp")
     launcher = _read("Firmware/Launcher/src/main.cpp")

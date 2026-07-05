@@ -15,9 +15,8 @@
 #include <math.h>
 #include <stdlib.h>
 #include "../../shared/Project33Protocol.h"
+#include "wifi_config.h"
 
-const char* ssid = "ROCKET_LAUNCHER";
-const char* password = "launch_secure"; 
 const int udpPort = 4444;
 const int UDP_COMMAND_BUFFER_SIZE = 192;
 const char* DASHBOARD_AUTH_TOKEN = "project33_bench_token";
@@ -99,7 +98,7 @@ void setup() {
     SerialGPS.begin(9600, SERIAL_8N1, GPS_RX_PIN, -1);
 
     Serial.println("Starting WiFi Access Point...");
-    WiFi.softAP(ssid, password);
+    WiFi.softAP(WIFI_AP_SSID, WIFI_AP_PASSWORD);
     IPAddress IP = WiFi.softAPIP();
     Serial.print("AP IP address: ");
     Serial.println(IP);
