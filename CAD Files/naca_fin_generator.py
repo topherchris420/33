@@ -125,3 +125,32 @@ def run(context):
     except:
         if ui:
             ui.messageBox('Failed:\n{}'.format(traceback.format_exc()))
+
+def export_step(profile_upper, profile_lower, path, span=60.0, sweep_deg=0.0):
+    import cadquery as cq
+    # Create polyline points
+    pts = [(p[0], p[1]) for p in profile_upper]
+    pts += [(p[0], p[1]) for p in reversed(profile_lower[1:-1])]
+    
+    if sweep_deg == 0.0:
+        shape = cq.Workplane("XY").polyline(pts).close().extrude(span)
+    else:
+        dx = span * math.tan(math.radians(sweep_deg))
+        path_wire = cq.Workplane("XZ").moveTo(0, 0).lineTo(dx, span)
+        shape = cq.Workplane("XY").polyline(pts).close().sweep(path_wire)
+        
+    cq.exporters.export(shape, str(path))
+
+def sweep(params_list, output_dir):
+    import os
+    os.makedirs(output_dir, exist_ok=True)
+    for p in params_list:
+        t = p.get('t', 0.12)
+        c = p.get('c', 0.060)
+        sweep_deg = p.get('sweep_deg', 0.0)
+        span = p.get('span', 60.0)
+        
+        upper, lower = naca_4digit_coordinates(0.0, 0.0, t, c, num_points=50)
+        filename = os.path.join(output_dir, f"naca00{int(t*100)}_c{int(c*1000)}_s{int(sweep_deg)}.step")
+        export_step(upper, lower, filename, span=span, sweep_deg=sweep_deg)
+

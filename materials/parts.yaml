@@ -1,0 +1,21 @@
+parts:
+  - name: Body Tube
+    subsystem: airframe
+    volume_cm3: 15.2
+    baseline_material: 7075-T6
+    optimized_material: CFRP_quasi_iso
+  - name: Nose Cone
+    subsystem: airframe
+    volume_cm3: 12.5
+    baseline_material: PLA
+    optimized_material: PLA
+  - name: Fin (x4)
+    subsystem: fin
+    volume_cm3: 3.4
+    baseline_material: 7075-T6
+    optimized_material: CFRP_quasi_iso
+  - name: Hinge Pin (x4)
+    subsystem: hinge_pin
+    volume_cm3: 0.15
+    baseline_material: 7075-T6
+    optimized_material: Ti-6Al-4V

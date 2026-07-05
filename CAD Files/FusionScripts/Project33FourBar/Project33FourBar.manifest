@@ -1,0 +1,10 @@
+{
+    "autodeskProduct":  "Fusion360",
+    "type":  "script",
+    "author":  "Vers3Dynamics",
+    "description":  {
+        "":  "Project 33 parametric four-bar mechanism generator."
+    },
+    "supportedOS":  "windows|mac",
+    "editEnabled":  true
+}

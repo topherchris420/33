@@ -82,3 +82,35 @@ def test_fusion_point_generator_converts_millimeters_to_fusion_centimeters():
 
     assert upper[-1][0] == pytest.approx(6.0)
     assert lower[-1][0] == pytest.approx(6.0)
+
+def test_naca_00xx_symmetry_error():
+    generator = _load_generator()
+    upper, lower = generator.naca_4digit_coordinates(0.0, 0.0, 0.12, 0.060, num_points=50)
+    for u, l in zip(upper, lower):
+        assert abs(u[1] + l[1]) < 1e-9
+
+def test_step_export_roundtrips(tmp_path):
+    import cadquery as cq
+    generator = _load_generator()
+    upper, lower = generator.naca_4digit_coordinates(0.0, 0.0, 0.12, 0.060, num_points=50)
+    
+    step_file = tmp_path / "test_fin.step"
+    generator.export_step(upper, lower, str(step_file), span=60.0)
+    
+    assert step_file.exists()
+    
+    imported = cq.importers.importStep(str(step_file))
+    faces = imported.faces().vals()
+    assert len(faces) > 0
+
+def test_sweep_produces_unique_files(tmp_path):
+    generator = _load_generator()
+    params = [
+        {'t': 0.10, 'c': 0.050, 'sweep_deg': 0.0},
+        {'t': 0.12, 'c': 0.060, 'sweep_deg': 15.0},
+        {'t': 0.15, 'c': 0.070, 'sweep_deg': 30.0}
+    ]
+    generator.sweep(params, str(tmp_path))
+    
+    files = list(tmp_path.glob("*.step"))
+    assert len(files) == 3

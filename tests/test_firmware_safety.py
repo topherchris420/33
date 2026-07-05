@@ -31,3 +31,12 @@ def test_firmware_exposes_onboard_log_dump_command():
     assert 'msg == Project33Protocol::DASHBOARD_DUMPLOG' in launcher
     assert "Serial2.println(Project33Protocol::CMD_DUMPLOG);" in launcher
     assert 'msg.startsWith(Project33Protocol::LOG_PREFIX)' in launcher
+
+def test_deploy_isr_integration():
+    rocket = _read("Firmware/Rocket/src/main.cpp")
+    isr_cpp = _read("Firmware/Rocket/src/deploy_isr.cpp")
+    
+    assert '#include "deploy_isr.h"' in rocket
+    assert 'init_project_33_deploy_system();' in rocket
+    assert 'IRAM_ATTR' in isr_cpp
+    assert 'fins_deployed' in isr_cpp
