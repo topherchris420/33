@@ -48,6 +48,7 @@ def test_ci_uses_pinned_python_and_platformio_requirements():
     assert "Firmware/requirements-test.txt" in workflow
     assert "Firmware/requirements-platformio.txt" in workflow
     assert "actions/cache@v4" in workflow
+    assert "cp Firmware/Launcher/src/wifi_config.h.example Firmware/Launcher/src/wifi_config.h" in workflow
 
     assert "pytest==" in _read("Firmware/requirements-test.txt")
     assert "platformio==" in _read("Firmware/requirements-platformio.txt")
