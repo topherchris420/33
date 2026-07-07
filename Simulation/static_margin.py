@@ -101,9 +101,12 @@ def parse_ork(ork_path):
     for nc in root.findall('.//nosecone'):
         L_n = get_val(nc, 'length', L_n)
         
-    for fin in root.findall('.//freeformfinset'):
-        # Just grab root chord if possible, else rely on defaults
-        pass
+    for fin in root.findall('.//trapezoidfinset'):
+        C_R = get_val(fin, 'rootchord', C_R)
+        C_T = get_val(fin, 'tipchord', C_T)
+        S = get_val(fin, 'height', S)
+        L_f = get_val(fin, 'sweeplength', L_f)
+        X_f = get_val(fin, 'position', X_f)
         
     return {
         'd_ref': d_ref, 'L_n': L_n, 'X_f': X_f,
@@ -134,6 +137,11 @@ def generate_reports(csv_path, plot_path, ork_path=None):
         m_dry = ork_geom['m_dry']
         cg_dry = ork_geom['cg_dry']
         R = d_ref / 2
+        X_f = ork_geom['X_f']
+        C_R = ork_geom['C_R']
+        C_T = ork_geom['C_T']
+        S = ork_geom['S']
+        L_f = ork_geom['L_f']
         
     cp = barrowman_cp(L_n, d, 0, d, d, 0, L_f, 0, X_f, C_R, C_T, S, R)
     
@@ -153,12 +161,19 @@ def generate_reports(csv_path, plot_path, ork_path=None):
             
     # Write MD
     md_path = Path(csv_path).parent / "C5_static_margin.md"
+    min_sm = np.min(sm_t)
+    max_sm = np.max(sm_t)
+    if min_sm >= 1.5 and max_sm <= 2.0:
+        validation_text = "This validates the design window requirement throughout the entire propulsion phase."
+    else:
+        validation_text = f"FAIL: The static margin falls outside the 1.5-2.0 cal window (min={min_sm:.2f}, max={max_sm:.2f})."
+        
     md_path.write_text(
         "# C5 — Static margin / 1.5–2.0 caliber window\n\n"
         "**Paper claim:** The physical aerodynamic design targets a safe static margin (SM) between 1.5 and 2.0 calibers.\n\n"
         "**Recomputed result:**\n"
-        f"Barrowman computation using motor Estes C6-5, launch mass {m_dry+m_motor_wet:.3f} kg, confirms SM ∈ [{np.min(sm_t):.2f}, {np.max(sm_t):.2f}] cal.\n"
-        "This validates the design window requirement throughout the entire propulsion phase.\n\n"
+        f"Barrowman computation using motor Estes C6-5, launch mass {m_dry+m_motor_wet:.3f} kg, confirms SM ∈ [{min_sm:.2f}, {max_sm:.2f}] cal.\n"
+        f"{validation_text}\n\n"
         "**Artifact paths:**\n"
         f"- {csv_path}\n"
         f"- {plot_path}\n\n"
