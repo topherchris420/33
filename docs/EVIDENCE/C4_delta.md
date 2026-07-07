@@ -1,4 +1,4 @@
-﻿# C4 â€” Material substitution matrix
+# C4 — Material substitution matrix
 
 **Paper claim:** Material optimization (quasi-isotropic CFRP, Ti-6Al-4V) yields a 30-40% total mass reduction compared to the baseline 3D printed/aluminum assembly.
 
@@ -18,4 +18,4 @@ Mass Reduction: 36.0%
 - `docs/EVIDENCE/C4_mass_baseline.csv`
 - `docs/EVIDENCE/C4_mass_optimized.csv`
 
-*Deterministic computation â€” no physical measurement*
+*Deterministic computation — no physical measurement*
