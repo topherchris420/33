@@ -1,4 +1,4 @@
-# C3 — NACA 4-digit generator with STEP export
+﻿# C3 â€” NACA 4-digit generator with STEP export
 
 **Paper claim:** The fin parametric generator replaces basic flat-plate assumptions with true NACA 4-digit profiles (e.g., NACA 0012) suitable for CFD, and exports them as STEP.
 
@@ -9,4 +9,4 @@ The `naca_fin_generator.py` script has been updated to generate true NACA coordi
 - `CAD Files/naca_fin_generator.py`
 - (Generated `.step` files would be output to `docs/EVIDENCE/` during full runs)
 
-*Code implementation — validated via pytest*
+*Code implementation â€” validated via pytest*

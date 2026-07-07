@@ -1,4 +1,4 @@
-# C8 � Hinge-pin Factor of Safety
+﻿# C8 — Hinge-pin Factor of Safety
 
 **Paper claim:** The Ti-6Al-4V hinge pin maintains a F.S. > 1.5 under worst-case 50g axial deployment shock.
 

@@ -1,6 +1,6 @@
-# C7 — Deployment reliability 99.9%
+﻿# C7 â€” Deployment reliability 99.9%
 
-**Paper claim:** Monte Carlo simulation of deployment dynamics with manufactured tolerances yields ≥ 99.9% reliability.
+**Paper claim:** Monte Carlo simulation of deployment dynamics with manufactured tolerances yields â‰¥ 99.9% reliability.
 
 **Recomputed result:**
 Trials: 10000

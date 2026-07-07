@@ -1,4 +1,4 @@
-# C8 — Composite layup (CLT)
+﻿# C8 â€” Composite layup (CLT)
 
 **Paper claim:** The fin uses a [0/45/90/-45]s quasi-isotropic CFRP layup to match or exceed aluminum stiffness at lower mass.
 
