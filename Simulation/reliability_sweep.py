@@ -120,6 +120,10 @@ def run_monte_carlo(num_trials=10000, seed=33, output_dir=None):
             writer.writerows(failures)
             
         md_path = Path(output_dir) / "C7_reliability.md"
+        if success_rate >= 0.999:
+            verdict = "The deterministic seeded simulation confirms the reliability exceeds the 99.9% threshold."
+        else:
+            verdict = f"FAIL: The success rate {success_rate*100:.2f}% is below the 99.9% threshold."
         md_path.write_text(
             "# C7 — Deployment reliability 99.9%\n\n"
             "**Paper claim:** Monte Carlo simulation of deployment dynamics with manufactured tolerances yields ≥ 99.9% reliability.\n\n"
@@ -127,7 +131,7 @@ def run_monte_carlo(num_trials=10000, seed=33, output_dir=None):
             f"Trials: {num_trials}\n"
             f"Successes: {successes}\n"
             f"Success Rate: {success_rate * 100:.2f}%\n\n"
-            "The deterministic seeded simulation confirms the reliability exceeds the 99.9% threshold.\n\n"
+            f"{verdict}\n\n"
             "**Artifact paths:**\n"
             f"- {csv_path}\n",
             encoding="utf-8"

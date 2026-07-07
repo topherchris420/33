@@ -99,6 +99,14 @@ def generate_reports(clt_csv_path, fos_md_path):
         
     # C8 CLT MD
     clt_md_path = Path(clt_csv_path).parent / "C8_clt.md"
+    al_E = 69.0  # 6061-T6 GPa
+    if Ex >= al_E:
+        clt_verdict = f"The quasi-isotropic CFRP layup achieves {Ex:.2f} GPa, exceeding 6061-T6 aluminum ({al_E} GPa)."
+    else:
+        clt_verdict = (f"The quasi-isotropic CFRP layup achieves {Ex:.2f} GPa, which is below "
+                       f"6061-T6 aluminum ({al_E} GPa). The paper claim of matching or exceeding "
+                       f"aluminum stiffness is not met by stiffness alone; the design relies on "
+                       f"increased section thickness to compensate.")
     clt_md_path.write_text(
         "# C8 — Composite layup (CLT)\n\n"
         "**Paper claim:** The fin uses a [0/45/90/-45]s quasi-isotropic CFRP layup to match or exceed aluminum stiffness at lower mass.\n\n"
@@ -106,7 +114,7 @@ def generate_reports(clt_csv_path, fos_md_path):
         f"Equivalent Ex: {Ex:.2f} GPa\n"
         f"Equivalent Ey: {Ey:.2f} GPa\n"
         f"Equivalent Gxy: {Gxy:.2f} GPa\n\n"
-        "(Typical 6061-T6 Aluminum is 69 GPa, so this quasi-isotropic CFRP layup achieves ~55 GPa Ex, which combined with structural thickness changes, provides sufficient stiffness).\n\n"
+        f"{clt_verdict}\n\n"
         "**Artifact paths:**\n"
         f"- {clt_csv_path}\n",
         encoding="utf-8"
@@ -114,6 +122,10 @@ def generate_reports(clt_csv_path, fos_md_path):
     
     # FoS MD
     Path(fos_md_path).parent.mkdir(parents=True, exist_ok=True)
+    if fos >= 1.5:
+        fos_verdict = f"The computed F.S. of {fos:.2f} exceeds the 1.5 minimum, verifying the claim."
+    else:
+        fos_verdict = f"FAIL: The computed F.S. of {fos:.2f} is below the required 1.5 minimum."
     Path(fos_md_path).write_text(
         "# C8 — Hinge-pin Factor of Safety\n\n"
         "**Paper claim:** The Ti-6Al-4V hinge pin maintains a F.S. > 1.5 under worst-case 50g axial deployment shock.\n\n"
@@ -123,9 +135,10 @@ def generate_reports(clt_csv_path, fos_md_path):
         f"Von Mises Stress: {vm/1e6:.1f} MPa\n"
         f"Ti-6Al-4V Yield Strength: 880 MPa\n"
         f"**Factor of Safety (F.S.): {fos:.2f}**\n\n"
-        "The computed F.S. is > 1.5, verifying the claim.\n\n"
+        f"{fos_verdict}\n\n"
         "**Artifact paths:**\n"
-        f"- {fos_md_path}\n"
+        f"- {fos_md_path}\n",
+        encoding="utf-8"
     )
 
 if __name__ == '__main__':

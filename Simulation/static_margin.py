@@ -66,48 +66,101 @@ def static_margin(cp, cg, d_ref):
     return (cp - cg) / d_ref
 
 def parse_ork(ork_path):
-    """Parses rocket geometry from an OpenRocket .ork file (zipped XML)."""
-    with zipfile.ZipFile(ork_path, 'r') as z:
-        # Some ORK files contain rocket.ork, some rocket.document
-        xml_name = [n for n in z.namelist() if n.endswith('.ork') or n.endswith('.xml') or n == 'rocket.document'][0]
-        xml_data = z.read(xml_name)
-    
-    root = ET.fromstring(xml_data)
-    
-    # We will extract rough values or fallback to baseline if not fully detailed
-    def get_val(elem, tag, default=0.0):
-        found = elem.find(tag)
-        return float(found.text) if found is not None else default
+    """Parses rocket geometry from an OpenRocket .ork file (zipped XML).
 
-    d_ref = 0.040
-    L_n = 0.100
-    X_f = 0.500
-    C_R = 0.060
-    C_T = 0.030
-    S = 0.060
-    L_f = 0.045
-    m_dry = 0.350
-    cg_dry = 0.410
-    
-    for bt in root.findall('.//bodytube'):
-        d_ref = get_val(bt, 'aftradius', d_ref / 2.0) * 2.0
-        m_dry_override = bt.find('overridemass')
-        if m_dry_override is not None:
-            m_dry = float(m_dry_override.text)
-        cg_dry_override = bt.find('overridecg')
-        if cg_dry_override is not None:
-            cg_dry = float(cg_dry_override.text)
-            
-    for nc in root.findall('.//nosecone'):
-        L_n = get_val(nc, 'length', L_n)
-        
-    for fin in root.findall('.//trapezoidfinset'):
-        C_R = get_val(fin, 'rootchord', C_R)
-        C_T = get_val(fin, 'tipchord', C_T)
-        S = get_val(fin, 'height', S)
-        L_f = get_val(fin, 'sweeplength', L_f)
-        X_f = get_val(fin, 'position', X_f)
-        
+    Walks the XML hierarchy to compute absolute positions from the nose tip,
+    picks the primary (largest-span) fin set, and aggregates dry mass across
+    all body tubes.  Raises ValueError if critical geometry is missing.
+    """
+    with zipfile.ZipFile(ork_path, 'r') as z:
+        xml_name = [n for n in z.namelist()
+                     if n.endswith('.ork') or n.endswith('.xml')
+                     or n == 'rocket.document'][0]
+        xml_data = z.read(xml_name)
+
+    root = ET.fromstring(xml_data)
+
+    def get_val(elem, tag, default=None):
+        found = elem.find(tag)
+        if found is not None:
+            return float(found.text)
+        if default is not None:
+            return default
+        raise ValueError(f"Required field <{tag}> missing in <{elem.tag}>")
+
+    # --- Nose cone ---
+    nc = root.find('.//nosecone')
+    if nc is None:
+        raise ValueError("No <nosecone> found in .ork file")
+    L_n = get_val(nc, 'length')
+    nc_radius = get_val(nc, 'aftradius', get_val(nc, 'radius', 0.020))
+
+    # --- Body tubes: walk in document order, accumulate length for absolute positions ---
+    body_tubes = root.findall('.//bodytube')
+    if not body_tubes:
+        raise ValueError("No <bodytube> found in .ork file")
+
+    d_ref = get_val(body_tubes[0], 'radius', nc_radius) * 2.0
+
+    # Aggregate dry mass: sum of all overridemass fields
+    total_dry_mass = 0.0
+    mass_sources = 0
+    weighted_cg_sum = 0.0
+    offset_from_nose = L_n  # running absolute position from nose tip
+
+    # Collect body tubes with their absolute offsets
+    bt_offsets = []
+    for bt in body_tubes:
+        bt_offsets.append(offset_from_nose)
+        bt_len = get_val(bt, 'length', 0.0)
+
+        override_mass = bt.find('overridemass')
+        override_cg = bt.find('overridecg')
+        if override_mass is not None:
+            m = float(override_mass.text)
+            total_dry_mass += m
+            mass_sources += 1
+            if override_cg is not None:
+                # overridecg is relative to the component, convert to absolute
+                weighted_cg_sum += m * (offset_from_nose + float(override_cg.text))
+            else:
+                weighted_cg_sum += m * (offset_from_nose + bt_len / 2.0)
+
+        offset_from_nose += bt_len
+
+    if mass_sources == 0:
+        total_dry_mass = 0.350  # fallback
+        weighted_cg_sum = total_dry_mass * 0.410
+    m_dry = total_dry_mass
+    cg_dry = weighted_cg_sum / m_dry if m_dry > 0 else 0.410
+
+    # --- Fins: find the primary (largest-span) trapezoidfinset ---
+    best_fin = None
+    best_span = -1.0
+    best_fin_abs_x = 0.0
+
+    for bt_idx, bt in enumerate(body_tubes):
+        bt_abs_offset = bt_offsets[bt_idx]
+        subs = bt.find('subcomponents')
+        if subs is None:
+            continue
+        for fin in subs.findall('trapezoidfinset'):
+            span = get_val(fin, 'height', 0.0)
+            if span > best_span:
+                best_span = span
+                best_fin = fin
+                fin_pos_in_tube = get_val(fin, 'position', 0.0)
+                best_fin_abs_x = bt_abs_offset + fin_pos_in_tube
+
+    if best_fin is None:
+        raise ValueError("No <trapezoidfinset> found in .ork file")
+
+    C_R = get_val(best_fin, 'rootchord')
+    C_T = get_val(best_fin, 'tipchord')
+    S = get_val(best_fin, 'height')
+    L_f = get_val(best_fin, 'sweeplength')
+    X_f = best_fin_abs_x
+
     return {
         'd_ref': d_ref, 'L_n': L_n, 'X_f': X_f,
         'C_R': C_R, 'C_T': C_T, 'S': S, 'L_f': L_f,

@@ -58,8 +58,29 @@ def test_static_margin_with_ork(tmp_path):
     sm_min = min(sm_vals)
     sm_max = max(sm_vals)
     
-    # We do NOT assert that it's in 1.5 - 2.0 cal because it might fail!
-    # The requirement is just to assert against actual computed values or ensure it runs.
-    # The user states: "asserts against the actual computed values, not just the default-geometry path."
-    # Let's assert it runs without crashing and check the output is generated.
+    # Assert the ork path actually produces different numbers from the default path
+    # (i.e. the parser is actually extracting real geometry, not falling back to defaults)
+    assert not (1.84 <= sm_min <= 1.93), (
+        f"ORK path produced default-geometry SM range [{sm_min:.2f},{sm_max:.2f}] — "
+        f"parser may be silently falling back to hardcoded defaults"
+    )
     assert len(sm_vals) > 0
+
+
+def test_ork_parser_extracts_real_geometry():
+    """Verify parse_ork() doesn't silently fall back to defaults."""
+    ork_path = ROOT / "Simulation" / "Folding Stabilized Rocket.ork"
+    geom = static_margin.parse_ork(str(ork_path))
+    
+    # The .ork has a 3-inch (76.2mm) body tube, not the 40mm default
+    assert abs(geom['d_ref'] - 0.0762) < 0.001, f"d_ref={geom['d_ref']} — expected ~0.0762"
+    
+    # Nose cone is 38.1mm, not the 100mm default
+    assert abs(geom['L_n'] - 0.0381) < 0.001, f"L_n={geom['L_n']} — expected ~0.0381"
+    
+    # Total dry mass should be sum of both body tubes' override masses
+    assert geom['m_dry'] > 1.0, f"m_dry={geom['m_dry']} — expected >1.0 (sum of two body tubes)"
+    
+    # X_f should be well past the nose (absolute position from nose tip)
+    assert geom['X_f'] > 0.30, f"X_f={geom['X_f']} — expected >0.30m from nose"
+
