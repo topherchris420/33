@@ -14,8 +14,5 @@ def test_hinge_pin_fos():
     fos, vm, tau, sig = fea_lite.compute_hinge_fos()
     # F.S. >= 1.5
     assert fos >= 1.5
-    # Should be around 1.8-2.0 with these simplified numbers
-    # Actually wait, let's just make sure it's correct.
-    # Yield strength = 880 MPa.
-    # If fos >= 1.5, it passes.
-    assert 1.5 <= fos <= 100.0
+    # Should be near paper's claimed 1.88 with the aligned parameters
+    assert 1.5 <= fos <= 3.0, f'FoS={fos:.2f} outside expected range [1.5, 3.0]'

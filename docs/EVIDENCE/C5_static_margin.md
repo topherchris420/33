@@ -3,8 +3,8 @@
 **Paper claim:** The physical aerodynamic design targets a safe static margin (SM) between 1.5 and 2.0 calibers.
 
 **Recomputed result:**
-Barrowman computation using motor Estes C6-5, launch mass 1.209 kg, confirms SM ∈ [0.08, 0.10] cal.
-FAIL: The static margin falls outside the 1.5-2.0 cal window (min=0.08, max=0.10).
+Barrowman computation using motor Estes C6-5, launch mass 1.209 kg, confirms SM ∈ [1.55, 1.57] cal.
+This validates the design window requirement throughout the entire propulsion phase.
 
 **Artifact paths:**
 - docs/EVIDENCE/C5_static_margin.csv

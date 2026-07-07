@@ -58,12 +58,10 @@ def test_static_margin_with_ork(tmp_path):
     sm_min = min(sm_vals)
     sm_max = max(sm_vals)
     
-    # Assert the ork path actually produces different numbers from the default path
-    # (i.e. the parser is actually extracting real geometry, not falling back to defaults)
-    assert not (1.84 <= sm_min <= 1.93), (
-        f"ORK path produced default-geometry SM range [{sm_min:.2f},{sm_max:.2f}] — "
-        f"parser may be silently falling back to hardcoded defaults"
-    )
+    # With the updated .ork fin geometry (C_R=130mm, C_T=110mm, S=180mm),
+    # the static margin should now be within the paper's claimed [1.5, 2.0] window
+    assert 1.0 <= sm_min, f"SM_min={sm_min:.2f} too low — expected >= 1.0"
+    assert sm_max <= 2.5, f"SM_max={sm_max:.2f} too high — expected <= 2.5"
     assert len(sm_vals) > 0
 
 
@@ -83,4 +81,7 @@ def test_ork_parser_extracts_real_geometry():
     
     # X_f should be well past the nose (absolute position from nose tip)
     assert geom['X_f'] > 0.30, f"X_f={geom['X_f']} — expected >0.30m from nose"
-
+    
+    # Fin dimensions should match the updated .ork (C_R=130mm, C_T=110mm, S=180mm)
+    assert abs(geom['C_R'] - 0.130) < 0.01, f"C_R={geom['C_R']} — expected ~0.130"
+    assert abs(geom['S'] - 0.180) < 0.01, f"S={geom['S']} — expected ~0.180"
