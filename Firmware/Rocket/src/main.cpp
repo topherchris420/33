@@ -176,11 +176,13 @@ void processSerialCommands() {
                 sysState = "ARMED";
                 calibrateGyro();
             }
+#ifdef BENCH_MODE
             else if (cmdBuffer == "IGNITE_FORCE" && sysState == "ARMED" && mpuHealthy) {
                 sysState = "IGNITING";
                 igniteStartTime = millis();
                 igniteServo.write(IGNITE_SERVO_ON);
             }
+#endif
             else if (cmdBuffer == Project33Protocol::CMD_IGNITE && sysState == "ARMED" && mpuHealthy) {
                 if (!is_fins_deployed()) {
                     Serial.println("CMD_REJECT: Fins not deployed");
