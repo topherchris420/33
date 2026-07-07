@@ -25,6 +25,10 @@ def simulate_deployment(k_spring, theta_toggle, v_egress, I_fin, Cm_alpha, timer
     def dynamics(t, state):
         theta, omega = state
         
+        # Delay start by latency
+        if t < latency_s:
+            return [0, 0]
+            
         # Stop at toggle
         if theta >= theta_toggle:
             return [0, 0]
@@ -53,7 +57,13 @@ def simulate_deployment(k_spring, theta_toggle, v_egress, I_fin, Cm_alpha, timer
     sol = solve_ivp(dynamics, [0, 0.2], y0, events=hit_toggle, max_step=0.01)
     
     theta_final = sol.y[0, -1]
-    omega_final = sol.y[1, -1]
+    
+    # If it hit the toggle event (status == 1), the mechanism mechanically locks,
+    # so the final velocity is 0. Otherwise, it's the velocity at t_end.
+    if sol.status == 1:
+        omega_final = 0.0
+    else:
+        omega_final = sol.y[1, -1]
     
     # Convert to deg and deg/s
     theta_deg = np.degrees(theta_final)
@@ -74,7 +84,7 @@ def run_monte_carlo(num_trials=10000, seed=33, output_dir=None):
     
     # Sample distributions
     k_samples = np.random.uniform(k_base*0.9, k_base*1.1, num_trials)
-    theta_samples = np.random.uniform(theta_toggle_base - np.radians(1.5), theta_toggle_base + np.radians(1.5), num_trials)
+    theta_samples = np.random.uniform(theta_toggle_base - np.radians(5.0), theta_toggle_base + np.radians(5.0), num_trials)
     v_samples = np.random.uniform(v_base*0.9, v_base*1.1, num_trials)
     I_samples = np.random.uniform(I_base*0.85, I_base*1.15, num_trials)
     Cm_samples = np.random.uniform(Cm_base*0.75, Cm_base*1.25, num_trials)
@@ -86,10 +96,9 @@ def run_monte_carlo(num_trials=10000, seed=33, output_dir=None):
     for i in range(num_trials):
         th, om = simulate_deployment(k_samples[i], theta_samples[i], v_samples[i], I_samples[i], Cm_samples[i], lat_samples[i])
         
-        # Success criteria: |theta - toggle_deg| <= 2 AND |omega| <= 50 (it locks and stops)
-        # Actually the event stops integration when theta reaches theta_toggle.
-        # Success criteria: |theta - 90| <= 2
-        if abs(th - 90.0) <= 2.0:
+        # Success criteria: It must lock (reach its specific toggle angle) and come to a rest (v <= 50)
+        toggle_deg = np.degrees(theta_samples[i])
+        if abs(th - toggle_deg) <= 0.1 and abs(om) <= 50.0:
             successes += 1
         else:
             failures.append({

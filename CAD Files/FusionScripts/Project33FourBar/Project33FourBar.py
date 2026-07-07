@@ -64,3 +64,45 @@ def run(context):
     except:
         if ui:
             ui.messageBox('Failed:\n{}'.format(traceback.format_exc()))
+
+def export_step(path):
+    import cadquery as cq
+    # Parameters
+    ground = 25.0
+    coupler = 60.0
+    input_l = 15.0
+    output_l = 15.0
+    width = 5.0
+    thick = 2.0
+    hole = 2.0
+    
+    def make_link(length):
+        return (cq.Workplane("XY")
+                .box(length + width, width, thick)
+                .faces(">Z").workplane()
+                .pushPoints([(-length/2, 0), (length/2, 0)])
+                .hole(hole))
+
+    l_ground = make_link(ground)
+    l_input = make_link(input_l)
+    l_coupler = make_link(coupler)
+    l_output = make_link(output_l)
+    
+    # Assembly is purely illustrative for CAD deliverable
+    assm = (cq.Assembly()
+            .add(l_ground, name="ground", color=cq.Color("gray"))
+            .add(l_input, name="input", color=cq.Color("red"), loc=cq.Location(cq.Vector(-ground/2, 0, thick)))
+            .add(l_coupler, name="coupler", color=cq.Color("blue"), loc=cq.Location(cq.Vector(0, input_l, thick*2)))
+            .add(l_output, name="output", color=cq.Color("green"), loc=cq.Location(cq.Vector(ground/2, 0, thick)))
+           )
+           
+    assm.save(path)
+
+if __name__ == '__main__':
+    import sys
+    from pathlib import Path
+    if len(sys.argv) > 1 and sys.argv[1] == '--export':
+        out_path = Path(sys.argv[2])
+        out_path.parent.mkdir(parents=True, exist_ok=True)
+        export_step(str(out_path))
+        print(f"Exported Four-Bar Linkage to {out_path}")

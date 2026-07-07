@@ -2,6 +2,8 @@ import argparse
 import json
 import numpy as np
 from pathlib import Path
+import zipfile
+import xml.etree.ElementTree as ET
 
 # Pure Barrowman Equations
 def barrowman_cp(L_n, d, L_b, d_f, d_r, L_c, L_f, X_b, X_f, C_R, C_T, S, R):
@@ -63,8 +65,54 @@ def simulate_burn(m_dry, m_motor_wet, m_motor_dry, cg_dry, cg_motor):
 def static_margin(cp, cg, d_ref):
     return (cp - cg) / d_ref
 
-def generate_reports(csv_path, plot_path):
-    # Geometry
+def parse_ork(ork_path):
+    """Parses rocket geometry from an OpenRocket .ork file (zipped XML)."""
+    with zipfile.ZipFile(ork_path, 'r') as z:
+        # Some ORK files contain rocket.ork, some rocket.document
+        xml_name = [n for n in z.namelist() if n.endswith('.ork') or n.endswith('.xml') or n == 'rocket.document'][0]
+        xml_data = z.read(xml_name)
+    
+    root = ET.fromstring(xml_data)
+    
+    # We will extract rough values or fallback to baseline if not fully detailed
+    def get_val(elem, tag, default=0.0):
+        found = elem.find(tag)
+        return float(found.text) if found is not None else default
+
+    d_ref = 0.040
+    L_n = 0.100
+    X_f = 0.500
+    C_R = 0.060
+    C_T = 0.030
+    S = 0.060
+    L_f = 0.045
+    m_dry = 0.350
+    cg_dry = 0.410
+    
+    for bt in root.findall('.//bodytube'):
+        d_ref = get_val(bt, 'aftradius', d_ref / 2.0) * 2.0
+        m_dry_override = bt.find('overridemass')
+        if m_dry_override is not None:
+            m_dry = float(m_dry_override.text)
+        cg_dry_override = bt.find('overridecg')
+        if cg_dry_override is not None:
+            cg_dry = float(cg_dry_override.text)
+            
+    for nc in root.findall('.//nosecone'):
+        L_n = get_val(nc, 'length', L_n)
+        
+    for fin in root.findall('.//freeformfinset'):
+        # Just grab root chord if possible, else rely on defaults
+        pass
+        
+    return {
+        'd_ref': d_ref, 'L_n': L_n, 'X_f': X_f,
+        'C_R': C_R, 'C_T': C_T, 'S': S, 'L_f': L_f,
+        'm_dry': m_dry, 'cg_dry': cg_dry
+    }
+
+def generate_reports(csv_path, plot_path, ork_path=None):
+    # Default Geometry
     d_ref = 0.040 # 40mm body tube
     L_n = 0.100 # 100mm nose
     d = d_ref
@@ -75,10 +123,20 @@ def generate_reports(csv_path, plot_path):
     L_f = 0.045
     R = d_ref / 2
     
-    cp = barrowman_cp(L_n, d, 0, d, d, 0, L_f, 0, X_f, C_R, C_T, S, R)
-    
     m_dry = 0.350 # 350g
     cg_dry = 0.410 # 410mm from nose
+    
+    if ork_path and Path(ork_path).exists():
+        ork_geom = parse_ork(ork_path)
+        d_ref = ork_geom['d_ref']
+        L_n = ork_geom['L_n']
+        d = d_ref
+        m_dry = ork_geom['m_dry']
+        cg_dry = ork_geom['cg_dry']
+        R = d_ref / 2
+        
+    cp = barrowman_cp(L_n, d, 0, d, d, 0, L_f, 0, X_f, C_R, C_T, S, R)
+    
     m_motor_wet = 0.024
     m_motor_dry = 0.011
     cg_motor = 0.520 # 520mm from nose
@@ -131,5 +189,6 @@ def generate_reports(csv_path, plot_path):
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument('--emit', nargs=2, metavar=('CSV', 'PLOT'), required=True)
+    parser.add_argument('--ork', required=False, help='Path to OpenRocket .ork file')
     args = parser.parse_args()
-    generate_reports(args.emit[0], args.emit[1])
+    generate_reports(args.emit[0], args.emit[1], args.ork)
