@@ -1,0 +1,5 @@
+part,subsystem,material,mass_kg
+Body Tube,airframe,CFRP_quasi_iso,0.023559999999999998
+Nose Cone,airframe,PLA,0.015499999999999998
+Fin (x4),fin,CFRP_quasi_iso,0.021079999999999998
+Hinge Pin (x4),hinge_pin,Ti-6Al-4V,0.0026579999999999998

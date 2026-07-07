@@ -15,4 +15,9 @@ void trigger_deployment_sequence(uint64_t delay_us);
 // Check if fins have been deployed.
 bool is_fins_deployed();
 
+// Reset deployment state for test harnesses
+void reset_fins_deployed();
+
+extern const float DEPLOY_ACCEL_THRESHOLD_G;
+
 #endif // DEPLOY_ISR_H

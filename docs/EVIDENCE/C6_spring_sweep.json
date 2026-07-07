@@ -1,0 +1,362 @@
+[
+  {
+    "v_egress_m_s": 50.0,
+    "Cm_alpha_max": 0.5,
+    "k_min_N_m_rad": 0.63
+  },
+  {
+    "v_egress_m_s": 50.0,
+    "Cm_alpha_max": 0.6,
+    "k_min_N_m_rad": 0.74
+  },
+  {
+    "v_egress_m_s": 50.0,
+    "Cm_alpha_max": 0.7,
+    "k_min_N_m_rad": 0.85
+  },
+  {
+    "v_egress_m_s": 50.0,
+    "Cm_alpha_max": 0.8,
+    "k_min_N_m_rad": 0.96
+  },
+  {
+    "v_egress_m_s": 50.0,
+    "Cm_alpha_max": 0.9,
+    "k_min_N_m_rad": 1.07
+  },
+  {
+    "v_egress_m_s": 50.0,
+    "Cm_alpha_max": 1.0,
+    "k_min_N_m_rad": 1.18
+  },
+  {
+    "v_egress_m_s": 50.0,
+    "Cm_alpha_max": 1.1,
+    "k_min_N_m_rad": 1.29
+  },
+  {
+    "v_egress_m_s": 50.0,
+    "Cm_alpha_max": 1.2,
+    "k_min_N_m_rad": 1.4
+  },
+  {
+    "v_egress_m_s": 55.0,
+    "Cm_alpha_max": 0.5,
+    "k_min_N_m_rad": 0.74
+  },
+  {
+    "v_egress_m_s": 55.0,
+    "Cm_alpha_max": 0.6,
+    "k_min_N_m_rad": 0.88
+  },
+  {
+    "v_egress_m_s": 55.0,
+    "Cm_alpha_max": 0.7,
+    "k_min_N_m_rad": 1.01
+  },
+  {
+    "v_egress_m_s": 55.0,
+    "Cm_alpha_max": 0.8,
+    "k_min_N_m_rad": 1.14
+  },
+  {
+    "v_egress_m_s": 55.0,
+    "Cm_alpha_max": 0.9,
+    "k_min_N_m_rad": 1.28
+  },
+  {
+    "v_egress_m_s": 55.0,
+    "Cm_alpha_max": 1.0,
+    "k_min_N_m_rad": 1.41
+  },
+  {
+    "v_egress_m_s": 55.0,
+    "Cm_alpha_max": 1.1,
+    "k_min_N_m_rad": 1.54
+  },
+  {
+    "v_egress_m_s": 55.0,
+    "Cm_alpha_max": 1.2,
+    "k_min_N_m_rad": 1.68
+  },
+  {
+    "v_egress_m_s": 60.0,
+    "Cm_alpha_max": 0.5,
+    "k_min_N_m_rad": 0.87
+  },
+  {
+    "v_egress_m_s": 60.0,
+    "Cm_alpha_max": 0.6,
+    "k_min_N_m_rad": 1.03
+  },
+  {
+    "v_egress_m_s": 60.0,
+    "Cm_alpha_max": 0.7,
+    "k_min_N_m_rad": 1.19
+  },
+  {
+    "v_egress_m_s": 60.0,
+    "Cm_alpha_max": 0.8,
+    "k_min_N_m_rad": 1.35
+  },
+  {
+    "v_egress_m_s": 60.0,
+    "Cm_alpha_max": 0.9,
+    "k_min_N_m_rad": 1.5
+  },
+  {
+    "v_egress_m_s": 60.0,
+    "Cm_alpha_max": 1.0,
+    "k_min_N_m_rad": 1.66
+  },
+  {
+    "v_egress_m_s": 60.0,
+    "Cm_alpha_max": 1.1,
+    "k_min_N_m_rad": 1.82
+  },
+  {
+    "v_egress_m_s": 60.0,
+    "Cm_alpha_max": 1.2,
+    "k_min_N_m_rad": 1.98
+  },
+  {
+    "v_egress_m_s": 65.0,
+    "Cm_alpha_max": 0.5,
+    "k_min_N_m_rad": 1.01
+  },
+  {
+    "v_egress_m_s": 65.0,
+    "Cm_alpha_max": 0.6,
+    "k_min_N_m_rad": 1.19
+  },
+  {
+    "v_egress_m_s": 65.0,
+    "Cm_alpha_max": 0.7,
+    "k_min_N_m_rad": 1.38
+  },
+  {
+    "v_egress_m_s": 65.0,
+    "Cm_alpha_max": 0.8,
+    "k_min_N_m_rad": 1.57
+  },
+  {
+    "v_egress_m_s": 65.0,
+    "Cm_alpha_max": 0.9,
+    "k_min_N_m_rad": 1.75
+  },
+  {
+    "v_egress_m_s": 65.0,
+    "Cm_alpha_max": 1.0,
+    "k_min_N_m_rad": 1.94
+  },
+  {
+    "v_egress_m_s": 65.0,
+    "Cm_alpha_max": 1.1,
+    "k_min_N_m_rad": 2.12
+  },
+  {
+    "v_egress_m_s": 65.0,
+    "Cm_alpha_max": 1.2,
+    "k_min_N_m_rad": 2.31
+  },
+  {
+    "v_egress_m_s": 70.0,
+    "Cm_alpha_max": 0.5,
+    "k_min_N_m_rad": 1.16
+  },
+  {
+    "v_egress_m_s": 70.0,
+    "Cm_alpha_max": 0.6,
+    "k_min_N_m_rad": 1.37
+  },
+  {
+    "v_egress_m_s": 70.0,
+    "Cm_alpha_max": 0.7,
+    "k_min_N_m_rad": 1.59
+  },
+  {
+    "v_egress_m_s": 70.0,
+    "Cm_alpha_max": 0.8,
+    "k_min_N_m_rad": 1.8
+  },
+  {
+    "v_egress_m_s": 70.0,
+    "Cm_alpha_max": 0.9,
+    "k_min_N_m_rad": 2.02
+  },
+  {
+    "v_egress_m_s": 70.0,
+    "Cm_alpha_max": 1.0,
+    "k_min_N_m_rad": 2.24
+  },
+  {
+    "v_egress_m_s": 70.0,
+    "Cm_alpha_max": 1.1,
+    "k_min_N_m_rad": 2.45
+  },
+  {
+    "v_egress_m_s": 70.0,
+    "Cm_alpha_max": 1.2,
+    "k_min_N_m_rad": 2.67
+  },
+  {
+    "v_egress_m_s": 75.0,
+    "Cm_alpha_max": 0.5,
+    "k_min_N_m_rad": 1.32
+  },
+  {
+    "v_egress_m_s": 75.0,
+    "Cm_alpha_max": 0.6,
+    "k_min_N_m_rad": 1.56
+  },
+  {
+    "v_egress_m_s": 75.0,
+    "Cm_alpha_max": 0.7,
+    "k_min_N_m_rad": 1.81
+  },
+  {
+    "v_egress_m_s": 75.0,
+    "Cm_alpha_max": 0.8,
+    "k_min_N_m_rad": 2.06
+  },
+  {
+    "v_egress_m_s": 75.0,
+    "Cm_alpha_max": 0.9,
+    "k_min_N_m_rad": 2.31
+  },
+  {
+    "v_egress_m_s": 75.0,
+    "Cm_alpha_max": 1.0,
+    "k_min_N_m_rad": 2.56
+  },
+  {
+    "v_egress_m_s": 75.0,
+    "Cm_alpha_max": 1.1,
+    "k_min_N_m_rad": 2.8
+  },
+  {
+    "v_egress_m_s": 75.0,
+    "Cm_alpha_max": 1.2,
+    "k_min_N_m_rad": 3.05
+  },
+  {
+    "v_egress_m_s": 80.0,
+    "Cm_alpha_max": 0.5,
+    "k_min_N_m_rad": 1.49
+  },
+  {
+    "v_egress_m_s": 80.0,
+    "Cm_alpha_max": 0.6,
+    "k_min_N_m_rad": 1.77
+  },
+  {
+    "v_egress_m_s": 80.0,
+    "Cm_alpha_max": 0.7,
+    "k_min_N_m_rad": 2.05
+  },
+  {
+    "v_egress_m_s": 80.0,
+    "Cm_alpha_max": 0.8,
+    "k_min_N_m_rad": 2.33
+  },
+  {
+    "v_egress_m_s": 80.0,
+    "Cm_alpha_max": 0.9,
+    "k_min_N_m_rad": 2.62
+  },
+  {
+    "v_egress_m_s": 80.0,
+    "Cm_alpha_max": 1.0,
+    "k_min_N_m_rad": 2.9
+  },
+  {
+    "v_egress_m_s": 80.0,
+    "Cm_alpha_max": 1.1,
+    "k_min_N_m_rad": 3.18
+  },
+  {
+    "v_egress_m_s": 80.0,
+    "Cm_alpha_max": 1.2,
+    "k_min_N_m_rad": 3.46
+  },
+  {
+    "v_egress_m_s": 85.0,
+    "Cm_alpha_max": 0.5,
+    "k_min_N_m_rad": 1.67
+  },
+  {
+    "v_egress_m_s": 85.0,
+    "Cm_alpha_max": 0.6,
+    "k_min_N_m_rad": 1.99
+  },
+  {
+    "v_egress_m_s": 85.0,
+    "Cm_alpha_max": 0.7,
+    "k_min_N_m_rad": 2.31
+  },
+  {
+    "v_egress_m_s": 85.0,
+    "Cm_alpha_max": 0.8,
+    "k_min_N_m_rad": 2.62
+  },
+  {
+    "v_egress_m_s": 85.0,
+    "Cm_alpha_max": 0.9,
+    "k_min_N_m_rad": 2.94
+  },
+  {
+    "v_egress_m_s": 85.0,
+    "Cm_alpha_max": 1.0,
+    "k_min_N_m_rad": 3.26
+  },
+  {
+    "v_egress_m_s": 85.0,
+    "Cm_alpha_max": 1.1,
+    "k_min_N_m_rad": 3.58
+  },
+  {
+    "v_egress_m_s": 85.0,
+    "Cm_alpha_max": 1.2,
+    "k_min_N_m_rad": 3.9
+  },
+  {
+    "v_egress_m_s": 90.0,
+    "Cm_alpha_max": 0.5,
+    "k_min_N_m_rad": 1.86
+  },
+  {
+    "v_egress_m_s": 90.0,
+    "Cm_alpha_max": 0.6,
+    "k_min_N_m_rad": 2.22
+  },
+  {
+    "v_egress_m_s": 90.0,
+    "Cm_alpha_max": 0.7,
+    "k_min_N_m_rad": 2.58
+  },
+  {
+    "v_egress_m_s": 90.0,
+    "Cm_alpha_max": 0.8,
+    "k_min_N_m_rad": 2.93
+  },
+  {
+    "v_egress_m_s": 90.0,
+    "Cm_alpha_max": 0.9,
+    "k_min_N_m_rad": 3.29
+  },
+  {
+    "v_egress_m_s": 90.0,
+    "Cm_alpha_max": 1.0,
+    "k_min_N_m_rad": 3.65
+  },
+  {
+    "v_egress_m_s": 90.0,
+    "Cm_alpha_max": 1.1,
+    "k_min_N_m_rad": 4.0
+  },
+  {
+    "v_egress_m_s": 90.0,
+    "Cm_alpha_max": 1.2,
+    "k_min_N_m_rad": 4.36
+  }
+]

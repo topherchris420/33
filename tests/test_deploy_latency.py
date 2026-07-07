@@ -2,20 +2,9 @@ import pytest
 import csv
 from pathlib import Path
 
-def test_deploy_latency_requirements(tmp_path):
-    # Simulated bench CSV for CI
-    # format: trial_num, requested_us, actual_us, jitter_us
-    csv_data = [
-        "trial,requested_us,actual_us,jitter_us",
-    ]
-    for i in range(100):
-        csv_data.append(f"{i},50000,50030,30")
-    for i in range(100, 200):
-        csv_data.append(f"{i},50000,50045,45")
-    csv_data.append("200,50000,50400,400") # P99.9 outlier
-    
-    csv_file = tmp_path / "bench_results.csv"
-    csv_file.write_text("\n".join(csv_data))
+def test_deploy_latency_requirements():
+    csv_file = Path(__file__).resolve().parents[1] / "docs" / "EVIDENCE" / "C2_latency.csv"
+    assert csv_file.exists(), "C2_latency.csv missing"
     
     jitters = []
     with open(csv_file, 'r') as f:

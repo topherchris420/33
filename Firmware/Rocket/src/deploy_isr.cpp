@@ -11,7 +11,7 @@
 #include "esp_timer.h"
 #include "driver/gpio.h"
 
-static const float DEPLOY_ACCEL_THRESHOLD_G = 15.0;
+const float DEPLOY_ACCEL_THRESHOLD_G = 15.0;
 static volatile bool fins_deployed = false;
 static esp_timer_handle_t deploy_timer = nullptr;
 
@@ -48,4 +48,8 @@ void trigger_deployment_sequence(uint64_t delay_us) {
 
 bool is_fins_deployed() {
     return fins_deployed;
+}
+
+void reset_fins_deployed() {
+    fins_deployed = false;
 }

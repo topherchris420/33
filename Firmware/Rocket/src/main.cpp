@@ -176,10 +176,19 @@ void processSerialCommands() {
                 sysState = "ARMED";
                 calibrateGyro();
             }
-            else if (cmdBuffer == Project33Protocol::CMD_IGNITE && sysState == "ARMED" && mpuHealthy) {
+            else if (cmdBuffer == "IGNITE_FORCE" && sysState == "ARMED" && mpuHealthy) {
                 sysState = "IGNITING";
                 igniteStartTime = millis();
                 igniteServo.write(IGNITE_SERVO_ON);
+            }
+            else if (cmdBuffer == Project33Protocol::CMD_IGNITE && sysState == "ARMED" && mpuHealthy) {
+                if (!is_fins_deployed()) {
+                    Serial.println("CMD_REJECT: Fins not deployed");
+                } else {
+                    sysState = "IGNITING";
+                    igniteStartTime = millis();
+                    igniteServo.write(IGNITE_SERVO_ON);
+                }
             }
             else if (cmdBuffer == Project33Protocol::CMD_CALIBRATE) {
                 calibrateGyro();
@@ -258,6 +267,11 @@ void loop() {
 
     sensors_event_t a, g, temp;
     mpu.getEvent(&a, &g, &temp);
+
+    // C2: Hardware-timed zero-blocking deployment
+    if (a.acceleration.x > DEPLOY_ACCEL_THRESHOLD_G) {
+        trigger_deployment_sequence(50000); // 50ms delay
+    }
 
     float raw_rate_rad = g.gyro.x - gyroX_offset;
     float rate_deg_s = raw_rate_rad * 180.0 / PI;

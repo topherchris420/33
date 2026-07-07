@@ -1,0 +1,5 @@
+part,subsystem,material,mass_kg
+Body Tube,airframe,7075-T6,0.04271199999999999
+Nose Cone,airframe,PLA,0.015499999999999998
+Fin (x4),fin,7075-T6,0.03821599999999999
+Hinge Pin (x4),hinge_pin,7075-T6,0.001686

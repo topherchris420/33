@@ -12,21 +12,20 @@ void setup() {
     
     for (int i = 0; i < 10000; i++) {
         uint64_t start = esp_timer_get_time();
-        uint64_t delay = 50000; // 50ms
-        trigger_deployment_sequence(delay);
+        uint64_t delay_target_us = 50000; // 50ms
+        trigger_deployment_sequence(delay_target_us);
         
         while (!is_fins_deployed()) {
             delayMicroseconds(10);
         }
         
         uint64_t actual = esp_timer_get_time() - start;
-        uint64_t jitter = actual > delay ? actual - delay : delay - actual;
+        uint64_t jitter = actual > delay_target_us ? actual - delay_target_us : delay_target_us - actual;
         
-        Serial.printf("%d,%llu,%llu,%llu\n", i, delay, actual, jitter);
+        Serial.printf("%d,%llu,%llu,%llu\n", i, delay_target_us, actual, jitter);
         
         // Reset state for next trial (note: in real flight, this is a one-shot)
-        extern volatile bool fins_deployed;
-        fins_deployed = false;
+        reset_fins_deployed();
         delay(10);
     }
 }
