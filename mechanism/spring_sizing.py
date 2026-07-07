@@ -41,7 +41,7 @@ def validate_design_margin(k_required, k_supplied):
     return margin, meets_20_pct
 
 def sensitivity_sweep(output_path):
-    v_egress_vals = range(50, 91, 5)
+    v_egress_vals = range(150, 251, 10)
     Cm_alpha_max_vals = [round(0.5 + 0.1 * i, 1) for i in range(8)]
     
     results = []
@@ -50,11 +50,11 @@ def sensitivity_sweep(output_path):
         for cm in Cm_alpha_max_vals:
             k = compute_k_min(
                 v_egress=float(v),
-                c_fin=0.060,
-                S_fin=0.0036,
+                c_fin=0.120,
+                S_fin=0.0216,
                 t_deploy=0.050,
-                h_fin=0.060,
-                m_fin=0.015,
+                h_fin=0.180,
+                m_fin=0.154,
                 Cm_alpha_max=cm,
                 damping_ratio=0.7
             )
@@ -83,11 +83,11 @@ def sensitivity_sweep(output_path):
             for j in range(V.shape[1]):
                 K[i,j] = compute_k_min(
                     v_egress=float(V[i,j]),
-                    c_fin=0.060,
-                    S_fin=0.0036,
+                    c_fin=0.120,
+                    S_fin=0.0216,
                     t_deploy=0.050,
-                    h_fin=0.060,
-                    m_fin=0.015,
+                    h_fin=0.180,
+                    m_fin=0.154,
                     Cm_alpha_max=float(CM[i,j]),
                     damping_ratio=0.7
                 )

@@ -8,13 +8,13 @@ import math
 def test_k_min_reference_value():
     # Compute k_min at design point and verify consistency
     k = spring_sizing.compute_k_min(
-        v_egress=70.0, c_fin=0.060, S_fin=0.0036,
-        t_deploy=0.050, h_fin=0.060, m_fin=0.015,
+        v_egress=205.0, c_fin=0.120, S_fin=0.0216,
+        t_deploy=0.050, h_fin=0.180, m_fin=0.154,
         Cm_alpha_max=0.8, damping_ratio=0.7
     )
-    # k should be a positive number in a reasonable range
+    # k should be close to the paper's claimed 185 N·m/rad
     assert k > 0
-    assert k < 1000  # sanity bound
+    assert 180 <= k <= 200, f'k_min={k:.1f} not near paper claim of 185'
 
 def test_negative_velocity_raises():
     with pytest.raises(ValueError):
@@ -39,8 +39,8 @@ def test_negative_mass_raises():
 
 def test_design_point_has_20_percent_margin():
     k_required = spring_sizing.compute_k_min(
-        v_egress=70.0, c_fin=0.060, S_fin=0.0036,
-        t_deploy=0.050, h_fin=0.060, m_fin=0.015,
+        v_egress=205.0, c_fin=0.120, S_fin=0.0216,
+        t_deploy=0.050, h_fin=0.180, m_fin=0.154,
         Cm_alpha_max=0.8, damping_ratio=0.7
     )
     k_supplied = 220.0  # N·m/rad from paper

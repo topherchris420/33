@@ -59,9 +59,10 @@ def compute_hinge_fos():
     Computes Factor of Safety for Ti-6Al-4V hinge pin under 50g axial load.
     Ti-6Al-4V Yield Strength = 880 MPa
     Pin diameter = 2 mm -> r = 1 mm
-    Assumed fin mass = 15 g. Under 50g acceleration -> F = m * a = 0.015 * 50 * 9.81 = 7.35 N
+    Fin mass = 154 g (CFRP fin: 130mm root, 110mm tip, 180mm span, 4mm thick).
+    Under 50g acceleration -> F = m * a = 0.154 * 50 * 9.81 = 75.5 N
     Assuming pin is in double shear, and experiences some bending moment.
-    Let's assume a simplified bending moment M = F * L / 4, with L = 5 mm gap.
+    Simplified bending moment M = F * L / 4, with L = 19.4 mm hinge gap.
     """
     Sy = 880e6 # Yield strength (Pa)
     r = 1e-3
@@ -69,8 +70,8 @@ def compute_hinge_fos():
     A = np.pi * r**2
     I = (np.pi * d**4) / 64
     
-    F = 0.015 * 50 * 9.81
-    L = 5e-3
+    F = 0.154 * 50 * 9.81
+    L = 19.4e-3
     
     # Shear stress (double shear)
     tau = (F / 2) / A
