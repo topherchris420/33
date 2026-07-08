@@ -32,6 +32,7 @@ const int DOWN_CENTER = 115;
 const int MAX_DEFLECTION = 12;
 const float ROLL_COMPLEMENTARY_GYRO_WEIGHT = 0.98;
 const float ROLL_COMPLEMENTARY_ACCEL_WEIGHT = 0.02;
+const float BOOST_ACCEL_THRESHOLD = 19.62; // ~2g in m/s²; accel-roll unreliable above this
 
 Servo igniteServo;
 Servo leftServo, rightServo, upServo, downServo;
@@ -279,7 +280,20 @@ void loop() {
     float rate_deg_s = raw_rate_rad * 180.0 / PI;
     float accel_roll_deg = atan2(a.acceleration.y, a.acceleration.z) * 180.0 / PI - physical_skew_angle;
     float gyro_roll_deg = roll + (rate_deg_s * dt);
-    roll = (ROLL_COMPLEMENTARY_GYRO_WEIGHT * gyro_roll_deg) + (ROLL_COMPLEMENTARY_ACCEL_WEIGHT * accel_roll_deg);
+
+    // Boost detection: when total accel magnitude exceeds ~2g, the
+    // accelerometer reads thrust+gravity, making accel_roll_deg unreliable.
+    // Fall back to pure gyro integration during powered flight.
+    float accel_mag = sqrt(a.acceleration.x * a.acceleration.x +
+                           a.acceleration.y * a.acceleration.y +
+                           a.acceleration.z * a.acceleration.z);
+    bool in_boost = (accel_mag > BOOST_ACCEL_THRESHOLD) || (sysState == "FLIGHT");
+
+    if (in_boost) {
+        roll = gyro_roll_deg; // pure gyro — no accel correction
+    } else {
+        roll = (ROLL_COMPLEMENTARY_GYRO_WEIGHT * gyro_roll_deg) + (ROLL_COMPLEMENTARY_ACCEL_WEIGHT * accel_roll_deg);
+    }
 
     float output = (Kp * roll) + (Kd * rate_deg_s);
     int servo_offset = constrain((int)output, -MAX_DEFLECTION, MAX_DEFLECTION);
