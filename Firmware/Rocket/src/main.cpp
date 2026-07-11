@@ -32,7 +32,12 @@ const int DOWN_CENTER = 115;
 const int MAX_DEFLECTION = 12;
 const float ROLL_COMPLEMENTARY_GYRO_WEIGHT = 0.98;
 const float ROLL_COMPLEMENTARY_ACCEL_WEIGHT = 0.02;
-const float BOOST_ACCEL_THRESHOLD = 19.62; // ~2g in m/s²; accel-roll unreliable above this
+// The accel-derived roll angle is only meaningful when the accelerometer is
+// measuring gravity alone: boost reads thrust+gravity (>1g) and coast reads
+// near free-fall (~0g), and atan2 of near-zero axes is noise. Blend accel in
+// only when total magnitude sits inside this band around 1g.
+const float GRAVITY_MS2 = 9.80665;
+const float ACCEL_GRAVITY_BAND_MS2 = 2.45; // ±0.25g
 
 Servo igniteServo;
 Servo leftServo, rightServo, upServo, downServo;
@@ -233,7 +238,9 @@ void setup() {
     if (mpu.begin()) {
         mpuHealthy = true;
         Serial.println("MPU6050 initialized successfully");
-        mpu.setAccelerometerRange(MPU6050_RANGE_8_G);
+        // ±16g so the deploy egress threshold (15g) is inside the measurable
+        // range; at ±8g the sensor saturates below the trigger point.
+        mpu.setAccelerometerRange(MPU6050_RANGE_16_G);
         mpu.setGyroRange(MPU6050_RANGE_500_DEG);
         mpu.setFilterBandwidth(MPU6050_BAND_10_HZ);
     } else {
@@ -271,8 +278,10 @@ void loop() {
     sensors_event_t a, g, temp;
     mpu.getEvent(&a, &g, &temp);
 
-    // C2: Hardware-timed zero-blocking deployment
-    if (a.acceleration.x > DEPLOY_ACCEL_THRESHOLD_G) {
+    // C2: Hardware-timed zero-blocking deployment. Gated on an armed state so
+    // bench handling of an unarmed rocket can never fire the deploy output,
+    // and compared in m/s² to match the Adafruit driver's units.
+    if (sysState != "IDLE" && a.acceleration.x > DEPLOY_ACCEL_THRESHOLD_MS2) {
         trigger_deployment_sequence(50000); // 50ms delay
     }
 
@@ -281,18 +290,16 @@ void loop() {
     float accel_roll_deg = atan2(a.acceleration.y, a.acceleration.z) * 180.0 / PI - physical_skew_angle;
     float gyro_roll_deg = roll + (rate_deg_s * dt);
 
-    // Boost detection: when total accel magnitude exceeds ~2g, the
-    // accelerometer reads thrust+gravity, making accel_roll_deg unreliable.
-    // Fall back to pure gyro integration during powered flight.
     float accel_mag = sqrt(a.acceleration.x * a.acceleration.x +
                            a.acceleration.y * a.acceleration.y +
                            a.acceleration.z * a.acceleration.z);
-    bool in_boost = (accel_mag > BOOST_ACCEL_THRESHOLD) || (sysState == "FLIGHT");
+    bool gravity_ref_valid = fabs(accel_mag - GRAVITY_MS2) <= ACCEL_GRAVITY_BAND_MS2 &&
+                             sysState != "FLIGHT";
 
-    if (in_boost) {
-        roll = gyro_roll_deg; // pure gyro — no accel correction
-    } else {
+    if (gravity_ref_valid) {
         roll = (ROLL_COMPLEMENTARY_GYRO_WEIGHT * gyro_roll_deg) + (ROLL_COMPLEMENTARY_ACCEL_WEIGHT * accel_roll_deg);
+    } else {
+        roll = gyro_roll_deg; // boost, coast, or FLIGHT: gyro only
     }
 
     float output = (Kp * roll) + (Kd * rate_deg_s);

@@ -23,6 +23,13 @@ Pin assignments are aligned with the current firmware constants in `Firmware/Roc
 | Up    | 80°          | ±12°           |
 | Down  | 115°         | ±12°           |
 
+### Fin Deployment Output
+| Function           | GPIO Pin | Notes                                        |
+|--------------------|----------|----------------------------------------------|
+| Fin Deploy Trigger | 33       | One-shot `esp_timer` output; safe LOW at boot |
+
+> The deploy output is latched HIGH by the hardware-timer ISR in `Firmware/Rocket/src/deploy_isr.cpp` when boost egress is detected while armed. It must stay on its own pin — it previously shared GPIO 5 with the ignition servo, which corrupted the servo PWM signal on deploy.
+
 ### I2C Bus (MPU6050)
 | Signal | GPIO Pin |
 |--------|----------|
