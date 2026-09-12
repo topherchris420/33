@@ -1,6 +1,4 @@
-import re
 from pathlib import Path
-from urllib.parse import unquote
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -8,33 +6,6 @@ ROOT = Path(__file__).resolve().parents[1]
 
 def _read(path: str) -> str:
     return (ROOT / path).read_text(encoding="utf-8")
-
-
-def test_local_markdown_image_links_point_to_existing_files():
-    image_pattern = re.compile(r"!\[[^\]]*\]\(([^)]+)\)")
-    failures = []
-
-    for markdown_path in sorted(ROOT.rglob("*.md")):
-        if ".git" in markdown_path.parts:
-            continue
-        text = markdown_path.read_text(encoding="utf-8")
-        for match in image_pattern.finditer(text):
-            target = match.group(1).split("#", 1)[0].split("?", 1)[0]
-            if target.startswith(("http://", "https://")):
-                continue
-
-            target = unquote(target)
-            if target.startswith("/33/"):
-                resolved = ROOT / target.removeprefix("/33/")
-            elif target.startswith("/"):
-                resolved = ROOT / target.lstrip("/")
-            else:
-                resolved = (markdown_path.parent / target).resolve()
-
-            if not resolved.exists():
-                failures.append(f"{markdown_path.relative_to(ROOT)} -> {target}")
-
-    assert failures == []
 
 
 def test_platformio_projects_pin_esp32_platform_version():

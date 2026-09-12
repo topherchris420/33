@@ -8,16 +8,29 @@ Run from the repository root:
 
 ```bash
 python tools/generate_protocol.py --check
+python tools/check_markdown_links.py
 python -m pytest tests Firmware/tests -q
 ```
 
 What this covers:
 
+- Local Markdown document and image destinations point to existing files or directories.
 - `docs/WIRING.md` stays synchronized with important firmware constants.
 - `protocol/project33_protocol.json` stays synchronized with `Firmware/shared/Project33Protocol.h` and `docs/PROTOCOL.md`.
 - Firmware command-gate expectations stay visible in review.
 - The telemetry CSV logger preserves dashboard packets and onboard `LOG` dump rows in a machine-readable format.
 - Bench session helpers create session summaries and PID comparison reports.
+
+The documentation checker uses only the Python standard library and runs offline.
+It supports inline links/images and single-line reference definitions, relative
+paths, root paths (including the site's `/33/` prefix), URL-encoded filenames,
+angle-bracket paths with spaces, optional quoted titles, and one level of nested
+parentheses in destinations. Code fences, inline code, indented code, and generated
+directories (`.git`, `.venv`, `venv`, `node_modules`, `TestSessions`, `__pycache__`,
+and `.pio`) are skipped. It checks target existence, not heading anchors, external
+URLs, HTML links, Liquid templates, or unresolved reference labels. A missing
+target prints `file:line: missing local target: path` and exits with status 1.
+Use `--root PATH` to check a different documentation tree.
 
 ## Firmware Builds
 
