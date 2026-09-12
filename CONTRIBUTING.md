@@ -47,6 +47,16 @@ python -m pytest tests Firmware/tests -q
 python tools/generate_protocol.py --check
 ```
 
+### Documentation Link Check
+
+```bash
+python tools/check_markdown_links.py
+```
+
+Checks local document and image destinations offline, reporting the source file
+and line for missing targets. The Python test suite also runs this check in CI.
+See [Testing](docs/TESTING.md) for supported syntax and scope.
+
 ### Firmware Build (without hardware)
 
 ```bash
@@ -63,7 +73,7 @@ pio run -d Firmware/Launcher
 | `Firmware/dashboard.py` | Python telemetry dashboard |
 | `docs/` | Status, architecture, wiring, protocol, evidence, and safety docs |
 | `tests/` | Python regression tests |
-| `tools/` | Protocol generation utilities |
+| `tools/` | Protocol generation, documentation checks, and Fusion script installation |
 
 ## Contribution Standards
 
