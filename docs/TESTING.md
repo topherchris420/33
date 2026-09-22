@@ -20,6 +20,8 @@ What this covers:
 - Firmware command-gate expectations stay visible in review.
 - The telemetry CSV logger preserves dashboard packets and onboard `LOG` dump rows in a machine-readable format.
 - Bench session helpers create session summaries and PID comparison reports.
+- Evidence reviews are deterministic and portable; tampering, malformed schemas, path traversal, and unsupported evidence promotion are rejected.
+- Offline telemetry audits expose non-finite samples, duplicates, conflicts, timing gaps, and ambiguous clock regressions while keeping live/recovered streams separate.
 
 The documentation checker uses only the Python standard library and runs offline.
 It supports inline links/images and single-line reference definitions, relative
@@ -27,7 +29,7 @@ paths, root paths (including the site's `/33/` prefix), URL-encoded filenames,
 angle-bracket paths with spaces, optional quoted titles, and one level of nested
 parentheses in destinations. Code fences, inline code, indented code, and generated
 directories (`.git`, `.venv`, `venv`, `node_modules`, `TestSessions`, `__pycache__`,
-and `.pio`) are skipped. It checks target existence, not heading anchors, external
+`.pio`, and `build`) are skipped. It checks target existence, not heading anchors, external
 URLs, HTML links, Liquid templates, or unresolved reference labels. A missing
 target prints `file:line: missing local target: path` and exits with status 1.
 Use `--root PATH` to check a different documentation tree.
@@ -42,6 +44,11 @@ pio run -d Firmware/Launcher
 ```
 
 The GitHub Actions workflow runs protocol generation checks, Python checks, and both firmware builds on every push and pull request.
+
+An independent `Portable evidence review` job builds the committed claim snapshot
+and the explicitly synthetic telemetry example with no package installation. It
+verifies both manifests and retains downloadable reports for 30 days. See
+[Evidence Observatory](EVIDENCE_OBSERVATORY.md) for local commands and exit codes.
 
 ## Simulation Evidence Already in Repo
 

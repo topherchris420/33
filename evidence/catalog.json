@@ -1,0 +1,113 @@
+{
+  "schema_version": 1,
+  "project": "Project 33",
+  "scope": "An inspectable record of an inert bench-validation prototype: claims, source artifacts, assumptions, unresolved questions, and the measurements still needed.",
+  "artifacts": [
+    {"id": "four_bar_source", "path": "mechanism/four_bar.py", "kind": "source", "format": "file", "description": "Existing analytical implementation; inclusion does not validate its physics."},
+    {"id": "four_bar_data", "path": "docs/EVIDENCE/C1_four_bar_sweep.json", "kind": "analytical", "format": "json", "description": "Committed model output, not a measured linkage test."},
+    {"id": "four_bar_tests", "path": "tests/test_four_bar.py", "kind": "test", "format": "file", "description": "Regression test source; execution is separate."},
+    {"id": "timing_source", "path": "Firmware/Rocket/src/deploy_isr.cpp", "kind": "source", "format": "file", "description": "Existing timer implementation."},
+    {"id": "timing_fixture", "path": "docs/EVIDENCE/C2_latency.csv", "kind": "synthetic", "format": "csv", "columns": ["trial", "requested_us", "actual_us", "jitter_us"], "min_rows": 1, "description": "Synthetic timing fixture. No hardware measurement."},
+    {"id": "timing_tests", "path": "tests/test_deploy_latency.py", "kind": "test", "format": "file", "description": "Checks fixture values only; not a timing benchmark."},
+    {"id": "cad_source", "path": "CAD Files/naca_fin_generator.py", "kind": "source", "format": "file", "description": "Existing CAD generator source."},
+    {"id": "cad_tests", "path": "tests/test_naca_fin_generator.py", "kind": "test", "format": "file", "description": "CAD generator regression test source."},
+    {"id": "mass_source", "path": "materials/mass_rollup.py", "kind": "source", "format": "file", "description": "Existing material mass calculation."},
+    {"id": "mass_inputs", "path": "materials/parts.yaml", "kind": "source", "format": "file", "description": "Authored part volumes and material assumptions."},
+    {"id": "mass_baseline", "path": "docs/EVIDENCE/C4_mass_baseline.csv", "kind": "analytical", "format": "csv", "columns": ["part", "subsystem", "material", "mass_kg"], "min_rows": 1, "description": "Committed baseline calculation, not a weigh-in."},
+    {"id": "mass_candidate", "path": "docs/EVIDENCE/C4_mass_optimized.csv", "kind": "analytical", "format": "csv", "columns": ["part", "subsystem", "material", "mass_kg"], "min_rows": 1, "description": "Committed candidate calculation, not a weigh-in."},
+    {"id": "mass_tests", "path": "tests/test_mass_rollup.py", "kind": "test", "format": "file", "description": "Mass calculation regression test source."},
+    {"id": "stability_source", "path": "Simulation/static_margin.py", "kind": "source", "format": "file", "description": "Existing analytical stability implementation."},
+    {"id": "stability_inputs", "path": "Simulation/Folding Stabilized Rocket.ork", "kind": "source", "format": "file", "description": "Committed OpenRocket model input, preserved byte for byte."},
+    {"id": "stability_data", "path": "docs/EVIDENCE/C5_static_margin.csv", "kind": "analytical", "format": "csv", "columns": ["time_s", "cg_m", "cp_m", "sm_calibers"], "min_rows": 1, "description": "Committed model output; applicability is unvalidated."},
+    {"id": "stability_tests", "path": "tests/test_static_margin.py", "kind": "test", "format": "file", "description": "Regression checks for model output and input parsing."},
+    {"id": "spring_source", "path": "mechanism/spring_sizing.py", "kind": "source", "format": "file", "description": "Existing sizing calculation; no optimization is performed by the reviewer."},
+    {"id": "spring_data", "path": "docs/EVIDENCE/C6_spring_sweep.json", "kind": "analytical", "format": "json", "description": "Committed parameter sweep."},
+    {"id": "spring_note", "path": "docs/EVIDENCE/C6_spring_sizing.md", "kind": "documentation", "format": "file", "description": "Recorded claim and its unresolved margin discrepancy."},
+    {"id": "spring_tests", "path": "tests/test_spring_sizing.py", "kind": "test", "format": "file", "description": "Regression source; the legacy margin test does not prove the stated percentage."},
+    {"id": "reliability_source", "path": "Simulation/reliability_sweep.py", "kind": "source", "format": "file", "description": "Existing simulation with a failure-only CSV export."},
+    {"id": "reliability_failures", "path": "docs/EVIDENCE/C7_reliability.csv", "kind": "analytical", "format": "csv", "columns": ["trial", "theta_final", "omega_final", "v_egress", "Cm_alpha"], "min_rows": 0, "description": "Failure-only log. Zero rows cannot establish how many trials ran."},
+    {"id": "reliability_tests", "path": "tests/test_reliability.py", "kind": "test", "format": "file", "description": "Regression source uses a different sample count/seed than the historical note."},
+    {"id": "structural_source", "path": "structures/fea_lite.py", "kind": "source", "format": "file", "description": "Existing simplified analytical calculations."},
+    {"id": "structural_data", "path": "docs/EVIDENCE/C8_clt.csv", "kind": "analytical", "format": "csv", "columns": ["Property", "Value_GPa"], "min_rows": 1, "description": "Committed laminate model output."},
+    {"id": "structural_note", "path": "docs/EVIDENCE/C8_clt.md", "kind": "documentation", "format": "file", "description": "The stiffness comparison is qualified in the original note."},
+    {"id": "structural_tests", "path": "tests/test_structural.py", "kind": "test", "format": "file", "description": "Simplified model regression test source."},
+    {"id": "hinge_note", "path": "docs/EVIDENCE/C8_hinge_fos.md", "kind": "documentation", "format": "file", "description": "Analytical result, not a measured load test."},
+    {"id": "scope", "path": "docs/SAFETY.md", "kind": "documentation", "format": "file", "description": "Current inert research boundary."},
+    {"id": "protocol", "path": "protocol/project33_protocol.json", "kind": "source", "format": "json", "description": "Canonical message definitions for interpreting captured records."},
+    {"id": "ci", "path": ".github/workflows/ci.yml", "kind": "source", "format": "file", "description": "CI configuration, not proof of a particular CI run."}
+  ],
+  "claims": [
+    {
+      "id": "C1", "title": "Mechanism model", "basis": "analytical",
+      "statement": "A parameter sweep and regression source are available for inspection.",
+      "evidence": ["four_bar_source", "four_bar_data", "four_bar_tests"],
+      "assumptions": ["The authored geometric model is an adequate representation for the question being asked."],
+      "limitations": ["Computed geometry is not a measurement of an assembled mechanism.", "Regression agreement does not establish physical model validity."],
+      "next_evidence": ["Independently reviewed model assumptions and an inert, instrumented physical comparison."],
+      "concerns": []
+    },
+    {
+      "id": "C2", "title": "Timing evidence", "basis": "synthetic",
+      "statement": "Timer source and a synthetic timing fixture exist; measured hardware jitter is unavailable.",
+      "evidence": ["timing_source", "timing_fixture", "timing_tests"],
+      "assumptions": ["Fixture rows exercise report calculations only."],
+      "limitations": ["Synthetic values do not demonstrate timer, scheduler, or actuator behavior.", "Twenty-one synthetic rows cannot establish a physical tail-latency bound."],
+      "next_evidence": ["Raw inert timing capture with instrument identity, sampling method, source revision, and uncertainty."],
+      "concerns": ["Historical wording described synthetic values as validating a hardware jitter requirement. That inference is unsupported."]
+    },
+    {
+      "id": "C3", "title": "CAD generator software", "basis": "software",
+      "statement": "Parametric generation code and regression tests are present.",
+      "evidence": ["cad_source", "cad_tests", "ci"],
+      "assumptions": ["The selected CAD dependency versions and test environment are recorded by the execution workflow."],
+      "limitations": ["Test source is not an execution record.", "Generating a CAD solid does not establish aerodynamic or structural performance."],
+      "next_evidence": ["Retained CI execution record and independently inspected exported geometry."],
+      "concerns": []
+    },
+    {
+      "id": "C4", "title": "Material mass accounting", "basis": "analytical",
+      "statement": "Baseline and candidate mass rollups are calculated from authored material and volume assumptions.",
+      "evidence": ["mass_source", "mass_inputs", "mass_baseline", "mass_candidate", "mass_tests"],
+      "assumptions": ["Part volumes, densities, and the included assembly scope are representative."],
+      "limitations": ["Calculated mass differences are not measured prototype savings.", "Assembly additions and manufacturing variability require separate accounting."],
+      "next_evidence": ["Traceable as-built part masses and a reconciled assembly inventory."],
+      "concerns": []
+    },
+    {
+      "id": "C5", "title": "Stability model trace", "basis": "analytical",
+      "statement": "Model input, implementation, and calculated output are available together.",
+      "evidence": ["stability_source", "stability_inputs", "stability_data", "stability_tests", "scope"],
+      "assumptions": ["The simplified formulation and its input interpretation are applicable to the modeled case."],
+      "limitations": ["A calculated static margin does not establish dynamic stability or flight readiness.", "Input revisions selected to match a target require independent justification."],
+      "next_evidence": ["Independent review of input provenance, model applicability, and uncertainty."],
+      "concerns": []
+    },
+    {
+      "id": "C6", "title": "Margin claim consistency", "basis": "analytical",
+      "statement": "The historical note reports a 19% calculated margin against a stated requirement of at least 20%.",
+      "evidence": ["spring_source", "spring_data", "spring_note", "spring_tests"],
+      "assumptions": ["The stated requirement and reported margin use the same definition and design point."],
+      "limitations": ["A positive margin does not establish satisfaction of a larger stated requirement.", "No measured component characterization is included."],
+      "next_evidence": ["Reviewer reconciliation of the requirement, arithmetic, and acceptance test before asserting satisfaction."],
+      "concerns": ["The reported percentage is below the stated requirement.", "The legacy test named for a 20% margin does not actually enforce that lower bound."]
+    },
+    {
+      "id": "C7", "title": "Reliability evidence completeness", "basis": "analytical",
+      "statement": "The committed CSV is a failure-only export with zero data rows, not a complete trial record.",
+      "evidence": ["reliability_source", "reliability_failures", "reliability_tests"],
+      "assumptions": ["A reliability interpretation would require an explicit trial count, seed, model revision, and outcome definition."],
+      "limitations": ["An empty failure list cannot establish the number of trials executed.", "Simulation outcomes do not measure physical reliability.", "No empirical confidence bound is asserted by this review."],
+      "next_evidence": ["An independently reviewed run record with explicit denominator and complete provenance, followed by physical evidence for any hardware claim."],
+      "concerns": ["The historical 100% statement cannot be reconstructed from the committed CSV alone."]
+    },
+    {
+      "id": "C8", "title": "Structural claim boundaries", "basis": "analytical",
+      "statement": "Simplified laminate and hinge calculations exist; the material stiffness comparison is qualified by its own evidence note.",
+      "evidence": ["structural_source", "structural_data", "structural_note", "structural_tests", "hinge_note"],
+      "assumptions": ["Idealized material properties, layup, geometry, and load assumptions represent the modeled case."],
+      "limitations": ["Material modulus and component bending stiffness are different quantities.", "An analytical factor of safety is not a qualification test.", "Manufacturing defects and actual loads are unmeasured."],
+      "next_evidence": ["Independent reconciliation of material and component stiffness claims, with measured component characterization."],
+      "concerns": ["The original modulus output is below the comparison material; a thickness-compensation statement is not independent validation."]
+    }
+  ]
+}

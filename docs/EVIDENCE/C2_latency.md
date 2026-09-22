@@ -3,7 +3,11 @@
 **Paper claim:** Hardware-timed deployment using `esp_timer` prevents main-loop blocking and achieves sub-millisecond actuation jitter.
 
 **Recomputed result:**
-The C2 latency CSV is synthetic reference data generated for CI validation. The 21-row simulated bench CSV validates the jitter requirement with a median jitter of ≤ 50 µs and p99.9 jitter of ≤ 500 µs. Real bench captures require physical ESP32 hardware and are not yet available.
+The C2 latency CSV contains 21 synthetic reference rows for software regression
+checks. Its values do not validate a hardware jitter requirement or establish a
+physical tail-latency bound. Real inert bench captures require physical hardware,
+a documented timing instrument and method, and an uncertainty assessment; they
+are not yet available.
 
 **Artifact paths:**
 - `docs/EVIDENCE/C2_latency.csv` (synthetic reference for CI)

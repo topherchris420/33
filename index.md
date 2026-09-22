@@ -10,6 +10,20 @@ Project 33 is a bench-validation prototype for a folding-fin/canard rocket conce
 
 Current status: documented prototype, automated firmware/software checks, and simulation artifacts. It is not a flight-tested system and does not claim live propulsion validation.
 
+## Every Claim, an Inspectable Trail
+
+The [Evidence Observatory](docs/EVIDENCE_OBSERVATORY.md) packages eight claims with
+their exact source artifacts, assumptions, limitations, and next evidence needed.
+Its searchable offline report separates analytical results, synthetic fixtures,
+and software evidence. Four claims remain unresolved; no physical evidence is
+represented as measured.
+
+Build a portable review with `python -m evidence build --output build/review` and
+open `build/review/index.html`. Reviewers can verify the included SHA-256 manifest,
+compare two snapshots to identify affected claims, or audit a recorded telemetry
+CSV without connecting to hardware. The workflow runs on Python's standard
+library, and CI retains downloadable reports with each run.
+
 ![OpenRocket 3D model](/33/Simulation/OpenRocket_3D_View.png)
 
 ## Status Snapshot
@@ -52,6 +66,7 @@ Shareable evidence should use [the bench evidence template](docs/BENCH_EVIDENCE_
 ## Project Documents
 
 - [Project status and readiness matrix](docs/PROJECT_STATUS.md)
+- [Evidence Observatory and offline review workflow](docs/EVIDENCE_OBSERVATORY.md)
 - [Paper integration and evidence traceability](docs/PAPER_ALIGNMENT.md)
 - [Validation roadmap](docs/ROADMAP.md)
 - [Architecture](docs/ARCHITECTURE.md)

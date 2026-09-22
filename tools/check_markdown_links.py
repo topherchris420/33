@@ -14,7 +14,7 @@ from urllib.parse import unquote, urlsplit
 
 
 ROOT = Path(__file__).resolve().parents[1]
-EXCLUDED = {".git", ".venv", "venv", "node_modules", "TestSessions", "__pycache__", ".pio"}
+EXCLUDED = {".git", ".venv", "venv", "node_modules", "TestSessions", "__pycache__", ".pio", "build"}
 DESTINATION = r"<[^>\n]+>|(?:[^\s()]|\([^()\n]*\))+"
 INLINE = re.compile(r"!?\[[^\]\n]*\]\(\s*(?P<target>" + DESTINATION + r")"
                     r"(?:[ \t]+[\"'][^\n]*?[\"'])?\s*\)")

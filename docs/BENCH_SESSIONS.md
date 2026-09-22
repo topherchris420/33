@@ -46,3 +46,20 @@ Use one session per test question, for example:
 - Onboard log dump recovery check
 
 Short, focused sessions make the CSV and graph much easier to explain.
+
+## Audit Before Sharing
+
+After closing the dashboard, audit the captured CSV without connecting to hardware:
+
+```bash
+python -m evidence audit Firmware/TestSessions/bench_EXAMPLE/telemetry.csv \
+  --origin bench --output build/bench-review
+python -m evidence verify build/bench-review
+```
+
+Open `build/bench-review/index.html`. Keep its original CSV, audit JSON, and
+manifest with the operator's notes. The origin is your declaration; the tool
+cannot establish whether hardware was present. A data-quality error returns exit
+code 1 after writing the report so problematic captures remain inspectable.
+See [Evidence Observatory](EVIDENCE_OBSERVATORY.md) for checks, limitations, and
+the synthetic example. An audit does not replace the physical evidence template.

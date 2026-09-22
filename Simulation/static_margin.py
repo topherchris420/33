@@ -217,7 +217,7 @@ def generate_reports(csv_path, plot_path, ork_path=None):
     min_sm = np.min(sm_t)
     max_sm = np.max(sm_t)
     if min_sm >= 1.5 and max_sm <= 2.0:
-        validation_text = "This validates the design window requirement throughout the entire propulsion phase."
+        validation_text = "The sampled model outputs lie in the stated window. This does not establish dynamic stability, physical validity, or flight readiness."
     else:
         validation_text = f"FAIL: The static margin falls outside the 1.5-2.0 cal window (min={min_sm:.2f}, max={max_sm:.2f})."
         
@@ -230,7 +230,7 @@ def generate_reports(csv_path, plot_path, ork_path=None):
         "**Artifact paths:**\n"
         f"- {csv_path}\n"
         f"- {plot_path}\n\n"
-        "*Deterministic Barrowman computation — no CFD involved*",
+        "*Deterministic model output — no physical measurement or CFD validation*",
         encoding="utf-8"
     )
     

@@ -57,6 +57,19 @@ Checks local document and image destinations offline, reporting the source file
 and line for missing targets. The Python test suite also runs this check in CI.
 See [Testing](docs/TESTING.md) for supported syntax and scope.
 
+### Portable Evidence Review
+
+```bash
+make review
+make evidence-demo
+```
+
+These standard-library commands build and verify offline review bundles. Open
+`build/review/index.html` to inspect claims and `build/demo/review/index.html` for
+the synthetic fault example. See [Evidence Observatory](docs/EVIDENCE_OBSERVATORY.md)
+before editing `evidence/catalog.json`; evidence kinds and limitations are required,
+and an available artifact is never automatically promoted to a validated claim.
+
 ### Firmware Build (without hardware)
 
 ```bash
