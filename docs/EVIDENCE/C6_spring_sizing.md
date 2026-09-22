@@ -8,7 +8,11 @@ At the design point (v_egress = 205 m/s, c_fin = 120 mm, S_fin = 0.0216 m², h_f
 - k_supplied = 220 N·m/rad
 - Margin = 19.0%
 
-The computed k_min is below k_supplied, confirming the design has adequate margin.
+The reported margin is positive but below the stated requirement of at least
+20%. The requirement remains unresolved; positive headroom is not evidence that
+the larger stated threshold has been met. The legacy test named for a 20% margin
+does not enforce that lower bound. These are analytical values, not component
+measurements.
 
 **Artifact paths:**
 - `docs/EVIDENCE/C6_spring_sweep.json`

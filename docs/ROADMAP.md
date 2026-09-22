@@ -11,6 +11,7 @@ Status: mostly complete.
 - Keep wiring docs synchronized with firmware constants.
 - Keep dashboard launch disabled by default.
 - Keep README, project page, safety docs, and status docs aligned.
+- Build and retain a portable Evidence Observatory review with exact source hashes and unresolved claims visible.
 
 Exit gate: CI is green and public docs clearly separate demonstrated behavior from planned validation.
 
@@ -23,6 +24,7 @@ Status: next priority.
 - Capture launcher arming, READY, abort, LED/buzzer, and command-rejection behavior.
 - Capture one PID tuning run with `telemetry.csv`, `graph.png`, `pid-comparison.md`, and `session-summary.md`.
 - Capture one onboard log dump recovery run.
+- Run the offline telemetry quality audit on each completed capture and retain its original CSV and manifest alongside the operator's evidence notes.
 
 Exit gate: at least one complete bench package uses [BENCH_EVIDENCE_TEMPLATE.md](BENCH_EVIDENCE_TEMPLATE.md) and points to raw files.
 

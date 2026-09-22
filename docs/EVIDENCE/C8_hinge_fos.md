@@ -9,7 +9,7 @@ Von Mises Stress: 466.9 MPa
 Ti-6Al-4V Yield Strength: 880 MPa
 **Factor of Safety (F.S.): 1.88**
 
-The computed F.S. of 1.88 exceeds the 1.5 minimum, verifying the claim.
+The computed F.S. of 1.88 exceeds the model threshold. This analytical comparison is not a measured load test or a qualification result.
 
 **Artifact paths:**
 - docs/EVIDENCE/C8_hinge_fos.md

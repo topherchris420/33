@@ -4,10 +4,10 @@
 
 **Recomputed result:**
 Barrowman computation using motor Estes C6-5, launch mass 1.209 kg, confirms SM ∈ [1.55, 1.57] cal.
-This validates the design window requirement throughout the entire propulsion phase.
+The sampled model outputs lie in the stated window. This does not establish dynamic stability, physical validity, or flight readiness.
 
 **Artifact paths:**
 - docs/EVIDENCE/C5_static_margin.csv
 - docs/EVIDENCE/C5_static_margin.png
 
-*Deterministic Barrowman computation — no CFD involved*
+*Deterministic model output — no physical measurement or CFD validation*

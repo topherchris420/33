@@ -124,7 +124,7 @@ def generate_reports(clt_csv_path, fos_md_path):
     # FoS MD
     Path(fos_md_path).parent.mkdir(parents=True, exist_ok=True)
     if fos >= 1.5:
-        fos_verdict = f"The computed F.S. of {fos:.2f} exceeds the 1.5 minimum, verifying the claim."
+        fos_verdict = f"The computed F.S. of {fos:.2f} exceeds the model threshold. This analytical comparison is not a measured load test or a qualification result."
     else:
         fos_verdict = f"FAIL: The computed F.S. of {fos:.2f} is below the required 1.5 minimum."
     Path(fos_md_path).write_text(

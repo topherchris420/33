@@ -68,6 +68,14 @@ Safety behavior:
 
 The dashboard owns per-session evidence capture. Each run creates a local session folder containing raw CSV telemetry, an exported graph, a PID comparison report, and a summary. If live telemetry drops, the dashboard can request the rocket RAM ring buffer with `dumplog`; the launcher forwards the request as `DUMPLOG` and relays `LOG` rows back to the dashboard.
 
+## Offline Review Boundary
+
+The [Evidence Observatory](EVIDENCE_OBSERVATORY.md) is a separate standard-library
+Python package. It reads committed files or a completed telemetry CSV, creates an
+HTML/JSON review and source manifest, and verifies portable bundles. It has no
+network or command-transport dependency. A successful integrity check cannot
+change an authored evidence classification or approve hardware readiness.
+
 ## Protocol Reference
 
 The canonical wiring reference lives in [WIRING.md](WIRING.md). Message constants live in `protocol/project33_protocol.json` and generate both [PROTOCOL.md](PROTOCOL.md) and `Firmware/shared/Project33Protocol.h`.

@@ -9,6 +9,25 @@ Project 33 is a low-cost aerospace engineering testbed for a folding-fin/canard 
 
 Current status: **bench-validation prototype**. The repository documents simulation, CAD, firmware, dashboard tooling, and safety gates; it does not claim flight-test results.
 
+**New: [Evidence Observatory](docs/EVIDENCE_OBSERVATORY.md)** — an offline review
+workflow that connects eight research claims to their exact source artifacts,
+distinguishes synthetic and analytical evidence from physical measurements, and
+keeps unresolved claims visible. Portable reports include copied inputs, SHA-256
+manifests, a standalone verifier, and a telemetry quality audit. Python standard
+library only; no hardware, account, or network connection required.
+
+```bash
+python -m evidence build --output build/review
+python -m evidence verify build/review
+python -m evidence demo --output build/demo
+```
+
+Open `build/review/index.html` for the claim explorer, or
+`build/demo/review/index.html` for the explicitly synthetic fault example.
+The catalog currently records **zero physical evidence artifacts** and **four
+unresolved claims**. A successful bundle build establishes file integrity and
+availability; it does not validate the underlying engineering.
+
 [Live project page](https://topherchris420.github.io/33/) | [Project Status](docs/PROJECT_STATUS.md) | [Paper Alignment](docs/PAPER_ALIGNMENT.md) | [Architecture](docs/ARCHITECTURE.md) | [Protocol](docs/PROTOCOL.md) | [Wiring](docs/WIRING.md) | [Bench Sessions](docs/BENCH_SESSIONS.md) | [Roadmap](docs/ROADMAP.md) | [Safety](docs/SAFETY.md) | [BOM](docs/BOM.md)
 
 ![OpenRocket 3D model](Simulation/OpenRocket_3D_View.png)
@@ -22,6 +41,7 @@ Current status: **bench-validation prototype**. The repository documents simulat
 | Firmware | Rocket and launcher PlatformIO projects build in CI | [CI workflow](.github/workflows/ci.yml), [Testing](docs/TESTING.md) |
 | Dashboard | Telemetry UI writes per-session CSV, graph, summary, and PID comparison artifacts | `Firmware/dashboard.py`, [Bench sessions](docs/BENCH_SESSIONS.md) |
 | Bench evidence | Template and capture workflow are ready; representative physical evidence is not yet committed | [Evidence template](docs/BENCH_EVIDENCE_TEMPLATE.md), [Project status](docs/PROJECT_STATUS.md) |
+| Evidence review | Portable claim explorer, source manifests, change-impact comparison, and offline telemetry audit | [Evidence Observatory](docs/EVIDENCE_OBSERVATORY.md), `evidence/` |
 | Flight testing | Not claimed | [Safety boundary](docs/SAFETY.md) |
 
 ## What It Demonstrates
@@ -61,6 +81,7 @@ The detailed architecture and state machines are documented in [docs/ARCHITECTUR
 | `Simulation/` | OpenRocket model and exported simulation visuals |
 | `docs/` | Status, wiring, protocol, architecture, bench-session, CAD, PID, safety, BOM, and testing docs |
 | `tests/`, `Firmware/tests/` | Python regression checks |
+| `evidence/` | Claim catalog, portable review builder/verifier, and telemetry quality audit |
 
 ## Build and Verify
 
@@ -143,7 +164,7 @@ This repository is for inert bench validation, simulation, and supervised educat
 - No flight-test data is committed yet.
 - No representative physical bench-session package is committed yet.
 - Stabilization is currently roll-axis focused.
-- Gyro integration can drift without additional filtering or reference correction.
+- The complementary roll filter includes accelerometer correction; physical drift and performance are not yet characterized.
 - UDP is simple and useful for bench work, but it does not guarantee delivery.
 - Real aerodynamic servo authority still needs physical validation.
 

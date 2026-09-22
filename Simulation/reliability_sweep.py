@@ -121,7 +121,7 @@ def run_monte_carlo(num_trials=10000, seed=33, output_dir=None):
             
         md_path = Path(output_dir) / "C7_reliability.md"
         if success_rate >= 0.999:
-            verdict = "The deterministic seeded simulation confirms the reliability exceeds the 99.9% threshold."
+            verdict = "The observed success fraction exceeds the threshold within this simulation. This is not a physical reliability measurement or a confidence bound."
         else:
             verdict = f"FAIL: The success rate {success_rate*100:.2f}% is below the 99.9% threshold."
         md_path.write_text(
@@ -132,6 +132,7 @@ def run_monte_carlo(num_trials=10000, seed=33, output_dir=None):
             f"Successes: {successes}\n"
             f"Success Rate: {success_rate * 100:.2f}%\n\n"
             f"{verdict}\n\n"
+            "**Evidence limitation:** The CSV exports failures only. An empty file body does not establish the trial denominator or independently reproduce this summary. Retain complete run provenance before relying on the claim.\n\n"
             "**Artifact paths:**\n"
             f"- {csv_path}\n",
             encoding="utf-8"

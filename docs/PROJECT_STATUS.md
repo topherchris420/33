@@ -14,6 +14,7 @@ Project 33 is a bench-validation prototype. The repository is organized to make 
 | Launcher firmware | PlatformIO project with AP, UART bridge, physical arming, sensor telemetry, and launch gates | `Firmware/Launcher/`, CI |
 | Dashboard | Tkinter telemetry console with CSV logging, graph export, PID comparison, and log dump request | `Firmware/dashboard.py`, `Firmware/tests/` |
 | Bench evidence | Capture workflow exists; representative physical bench package is not yet committed | [BENCH_SESSIONS.md](BENCH_SESSIONS.md), [BENCH_EVIDENCE_TEMPLATE.md](BENCH_EVIDENCE_TEMPLATE.md) |
+| Evidence Observatory | Offline claim explorer, source snapshots, integrity verifier, change-impact comparison, and CSV quality audit | [EVIDENCE_OBSERVATORY.md](EVIDENCE_OBSERVATORY.md), `evidence/catalog.json` |
 | Safety posture | Inert bench validation only; dashboard launch rejected by default | [SAFETY.md](SAFETY.md), `Firmware/Launcher/src/main.cpp` |
 
 ## Readiness Matrix
@@ -40,8 +41,9 @@ Do not fabricate or imply flight, propulsion, or live-ignition results. If a tes
 - No committed physical bench-session package yet.
 - No flight-test data, and no flight-readiness claim.
 - CAD archives need annotated render exports for easier review (though `naca_fin_generator.py` now automates STEP export).
-- Servo authority under aerodynamic load is not physically measured, though mathematically validated (C6).
+- Servo authority under aerodynamic load is not physically measured. C6 is a model calculation with an unresolved margin discrepancy, not a physical validation.
 - Gyro drift and UDP delivery limits remain known technical risks.
+- C2 timing data is synthetic; C7's failure-only CSV has no trial denominator; C8's material/component stiffness interpretation requires review. The Evidence Observatory keeps these gaps explicit.
 
 ## Submission Package Checklist
 
