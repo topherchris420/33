@@ -1,6 +1,5 @@
 """Evidence integrity is separate from the scientific validity of a claim."""
 
-import copy
 import csv
 import io
 from pathlib import Path
@@ -10,47 +9,36 @@ import sys
 import pytest
 
 from evidence.__main__ import demo, main
-from evidence.bundle import build_audit, build_review, compare_reviews, validate_catalog, verify_bundle
-from evidence.common import EvidenceError, canonical_json, digest, load_json, safe_path
+from evidence.bundle import build_audit, build_review, compare_reviews, verify_bundle
+from evidence.common import EvidenceError, digest, load_json, safe_path
 from evidence.telemetry import audit_bytes
-
+from evidence_project import Project
 
 ROOT = Path(__file__).resolve().parents[1]
 
 
 @pytest.fixture
 def project(tmp_path):
-    root = tmp_path / "project"
-    root.mkdir()
-    (root / "sample.csv").write_text("time_ms,value\n0,1\n50,2\n", encoding="utf-8")
-    catalog = {
-        "schema_version": 1, "project": "Review fixture", "scope": "Synthetic software test only.",
-        "artifacts": [{"id": "fixture", "path": "sample.csv", "kind": "synthetic", "format": "csv",
-                       "columns": ["time_ms", "value"], "min_rows": 1, "description": "Synthetic"}],
-        "claims": [{"id": "C1", "title": "Fixture", "statement": "A fixture is present.",
-                    "basis": "synthetic", "evidence": ["fixture"], "assumptions": ["Synthetic values."],
-                    "limitations": ["No measurement."], "next_evidence": ["Physical data."], "concerns": []}],
-    }
-    (root / "catalog.json").write_bytes(canonical_json(catalog))
-    return root, catalog
+    return Project(tmp_path / "project")
 
 
-def build(project, destination):
-    root, catalog = project
-    (root / "catalog.json").write_bytes(canonical_json(catalog))
-    return build_review(root, destination, "catalog.json")
+def build(project, destination, **kwargs):
+    project.save()
+    return build_review(project.root, destination, "catalog.json", **kwargs)
 
 
-def telemetry(samples):
+def telemetry(samples, raw=False, gains=False):
     buffer = io.StringIO(newline="")
-    writer = csv.DictWriter(buffer, fieldnames=["received_at_iso", "source", "message_type", "time_ms",
-                                              "roll_deg", "rate_deg_s", "servo_output"])
+    fields = ["received_at_iso", "source", "message_type", "time_ms", "roll_deg", "rate_deg_s", "servo_output"]
+    fields += ["raw"] if raw else []
+    fields += ["kp", "kd"] if gains else []
+    writer = csv.DictWriter(buffer, fieldnames=fields)
     writer.writeheader()
     for sample in samples:
         row = {"received_at_iso": "2026-01-01T00:00:00+00:00", "source": "fixture", "message_type": "T",
                "time_ms": "0", "roll_deg": "0", "rate_deg_s": "0", "servo_output": "0"}
         row.update(sample)
-        writer.writerow(row)
+        writer.writerow({key: row.get(key, "") for key in fields})
     return buffer.getvalue().encode()
 
 
@@ -58,16 +46,32 @@ def codes(audit):
     return {item["code"]: item["count"] for item in audit["findings"]}
 
 
-def test_project_catalog_exposes_limits_and_header_only_failure_log(tmp_path):
+def test_project_record_states_what_is_and_is_not_established(tmp_path):
     review = build_review(ROOT, tmp_path / "review")
-    assert len(review["claims"]) == 8
-    assert review["physical_evidence_count"] == 0
-    assert review["unresolved_claim_count"] == 4
+    counts = review["counts"]
+    assert counts["claims"] == 8
+    assert counts["declared_physical_artifacts"] == 0
+    assert counts["accepted_physical_measurements"] == 0
+    assert counts["predictions_not_measured"] == counts["predictions_total"]
+    claims = {c["id"]: c for c in review["claims"]}
+    # Unresolved claims stay unresolved; C6 and C8 are contradicted by their own records.
+    assert {k for k, c in claims.items() if c["status"] in ("open", "contradicted")} >= {"C2", "C6", "C7", "C8"}
+    assert not any(c["has_accepted_physical_evidence"] for c in claims.values())
+    requirements = {r["id"]: r for r in review["requirements"]}
+    assert requirements["R-C6-MARGIN"]["result"] == "not_satisfied"
+    assert requirements["R-C5-WINDOW"]["result"] == "conflicting"
+    assert requirements["R-C1-CLOSURE"]["result"] == "not_satisfied"
+    assert requirements["R-C2-JITTER"]["result"] == "not_measured"
     artifacts = {a["id"]: a for a in review["artifacts"]}
     assert artifacts["reliability_failures"]["row_count"] == 0
-    assert artifacts["timing_fixture"]["row_count"] == 21
-    assert artifacts["timing_fixture"]["kind"] == "synthetic"
-    assert verify_bundle(tmp_path / "review")["integrity"] == "ok"
+    assert artifacts["timing_fixture"]["class"] == "synthetic"
+    assert artifacts["timing_fixture"]["origins_in_data"] == ["synthetic-fixture"]
+    scopes = {s["id"]: s["state"] for s in review["scopes"]}
+    assert scopes["physical_performance"] == "not_established"
+    assert scopes["flight_readiness"] == "not_assessed"
+    assert scopes["software_tests"] == "not_run"
+    assert review["violations"] == []
+    assert verify_bundle(tmp_path / "review")["bundle_integrity"] == "verified"
 
 
 def test_bundle_is_byte_reproducible_and_portable(project, tmp_path):
@@ -81,13 +85,12 @@ def test_bundle_is_byte_reproducible_and_portable(project, tmp_path):
     first.rename(relocated)
     expected = (relocated / "manifest.sha256").read_text().strip()
     assert verify_bundle(relocated, expected)["trusted_digest_checked"]
-    # Verifier also works without the original repository or any third-party packages.
     result = subprocess.run([sys.executable, "-B", "-m", "evidence", "verify", ".."],
                             cwd=relocated / "reviewer", capture_output=True, text=True)
     assert result.returncode == 0, result.stderr
 
 
-@pytest.mark.parametrize("change", ["modify", "delete", "extra", "symlink", "manifest", "trusted"])
+@pytest.mark.parametrize("change", ["modify", "delete", "extra", "symlink", "manifest", "trusted", "record"])
 def test_verifier_rejects_tampering(project, tmp_path, change):
     output = tmp_path / "review"
     build(project, output)
@@ -98,12 +101,14 @@ def test_verifier_rejects_tampering(project, tmp_path, change):
     elif change == "delete":
         target.unlink()
     elif change == "extra":
-        (output / "unlisted.txt").write_text("not in manifest")
+        (output / "artifacts/unlisted.txt").write_text("not in manifest")
     elif change == "symlink":
         target.unlink()
-        target.symlink_to(project[0] / "sample.csv")
+        target.symlink_to(project.root / "sample.csv")
     elif change == "manifest":
         (output / "manifest.json").write_text("{}")
+    elif change == "record":
+        (output / "records/requirements.json").write_text("{}")
     else:
         kwargs["expected_sha256"] = "0" * 64
     with pytest.raises((EvidenceError, OSError)):
@@ -117,11 +122,10 @@ def test_no_partial_output_or_overwriting(project, tmp_path):
     with pytest.raises(EvidenceError, match="already exists"):
         build(project, output)
     assert (output / "manifest.json").read_bytes() == original
-    (project[0] / "sample.csv").unlink()
-    missing = tmp_path / "missing"
+    (project.root / "sample.csv").unlink()
     with pytest.raises(EvidenceError):
-        build(project, missing)
-    assert not missing.exists()
+        build(project, tmp_path / "missing")
+    assert not (tmp_path / "missing").exists()
 
 
 @pytest.mark.parametrize("name", ["../secret", "/etc/passwd", "a/../b", "a//b", "./a", "C:/a", "a\\b", ".", "a\x00b"])
@@ -131,30 +135,52 @@ def test_paths_cannot_escape_or_alias(tmp_path, name):
 
 
 def test_source_symlink_is_rejected(project, tmp_path):
-    root, _ = project
-    (root / "sample.csv").unlink()
+    (project.root / "sample.csv").unlink()
     external = tmp_path / "outside.csv"
-    external.write_text("time_ms,value\n0,1\n")
-    (root / "sample.csv").symlink_to(external)
+    external.write_text("time_ms,value,origin\n0,1,synthetic\n")
+    (project.root / "sample.csv").symlink_to(external)
     with pytest.raises(EvidenceError, match="Symlinks"):
         build(project, tmp_path / "review")
 
 
-@pytest.mark.parametrize("change", ["duplicate_id", "unknown_ref", "physical_promotion", "unknown_key", "bool_rows", "empty_limits"])
-def test_invalid_catalog_never_produces_a_report(project, tmp_path, change):
-    _, catalog = project
+@pytest.mark.parametrize("change", ["duplicate_id", "unknown_ref", "old_basis", "unknown_key", "bool_rows",
+                                    "empty_limits", "physical_class", "field_class", "verified_class", "kind_field",
+                                    "execution_class", "cycle", "unlinked_requirement", "missing_record_file"])
+def test_invalid_record_never_produces_a_report(project, tmp_path, change):
+    catalog, claim = project.catalog, project.claim
     if change == "duplicate_id":
-        catalog["claims"].append(copy.deepcopy(catalog["claims"][0]))
+        catalog["claims"].append(dict(claim))
     elif change == "unknown_ref":
-        catalog["claims"][0]["evidence"] = ["missing"]
-    elif change == "physical_promotion":
-        catalog["claims"][0]["basis"] = "physical"
+        claim["evidence"] = ["missing"]
+    elif change == "old_basis":
+        claim["basis"] = "physical"
     elif change == "unknown_key":
-        catalog["claims"][0]["verified"] = True
+        claim["verified"] = True
     elif change == "bool_rows":
-        catalog["artifacts"][0]["min_rows"] = True
+        catalog["artifacts"][2]["min_rows"] = True
+    elif change == "empty_limits":
+        claim["limitations"] = []
+    elif change == "physical_class":
+        catalog["artifacts"][2]["class"] = "physical"
+    elif change == "field_class":
+        catalog["artifacts"][2]["class"] = "field_measured"
+    elif change == "verified_class":
+        catalog["artifacts"][2]["class"] = "verified"
+    elif change == "kind_field":
+        catalog["artifacts"][2]["kind"] = "synthetic"
+    elif change == "execution_class":
+        catalog["artifacts"][3]["class"] = "execution_record"
+    elif change == "cycle":
+        catalog["artifacts"][0]["derived_from"] = ["out"]
+    elif change == "unlinked_requirement":
+        claim["requirements"] = []
     else:
-        catalog["claims"][0]["limitations"] = []
+        project.save()
+        (project.root / "discrepancies.json").unlink()
+        with pytest.raises((EvidenceError, OSError)):
+            build_review(project.root, tmp_path / "review", "catalog.json")
+        assert not (tmp_path / "review").exists()
+        return
     with pytest.raises(EvidenceError):
         build(project, tmp_path / "review")
     assert not (tmp_path / "review").exists()
@@ -167,41 +193,50 @@ def test_ambiguous_or_nonfinite_json_is_rejected(text):
 
 
 def test_html_escapes_content_and_links(project, tmp_path):
-    _, catalog = project
     attack = '<script>alert("unsafe")</script>'
-    catalog["claims"][0]["title"] = attack
-    catalog["claims"][0]["limitations"] = [attack]
+    project.claim["title"] = attack
+    project.claim["limitations"] = [attack]
     build(project, tmp_path / "review")
     html = (tmp_path / "review/index.html").read_text()
     assert attack not in html
     assert "&lt;script&gt;" in html
     assert "Content-Security-Policy" in html
-    assert "https://" not in html
+    assert "https://" not in html and "http://" not in html
 
 
 def test_compare_maps_artifact_and_classification_changes_to_claims(project, tmp_path):
     old, new = tmp_path / "old", tmp_path / "new"
     build(project, old)
-    (project[0] / "sample.csv").write_text("time_ms,value\n0,2\n50,3\n")
+    (project.root / "model.py").write_text(project.root.joinpath("model.py").read_text() + "# edited\n")
     build(project, new)
     change = compare_reviews(old, new)
-    assert change["changed_artifacts"] == ["sample.csv"]
+    assert change["changed_artifacts"] == ["model.py"]
     assert change["affected_claims"] == ["C1"]
-    project[1]["artifacts"][0]["description"] = "Changed interpretation"
+    project.catalog["artifacts"][2]["description"] = "Changed interpretation"
     build(project, tmp_path / "reclassified")
     change = compare_reviews(new, tmp_path / "reclassified")
     assert change["changed_artifacts"] == []
+    assert change["changed_artifact_records"] == ["sample.csv"]
     assert change["affected_claims"] == ["C1"]
+
+
+def test_compare_reports_requirement_result_changes(project, tmp_path):
+    build(project, tmp_path / "old")
+    (project.root / "out.json").write_text('{"value": 0.1, "flag": true, "missing": null}')
+    project.claim["status"] = "contradicted"
+    build(project, tmp_path / "new")
+    change = compare_reviews(tmp_path / "old", tmp_path / "new")
+    assert change["requirement_changes"] == [{"requirement": "R-1", "before": "satisfied", "after": "not_satisfied"}]
+    assert change["claim_status_changes"] == [{"claim": "C1", "before": "supported_within_limits", "after": "contradicted"}]
 
 
 def test_compare_marks_scope_changes_for_review(project, tmp_path):
     build(project, tmp_path / "old")
-    project[1]["scope"] = "A different authored interpretation."
+    project.catalog["scope"] = "A different authored interpretation."
     build(project, tmp_path / "new")
     change = compare_reviews(tmp_path / "old", tmp_path / "new")
     assert change["review_context_changed"] is True
     assert change["affected_claims"] == ["C1"]
-    assert change["changed_artifacts"] == []
 
 
 def test_live_and_recovered_rows_never_share_a_clock_or_sample_count():
@@ -210,7 +245,8 @@ def test_live_and_recovered_rows_never_share_a_clock_or_sample_count():
     audit = audit_bytes(data, origin="synthetic")
     assert audit["quality"] == "clean"
     assert [s["valid_samples"] for s in audit["streams"]] == [2, 2]
-    assert all(s["median_positive_interval_ms"] == 50 for s in audit["streams"])
+    assert {s["message_type"]: s["clock_domain"] for s in audit["streams"]} == \
+        {"LOG": "rocket_millis", "T": "launcher_relay_millis"}
 
 
 @pytest.mark.parametrize("value", ["NaN", "inf", "-inf", "garbage", "", "1e999"])
@@ -232,8 +268,8 @@ def test_duplicate_conflict_reset_and_gap_are_distinct():
         {"time_ms": "0"}, {"time_ms": "0"}, {"time_ms": "0", "roll_deg": "1"},
         {"time_ms": "700"}, {"time_ms": "10"}, {"time_ms": "60"},
     ]), origin="bench")
-    assert codes(audit) == {"duplicate_sample": 1, "timestamp_conflict": 1,
-                            "device_time_gap": 1, "device_clock_regression": 1}
+    assert codes(audit) == {"duplicate_sample": 1, "timestamp_conflict": 1, "device_time_gap": 1,
+                            "device_clock_regression": 1, "interval_differs_from_expected": 1}
     assert audit["streams"][0]["segments"] == 2
     assert audit["origin_is_operator_declared"] is True
     assert "packet_loss" not in audit
@@ -252,6 +288,35 @@ def test_receive_timestamps_require_timezone_and_regressions_are_visible():
     audit = audit_bytes(data, origin="synthetic")
     assert codes(audit) == {"invalid_receive_timestamp": 1, "receive_clock_regression": 1}
     assert audit["invalid_rows"] == 1
+
+
+def test_partial_log_dump_is_reported_not_assumed_complete():
+    rows = [{"message_type": "RAW", "raw": "LOG_START,3", "time_ms": ""},
+            {"message_type": "LOG", "time_ms": "0", "raw": "LOG,0"},
+            {"message_type": "LOG", "time_ms": "50", "raw": "LOG,50"},
+            {"message_type": "RAW", "raw": "LOG_END", "time_ms": ""},
+            {"message_type": "RAW", "raw": "LOG_START,2", "time_ms": ""},
+            {"message_type": "LOG", "time_ms": "0", "raw": "LOG,0"}]
+    audit = audit_bytes(telemetry(rows, raw=True), origin="synthetic")
+    assert [d["state"] for d in audit["log_dumps"]] == ["incomplete", "unterminated"]
+    assert codes(audit)["log_dump_incomplete"] == 1
+    assert codes(audit)["log_dump_unterminated"] == 1
+
+
+def test_gain_windows_follow_changes_and_rejections_are_counted():
+    rows = [{"message_type": "STATUS", "kp": "0.50", "kd": "0.20", "time_ms": ""},
+            {"message_type": "STATUS", "kp": "0.50", "kd": "0.20", "time_ms": ""},
+            {"message_type": "STATUS", "kp": "0.80", "kd": "0.30", "time_ms": ""},
+            {"message_type": "RAW", "raw": "CMD_REJECT:dashboard_launch_disabled", "time_ms": ""},
+            {"time_ms": "0"}]
+    audit = audit_bytes(telemetry(rows, raw=True, gains=True), origin="synthetic")
+    assert [(g["kp"], g["kd"], g["status_rows"]) for g in audit["gain_windows"]] == [("0.50", "0.20", 2), ("0.80", "0.30", 1)]
+    assert audit["command_responses"] == [{"code": "CMD_REJECT:dashboard_launch_disabled", "count": 1}]
+
+
+def test_missing_columns_are_not_recorded_rather_than_empty():
+    audit = audit_bytes(telemetry([{"time_ms": "0"}]), origin="synthetic")
+    assert audit["gain_windows"] is None and audit["log_dumps"] is None
 
 
 @pytest.mark.parametrize("data", [b"", b"a,a\n1,2\n", b"a,b\n1\n", b"a,b\n1,2,3\n", b"a,b\n\xff,2\n"])
@@ -282,14 +347,17 @@ def test_detail_limit_does_not_truncate_issue_counts():
 
 def test_demo_detects_exact_faults_and_preserves_input(tmp_path):
     audit = demo(tmp_path / "demo")
-    assert codes(audit) == {"duplicate_sample": 1, "invalid_numeric_sample": 1,
-                            "device_time_gap": 1, "device_clock_regression": 1}
+    assert codes(audit) == {"duplicate_sample": 1, "invalid_numeric_sample": 1, "device_time_gap": 1,
+                            "device_clock_regression": 1, "interval_differs_from_expected": 1,
+                            "log_dump_unterminated": 1}
     assert audit["origin"] == "synthetic"
     assert audit["quality"] == "error"
-    assert verify_bundle(tmp_path / "demo/review")["integrity"] == "ok"
+    assert "series" not in load_json((tmp_path / "demo/review/audit.json").read_bytes())
+    assert verify_bundle(tmp_path / "demo/review")["bundle_integrity"] == "verified"
     csv_path = tmp_path / "demo/synthetic-telemetry.csv"
     assert (tmp_path / "demo/review/telemetry.csv").read_bytes() == csv_path.read_bytes()
     assert audit["input_sha256"] == digest(csv_path.read_bytes())
+    assert "<svg" in (tmp_path / "demo/review/index.html").read_text()
 
 
 def test_cli_reports_quality_failure_after_writing_a_verifiable_bundle(tmp_path, capsys):
@@ -297,7 +365,12 @@ def test_cli_reports_quality_failure_after_writing_a_verifiable_bundle(tmp_path,
     csv_path.write_bytes(telemetry([{"roll_deg": "NaN"}]))
     result = main(["audit", str(csv_path), "--origin", "synthetic", "--output", str(tmp_path / "review")])
     assert result == 1
-    assert verify_bundle(tmp_path / "review")["integrity"] == "ok"
-    result = main(["verify", str(tmp_path / "missing")])
-    assert result == 2
+    assert verify_bundle(tmp_path / "review")["bundle_integrity"] == "verified"
+    assert main(["verify", str(tmp_path / "missing")]) == 2
     assert "evidence:" in capsys.readouterr().err
+
+
+def test_repository_record_is_consistent_and_generated_docs_are_current(capsys):
+    # Fails when evidence changes without a review snapshot, a prediction drifts,
+    # or a generated passport/fragment no longer matches the record.
+    assert main(["check"]) == 0, capsys.readouterr().out

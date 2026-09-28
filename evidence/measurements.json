@@ -1,0 +1,5 @@
+{
+  "schema_version": 1,
+  "note": "Physical inert measurements only. Each entry must reference a human-accepted session, a named instrument, and an uncertainty. This list is empty because no physical measurement has been recorded. Empty means NOT MEASURED, never zero.",
+  "measurements": []
+}

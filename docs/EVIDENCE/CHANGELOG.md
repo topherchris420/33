@@ -1,5 +1,12 @@
 # Evidence Divergence Log
 
+> **Historical record, superseded.** This log was written while model inputs were being revised to
+> match the source paper's numbers. "RESOLVED" below means the model output was brought into
+> agreement with the paper by changing inputs; it does not mean the inputs were independently
+> sourced or the result validated. Matching a target is not validation. Current state:
+> [discrepancy register](../DISCREPANCIES.md) (D-009 and others) and [claim passports](../claims/README.md).
+> The pre-revision OpenRocket model is preserved in `evidence/archive/C5_openrocket_pre_retune.ork.xml`.
+
 Per the spec's review-gate rule: "Any paper claim where the recomputed number diverges
 from the paper's stated number by more than 10% — don't silently round — open an issue
 in docs/EVIDENCE/CHANGELOG.md and ask for direction."

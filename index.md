@@ -2,84 +2,103 @@
 title: Project 33
 ---
 
-# Project 33: Low-Cost Folding-Fin Rocket Testbed
+# Project 33
 
 **Vers3Dynamics | Applied Aerospace Research**
 
-Project 33 is a bench-validation prototype for a folding-fin/canard rocket concept. It brings together OpenRocket simulation, Fusion CAD, ESP32 firmware, an instrumented launcher, and a Python telemetry dashboard so the work can be reviewed as an engineering system rather than a standalone demo.
+## 1. What Project 33 is
 
-Current status: documented prototype, automated firmware/software checks, and simulation artifacts. It is not a flight-tested system and does not claim live propulsion validation.
+A low-cost folding-fin/canard rocket testbed, built as an engineering system in which models, software, hardware behavior, measurements, assumptions, failures, and open questions stay connected through inspectable evidence. The rocket is the specimen; the evidence record is the product.
 
-## Every Claim, an Inspectable Trail
+## 2. Current validation stage
 
-The [Evidence Observatory](docs/EVIDENCE_OBSERVATORY.md) packages eight claims with
-their exact source artifacts, assumptions, limitations, and next evidence needed.
-Its searchable offline report separates analytical results, synthetic fixtures,
-and software evidence. Four claims remain unresolved; no physical evidence is
-represented as measured.
+**Bench-validation prototype.** Models, CAD, firmware, a telemetry dashboard, and automated checks exist. No physical measurement has been accepted into the evidence record. It is not a flight-tested system and makes no live-propulsion claim.
 
-Build a portable review with `python -m evidence build --output build/review` and
-open `build/review/index.html`. Reviewers can verify the included SHA-256 manifest,
-compare two snapshots to identify affected claims, or audit a recorded telemetry
-CSV without connecting to hardware. The workflow runs on Python's standard
-library, and CI retains downloadable reports with each run.
+<!-- evidence:counts -->
+**Record state:** 8 claims · 3 contradicted · 4 unresolved · 1 supported within stated limits · 0 accepted physical measurements · 17 open discrepancies of 24 · 5 of 5 predictions not measured.
+<!-- /evidence:counts -->
 
-![OpenRocket 3D model](/33/Simulation/OpenRocket_3D_View.png)
+## 3. Evidence Observatory
 
-## Status Snapshot
+The [Evidence Observatory](docs/EVIDENCE_OBSERVATORY.md) answers, for each claim: what is claimed, which exact files support it, what class of evidence they are (analytical, simulated, synthetic, software-verified, bench-observed, bench-measured), which requirements it meets or misses, what contradicts it, which reviews a change has made insufficient, and which measurements are still missing. Support is derived from evidence classes and cannot be authored; a model never becomes a measurement.
 
-| Area | Status |
-|------|--------|
-| Simulation | OpenRocket model and visual exports are committed |
-| CAD | Fusion archives are committed; annotated render exports are planned |
-| Firmware | Rocket and launcher builds are checked by CI |
-| Dashboard | Telemetry logging, graph export, PID comparison, and onboard log dump support are implemented |
-| Evidence | Bench evidence workflow exists; representative physical bench package is the next milestone |
-| Safety | Dashboard launch is disabled by default and live propulsion is outside this repository's claim boundary |
+Its portable review packets run offline on Python's standard library, carry every cited file with its SHA-256 digest, and state separately what was checked: bundle integrity, record consistency, software tests, model reproduction, firmware build. Physical performance is reported as not established; flight readiness as not assessed.
 
-## What This Repository Contains
+## 4. The engineering system
 
-| Area | Contents |
-|------|----------|
-| CAD | Fusion 360 design archives, render coverage notes, and a NACA 4-digit airfoil generator |
-| Simulation | OpenRocket model, side view, 3D view, and stability graph |
-| Firmware | Rocket flight computer, launcher ground station, calibration sketches, shared protocol header |
-| Dashboard | Ground-control UI with per-session CSV logs, graph export, onboard log dump, and PID comparison reports |
-| Docs | Status, architecture, wiring, generated protocol, bench evidence, CAD, PID, safety, BOM, and testing docs |
+Question → model → registered prediction → implementation → pre-registered inert test → captured session → audit and passport → **named human acceptance** → comparison → claim review.
 
-## System Overview
+The dashboard talks to the launcher over UDP; the launcher owns the WiFi access point, physical arming controls, and the UART bridge to the rocket; the rocket owns IMU roll sensing, canard servos, and its own arming state. See [Architecture](docs/ARCHITECTURE.md), [Protocol](docs/PROTOCOL.md), and [Wiring](docs/WIRING.md).
 
-The Python dashboard talks to the launcher over UDP. The launcher owns the WiFi access point, physical arming controls, GPS/barometer/compass telemetry, and the UART bridge to the rocket. The rocket owns IMU roll sensing, canard servo output, rocket-side arming/ignition state, and a RAM ring buffer for onboard log dumps.
+## 5. C1–C8 claim status
 
-See [Project Status](docs/PROJECT_STATUS.md), [Architecture](docs/ARCHITECTURE.md), [Protocol](docs/PROTOCOL.md), and [Wiring](docs/WIRING.md) for the full system map.
+<!-- evidence:claims-table -->
+**Record state:** 8 claims · 3 contradicted · 4 unresolved · 1 supported within stated limits · 0 accepted physical measurements · 17 open discrepancies of 24 · 5 of 5 predictions not measured.
 
-## Current Evidence
+| Claim | Subject | Status | Strongest accepted evidence | Failing or disputed requirements | Open discrepancies |
+|---|---|---|---|---|---|
+| [C1](docs/claims/C1.md) | Folding-fin mechanism model | **CONTRADICTED** | MODEL ONLY | R-C1-CLOSURE NOT SATISFIED | D-002, D-004, D-005 |
+| [C2](docs/claims/C2.md) | Deployment timing | **UNRESOLVED** | IMPLEMENTATION ONLY | none failing | D-017, D-018, D-024 |
+| [C3](docs/claims/C3.md) | CAD generator software | **SUPPORTED WITHIN STATED LIMITS** | IMPLEMENTATION ONLY | none failing | none |
+| [C4](docs/claims/C4.md) | Material mass accounting | **UNRESOLVED** | MODEL ONLY | none failing | D-010, D-022 |
+| [C5](docs/claims/C5.md) | Static-stability model | **UNRESOLVED** | MODEL ONLY | R-C5-WINDOW MODELS DISAGREE | D-006, D-007, D-008, D-009, D-023 |
+| [C6](docs/claims/C6.md) | Spring margin consistency | **CONTRADICTED** | MODEL ONLY | R-C6-MARGIN NOT SATISFIED | D-009, D-010, D-011 |
+| [C7](docs/claims/C7.md) | Deployment reliability evidence | **UNRESOLVED** | MODEL ONLY | none failing | D-010, D-013 |
+| [C8](docs/claims/C8.md) | Structural claim boundaries | **CONTRADICTED** | MODEL ONLY | R-C8-MODULUS NOT SATISFIED | D-009, D-010, D-015 |
+<!-- /evidence:claims-table -->
 
-![Side view](/33/Simulation/Side_View.png)
+## 6. Current evidence
 
-![Stability graph](/33/Simulation/Stability_Graph.png)
+![C1 loop-closure check: the output circle never meets the coupler circles](/33/docs/assets/review/c1_loop_closure.svg)
 
-The repository currently includes simulation artifacts, CAD archives, firmware, dashboard code, generated protocol docs, and automated checks. Bench logs generated by the dashboard are stored locally in `Firmware/TestSessions/` with CSV, graph, summary, and PID comparison artifacts for each run.
+*C1: the specified four-bar cannot close at any drive angle. Rendered from the tested model; geometry only.*
 
-Shareable evidence should use [the bench evidence template](docs/BENCH_EVIDENCE_TEMPLATE.md), include raw-file provenance, and clearly state what was not measured.
+![C3: NACA 0012 fin profile, 60 mm chord](/33/docs/assets/review/c3_naca0012_profile.svg)
 
-## Project Documents
+*C3: generated fin profile with chord and maximum thickness. Geometry says nothing about aerodynamic performance.*
+
+The complete requirement matrix and prediction ledger are in [Traceability](docs/TRACEABILITY.md); every recorded mismatch is in the [Discrepancy register](docs/DISCREPANCIES.md).
+
+## 7. Known gaps
+
+- No accepted inert bench measurement of anything: timing, spring rate, masses, CG, servo authority, gyro drift, interlocks.
+- The C1 linkage dimensions cannot form a closed loop; the intended topology needs human review.
+- Two static-margin formulations disagree about the C5 window; the script's motor differs from the OpenRocket model.
+- The mass, spring, reliability, and structural models do not share a design point.
+- Live telemetry timestamps are launcher relay times; the protocol has no sequence number or boot identifier.
+
+## 8. Validation roadmap
+
+Analytical model → software reproduction → synthetic test → inert bench setup → inert physical measurement → repeated measurement → independent review. Gates from inert bench setup onward require a human-registered pre-registration or a human-accepted measurement. See the [Roadmap](docs/ROADMAP.md) and [Project Status](docs/PROJECT_STATUS.md).
+
+## 9. Safety boundary
+
+Inert bench validation, simulation, and engineering review only. Dashboard launch is rejected by default in firmware; the physical arming switch, readiness handshake, heartbeat timeout, and rocket-side arming state remain in force, and refusals are logged. No AI feature or automated tool has authority over any gate. Field testing is a separate, safety-reviewed process outside this repository. See [Safety](docs/SAFETY.md).
+
+## 10. Reproduce the review
+
+```bash
+python -m evidence status
+python -m evidence check
+python -m evidence build --output build/review
+python -m evidence verify build/review
+```
+
+Open `build/review/index.html`. No network, account, or hardware is needed. CI retains review packets with the test and model-reproduction run records attached.
+
+## Project documents
 
 - [Project status and readiness matrix](docs/PROJECT_STATUS.md)
 - [Evidence Observatory and offline review workflow](docs/EVIDENCE_OBSERVATORY.md)
+- [Claim passports](docs/claims/README.md)
 - [Paper integration and evidence traceability](docs/PAPER_ALIGNMENT.md)
 - [Validation roadmap](docs/ROADMAP.md)
-- [Architecture](docs/ARCHITECTURE.md)
-- [Generated protocol reference](docs/PROTOCOL.md)
-- [Wiring reference](docs/WIRING.md)
 - [Bench session evidence](docs/BENCH_SESSIONS.md)
 - [CAD assemblies and materials](docs/CAD_ASSEMBLIES.md)
-- [PID tuning data](docs/PID_TUNING.md)
-- [Onboard logging](docs/ONBOARD_LOGGING.md)
-- [Bill of materials](docs/BOM.md)
 - [Testing and evidence plan](docs/TESTING.md)
 - [Safety and test boundaries](docs/SAFETY.md)
+- [Bill of materials](docs/BOM.md)
 
-## Known Limits
+![OpenRocket 3D model](/33/Simulation/OpenRocket_3D_View.png)
 
-This is an educational prototype. The repo does not yet include committed physical bench-session evidence or flight-test data, and the current stabilization loop is roll-axis focused. Treat live propulsion or ignition work as out of scope unless it is separately reviewed under qualified supervision and local rules.
+*OpenRocket export; the model revision that produced it is not recorded (D-023).*

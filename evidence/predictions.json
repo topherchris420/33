@@ -1,0 +1,61 @@
+{
+  "schema_version": 1,
+  "note": "A prediction's value is frozen at registration. If the source artifact later reports a different value, the check fails with PREDICTION DRIFT: register a new prediction and mark this one superseded. Never edit a registered value.",
+  "predictions": [
+    {
+      "id": "PRED-C2-DELAY", "claims": ["C2"], "status": "active",
+      "quantity": "delay from deploy trigger call to GPIO 33 rising edge", "unit": "us",
+      "condition": "rocket firmware as committed; inert bench; no load on GPIO 33",
+      "value": 50000, "uncertainty": null,
+      "evidence_class": "implementation",
+      "source": {"artifact": "rocket_firmware", "regex": "trigger_deployment_sequence\\((\\d+)\\)"},
+      "basis": "Requested delay in firmware. This is a setpoint, not a model of achieved timing.",
+      "measurement_method": "External logic analyzer on GPIO 33 and a trigger-reference GPIO; see P-001.",
+      "acceptance": null, "preregistration": "P-001", "registered": "2026-09-28"
+    },
+    {
+      "id": "PRED-C5-DRY-CG", "claims": ["C5"], "status": "active",
+      "quantity": "dry centre of gravity from nose tip", "unit": "m",
+      "condition": "OpenRocket override masses of the body tubes only; no motor",
+      "value": 0.335817, "uncertainty": null,
+      "evidence_class": "analytical",
+      "source": {"artifact": "stability_record", "json": "/dry_cg_m", "round": 6},
+      "basis": "Reference script's aggregation of body-tube override masses (excludes the nose-cone override mass; D-008).",
+      "measurement_method": "Balance point of the assembled inert airframe, fins deployed, motor mount empty.",
+      "acceptance": null, "preregistration": null, "registered": "2026-09-28"
+    },
+    {
+      "id": "PRED-C6-SPRING-RATE", "claims": ["C6"], "status": "active",
+      "quantity": "torsion spring rate of the supplied spring", "unit": "N*m/rad",
+      "condition": "spring as supplied, room temperature, within its rated angle",
+      "value": 220.0, "uncertainty": null,
+      "evidence_class": "specification",
+      "source": {"artifact": "spring_design_point", "json": "/k_supplied_N_m_rad"},
+      "basis": "Value stated in the source paper; no datasheet or measurement is recorded.",
+      "measurement_method": "Inert torque-angle characterization; see P-002.",
+      "acceptance": null, "preregistration": "P-002", "registered": "2026-09-28"
+    },
+    {
+      "id": "PRED-C7-LOCK-FRACTION", "claims": ["C7"], "status": "active",
+      "quantity": "fraction of deployments that reach and hold the lock position", "unit": "fraction",
+      "condition": "simulated tolerance ranges of the C7 run record",
+      "value": 1.0, "uncertainty": null,
+      "evidence_class": "simulated",
+      "source": {"artifact": "reliability_run_record", "json": "/success_fraction"},
+      "basis": "Simulation whose velocity criterion cannot fail for a locked trial (D-013).",
+      "measurement_method": "Repeated inert spring deployments of a printed mechanism; requires C1 to be resolved first.",
+      "acceptance": null, "preregistration": null, "registered": "2026-09-28"
+    },
+    {
+      "id": "PRED-TLM-T-INTERVAL", "claims": [], "status": "active",
+      "quantity": "interval between successive rocket DATA packets", "unit": "ms",
+      "condition": "rocket firmware as committed, MPU6050 healthy",
+      "value": 50, "uncertainty": null,
+      "evidence_class": "implementation",
+      "source": {"artifact": "rocket_firmware", "regex": "current_time - lastTelemetrySent >= (\\d+)"},
+      "basis": "Firmware send period. Live T packets are stamped with launcher relay time, so their spacing measures relay cadence (D-018).",
+      "measurement_method": "LOG-stream intervals from an onboard log dump (rocket clock), audited with python -m evidence audit.",
+      "acceptance": null, "preregistration": null, "registered": "2026-09-28"
+    }
+  ]
+}

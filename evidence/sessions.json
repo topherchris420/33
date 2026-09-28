@@ -1,0 +1,5 @@
+{
+  "schema_version": 1,
+  "note": "Registry of bench sessions promoted beyond a local raw capture. Stages: raw, audited, review_candidate, human_accepted, rejected. Only a named human may set human_accepted. No session has been registered.",
+  "sessions": []
+}

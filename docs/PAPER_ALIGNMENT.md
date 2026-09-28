@@ -1,8 +1,8 @@
 # Paper Integration and Evidence Traceability
 
-This document records how the local Project 33 paper was reviewed against the repository. The source PDF was reviewed from `Downloads/main_tex (2).pdf`; the PDF itself is not committed here.
+This document records how the local Project 33 paper was reviewed against the repository. The source PDF was reviewed from `Downloads/main_tex (2).pdf`; the PDF itself is not committed here, so the paper's statements appear in the record only as the historical claim text preserved in `evidence/archive/notes-v1/` and as the `source` of each requirement.
 
-## Integration Boundary
+## Integration boundary
 
 Project 33 remains an inert bench-validation prototype for simulation, CAD review, firmware checks, dashboard logging, and supervised educational testing. The paper's tactical, weaponized, live-test, and advanced guidance framing is not adopted by this repository and does not create a flight-readiness or live-propulsion claim.
 
@@ -13,32 +13,40 @@ No integration work in this repository should:
 - add targeting, live-fire, or autonomous guidance behavior;
 - replace evidence gaps with estimated performance claims.
 
-## Traceability Matrix
+## Paper themes and where they live
 
-| Claim | Paper theme | Repository integration | Evidence status |
-|-------|-------------|------------------------|-----------------| 
-| **C1** | Four-bar folding-fin mechanism | Existing kinematic model and parameter sweep | Analytical only; no assembled-mechanism measurement. `docs/EVIDENCE/C1_four_bar.md` |
-| **C2** | Zero-blocking hardware deployment | Timer implementation plus a 21-row synthetic timing fixture | Unresolved: synthetic rows do not establish hardware timing. `docs/EVIDENCE/C2_latency.md` |
-| **C3** | NACA 4-digit fin profile generation | Parametric generator and STEP-export regression source | Software evidence; generated geometry does not establish physical performance. `docs/EVIDENCE/C3_naca_sweep.md` |
-| **C4** | Material substitutions | Baseline and candidate mass calculations | Analytical only; no as-built weigh-in. `docs/EVIDENCE/C4_delta.md` |
-| **C5** | Static-margin and stability claims | Existing model input and calculated static margin | Analytical only; applicability and uncertainty require review. `docs/EVIDENCE/C5_static_margin.md` |
-| **C6** | Torsion spring sizing | Reported 19% margin against a stated requirement of at least 20% | Unresolved: the stated percentage is not met and the legacy test does not enforce that bound. `docs/EVIDENCE/C6_spring_sizing.md` |
-| **C7** | Deployment reliability | Seeded simulation source and a failure-only CSV | Unresolved: a header-only CSV cannot establish the trial denominator; simulation does not measure physical reliability. `docs/EVIDENCE/C7_reliability.md` |
-| **C8** | Structural and Composite CLT | Simplified material and hinge calculations | Unresolved: material modulus and component stiffness are different quantities; no physical qualification. `docs/EVIDENCE/C8_clt.md` and `C8_hinge_fos.md` |
+| Claim | Paper theme | Repository integration |
+|-------|-------------|------------------------|
+| C1 | Four-bar folding-fin mechanism with over-center locking | Planar loop-closure model, parameter sweep, loop-closure figure |
+| C2 | Zero-blocking hardware-timed deployment | esp_timer implementation, synthetic timing fixture, proposed inert timing protocol (P-001) |
+| C3 | NACA 4-digit fin profile generation | Parametric generator, STEP export tests, profile figure |
+| C4 | Material substitutions and mass reduction | Four-part mass rollup with an explicit exclusion list |
+| C5 | Static-margin window | Reference Barrowman script and an independent textbook cross-check |
+| C6 | Torsion-spring sizing with margin | Design-point record and sensitivity sweep |
+| C7 | Deployment reliability from Monte Carlo | Seeded simulation with an explicit run record |
+| C8 | Composite layup stiffness and hinge-pin factor of safety | Classical laminate theory and a closed-form pin check |
 
-Use the [Evidence Observatory](EVIDENCE_OBSERVATORY.md) to inspect the exact source
-files, classifications, assumptions, and open questions together. The executable
-catalog in `evidence/catalog.json` replaces the former blanket "Verified" labels
-with explicit limits. A successful review build checks artifact availability and
-integrity; it is not a scientific acceptance test.
+## Current status of each claim
 
-## Implementation Notes
+<!-- evidence:claims-table -->
+**Record state:** 8 claims · 3 contradicted · 4 unresolved · 1 supported within stated limits · 0 accepted physical measurements · 17 open discrepancies of 24 · 5 of 5 predictions not measured.
 
-All eight claim themes (C1–C8) have corresponding code or authored evidence notes.
-That traceability does not establish that the claims are physically true. The
-offline review workflow does not exercise or modify actuation or command paths.
+| Claim | Subject | Status | Strongest accepted evidence | Failing or disputed requirements | Open discrepancies |
+|---|---|---|---|---|---|
+| [C1](claims/C1.md) | Folding-fin mechanism model | **CONTRADICTED** | MODEL ONLY | R-C1-CLOSURE NOT SATISFIED | D-002, D-004, D-005 |
+| [C2](claims/C2.md) | Deployment timing | **UNRESOLVED** | IMPLEMENTATION ONLY | none failing | D-017, D-018, D-024 |
+| [C3](claims/C3.md) | CAD generator software | **SUPPORTED WITHIN STATED LIMITS** | IMPLEMENTATION ONLY | none failing | none |
+| [C4](claims/C4.md) | Material mass accounting | **UNRESOLVED** | MODEL ONLY | none failing | D-010, D-022 |
+| [C5](claims/C5.md) | Static-stability model | **UNRESOLVED** | MODEL ONLY | R-C5-WINDOW MODELS DISAGREE | D-006, D-007, D-008, D-009, D-023 |
+| [C6](claims/C6.md) | Spring margin consistency | **CONTRADICTED** | MODEL ONLY | R-C6-MARGIN NOT SATISFIED | D-009, D-010, D-011 |
+| [C7](claims/C7.md) | Deployment reliability evidence | **UNRESOLVED** | MODEL ONLY | none failing | D-010, D-013 |
+| [C8](claims/C8.md) | Structural claim boundaries | **CONTRADICTED** | MODEL ONLY | R-C8-MODULUS NOT SATISFIED | D-009, D-010, D-015 |
+<!-- /evidence:claims-table -->
 
-Historical parameter changes intended to align C5, C6, and C8 with paper targets
-are recorded in `docs/EVIDENCE/CHANGELOG.md`. Matching a target by revising model
-inputs is not independent validation. Input provenance, cross-model consistency,
-and physical applicability remain review questions.
+A paper statement becomes a requirement in `evidence/requirements.json`, evaluated from committed values and labeled with the evidence class of the value. Where the repository's own models contradict the paper (C1 closure, C6 margin, C8 modulus) or disagree with each other (C5), that is recorded, not rounded. Passports: [docs/claims](claims/README.md).
+
+## Matching a target is not validation
+
+`docs/EVIDENCE/CHANGELOG.md` records that model inputs for C5, C6, and C8 were revised until the results matched the paper's numbers, and marked those items "resolved". The pre-revision OpenRocket model is preserved in the failure archive. Changing inputs until a model agrees with a target is not independent validation; each revised input needs an independent source (drawing, datasheet, or measurement). This is discrepancy D-009.
+
+Use the [Evidence Observatory](EVIDENCE_OBSERVATORY.md) to inspect the exact files, classes, requirements, and open questions together. A successful review build checks record consistency and file integrity; it is not a scientific acceptance test.

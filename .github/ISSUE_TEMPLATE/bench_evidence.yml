@@ -25,6 +25,20 @@ body:
       description: Describe propulsion/ignition state, disconnected actuators, power limits, and reset method.
     validations:
       required: true
+  - type: input
+    id: passport
+    attributes:
+      label: Session passport digest
+      description: manifest.sha256 of the passport built with python -m evidence session passport.
+    validations:
+      required: true
+  - type: input
+    id: preregistration
+    attributes:
+      label: Pre-registration
+      description: ID of the registered pre-registration, or "none (descriptive only)".
+    validations:
+      required: true
   - type: textarea
     id: files
     attributes:
@@ -54,4 +68,8 @@ body:
         - label: The run was inert and does not imply a flight-test result.
           required: true
         - label: Raw-file provenance is included.
+          required: true
+        - label: Raw capture files were not edited; corrections are in the declaration.
+          required: true
+        - label: Anything not measured is written as NOT MEASURED, not zero.
           required: true

@@ -1,5 +1,7 @@
-import yaml
 import csv
+import json
+
+import yaml
 import argparse
 from pathlib import Path
 
@@ -69,55 +71,41 @@ def export_csv(data, path):
     output = Path(path)
     output.parent.mkdir(parents=True, exist_ok=True)
     with open(output, 'w', newline='') as f:
-        writer = csv.DictWriter(f, fieldnames=['part', 'subsystem', 'material', 'mass_kg'])
+        writer = csv.DictWriter(f, fieldnames=['part', 'subsystem', 'material', 'mass_kg'],
+                                lineterminator='\n')
         writer.writeheader()
         writer.writerows(data)
 
-def generate_evidence_doc(baseline, optimized, b_mass, o_mass, output_dir):
-    delta = b_mass - o_mass
-    delta_pct = (delta / b_mass) * 100 if b_mass > 0 else 0
-    
-    doc = [
-        "# C4 — Material substitution matrix",
-        "",
-        "**Paper claim:** Material optimization (quasi-isotropic CFRP, Ti-6Al-4V) yields a 30-40% total mass reduction compared to the baseline 3D printed/aluminum assembly.",
-        "",
-        "**Recomputed result:**",
-        f"Baseline Mass: {b_mass*1000:.1f} g",
-        f"Optimized Mass: {o_mass*1000:.1f} g",
-        f"Mass Reduction: {delta_pct:.1f}%",
-        "",
-        "| Part | Baseline Material | Optimized Material | Baseline Mass (g) | Optimized Mass (g) | Delta (g) |",
-        "|---|---|---|---|---|---|"
-    ]
-    
-    for b, o in zip(baseline, optimized):
-        d = (b['mass_kg'] - o['mass_kg']) * 1000
-        doc.append(f"| {b['part']} | {b['material']} | {o['material']} | {b['mass_kg']*1000:.1f} | {o['mass_kg']*1000:.1f} | {d:.1f} |")
-        
-    doc.extend([
-        "",
-        "**Artifact paths:**",
-        "- `docs/EVIDENCE/C4_mass_baseline.csv`",
-        "- `docs/EVIDENCE/C4_mass_optimized.csv`",
-        "",
-        "*Deterministic computation — no physical measurement*"
-    ])
-    
-    out_path = Path(output_dir) / "C4_delta.md"
-    out_path.write_text("\n".join(doc), encoding="utf-8")
+
+def summarize(parts, b_mass, o_mass):
+    """Structured totals. Scope is exactly the parts listed in parts.yaml."""
+    return {
+        'schema': 'project33.c4.mass_summary/1',
+        'generator': 'materials/mass_rollup.py',
+        'inputs': 'materials/parts.yaml',
+        'units': {'mass': 'kg', 'volume': 'cm^3', 'density': 'kg/m^3'},
+        'densities': DENSITIES,
+        'parts_included': [p['name'] for p in parts],
+        'baseline_total_kg': round(b_mass, 6),
+        'candidate_total_kg': round(o_mass, 6),
+        'reduction_fraction': round((b_mass - o_mass) / b_mass, 6) if b_mass > 0 else None,
+        'not_included': ['electronics', 'servos', 'fasteners and adhesives', 'motor',
+                         'wiring and battery', 'manufacturing variation'],
+        'basis': 'calculated from authored volumes and handbook densities; no part was weighed',
+    }
+
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument('--emit', nargs=2, metavar=('BASELINE_CSV', 'OPTIMIZED_CSV'), required=True)
     args = parser.parse_args()
-    
+
     yaml_path = Path(__file__).resolve().parent / "parts.yaml"
     parts = load_parts(yaml_path)
-    
+
     b_data, o_data, b_mass, o_mass = generate_rollup(parts)
-    
+
     export_csv(b_data, args.emit[0])
     export_csv(o_data, args.emit[1])
-    
-    generate_evidence_doc(b_data, o_data, b_mass, o_mass, Path(args.emit[0]).parent)
+    summary_path = Path(args.emit[0]).parent / "C4_mass_summary.json"
+    summary_path.write_text(json.dumps(summarize(parts, b_mass, o_mass), indent=2) + "\n", encoding="utf-8")

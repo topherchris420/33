@@ -1,0 +1,41 @@
+{
+  "schema": "project33.c5.static_margin_inputs/1",
+  "generator": "Simulation/static_margin.py",
+  "geometry_source": "Folding Stabilized Rocket.ork",
+  "units": {
+    "length": "m",
+    "mass": "kg",
+    "time": "s",
+    "static_margin": "calibers"
+  },
+  "geometry": {
+    "d_ref": 0.0762,
+    "L_n": 0.038099999999999995,
+    "X_f": 0.381,
+    "C_R": 0.13,
+    "C_T": 0.11,
+    "S": 0.18,
+    "L_f_sweeplength": 0.01
+  },
+  "dry_mass_kg": 1.185,
+  "dry_cg_m": 0.33581729957805906,
+  "motor_assumed": {
+    "designation": "Estes C6-5 (hard-coded)",
+    "wet_kg": 0.024,
+    "dry_kg": 0.011,
+    "cg_m": 0.52,
+    "burn_s": 1.8
+  },
+  "ork_motor_designation": "G64W",
+  "ork_nose_shape": "ellipsoid",
+  "nose_cp_coefficient_used": 0.466,
+  "formula_notes": [
+    "Fin CP term uses C_R/3*(C_R+2C_T)/(C_R+C_T) as the sweep term; the textbook Barrowman form uses the tip leading-edge sweep distance X_R in that position.",
+    "Fin normal-force term uses the sweep length where the textbook form uses the mid-chord line length.",
+    "Nose CP coefficient 0.466 is the ogive value.",
+    "Only body-tube override masses are summed for dry mass."
+  ],
+  "cp_m": 0.457464,
+  "sm_min_calibers": 1.5484,
+  "sm_max_calibers": 1.5742
+}

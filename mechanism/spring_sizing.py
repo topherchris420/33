@@ -40,6 +40,37 @@ def validate_design_margin(k_required, k_supplied):
     meets_20_pct = margin >= 0.20
     return margin, meets_20_pct
 
+DESIGN_POINT = {
+    'v_egress': 205.0, 'c_fin': 0.120, 'S_fin': 0.0216, 't_deploy': 0.050,
+    'h_fin': 0.180, 'm_fin': 0.154, 'Cm_alpha_max': 0.8, 'damping_ratio': 0.7,
+}
+K_SUPPLIED = 220.0  # N·m/rad, stated in the source paper; no spring has been characterized
+
+
+def design_point_record():
+    """The single calculation the C6 claim rests on, with every input stated."""
+    k_min = compute_k_min(**DESIGN_POINT)
+    margin, _ = validate_design_margin(k_min, K_SUPPLIED)
+    return {
+        'schema': 'project33.c6.design_point/1',
+        'generator': 'mechanism/spring_sizing.py',
+        'units': {'v_egress': 'm/s', 'c_fin': 'm', 'S_fin': 'm^2', 't_deploy': 's', 'h_fin': 'm',
+                  'm_fin': 'kg', 'k': 'N*m/rad', 'margin_fraction': '(k_supplied - k_min) / k_min'},
+        'inputs': DESIGN_POINT,
+        'model_assumptions': [
+            'constant angular acceleration to 90 deg within t_deploy',
+            'thin-rod fin inertia about its end',
+            'peak aerodynamic hinge moment applied throughout deployment',
+            'damping handled by dividing by (1 - damping_ratio), a heuristic inflation',
+            'air density fixed at 1.225 kg/m^3',
+        ],
+        'k_min_N_m_rad': round(k_min, 4),
+        'k_supplied_N_m_rad': K_SUPPLIED,
+        'k_supplied_basis': 'stated in source paper; not a measured spring rate',
+        'margin_fraction': round(margin, 6),
+    }
+
+
 def sensitivity_sweep(output_path):
     v_egress_vals = range(150, 251, 10)
     Cm_alpha_max_vals = [round(0.5 + 0.1 * i, 1) for i in range(8)]
@@ -67,8 +98,10 @@ def sensitivity_sweep(output_path):
             
     output_file = Path(output_path)
     output_file.parent.mkdir(parents=True, exist_ok=True)
-    with open(output_file, 'w') as f:
+    with open(output_file, 'w', newline='\n') as f:
         json.dump(results, f, indent=2)
+    (output_file.parent / 'C6_design_point.json').write_text(
+        json.dumps(design_point_record(), indent=2) + '\n', encoding='utf-8')
         
     try:
         import matplotlib

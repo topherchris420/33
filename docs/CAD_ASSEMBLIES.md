@@ -2,6 +2,30 @@
 
 The authoritative CAD source files are the Fusion 360 archives in `CAD Files/`. The repo also includes OpenRocket render exports for the rocket configuration in `Simulation/`.
 
+Rendered geometry shows shape, not feasibility. A render or STEP file is not evidence that a mechanism assembles, carries load, or performs; those need a model that closes and an inert physical test.
+
+## Review Figures (generated from tested code)
+
+These are rendered by `tools/review_figures.py` from the same code the tests exercise; CI fails if they go stale.
+
+![C1 loop-closure check](assets/review/c1_loop_closure.svg)
+
+The specified four-bar (ground 25, coupler 60, input 15, output 15 mm) cannot close at any drive angle from 0 to 92 degrees (D-002).
+
+![C3 NACA 0012 fin profile](assets/review/c3_naca0012_profile.svg)
+
+The NACA 0012, 60 mm chord profile produced by `naca_fin_generator.py`, with chord and maximum thickness as sampled.
+
+## Known CAD-versus-Model Discrepancies
+
+| ID | Discrepancy | Status |
+|----|-------------|--------|
+| D-005 | `Project33FourBar.py` draws the coupler as 25 mm and exports four separate bars; the model's 60 mm coupler cannot close | Open |
+| D-002 | The linkage dimensions themselves cannot form a closed loop | Open |
+| D-021 | The folding-rocket archive references an MG996R servo that the BOM does not list | Open |
+| D-022 | The C4 mass "baseline" is 7075-T6, but the prototype material plan below is PLA+/PETG | Open |
+| — | No as-built measurement of any printed part exists, so CAD-versus-as-built differences are NOT MEASURED | — |
+
 ## Render Coverage
 
 | Assembly | CAD Source | Current Visual Evidence | Render Export Target |

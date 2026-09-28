@@ -37,19 +37,27 @@ def test_negative_mass_raises():
             t_deploy=0.050, h_fin=0.060, m_fin=-0.015, Cm_alpha_max=0.8
         )
 
-def test_design_point_has_20_percent_margin():
-    k_required = spring_sizing.compute_k_min(
-        v_egress=205.0, c_fin=0.120, S_fin=0.0216,
-        t_deploy=0.050, h_fin=0.180, m_fin=0.154,
-        Cm_alpha_max=0.8, damping_ratio=0.7
-    )
-    k_supplied = 220.0  # N·m/rad from paper
-    assert k_required <= k_supplied * 1.20, (
-        f'k_required={k_required:.1f} exceeds k_supplied*1.2={k_supplied*1.2:.1f}'
-    )
-    assert k_required <= k_supplied, (
-        f'k_required={k_required:.1f} exceeds k_supplied={k_supplied:.1f} — no margin'
-    )
+def test_margin_arithmetic_is_reported_not_rounded_up():
+    # Revision 1 of this test was named for a 20% margin but only asserted
+    # k_required <= 1.2 * k_supplied, which accepts negative margins. It is
+    # preserved in evidence/archive/test_spring_sizing.v1.py.txt. Whether the
+    # design point meets its stated margin is evaluated by requirement
+    # R-C6-MARGIN in evidence/requirements.json, not asserted here.
+    margin, meets = spring_sizing.validate_design_margin(100.0, 119.0)
+    assert margin == pytest.approx(0.19)
+    assert meets is False
+    margin, meets = spring_sizing.validate_design_margin(100.0, 120.0)
+    assert margin == pytest.approx(0.20)
+    assert meets is True
+
+
+def test_design_point_record_matches_direct_calculation():
+    record = spring_sizing.design_point_record()
+    k = spring_sizing.compute_k_min(**spring_sizing.DESIGN_POINT)
+    assert record['k_min_N_m_rad'] == pytest.approx(k, abs=1e-4)
+    assert record['margin_fraction'] == pytest.approx((220.0 - k) / k, abs=1e-6)
+    assert record['inputs']['t_deploy'] == 0.050
+
 
 def test_sensitivity_sweep_emits_json(tmp_path):
     output = tmp_path / 'sweep.json'

@@ -23,4 +23,8 @@ namespace Project33Protocol {
     static constexpr const char* CMD_REJECT_PID_INVALID = "CMD_REJECT:pid_invalid";
     static constexpr const char* CMD_REJECT_UNKNOWN_COMMAND = "CMD_REJECT:unknown_command";
     static constexpr const char* ABORT_PREFIX = "ABORT:";
+    static constexpr const char* CMD_REJECT_ARM_NOT_IDLE = "CMD_REJECT:arm_not_idle";
+    static constexpr const char* CMD_REJECT_IGNITE_NOT_ARMED = "CMD_REJECT:ignite_not_armed";
+    static constexpr const char* CMD_REJECT_IGNITE_FINS_NOT_DEPLOYED = "CMD_REJECT:ignite_fins_not_deployed";
+    static constexpr const char* CMD_REJECT_SENSOR_UNAVAILABLE = "CMD_REJECT:sensor_unavailable";
 }

@@ -226,6 +226,8 @@ void processSerial2() {
                     String kd = msg.substring(c[8]+1, c[9]);
                     String skew = msg.substring(c[9]+1);
 
+                    // T carries the launcher's millis() at relay time, not the rocket's sample
+                    // time (DATA has no rocket timestamp). Audits label it launcher_relay_millis.
                     sendToDashboard("T," + String(millis()) + "," + roll + "," + rate + "," + out);
                     sendToDashboard(String(Project33Protocol::STATUS_PREFIX) + state + "," + kp + "," + kd + "," + skew);
                 } else {
@@ -482,9 +484,11 @@ void loop() {
         }
         lastCharsProcessed = currentChars;
         
-        // Send: ENV,lat,lon,alt,gpsState
+        // Send: ENV,lat,lon,alt,gpsState. Missing is not zero: without a barometer the
+        // altitude field is nan, and lat/lon are placeholders unless gpsState is 2.
+        float altOut = bmpHealthy ? filteredAlt : NAN;
         char envMsg[128];
-        snprintf(envMsg, sizeof(envMsg), "%s%.6f,%.6f,%.1f,%d", Project33Protocol::ENV_PREFIX, lat, lon, filteredAlt, gpsState);
+        snprintf(envMsg, sizeof(envMsg), "%s%.6f,%.6f,%.1f,%d", Project33Protocol::ENV_PREFIX, lat, lon, altOut, gpsState);
         sendToDashboard(String(envMsg));
     }
 }

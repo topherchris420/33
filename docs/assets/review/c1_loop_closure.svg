@@ -1,0 +1,27 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 600" width="1000" height="600" font-family="system-ui, sans-serif" role="img" aria-label="Four-bar loop closure check">
+<rect width="1000" height="600" fill="#ffffff"/>
+<text x="30.0" y="36.0" font-size="17" fill="#1b2622" text-anchor="start" font-weight="600">C1 · Can the baseline four-bar close? (ground 25, coupler 60, input 15, output 15 mm)</text>
+<text x="30.0" y="58.0" font-size="12" fill="#5b6b64" text-anchor="start" font-weight="normal">Source: mechanism/four_bar.py revision 2. The output joint C must lie on both circles at once.</text>
+<line x1="250.0" y1="330.0" x2="330.0" y2="330.0" stroke="#1b2622" stroke-width="4"/>
+<line x1="250.0" y1="330.0" x2="298.0" y2="330.0" stroke="#1f6f5a" stroke-width="3"/>
+<circle cx="298.0" cy="330.0" r="192.0" fill="none" stroke="#1f6f5a" stroke-dasharray="6 4"/>
+<text x="298.0" y="370.0" font-size="12" fill="#1f6f5a" text-anchor="middle" font-weight="normal">B at drive 0°</text>
+<line x1="250.0" y1="330.0" x2="248.3" y2="282.0" stroke="#6b5bd6" stroke-width="3"/>
+<circle cx="248.3" cy="282.0" r="192.0" fill="none" stroke="#6b5bd6" stroke-dasharray="6 4"/>
+<text x="254.3" y="276.0" font-size="12" fill="#6b5bd6" text-anchor="start" font-weight="normal">B at drive 92°</text>
+<circle cx="330.0" cy="330.0" r="48.0" fill="none" stroke="#9b2c2c" stroke-width="1.6"/>
+<text x="242.0" y="348.0" font-size="13" fill="#1b2622" text-anchor="end" font-weight="600">A</text>
+<text x="336.0" y="348.0" font-size="13" fill="#1b2622" text-anchor="start" font-weight="600">D</text>
+<text x="560.0" y="110.0" font-size="12" fill="#1b2622" text-anchor="start" font-weight="normal">Dashed circles: where the 60 mm coupler can put C from B.</text>
+<text x="560.0" y="129.0" font-size="12" fill="#1b2622" text-anchor="start" font-weight="normal">Red circle: where the 15 mm output link allows C.</text>
+<text x="560.0" y="148.0" font-size="12" fill="#1b2622" text-anchor="start" font-weight="normal"></text>
+<text x="560.0" y="167.0" font-size="12" fill="#1b2622" text-anchor="start" font-weight="normal">The B-D distance never exceeds 29.6 mm, but the circles</text>
+<text x="560.0" y="186.0" font-size="12" fill="#1b2622" text-anchor="start" font-weight="normal">only meet when it is at least |60-15| = 45 mm.</text>
+<text x="560.0" y="205.0" font-size="12" fill="#1b2622" text-anchor="start" font-weight="normal"></text>
+<text x="560.0" y="224.0" font-size="12" fill="#9b2c2c" text-anchor="start" font-weight="normal">Result: the linkage cannot close at any drive angle from 0</text>
+<text x="560.0" y="243.0" font-size="12" fill="#1b2622" text-anchor="start" font-weight="normal">to 92° (requirement R-C1-CLOSURE, discrepancy D-002).</text>
+<text x="560.0" y="262.0" font-size="12" fill="#1b2622" text-anchor="start" font-weight="normal"></text>
+<text x="560.0" y="281.0" font-size="12" fill="#1b2622" text-anchor="start" font-weight="normal">Geometry only: a closed loop would still say nothing about</text>
+<text x="560.0" y="300.0" font-size="12" fill="#1b2622" text-anchor="start" font-weight="normal">loads, clearance, or locking.</text>
+<text x="560.0" y="319.0" font-size="12" fill="#1b2622" text-anchor="start" font-weight="normal"></text>
+</svg>

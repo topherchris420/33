@@ -191,12 +191,25 @@ void processSerialCommands() {
 #endif
             else if (cmdBuffer == Project33Protocol::CMD_IGNITE && sysState == "ARMED" && mpuHealthy) {
                 if (!is_fins_deployed()) {
+                    // Report the refusal on the UART so the launcher forwards it into the
+                    // dashboard CSV; a USB-only message never reaches the evidence record.
                     Serial.println("CMD_REJECT: Fins not deployed");
+                    Serial2.println(Project33Protocol::CMD_REJECT_IGNITE_FINS_NOT_DEPLOYED);
                 } else {
                     sysState = "IGNITING";
                     igniteStartTime = millis();
                     igniteServo.write(IGNITE_SERVO_ON);
                 }
+            }
+            // The gated ARM and IGNITE branches above did not match: log the refusal.
+            // These branches change nothing but the record; every gate is unchanged.
+            else if (cmdBuffer == Project33Protocol::CMD_IGNITE) {
+                Serial2.println(mpuHealthy ? Project33Protocol::CMD_REJECT_IGNITE_NOT_ARMED
+                                           : Project33Protocol::CMD_REJECT_SENSOR_UNAVAILABLE);
+            }
+            else if (cmdBuffer == Project33Protocol::CMD_ARM) {
+                Serial2.println(mpuHealthy ? Project33Protocol::CMD_REJECT_ARM_NOT_IDLE
+                                           : Project33Protocol::CMD_REJECT_SENSOR_UNAVAILABLE);
             }
             else if (cmdBuffer == Project33Protocol::CMD_CALIBRATE) {
                 calibrateGyro();

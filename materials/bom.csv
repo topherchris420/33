@@ -1,0 +1,11 @@
+item,qty,unit,unit_price_usd,price_basis,purchased_price_usd,source,source_date,reused,notes
+ESP32 DevKit V1,2,each,6,estimate,,planning estimate (small-quantity online price),,unknown,Rocket flight computer and launcher
+MPU6050 IMU module,1,each,4,estimate,,planning estimate (small-quantity online price),,unknown,Rocket roll sensing
+SG90-class micro servo,5,each,3,estimate,,planning estimate (small-quantity online price),,unknown,Four canards plus ignition servo; firmware drives six servos in total (D-021)
+QMC5883L compass,1,each,4,estimate,,planning estimate (small-quantity online price),,unknown,Launcher heading estimate
+BMP180 barometer,1,each,3,estimate,,planning estimate (small-quantity online price),,unknown,Launcher altitude/environment estimate
+GPS receiver module,1,each,10,estimate,,planning estimate (small-quantity online price),,unknown,Launcher location/status
+"Switches, button, LED, buzzer",1,set,5,estimate,,planning estimate (small-quantity online price),,unknown,Physical launch interlock and indicators
+Battery/regulator/wiring,1,set,12,estimate,,planning estimate (small-quantity online price),,unknown,Depends on available lab stock
+FDM filament,1,spool share,8,estimate,,planning estimate (small-quantity online price),,unknown,Airframe/launcher printed parts
+"Fasteners, inserts, adhesives",1,set,8,estimate,,planning estimate (small-quantity online price),,unknown,Mechanical assembly

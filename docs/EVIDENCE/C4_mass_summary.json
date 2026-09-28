@@ -1,0 +1,35 @@
+{
+  "schema": "project33.c4.mass_summary/1",
+  "generator": "materials/mass_rollup.py",
+  "inputs": "materials/parts.yaml",
+  "units": {
+    "mass": "kg",
+    "volume": "cm^3",
+    "density": "kg/m^3"
+  },
+  "densities": {
+    "PLA": 1240,
+    "PETG": 1270,
+    "7075-T6": 2810,
+    "CFRP_quasi_iso": 1550,
+    "Ti-6Al-4V": 4430
+  },
+  "parts_included": [
+    "Body Tube",
+    "Nose Cone",
+    "Fin (x4)",
+    "Hinge Pin (x4)"
+  ],
+  "baseline_total_kg": 0.098114,
+  "candidate_total_kg": 0.062798,
+  "reduction_fraction": 0.359949,
+  "not_included": [
+    "electronics",
+    "servos",
+    "fasteners and adhesives",
+    "motor",
+    "wiring and battery",
+    "manufacturing variation"
+  ],
+  "basis": "calculated from authored volumes and handbook densities; no part was weighed"
+}

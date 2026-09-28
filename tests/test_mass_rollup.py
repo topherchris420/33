@@ -1,35 +1,43 @@
+"""C4 model regression checks.
+
+Whether the calculated reduction meets the 30-40% target is evaluated by
+requirement R-C4-REDUCTION in the evidence record, not asserted by CI.
+"""
+
+import json
 import sys
 from pathlib import Path
-sys.path.insert(0, str(Path(__file__).resolve().parents[1] / 'materials'))
-import mass_rollup
+
 import pytest
 
-def test_mass_reduction_within_claim():
-    yaml_path = Path(__file__).resolve().parents[1] / "materials" / "parts.yaml"
-    parts = mass_rollup.load_parts(yaml_path)
-    b_data, o_data, b_mass, o_mass = mass_rollup.generate_rollup(parts)
-    
-    delta_pct = (b_mass - o_mass) / b_mass
-    
-    assert 0.30 <= delta_pct <= 0.40, f"Mass reduction {delta_pct*100:.1f}% not in [30%, 40%]"
+ROOT = Path(__file__).resolve().parents[1]
+sys.path.insert(0, str(ROOT / 'materials'))
+import mass_rollup
 
-def test_densities_within_bounds():
-    # CFRP density is typically 1500-1600
+
+def _rollup():
+    parts = mass_rollup.load_parts(ROOT / "materials" / "parts.yaml")
+    return parts, mass_rollup.generate_rollup(parts)
+
+
+def test_rollup_reproduces_committed_summary():
+    parts, (_, _, b_mass, o_mass) = _rollup()
+    committed = json.loads((ROOT / "docs/EVIDENCE/C4_mass_summary.json").read_text())
+    assert mass_rollup.summarize(parts, b_mass, o_mass) == committed
+
+
+def test_densities_within_handbook_ranges():
     assert 1500 <= mass_rollup.DENSITIES['CFRP_quasi_iso'] <= 1600
-    # Ti-6Al-4V is around 4430
     assert 4400 <= mass_rollup.DENSITIES['Ti-6Al-4V'] <= 4500
-    # 7075-T6 is around 2810
     assert 2750 <= mass_rollup.DENSITIES['7075-T6'] <= 2850
-    
+
+
 def test_no_negative_volumes_or_masses():
-    yaml_path = Path(__file__).resolve().parents[1] / "materials" / "parts.yaml"
-    parts = mass_rollup.load_parts(yaml_path)
-    b_data, o_data, b_mass, o_mass = mass_rollup.generate_rollup(parts)
-    
-    assert b_mass > 0
-    assert o_mass > 0
-    
-    for b in b_data:
-        assert b['mass_kg'] > 0
-    for o in o_data:
-        assert o['mass_kg'] > 0
+    _, (b_data, o_data, b_mass, o_mass) = _rollup()
+    assert b_mass > 0 and o_mass > 0
+    assert all(row['mass_kg'] > 0 for row in b_data + o_data)
+
+
+def test_unknown_material_is_an_error_not_zero_mass():
+    with pytest.raises(ValueError):
+        mass_rollup.compute_mass(1.0, "unobtainium")

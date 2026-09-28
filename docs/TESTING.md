@@ -1,27 +1,38 @@
 # Testing and Evidence Plan
 
-The project should be graded on evidence: buildability, simulation, bench telemetry, CAD documentation, PID comparisons, and clear documentation of limitations.
+Project 33 is judged on evidence: what builds, what reproduces, what was measured, and what is honestly marked as not measured. Every check below names its scope. "Build passed" is not "design works".
 
-## Automated Checks
+## What CI can and cannot establish
+
+| CI establishes | CI cannot establish |
+|---|---|
+| Firmware compiles for both boards | That any firmware behavior happens on hardware |
+| Python tests pass (a JUnit record is attached to the CI review packet) | That a mechanism deploys or locks |
+| Every committed model output regenerates from source and matches by value | That a model's formulation or inputs are valid |
+| Requirements are evaluated from committed values, labeled with their evidence class | That a requirement is met physically |
+| Records are internally consistent; generated docs and figures are current | Timing, stiffness, servo authority, drift, current draw |
+| Interlocks are present in source, pinned by tests | That interlocks behave correctly on hardware, or operational safety |
+
+## Automated checks
 
 Run from the repository root:
 
 ```bash
-python tools/generate_protocol.py --check
-python tools/check_markdown_links.py
-python -m pytest tests Firmware/tests -q
+python tools/generate_protocol.py --check      # protocol JSON, firmware header, and PROTOCOL.md agree
+python tools/check_markdown_links.py           # local Markdown targets exist
+python tools/review_figures.py --check         # review figures match the tested geometry code
+python -m evidence check                        # record consistency, review freshness, stale generated docs
+python -m pytest tests Firmware/tests -q        # regression and adversarial tests
+python -m evidence reproduce                    # regenerate model outputs and compare values (needs requirements-evidence.txt)
 ```
 
-What this covers:
+What the tests cover:
 
-- Local Markdown document and image destinations point to existing files or directories.
-- `docs/WIRING.md` stays synchronized with important firmware constants.
-- `protocol/project33_protocol.json` stays synchronized with `Firmware/shared/Project33Protocol.h` and `docs/PROTOCOL.md`.
-- Firmware command-gate expectations stay visible in review.
-- The telemetry CSV logger preserves dashboard packets and onboard `LOG` dump rows in a machine-readable format.
-- Bench session helpers create session summaries and PID comparison reports.
-- Evidence reviews are deterministic and portable; tampering, malformed schemas, path traversal, and unsupported evidence promotion are rejected.
-- Offline telemetry audits expose non-finite samples, duplicates, conflicts, timing gaps, and ambiguous clock regressions while keeping live/recovered streams separate.
+- **Evidence record:** schema validation, forbidden classes, promotion refusal (status, gate, support), synthetic-data relabeling, physical evidence without an accepted session, duplicate measurements counted as repeats, pre-registrations edited after a result, prediction drift, missing values, incomplete denominators, stale reviews (source, statement, assumption, discrepancy changes), stale generated passports, packet tampering, source replaced after a packet, hash-seed independence, archive immutability, execution records (skipped is not passed), reproduction records going stale (`tests/test_evidence_adversarial.py`, `tests/test_evidence_review.py`).
+- **Telemetry and sessions:** non-finite and malformed samples, duplicates and conflicts, clock regressions and rollover, missing timezones, stream separation and clock domains, partial log dumps, gain windows, command responses, session passports for missing metadata, unclean close, version mismatch, synthetic declarations, and human-only acceptance.
+- **Models:** C1 geometry and null handling (unassemblable poses report no value), margin arithmetic, run-record denominators, laminate isotropy, and regression against committed outputs. No CI test asserts that a design meets its requirement; requirement outcomes are evaluated by the record.
+- **Firmware source:** wiring docs match constants, gates match the safety registry, refusal logging comes after the gates it reports, missing altitude is `nan`, and no rocket-side text can trigger the launcher's `READY`/`IGNITED` substring matches.
+- **Dashboard modules:** PID windows follow gain changes, T and LOG stay separate, invalid samples are excluded, live quality counters, session metadata, command log, and gap-breaking plots.
 
 The documentation checker uses only the Python standard library and runs offline.
 It supports inline links/images and single-line reference definitions, relative
@@ -34,62 +45,36 @@ URLs, HTML links, Liquid templates, or unresolved reference labels. A missing
 target prints `file:line: missing local target: path` and exits with status 1.
 Use `--root PATH` to check a different documentation tree.
 
-## Firmware Builds
-
-Run with PlatformIO:
+## Firmware builds
 
 ```bash
 pio run -d Firmware/Rocket
 pio run -d Firmware/Launcher
 ```
 
-The GitHub Actions workflow runs protocol generation checks, Python checks, and both firmware builds on every push and pull request.
+GitHub Actions runs these on every push and pull request. A successful build is compile-level evidence only.
 
-An independent `Portable evidence review` job builds the committed claim snapshot
-and the explicitly synthetic telemetry example with no package installation. It
-verifies both manifests and retains downloadable reports for 30 days. See
-[Evidence Observatory](EVIDENCE_OBSERVATORY.md) for local commands and exit codes.
+## Bench evidence to capture
 
-## Simulation Evidence Already in Repo
+Every capture goes through the session workflow in [BENCH_SESSIONS.md](BENCH_SESSIONS.md): declare, passport, human acceptance, then citation. Until then it is a raw session, not evidence.
 
-| Artifact | Purpose |
-|----------|---------|
-| `Simulation/Folding Stabilized Rocket.ork` | OpenRocket model |
-| `Simulation/OpenRocket_3D_View.png` | Visual configuration reference |
-| `Simulation/Side_View.png` | Geometry overview |
-| `Simulation/Stability_Graph.png` | Stability trend evidence |
+| Test | Evidence to save | Related record |
+|------|------------------|----------------|
+| Deploy-output timing | External logic-analyzer capture of GPIO 33 against a trigger reference | P-001, R-C2-JITTER |
+| Gyro drift, stationary | Session with periodic `dumplog`, rocket-clock LOG rows | P-003 |
+| Torsion spring rate | Torque-angle table with instrument and calibration | P-002, R-C6-SPRING-RATE |
+| Servo centering | Photo/video plus center angles used | — |
+| PID comparison | Session CSV, `pid-comparison.md`, `graph.png`, identical fixture motion across runs | — |
+| Launcher arming and aborts | Session showing READY, `ABORT:` rows, LED/buzzer video | Safety gates G-01 to G-03 |
+| Command rejection | `CMD_REJECT:dashboard_launch_disabled`, `CMD_REJECT:ignite_not_armed` rows | G-04, G-09, G-13 |
+| Onboard log dump | `LOG_START`, `LOG,...`, `LOG_END` rows; audit reports the dump complete | — |
+| Dry CG | Balance-point measurement of the inert airframe | PRED-C5-DRY-CG |
+| CAD assembly renders | Exports listed in [CAD_ASSEMBLIES.md](CAD_ASSEMBLIES.md) | D-005 |
 
-## Bench Evidence Generated by the Dashboard
+## Known validation gaps
 
-`Firmware/dashboard.py` automatically creates one folder per run in `Firmware/TestSessions/`. Each session includes:
-
-| Artifact | Purpose |
-|----------|---------|
-| `telemetry.csv` | Raw dashboard packets normalized into CSV columns |
-| `graph.png` | Roll/rate/output plot saved when data exists |
-| `pid-comparison.md` | PID-window comparison grouped by active Kp/Kd |
-| `session-summary.md` | Packet count and artifact index |
-
-See [BENCH_SESSIONS.md](BENCH_SESSIONS.md) and [PID_TUNING.md](PID_TUNING.md).
-
-## Bench Evidence to Capture
-
-| Test | Evidence to save |
-|------|------------------|
-| Servo centering | Photo/video plus center angles used |
-| Gyro calibration | Dashboard screenshot before/after calibration |
-| PID tuning | CSV log plus `pid-comparison.md` and `graph.png` |
-| Launcher arming | Video showing switch, LED/buzzer, `READY`, and abort behavior |
-| Dashboard command rejection | CSV row or screenshot showing `CMD_REJECT:dashboard_launch_disabled` by default, or `CMD_REJECT:launch_not_ready` if remote launch was intentionally enabled for an inert test |
-| Onboard log dump | CSV rows showing `LOG_START`, `LOG,...`, and `LOG_END` after `dumplog` |
-| GPS/barometer status | CSV row showing `ENV` messages and GPS state |
-| CAD assembly renders | Export images listed in [CAD_ASSEMBLIES.md](CAD_ASSEMBLIES.md) |
-
-## Known Validation Gaps
-
-- No physical bench-session folders are committed yet.
-- No flight-test data is committed yet.
-- Stability control is roll-axis focused.
-- Gyro integration can drift over time.
-- UDP is convenient for the bench but does not provide delivery guarantees.
-- Servo authority under real aerodynamic load still needs measurement.
+- No accepted physical measurement of any quantity.
+- Live telemetry has launcher relay timestamps and no sequence number or boot identifier.
+- Stabilization is roll-axis only; gyro integration drift is uncharacterized.
+- UDP does not guarantee delivery; the dashboard records "sent", not "received".
+- Servo authority under aerodynamic load is unmeasured and outside inert bench scope.

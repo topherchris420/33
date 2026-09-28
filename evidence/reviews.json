@@ -1,0 +1,251 @@
+{
+  "note": "Last review of each claim. Snapshot entries are recorded by tooling to detect later change; they are not engineering reviews. Human entries name the reviewer.",
+  "reviews": {
+    "C1": {
+      "current": {
+        "assumptions_sha256": "86d9c2f5a1418b666f93ce488b59f989c934281234418e887b13359b968d8d7d",
+        "dependencies": {
+          "c1_closure_figure": "6eaf21321a2c3f8dc86af6c632a0336e9964676b62634251b3bcfda28f67d963",
+          "four_bar_cad_script": "135baaed83dbb1d6957c664ede7de9e3509efeed0c90e59153ceb169117d8885",
+          "four_bar_data": "b5db59c4d5fcbc09379e046279f2cf5e778cb0d93f71a0df3ac0baba2ff4b0eb",
+          "four_bar_plot": "5097fb03a463ccdeaaee248a93d88414d4ecce3cb76c2500aaec5a0c352790a7",
+          "four_bar_source": "c29b5f1905d006accd1d5d9636e531e603f266da1d35808c540c59f45a2dd1f0",
+          "four_bar_step": "7f4afad7b1d77b01b21a776c13eca2041daeae40b52a598f1537ec80b10a2c87",
+          "four_bar_tests": "63215cc6d69d68ae06f47498f28c28c0a724fcfb98bacb0e640eb15d31a8e4fb",
+          "review_figures_tool": "73d43e02f4f5b7820580b68f93f815fa975d58057cab476e2887b9d3c253e799"
+        },
+        "kind": "snapshot",
+        "note": "Added the loop-closure review figure; D-002 now states the 0-92 deg B-D maximum (29.6 mm) precisely. Claim statement unchanged.",
+        "recorded": "2026-09-28",
+        "recorded_by": "tooling snapshot (no human review)",
+        "statement_sha256": "dc91b96b0950b0f65c122fc58828b515e05d46c0031c7a6027a82218a3ab3e6a"
+      },
+      "history": [
+        {
+          "assumptions_sha256": "343167623831cf0dc42e682af483a582687bd4f3ed2ed6664d24be3b3d1657f5",
+          "dependencies": {
+            "four_bar_cad_script": "135baaed83dbb1d6957c664ede7de9e3509efeed0c90e59153ceb169117d8885",
+            "four_bar_data": "b5db59c4d5fcbc09379e046279f2cf5e778cb0d93f71a0df3ac0baba2ff4b0eb",
+            "four_bar_plot": "5097fb03a463ccdeaaee248a93d88414d4ecce3cb76c2500aaec5a0c352790a7",
+            "four_bar_source": "c29b5f1905d006accd1d5d9636e531e603f266da1d35808c540c59f45a2dd1f0",
+            "four_bar_step": "7f4afad7b1d77b01b21a776c13eca2041daeae40b52a598f1537ec80b10a2c87",
+            "four_bar_tests": "63215cc6d69d68ae06f47498f28c28c0a724fcfb98bacb0e640eb15d31a8e4fb"
+          },
+          "kind": "snapshot",
+          "note": "Baseline snapshot after the evidence-discipline rewrite; detects later change. Not an engineering review.",
+          "recorded": "2026-09-28",
+          "recorded_by": "tooling snapshot (no human review)",
+          "statement_sha256": "dc91b96b0950b0f65c122fc58828b515e05d46c0031c7a6027a82218a3ab3e6a"
+        }
+      ]
+    },
+    "C2": {
+      "current": {
+        "assumptions_sha256": "cde7a310452916d0a79b59bafb6bcb97712bfb804edf0a273966b660bdf40e16",
+        "dependencies": {
+          "firmware_safety_tests": "ff5e17217ea229ee936dfa61180bb98c083475c4ce0ff1eb1f44aa348e466a77",
+          "rocket_firmware": "4a14aac55f7f658ad74cca2738ffa49652595d811e94da35915854bdd5aba926",
+          "timing_bench_sketch": "add4c75d552ef7640487daeb7eecf33def960ea100b510accad1590417658419",
+          "timing_fixture": "8cf6f0fe7a94d49f4c3a872fdd400437addce23f03057ae8abe22bb778e69467",
+          "timing_header": "cd28abe0e40b3a53f98a2f04c03ff740f24a1457bf2d0dd818267a5952c88c9f",
+          "timing_source": "013cb6614c2cdb6b2d7a45cce893f89134e6f03cc5acc161dd36b5b23bec4028",
+          "timing_tests": "2012e20b2348325ddf94478678f8f8e053a5ad09e5b501ed9391797250fd8540"
+        },
+        "kind": "snapshot",
+        "note": "Rocket now reports IGNITE/ARM refusals over UART (logging only; gates unchanged, compile-verified). Firmware safety tests added as cited evidence.",
+        "recorded": "2026-09-28",
+        "recorded_by": "tooling snapshot (no human review)",
+        "statement_sha256": "89c813e601f029d8c123406f34f8f6518a66ba74bad03982576bcb2f394c7af8"
+      },
+      "history": [
+        {
+          "assumptions_sha256": "cde7a310452916d0a79b59bafb6bcb97712bfb804edf0a273966b660bdf40e16",
+          "dependencies": {
+            "rocket_firmware": "c4cb6ad31f01b29b7751d46f647dcceb82680a87c37c8f9e13dfa94a53b6ae25",
+            "timing_bench_sketch": "add4c75d552ef7640487daeb7eecf33def960ea100b510accad1590417658419",
+            "timing_fixture": "8cf6f0fe7a94d49f4c3a872fdd400437addce23f03057ae8abe22bb778e69467",
+            "timing_header": "cd28abe0e40b3a53f98a2f04c03ff740f24a1457bf2d0dd818267a5952c88c9f",
+            "timing_source": "013cb6614c2cdb6b2d7a45cce893f89134e6f03cc5acc161dd36b5b23bec4028",
+            "timing_tests": "2012e20b2348325ddf94478678f8f8e053a5ad09e5b501ed9391797250fd8540"
+          },
+          "kind": "snapshot",
+          "note": "Baseline snapshot after the evidence-discipline rewrite; detects later change. Not an engineering review.",
+          "recorded": "2026-09-28",
+          "recorded_by": "tooling snapshot (no human review)",
+          "statement_sha256": "89c813e601f029d8c123406f34f8f6518a66ba74bad03982576bcb2f394c7af8"
+        }
+      ]
+    },
+    "C3": {
+      "current": {
+        "assumptions_sha256": "db27ac8458e0bde77deb061fdbceba37f336b927d176baae693c72e2153388c7",
+        "dependencies": {
+          "c3_profile_figure": "6afe5f42d7e64820fb3aa08ebf4340dd4605e66b3f3cab70b8c9411480903663",
+          "cad_fusion_script": "52754c73baf5a2d2f06dad2266c208f7dc6d3eb44e430f2b3ca8eb2c5d7ea7e7",
+          "cad_install_tests": "f02aa050624ebf98b8176f84e9d30f76b5434d987b4279c12ff24ddf9a1e0b17",
+          "cad_source": "9d19d2ce4f06daea7e8ca8f6a5f52c03f5540e9c0c3999204292449f05c8749f",
+          "cad_tests": "4dba7f7013f2a2c3b902038062b7894ae239aa99b7b469b98b52cafb50ac96b5",
+          "ci": "021243c2881fc1bbc04c4334a1d3d08c08a2cb50eb1ffce71e13222251be3a3e",
+          "review_figures_tool": "73d43e02f4f5b7820580b68f93f815fa975d58057cab476e2887b9d3c253e799"
+        },
+        "kind": "snapshot",
+        "note": "Added the NACA profile review figure; CI now attaches a test run record and reproduces models.",
+        "recorded": "2026-09-28",
+        "recorded_by": "tooling snapshot (no human review)",
+        "statement_sha256": "dad6de0a19d3bfb8f0260fd9201fa4c27673423ab4c23e4ef54778f213761bbd"
+      },
+      "history": [
+        {
+          "assumptions_sha256": "db27ac8458e0bde77deb061fdbceba37f336b927d176baae693c72e2153388c7",
+          "dependencies": {
+            "cad_fusion_script": "52754c73baf5a2d2f06dad2266c208f7dc6d3eb44e430f2b3ca8eb2c5d7ea7e7",
+            "cad_install_tests": "f02aa050624ebf98b8176f84e9d30f76b5434d987b4279c12ff24ddf9a1e0b17",
+            "cad_source": "9d19d2ce4f06daea7e8ca8f6a5f52c03f5540e9c0c3999204292449f05c8749f",
+            "cad_tests": "4dba7f7013f2a2c3b902038062b7894ae239aa99b7b469b98b52cafb50ac96b5",
+            "ci": "81e432f9f8b2d4afe57591020996298f5a1bc9b4be478df0c6e89489a48d0e84"
+          },
+          "kind": "snapshot",
+          "note": "Baseline snapshot after the evidence-discipline rewrite; detects later change. Not an engineering review.",
+          "recorded": "2026-09-28",
+          "recorded_by": "tooling snapshot (no human review)",
+          "statement_sha256": "dad6de0a19d3bfb8f0260fd9201fa4c27673423ab4c23e4ef54778f213761bbd"
+        }
+      ]
+    },
+    "C4": {
+      "current": {
+        "assumptions_sha256": "75387f1f396560b2d8a9048642a23c005894007e6421eb6c4a12f0b6932a0a93",
+        "dependencies": {
+          "cad_materials_doc": "4352bd376b309bc8e0ca856646b6d1c6e846fc40815f355387a47b139967c41d",
+          "mass_baseline": "aa54a78f60d0af0382307032aa31fef2f13fafa79c39cc50dabf13d4c0d91868",
+          "mass_candidate": "c6dff1a044a6a2fc22ee873671dacb616ffad05a8dc055edcb8c4b81656e8cd7",
+          "mass_inputs": "b2b65a256c6bfb9fa911b2b79a457d56e8fdf3bf29667c33a936bcd676d70542",
+          "mass_source": "7e8b8ca2b46b20102721c645284fc7b1a81e8c4848e30ee4295a8a10260025ec",
+          "mass_summary": "f2987d38960196ad414a181cbb34e72a85be9245eda11271ca7eb84c51e8a832",
+          "mass_tests": "a553cf030873f9b6ec7a16c35556306a04c8f614de506dae0ccf711425fb6bbb"
+        },
+        "kind": "snapshot",
+        "note": "CAD_ASSEMBLIES.md gained review figures and a CAD-versus-model discrepancy table; material plan unchanged.",
+        "recorded": "2026-09-28",
+        "recorded_by": "tooling snapshot (no human review)",
+        "statement_sha256": "305c4f521e41edf64a3bd057c6db2082cf1d4f4e0f44c51048df74e2b8f0ee4c"
+      },
+      "history": [
+        {
+          "assumptions_sha256": "75387f1f396560b2d8a9048642a23c005894007e6421eb6c4a12f0b6932a0a93",
+          "dependencies": {
+            "cad_materials_doc": "48c592d9fa283ffdcf91da759facdd2331e2a0bd3690ec973505a8a6dd623013",
+            "mass_baseline": "aa54a78f60d0af0382307032aa31fef2f13fafa79c39cc50dabf13d4c0d91868",
+            "mass_candidate": "c6dff1a044a6a2fc22ee873671dacb616ffad05a8dc055edcb8c4b81656e8cd7",
+            "mass_inputs": "b2b65a256c6bfb9fa911b2b79a457d56e8fdf3bf29667c33a936bcd676d70542",
+            "mass_source": "7e8b8ca2b46b20102721c645284fc7b1a81e8c4848e30ee4295a8a10260025ec",
+            "mass_summary": "f2987d38960196ad414a181cbb34e72a85be9245eda11271ca7eb84c51e8a832",
+            "mass_tests": "a553cf030873f9b6ec7a16c35556306a04c8f614de506dae0ccf711425fb6bbb"
+          },
+          "kind": "snapshot",
+          "note": "Baseline snapshot after the evidence-discipline rewrite; detects later change. Not an engineering review.",
+          "recorded": "2026-09-28",
+          "recorded_by": "tooling snapshot (no human review)",
+          "statement_sha256": "305c4f521e41edf64a3bd057c6db2082cf1d4f4e0f44c51048df74e2b8f0ee4c"
+        }
+      ]
+    },
+    "C5": {
+      "current": {
+        "assumptions_sha256": "ab9e645e7acc93deb6a943b9729c06692fe17604f820904a3d9c7229ece71ce0",
+        "dependencies": {
+          "crosscheck_data": "bbf54cd31799f8d20b17ffc82de1e1cba337991a8eafb1277e018c0df24be7b5",
+          "crosscheck_source": "844a03c57bed3292b205cf6225340c94f4e70162a0fb1d5793c619ddf18c0f1e",
+          "divergence_log": "ec9345c71ad5d118a307b40346e82ca9c45110643b673c681e21dd97ff2d8d69",
+          "openrocket_stability_graph": "899af6b7a02c5b229ffdb1cac48fa5eaa167b2c9f80bceddd756aefcf0327866",
+          "stability_data": "11dbead6cfeabb560443aff7536136816eb47eef446a0b9de4be19ffd702f0cc",
+          "stability_inputs": "26087d70e4929b10acc960569d8211b4f2985004c545698ccd52e07eed02ae6a",
+          "stability_plot": "f25b14f130e2ba14940f37abfbae4483f818ed10ab531bb901dfbe85b5866d17",
+          "stability_record": "642c367181cab4d0b1b66054ddc0ee6c1a31af8b9c62560b3454f56ab32da821",
+          "stability_source": "4e5749eb7ef8b3d0fa209980e1d999ce7535fc7d145496401876d656d4e4181b",
+          "stability_tests": "859d50abe84990d69446cff6b1e61afbdfc935efd1f3c5510aeabf322c782666"
+        },
+        "kind": "snapshot",
+        "note": "Divergence log prefaced as a superseded historical record; content unchanged.",
+        "recorded": "2026-09-28",
+        "recorded_by": "tooling snapshot (no human review)",
+        "statement_sha256": "bd9ae2d94fa5d925c89270be120e60da66f32914b873ce0d354b79a895d99346"
+      },
+      "history": [
+        {
+          "assumptions_sha256": "ab9e645e7acc93deb6a943b9729c06692fe17604f820904a3d9c7229ece71ce0",
+          "dependencies": {
+            "crosscheck_data": "bbf54cd31799f8d20b17ffc82de1e1cba337991a8eafb1277e018c0df24be7b5",
+            "crosscheck_source": "844a03c57bed3292b205cf6225340c94f4e70162a0fb1d5793c619ddf18c0f1e",
+            "divergence_log": "671ebe2b5e544206a111c12e5efd057bb277a293b9324edf6124077fb0f89219",
+            "openrocket_stability_graph": "899af6b7a02c5b229ffdb1cac48fa5eaa167b2c9f80bceddd756aefcf0327866",
+            "stability_data": "11dbead6cfeabb560443aff7536136816eb47eef446a0b9de4be19ffd702f0cc",
+            "stability_inputs": "26087d70e4929b10acc960569d8211b4f2985004c545698ccd52e07eed02ae6a",
+            "stability_plot": "f25b14f130e2ba14940f37abfbae4483f818ed10ab531bb901dfbe85b5866d17",
+            "stability_record": "642c367181cab4d0b1b66054ddc0ee6c1a31af8b9c62560b3454f56ab32da821",
+            "stability_source": "4e5749eb7ef8b3d0fa209980e1d999ce7535fc7d145496401876d656d4e4181b",
+            "stability_tests": "859d50abe84990d69446cff6b1e61afbdfc935efd1f3c5510aeabf322c782666"
+          },
+          "kind": "snapshot",
+          "note": "Baseline snapshot after the evidence-discipline rewrite; detects later change. Not an engineering review.",
+          "recorded": "2026-09-28",
+          "recorded_by": "tooling snapshot (no human review)",
+          "statement_sha256": "bd9ae2d94fa5d925c89270be120e60da66f32914b873ce0d354b79a895d99346"
+        }
+      ]
+    },
+    "C6": {
+      "current": {
+        "assumptions_sha256": "66184d49b979fb87d6c9376c0fcdba11ae2fe2c87ae2ed701dac64c0e76c69d7",
+        "dependencies": {
+          "spring_data": "9db0f75cf68ece3fed03cc87abbcda3f4c8af4edcb0c1a115679004f277208cc",
+          "spring_design_point": "85e82763995ff0f76e2c58b297a01fa844f00939d3c7f9ed6279aef7516823d0",
+          "spring_plot": "0708c30e661880a0bdf1c1f4c1b36644119670a76b1a63b9272786710a4c50ed",
+          "spring_source": "c19a9aadb9bc574cf732a49e7595d307a42de02956ea81db916430a52d1241d8",
+          "spring_tests": "24e6e66c244c84fd95d3e462c07a0411ae34fc49ab589dfd84411ec68e8d6f38"
+        },
+        "kind": "snapshot",
+        "note": "Baseline snapshot after the evidence-discipline rewrite; detects later change. Not an engineering review.",
+        "recorded": "2026-09-28",
+        "recorded_by": "tooling snapshot (no human review)",
+        "statement_sha256": "061b9e966a874dad98bc833dcf72110a6bccbbd36a0e874bb7b77505dad135f6"
+      },
+      "history": []
+    },
+    "C7": {
+      "current": {
+        "assumptions_sha256": "920da4b7779515478478f6211dc2fa80ae901b97267d0f27cb1478736b0792a9",
+        "dependencies": {
+          "reliability_failures": "3eb6d15631e45528056f71c8a650326cceff2291ca6132766a2964482e1cc2b6",
+          "reliability_run_record": "1fb2b424083fdd19c5bc2b5645b67b3bbbe210a8adf08fd9d5636703ea427016",
+          "reliability_source": "08c76f04ad0476372c26a25a0f51efe3e5002df92d1f92e9c8596b7c307bac99",
+          "reliability_tests": "59ebcda5985bd4a48ca0689df833591bef95690a7ef2b9fc8f1481ca51f9ef2f"
+        },
+        "kind": "snapshot",
+        "note": "Baseline snapshot after the evidence-discipline rewrite; detects later change. Not an engineering review.",
+        "recorded": "2026-09-28",
+        "recorded_by": "tooling snapshot (no human review)",
+        "statement_sha256": "b6f22ad1c70c2e31fedaf8272df82516d656be7984cd32e8e279615753cf2c0d"
+      },
+      "history": []
+    },
+    "C8": {
+      "current": {
+        "assumptions_sha256": "6f1e3ccd0a9e1101ce7c40ed90551f8052de0266638765b8e10d7edd6b92cc12",
+        "dependencies": {
+          "hinge_data": "f04f43f57ff9a69e9226cabe2e727db134cdf3abedf5e4ddf19e8f45560c9f6e",
+          "structural_data": "67193424e7210d4f392760ef104911b2d0bcab7ebefe05b030185d9ca3a3b922",
+          "structural_source": "f8a0d02ca9d9134604acf4141ce16c20aa27d2a9bc5e739f389824eeaf1fc6a6",
+          "structural_tests": "3a6078b66cfcaa8b98f3508a08326ce8f7483f149363eba2f28f811691a487a8"
+        },
+        "kind": "snapshot",
+        "note": "Baseline snapshot after the evidence-discipline rewrite; detects later change. Not an engineering review.",
+        "recorded": "2026-09-28",
+        "recorded_by": "tooling snapshot (no human review)",
+        "statement_sha256": "f21b90dde5d4a6d3f4b9ab1cd1a82d98d99865e29d07cb7172f4a24ddbe0e222"
+      },
+      "history": []
+    }
+  },
+  "schema_version": 1
+}

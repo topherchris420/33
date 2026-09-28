@@ -161,10 +161,15 @@ def parse_ork(ork_path):
     L_f = get_val(best_fin, 'sweeplength')
     X_f = best_fin_abs_x
 
+    motor = root.find('.//motor/designation')
+    nose_shape = nc.find('shape')
+
     return {
         'd_ref': d_ref, 'L_n': L_n, 'X_f': X_f,
         'C_R': C_R, 'C_T': C_T, 'S': S, 'L_f': L_f,
-        'm_dry': m_dry, 'cg_dry': cg_dry
+        'm_dry': m_dry, 'cg_dry': cg_dry,
+        'ork_motor': motor.text if motor is not None else None,
+        'ork_nose_shape': nose_shape.text if nose_shape is not None else None,
     }
 
 def generate_reports(csv_path, plot_path, ork_path=None):
@@ -182,6 +187,7 @@ def generate_reports(csv_path, plot_path, ork_path=None):
     m_dry = 0.350 # 350g
     cg_dry = 0.410 # 410mm from nose
     
+    ork_geom = {}
     if ork_path and Path(ork_path).exists():
         ork_geom = parse_ork(ork_path)
         d_ref = ork_geom['d_ref']
@@ -205,35 +211,42 @@ def generate_reports(csv_path, plot_path, ork_path=None):
     t, cg_t = simulate_burn(m_dry, m_motor_wet, m_motor_dry, cg_dry, cg_motor)
     sm_t = static_margin(cp, cg_t, d_ref)
     
-    # Write CSV
+    # Write CSV (LF line endings on every platform)
     Path(csv_path).parent.mkdir(parents=True, exist_ok=True)
-    with open(csv_path, 'w') as f:
+    with open(csv_path, 'w', newline='\n') as f:
         f.write("time_s,cg_m,cp_m,sm_calibers\n")
         for i in range(len(t)):
             f.write(f"{t[i]:.2f},{cg_t[i]:.3f},{cp:.3f},{sm_t[i]:.2f}\n")
-            
-    # Write MD
-    md_path = Path(csv_path).parent / "C5_static_margin.md"
-    min_sm = np.min(sm_t)
-    max_sm = np.max(sm_t)
-    if min_sm >= 1.5 and max_sm <= 2.0:
-        validation_text = "The sampled model outputs lie in the stated window. This does not establish dynamic stability, physical validity, or flight readiness."
-    else:
-        validation_text = f"FAIL: The static margin falls outside the 1.5-2.0 cal window (min={min_sm:.2f}, max={max_sm:.2f})."
-        
-    md_path.write_text(
-        "# C5 — Static margin / 1.5–2.0 caliber window\n\n"
-        "**Paper claim:** The physical aerodynamic design targets a safe static margin (SM) between 1.5 and 2.0 calibers.\n\n"
-        "**Recomputed result:**\n"
-        f"Barrowman computation using motor Estes C6-5, launch mass {m_dry+m_motor_wet:.3f} kg, confirms SM ∈ [{min_sm:.2f}, {max_sm:.2f}] cal.\n"
-        f"{validation_text}\n\n"
-        "**Artifact paths:**\n"
-        f"- {csv_path}\n"
-        f"- {plot_path}\n\n"
-        "*Deterministic model output — no physical measurement or CFD validation*",
-        encoding="utf-8"
-    )
-    
+
+    # Structured record of what the calculation actually used. No verdict is
+    # written here: interpretation belongs to the reviewed evidence record.
+    inputs = {
+        'schema': 'project33.c5.static_margin_inputs/1',
+        'generator': 'Simulation/static_margin.py',
+        'geometry_source': Path(ork_path).name if ork_path and Path(ork_path).exists() else 'built-in defaults',
+        'units': {'length': 'm', 'mass': 'kg', 'time': 's', 'static_margin': 'calibers'},
+        'geometry': {'d_ref': d_ref, 'L_n': L_n, 'X_f': X_f, 'C_R': C_R, 'C_T': C_T,
+                     'S': S, 'L_f_sweeplength': L_f},
+        'dry_mass_kg': m_dry, 'dry_cg_m': cg_dry,
+        'motor_assumed': {'designation': 'Estes C6-5 (hard-coded)', 'wet_kg': m_motor_wet,
+                          'dry_kg': m_motor_dry, 'cg_m': cg_motor, 'burn_s': 1.8},
+        'ork_motor_designation': ork_geom.get('ork_motor'),
+        'ork_nose_shape': ork_geom.get('ork_nose_shape'),
+        'nose_cp_coefficient_used': 0.466,
+        'formula_notes': [
+            'Fin CP term uses C_R/3*(C_R+2C_T)/(C_R+C_T) as the sweep term; the textbook Barrowman '
+            'form uses the tip leading-edge sweep distance X_R in that position.',
+            'Fin normal-force term uses the sweep length where the textbook form uses the mid-chord line length.',
+            'Nose CP coefficient 0.466 is the ogive value.',
+            'Only body-tube override masses are summed for dry mass.',
+        ],
+        'cp_m': round(float(cp), 6),
+        'sm_min_calibers': round(float(np.min(sm_t)), 4),
+        'sm_max_calibers': round(float(np.max(sm_t)), 4),
+    }
+    (Path(csv_path).parent / "C5_static_margin_inputs.json").write_text(
+        json.dumps(inputs, indent=2) + "\n", encoding="utf-8")
+
     try:
         import matplotlib
         matplotlib.use('Agg')

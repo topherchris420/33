@@ -1,0 +1,52 @@
+{
+  "schema": "project33.c7.run_record/1",
+  "generator": "Simulation/reliability_sweep.py",
+  "trials": 10000,
+  "successes": 10000,
+  "failures": 0,
+  "seed": 33,
+  "rng": "numpy.random.seed + numpy.random.uniform (legacy global RNG)",
+  "sampled_ranges": {
+    "k_spring": [
+      198.0,
+      242.00000000000003
+    ],
+    "theta_toggle_deg": [
+      85.0,
+      95.0
+    ],
+    "v_egress_m_s": [
+      63.0,
+      77.0
+    ],
+    "I_fin_kg_m2": [
+      1.5299999999999996e-05,
+      2.0699999999999995e-05
+    ],
+    "Cm_alpha": [
+      0.6000000000000001,
+      1.0
+    ],
+    "timer_latency_ms": [
+      40.0,
+      60.0
+    ]
+  },
+  "fixed_parameters": {
+    "S_fin_m2": 0.0036,
+    "c_fin_m": 0.06,
+    "fin_mass_kg": 0.015,
+    "fin_length_m": 0.06,
+    "damping_N_m_s": 0.05,
+    "rho_kg_m3": 1.225
+  },
+  "success_criterion": "|theta_final - theta_toggle| <= 0.1 deg and |omega_final| <= 50 deg/s",
+  "model_structure_notes": [
+    "omega_final is set to 0 whenever the toggle event fires, so the omega test cannot fail for a locked trial",
+    "k_spring (stated in N*m/rad) is applied as a constant torque in N*m",
+    "timer_latency_ms delays the start but has no effect on the final state",
+    "fin mass, size and egress speed differ from the C6 design point"
+  ],
+  "success_fraction": 1.0,
+  "basis": "numerical simulation; no physical deployment was observed"
+}
