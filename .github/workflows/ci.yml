@@ -33,7 +33,7 @@ jobs:
           retention-days: 30
 
   python-tests:
-    name: Python tests and model reproduction
+    name: Python docs and telemetry checks
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4

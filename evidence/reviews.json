@@ -85,16 +85,33 @@
           "cad_install_tests": "f02aa050624ebf98b8176f84e9d30f76b5434d987b4279c12ff24ddf9a1e0b17",
           "cad_source": "9d19d2ce4f06daea7e8ca8f6a5f52c03f5540e9c0c3999204292449f05c8749f",
           "cad_tests": "4dba7f7013f2a2c3b902038062b7894ae239aa99b7b469b98b52cafb50ac96b5",
-          "ci": "021243c2881fc1bbc04c4334a1d3d08c08a2cb50eb1ffce71e13222251be3a3e",
+          "ci": "1aa2ade27c00d88217cce38b6b01b4dec8a845280bf52878c95a413a261fb04b",
           "review_figures_tool": "73d43e02f4f5b7820580b68f93f815fa975d58057cab476e2887b9d3c253e799"
         },
         "kind": "snapshot",
-        "note": "Added the NACA profile review figure; CI now attaches a test run record and reproduces models.",
-        "recorded": "2026-09-28",
+        "note": "CI job display name restored to 'Python docs and telemetry checks' so required-check settings keep matching; job steps unchanged.",
+        "recorded": "2026-09-29",
         "recorded_by": "tooling snapshot (no human review)",
         "statement_sha256": "dad6de0a19d3bfb8f0260fd9201fa4c27673423ab4c23e4ef54778f213761bbd"
       },
       "history": [
+        {
+          "assumptions_sha256": "db27ac8458e0bde77deb061fdbceba37f336b927d176baae693c72e2153388c7",
+          "dependencies": {
+            "c3_profile_figure": "6afe5f42d7e64820fb3aa08ebf4340dd4605e66b3f3cab70b8c9411480903663",
+            "cad_fusion_script": "52754c73baf5a2d2f06dad2266c208f7dc6d3eb44e430f2b3ca8eb2c5d7ea7e7",
+            "cad_install_tests": "f02aa050624ebf98b8176f84e9d30f76b5434d987b4279c12ff24ddf9a1e0b17",
+            "cad_source": "9d19d2ce4f06daea7e8ca8f6a5f52c03f5540e9c0c3999204292449f05c8749f",
+            "cad_tests": "4dba7f7013f2a2c3b902038062b7894ae239aa99b7b469b98b52cafb50ac96b5",
+            "ci": "021243c2881fc1bbc04c4334a1d3d08c08a2cb50eb1ffce71e13222251be3a3e",
+            "review_figures_tool": "73d43e02f4f5b7820580b68f93f815fa975d58057cab476e2887b9d3c253e799"
+          },
+          "kind": "snapshot",
+          "note": "Added the NACA profile review figure; CI now attaches a test run record and reproduces models.",
+          "recorded": "2026-09-28",
+          "recorded_by": "tooling snapshot (no human review)",
+          "statement_sha256": "dad6de0a19d3bfb8f0260fd9201fa4c27673423ab4c23e4ef54778f213761bbd"
+        },
         {
           "assumptions_sha256": "db27ac8458e0bde77deb061fdbceba37f336b927d176baae693c72e2153388c7",
           "dependencies": {
