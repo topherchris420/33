@@ -115,29 +115,42 @@ def run_monte_carlo(num_trials=10000, seed=33, output_dir=None):
         csv_path = Path(output_dir) / "C7_reliability.csv"
         csv_path.parent.mkdir(parents=True, exist_ok=True)
         with open(csv_path, 'w', newline='') as f:
-            writer = csv.DictWriter(f, fieldnames=['trial', 'theta_final', 'omega_final', 'v_egress', 'Cm_alpha'])
+            writer = csv.DictWriter(f, fieldnames=['trial', 'theta_final', 'omega_final', 'v_egress', 'Cm_alpha'],
+                                    lineterminator='\n')
             writer.writeheader()
             writer.writerows(failures)
-            
-        md_path = Path(output_dir) / "C7_reliability.md"
-        if success_rate >= 0.999:
-            verdict = "The observed success fraction exceeds the threshold within this simulation. This is not a physical reliability measurement or a confidence bound."
-        else:
-            verdict = f"FAIL: The success rate {success_rate*100:.2f}% is below the 99.9% threshold."
-        md_path.write_text(
-            "# C7 — Deployment reliability 99.9%\n\n"
-            "**Paper claim:** Monte Carlo simulation of deployment dynamics with manufactured tolerances yields ≥ 99.9% reliability.\n\n"
-            "**Recomputed result:**\n"
-            f"Trials: {num_trials}\n"
-            f"Successes: {successes}\n"
-            f"Success Rate: {success_rate * 100:.2f}%\n\n"
-            f"{verdict}\n\n"
-            "**Evidence limitation:** The CSV exports failures only. An empty file body does not establish the trial denominator or independently reproduce this summary. Retain complete run provenance before relying on the claim.\n\n"
-            "**Artifact paths:**\n"
-            f"- {csv_path}\n",
-            encoding="utf-8"
-        )
-        
+
+        # The failure-only CSV cannot carry its own denominator; this record does.
+        record = {
+            'schema': 'project33.c7.run_record/1',
+            'generator': 'Simulation/reliability_sweep.py',
+            'trials': num_trials,
+            'successes': successes,
+            'failures': len(failures),
+            'seed': seed,
+            'rng': 'numpy.random.seed + numpy.random.uniform (legacy global RNG)',
+            'sampled_ranges': {
+                'k_spring': [k_base * 0.9, k_base * 1.1],
+                'theta_toggle_deg': [90.0 - 5.0, 90.0 + 5.0],
+                'v_egress_m_s': [v_base * 0.9, v_base * 1.1],
+                'I_fin_kg_m2': [I_base * 0.85, I_base * 1.15],
+                'Cm_alpha': [Cm_base * 0.75, Cm_base * 1.25],
+                'timer_latency_ms': [lat_base - 10, lat_base + 10],
+            },
+            'fixed_parameters': {'S_fin_m2': 0.0036, 'c_fin_m': 0.060, 'fin_mass_kg': 0.015,
+                                 'fin_length_m': 0.060, 'damping_N_m_s': 0.05, 'rho_kg_m3': 1.225},
+            'success_criterion': '|theta_final - theta_toggle| <= 0.1 deg and |omega_final| <= 50 deg/s',
+            'model_structure_notes': [
+                'omega_final is set to 0 whenever the toggle event fires, so the omega test cannot fail for a locked trial',
+                'k_spring (stated in N*m/rad) is applied as a constant torque in N*m',
+                'timer_latency_ms delays the start but has no effect on the final state',
+                'fin mass, size and egress speed differ from the C6 design point',
+            ],
+            'success_fraction': successes / num_trials if num_trials else None,
+            'basis': 'numerical simulation; no physical deployment was observed',
+        }
+        (csv_path.parent / "C7_run_record.json").write_text(json.dumps(record, indent=2) + "\n", encoding="utf-8")
+
     return success_rate, failures
 
 if __name__ == '__main__':

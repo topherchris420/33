@@ -1,104 +1,28 @@
-"""Portable, deterministic review bundles with independently checked file hashes."""
+"""Portable, deterministic review packets with independently checked file hashes."""
 
-from collections import Counter
 from pathlib import Path
 import platform
 import re
 import subprocess
 
 from . import __version__
-from .common import (EvidenceError, canonical_json, csv_rows, digest, load_json,
-                     new_directory, read_bytes, safe_path)
+from . import assess as A
+from . import evaluate as E
+from . import records as R
+from .common import (EvidenceError, canonical_json, digest, load_json, new_directory, read_bytes, safe_path)
 from .telemetry import audit_bytes
 
-
-KINDS = {"source", "test", "analytical", "synthetic", "physical", "documentation"}
-BASES = {"software", "analytical", "synthetic", "physical"}
 HEX = re.compile(r"[0-9a-f]{64}\Z")
-IDENTIFIER = re.compile(r"[A-Za-z][A-Za-z0-9_-]{0,63}\Z")
-
-
-def _keys(value, required, optional=()):
-    if not isinstance(value, dict):
-        raise EvidenceError("Expected a JSON object")
-    if set(value) - set(required) - set(optional) or set(required) - set(value):
-        raise EvidenceError(f"Unexpected or missing keys; expected {sorted(required)}")
-
-
-def _strings(values, *, nonempty=True):
-    if not isinstance(values, list) or (nonempty and not values):
-        raise EvidenceError("Expected a nonempty list" if nonempty else "Expected a list")
-    if any(not isinstance(value, str) or not value.strip() for value in values):
-        raise EvidenceError("Expected nonempty strings")
-
-
-def _text(value):
-    if not isinstance(value, str) or not value.strip():
-        raise EvidenceError("Expected a nonempty string")
-
-
-def validate_catalog(catalog):
-    _keys(catalog, {"schema_version", "project", "scope", "artifacts", "claims"})
-    if type(catalog["schema_version"]) is not int or catalog["schema_version"] != 1:
-        raise EvidenceError("Unsupported catalog schema_version")
-    _text(catalog["project"])
-    _text(catalog["scope"])
-    artifacts, paths = {}, set()
-    for name in ("artifacts", "claims"):
-        if not isinstance(catalog[name], list) or not catalog[name]:
-            raise EvidenceError(f"Catalog {name} must be a nonempty list")
-        if len(catalog[name]) > 1000:
-            raise EvidenceError(f"Too many {name}")
-    for item in catalog["artifacts"]:
-        _keys(item, {"id", "path", "kind", "format", "description"}, {"columns", "min_rows"})
-        _text(item["id"])
-        if not IDENTIFIER.fullmatch(item["id"]) or item["id"] in artifacts:
-            raise EvidenceError(f"Invalid or duplicate artifact ID: {item['id']}")
-        _text(item["kind"])
-        _text(item["format"])
-        if item["kind"] not in KINDS or item["format"] not in {"file", "csv", "json"}:
-            raise EvidenceError(f"Unknown artifact classification: {item['id']}")
-        _text(item["description"])
-        _text(item["path"])
-        if item["path"] in paths:
-            raise EvidenceError(f"Duplicate artifact path: {item['path']}")
-        paths.add(item["path"])
-        if item["format"] == "csv":
-            _strings(item.get("columns"))
-            if len(set(item["columns"])) != len(item["columns"]):
-                raise EvidenceError("CSV columns must be unique")
-            minimum = item.get("min_rows")
-            if type(minimum) is not int or minimum < 0:
-                raise EvidenceError("CSV min_rows must be a nonnegative integer")
-        elif "columns" in item or "min_rows" in item:
-            raise EvidenceError("CSV options on a non-CSV artifact")
-        artifacts[item["id"]] = item
-    seen = set()
-    for claim in catalog["claims"]:
-        _keys(claim, {"id", "title", "statement", "basis", "evidence", "assumptions",
-                      "limitations", "next_evidence", "concerns"})
-        for name in ("id", "title", "statement", "basis"):
-            _text(claim[name])
-        if not IDENTIFIER.fullmatch(claim["id"]) or claim["id"] in seen:
-            raise EvidenceError(f"Invalid or duplicate claim ID: {claim['id']}")
-        seen.add(claim["id"])
-        if claim["basis"] not in BASES:
-            raise EvidenceError(f"Unknown claim basis: {claim['basis']}")
-        for name in ("evidence", "assumptions", "limitations", "next_evidence", "concerns"):
-            _strings(claim[name], nonempty=name != "concerns")
-        if len(set(claim["evidence"])) != len(claim["evidence"]):
-            raise EvidenceError(f"Duplicate evidence reference: {claim['id']}")
-        if any(ref not in artifacts for ref in claim["evidence"]):
-            raise EvidenceError(f"Unknown artifact reference: {claim['id']}")
-        kinds = {artifacts[ref]["kind"] for ref in claim["evidence"]}
-        required = {"source", "test"} if claim["basis"] == "software" else {claim["basis"]}
-        if not kinds.intersection(required):
-            raise EvidenceError(f"Declared basis has no matching evidence: {claim['id']}")
-    return catalog
+KINDS = {
+    "project_review": {"records/catalog.json", "assessment.json", "questions.json"},
+    "telemetry_quality": {"audit.json", "telemetry.csv"},
+    "session_passport": {"passport.json", "audit.json", "session/telemetry.csv"},
+}
 
 
 def provenance(root):
-    result = {"commit": None, "worktree_dirty": None, "python": platform.python_version()}
+    result = {"commit": None, "worktree_dirty": None, "python": platform.python_version(),
+              "reviewer": f"project33-evidence/{__version__}"}
     try:
         def git(*args):
             return subprocess.check_output(["git", "-C", str(root), *args],
@@ -117,25 +41,6 @@ def _write(stage, name, data):
     path.write_bytes(data)
 
 
-def _inspect(item, data):
-    details = {**item, "sha256": digest(data), "bytes": len(data),
-               "snapshot_path": "artifacts/" + item["path"]}
-    if not data:
-        raise EvidenceError(f"Empty artifact: {item['path']}")
-    if item["format"] == "csv":
-        rows = csv_rows(data)
-        columns = next(rows)
-        if not set(item["columns"]).issubset(columns):
-            raise EvidenceError(f"Missing CSV columns: {item['path']}")
-        count = sum(1 for _ in rows)
-        if count < item["min_rows"]:
-            raise EvidenceError(f"Insufficient rows in {item['path']}: {count}")
-        details["row_count"] = count
-    elif item["format"] == "json":
-        load_json(data)
-    return details
-
-
 def _seal(stage, kind, source):
     # Include the actual reviewer implementation so the bundle can be checked offline.
     for path in sorted(Path(__file__).parent.glob("*.py")):
@@ -145,10 +50,8 @@ def _seal(stage, kind, source):
     for path in sorted(stage.rglob("*")):
         if path.is_file():
             data = read_bytes(path)
-            files.append({"path": path.relative_to(stage).as_posix(),
-                          "bytes": len(data), "sha256": digest(data)})
-    manifest = {"schema_version": 1, "kind": kind,
-                "producer": f"project33-evidence/{__version__}",
+            files.append({"path": path.relative_to(stage).as_posix(), "bytes": len(data), "sha256": digest(data)})
+    manifest = {"schema_version": 1, "kind": kind, "producer": f"project33-evidence/{__version__}",
                 "provenance": source, "files": files}
     data = canonical_json(manifest)
     _write(stage, "manifest.json", data)
@@ -156,51 +59,61 @@ def _seal(stage, kind, source):
     return manifest
 
 
-def build_review(root, output, catalog_path="evidence/catalog.json"):
-    from .report import render_review
+def load_assessment(root, catalog_path="evidence/catalog.json", *, execution_record=None,
+                    reproduction_record=None):
+    """Load, validate, and assess the working tree. Returns (records, data, assessment, attachments)."""
+    from .workflow import validate_reproduction
 
     root = Path(root).resolve()
-    catalog_data = read_bytes(safe_path(root, catalog_path))
-    catalog = validate_catalog(load_json(catalog_data))
-    source = provenance(root)
+    records = R.load(root, catalog_path)
+    data = E.load_artifact_data(records)
+    attachments = {}
+    execution = reproduction = None
+    if execution_record is not None:
+        raw = read_bytes(execution_record)
+        execution = E.parse_junit(raw)
+        attachments["execution/junit.xml"] = raw
+    if reproduction_record is not None:
+        raw = read_bytes(reproduction_record)
+        reproduction = validate_reproduction(load_json(raw))
+        attachments["execution/reproduction.json"] = raw
+    assessment = A.assess(records, data, provenance=provenance(root), execution=execution,
+                          reproduction=reproduction)
+    return records, data, assessment, attachments
+
+
+def build_review(root, output, catalog_path="evidence/catalog.json", *, execution_record=None,
+                 reproduction_record=None):
+    from .report import render_review
+
+    records, data, assessment, attachments = load_assessment(
+        root, catalog_path, execution_record=execution_record, reproduction_record=reproduction_record)
     with new_directory(output) as stage:
-        _write(stage, "catalog.json", catalog_data)
-        artifacts = []
-        for item in sorted(catalog["artifacts"], key=lambda item: item["id"]):
-            data = read_bytes(safe_path(root, item["path"]))
-            detail = _inspect(item, data)
-            artifacts.append(detail)
-            _write(stage, detail["snapshot_path"], data)
-        lookup = {item["id"]: item for item in artifacts}
-        claims = []
-        for claim in sorted(catalog["claims"], key=lambda item: item["id"]):
-            types = sorted({lookup[ref]["kind"] for ref in claim["evidence"]})
-            claims.append({**claim, "evidence_types": types,
-                           "review_state": "unresolved" if claim["concerns"] else "limited",
-                           "has_declared_physical_evidence": "physical" in types})
-        assessment = {
-            "schema_version": 1, "kind": "project_review", "project": catalog["project"],
-            "scope": catalog["scope"], "provenance": source, "artifacts": artifacts,
-            "claims": claims, "basis_counts": dict(sorted(Counter(c["basis"] for c in claims).items())),
-            "physical_evidence_count": sum(a["kind"] == "physical" for a in artifacts),
-            "unresolved_claim_count": sum(c["review_state"] == "unresolved" for c in claims),
-            "limitations": [
-                "Artifact presence and hash integrity are not scientific validation.",
-                "Evidence classifications, assumptions, and concerns are authored declarations.",
-                "This build checks file structure; it does not run models, tests, or hardware.",
-                "A digest detects changes against a trusted reference; it is not a signature.",
-                "No flight readiness, certification, or agency endorsement is asserted.",
-            ],
-        }
+        catalog_dir = Path(records.catalog_path).parent
+        for kind, (path, raw) in sorted(records.raw.items()):
+            _write(stage, "records/" + Path(path).relative_to(catalog_dir).as_posix(), raw)
+        for item in assessment["artifacts"]:
+            _write(stage, item["snapshot_path"], data[item["id"]])
+        for name, raw in sorted(attachments.items()):
+            _write(stage, name, raw)
         _write(stage, "assessment.json", canonical_json(assessment))
+        _write(stage, "questions.json", canonical_json({"questions": assessment["questions"],
+                                                         "ai_boundary": assessment["ai_boundary"]}))
         _write(stage, "index.html", render_review(assessment).encode())
-        _write(stage, "README.txt", _instructions().encode())
-        _seal(stage, "project_review", source)
+        _write(stage, "README.txt", _instructions(assessment).encode())
+        _seal(stage, "project_review", assessment["provenance"])
     return assessment
 
 
-def _instructions():
-    return ("PROJECT 33 / OFFLINE EVIDENCE REVIEW\n\n"
+def _instructions(assessment=None):
+    scope = ""
+    if assessment:
+        scope = "WHAT THIS PACKET ESTABLISHES, AND WHAT IT DOES NOT\n" + "".join(
+            f"  - {item['text']}\n" for item in assessment["scopes"]) + "\n"
+        source = assessment["provenance"]
+        scope += (f"Source commit: {source['commit'] or 'unavailable'}; working tree "
+                  f"{ {True: 'MODIFIED', False: 'clean', None: 'unknown'}[source['worktree_dirty']] }.\n\n")
+    return ("PROJECT 33 / OFFLINE EVIDENCE REVIEW\n\n" + scope +
             "Open index.html for the report. No server or network is required.\n"
             "From the original repository: python -m evidence verify PATH_TO_THIS_FOLDER\n"
             "Standalone: cd reviewer, then python -m evidence verify ..\n"
@@ -208,19 +121,27 @@ def _instructions():
             "For independent verification, use reviewer code from a trusted checkout.\n"
             "Compare manifest.sha256 against a digest received through a trusted channel.\n"
             "Use verify --expected-sha256 DIGEST to pin that reference. A changed manifest\n"
-            "and a new digest can be created by anyone: hashes are not authentication.\n"
-            "This package checks files, not scientific truth or hardware readiness.\n")
+            "and a new digest can be created by anyone: hashes are not authentication.\n\n"
+            "Contents: records/ (every record file as committed), artifacts/ (byte copies of\n"
+            "cited files), assessment.json (evaluated record), questions.json (grounded answers),\n"
+            "execution/ (attached test or reproduction records, if any), reviewer/ (verifier).\n\n"
+            "FOR AUTOMATED OR AI REVIEWERS: interpret the record; do not rewrite it. Answers must\n"
+            "cite assessment.json or records/. Never treat a model, test, hash, or clean dataset\n"
+            "as a physical measurement, and never fill a missing value.\n\n"
+            "This package checks files and record consistency, not scientific truth or hardware readiness.\n")
 
 
 def build_audit(csv_path, output, *, origin="unknown", gap_ms=500):
     from .report import render_audit
 
     data = read_bytes(csv_path)
-    audit = audit_bytes(data, origin=origin, gap_ms=gap_ms)
+    audit = audit_bytes(data, origin=origin, gap_ms=gap_ms, keep_series=True)
+    html = render_audit(audit)
+    audit.pop("series")  # display-only; the CSV itself is the data
     with new_directory(output) as stage:
         _write(stage, "telemetry.csv", data)
         _write(stage, "audit.json", canonical_json(audit))
-        _write(stage, "index.html", render_audit(audit).encode())
+        _write(stage, "index.html", html.encode())
         _write(stage, "README.txt", _instructions().encode())
         _seal(stage, "telemetry_quality", {"python": platform.python_version()})
     return audit
@@ -238,16 +159,16 @@ def verify_bundle(directory, expected_sha256=None):
     if expected_sha256 is not None and expected_sha256 != actual:
         raise EvidenceError("Manifest does not match the trusted digest")
     manifest = load_json(data)
-    _keys(manifest, {"schema_version", "kind", "producer", "provenance", "files"})
+    R.keys(manifest, {"schema_version", "kind", "producer", "provenance", "files"}, (), "manifest")
     if type(manifest["schema_version"]) is not int or manifest["schema_version"] != 1:
         raise EvidenceError("Unsupported manifest schema_version")
-    if manifest["kind"] not in ("project_review", "telemetry_quality"):
+    if manifest["kind"] not in KINDS:
         raise EvidenceError("Unknown manifest kind")
     if not isinstance(manifest["files"], list) or not manifest["files"] or len(manifest["files"]) > 5000:
         raise EvidenceError("Invalid manifest file list")
     seen = {"manifest.json", "manifest.sha256"}
     for item in manifest["files"]:
-        _keys(item, {"path", "bytes", "sha256"})
+        R.keys(item, {"path", "bytes", "sha256"}, (), "manifest entry")
         path = safe_path(root, item["path"])
         if item["path"] in seen:
             raise EvidenceError(f"Duplicate or reserved manifest path: {item['path']}")
@@ -259,8 +180,7 @@ def verify_bundle(directory, expected_sha256=None):
         content = read_bytes(path)
         if len(content) != item["bytes"] or digest(content) != item["sha256"]:
             raise EvidenceError(f"Artifact integrity mismatch: {item['path']}")
-    required = {"index.html", "README.txt"}
-    required |= {"catalog.json", "assessment.json"} if manifest["kind"] == "project_review" else {"audit.json", "telemetry.csv"}
+    required = {"index.html", "README.txt"} | KINDS[manifest["kind"]]
     if not required.issubset(seen):
         raise EvidenceError("Manifest is missing required bundle files")
     found = set()
@@ -275,45 +195,94 @@ def verify_bundle(directory, expected_sha256=None):
             found.add(relative)
     if found != seen:
         raise EvidenceError(f"Unexpected or missing bundle files: {sorted(found ^ seen)}")
-    return {"integrity": "ok", "manifest_sha256": actual, "file_count": len(manifest["files"]),
-            "trusted_digest_checked": expected_sha256 is not None, "kind": manifest["kind"]}
+    return {"bundle_integrity": "verified", "manifest_sha256": actual, "file_count": len(manifest["files"]),
+            "trusted_digest_checked": expected_sha256 is not None, "kind": manifest["kind"],
+            "not_established": ["scientific validity", "physical performance", "flight readiness",
+                                "authorship (a digest is not a signature)"]}
+
+
+def _load_review(path):
+    checked = verify_bundle(path)
+    if checked["kind"] != "project_review":
+        raise EvidenceError("Compare requires two project review bundles")
+    manifest = load_json(read_bytes(Path(path) / "manifest.json"))
+    return load_json(read_bytes(Path(path) / "assessment.json")), manifest
 
 
 def compare_reviews(before, after):
-    manifests = []
-    for path in (before, after):
-        checked = verify_bundle(path)
-        if checked["kind"] != "project_review":
-            raise EvidenceError("Compare requires two project review bundles")
-        manifests.append(load_json(read_bytes(Path(path) / "manifest.json")))
-    old = load_json(read_bytes(Path(before) / "assessment.json"))
-    new = load_json(read_bytes(Path(after) / "assessment.json"))
-    old_artifacts = {a["path"]: a["sha256"] for a in old["artifacts"]}
-    new_artifacts = {a["path"]: a["sha256"] for a in new["artifacts"]}
+    (old, old_manifest), (new, new_manifest) = _load_review(before), _load_review(after)
+    old_artifacts = {a["path"]: a for a in old["artifacts"]}
+    new_artifacts = {a["path"]: a for a in new["artifacts"]}
     changed = sorted(path for path in old_artifacts.keys() | new_artifacts.keys()
-                     if old_artifacts.get(path) != new_artifacts.get(path))
+                     if (old_artifacts.get(path) or {}).get("sha256") != (new_artifacts.get(path) or {}).get("sha256"))
+    fields = ("id", "class", "description", "derived_from", "status", "format", "columns", "min_rows")
+    changed_records = sorted(path for path in old_artifacts.keys() & new_artifacts.keys()
+                             if {k: old_artifacts[path].get(k) for k in fields}
+                             != {k: new_artifacts[path].get(k) for k in fields})
     old_claims = {c["id"]: c for c in old["claims"]}
     new_claims = {c["id"]: c for c in new["claims"]}
+    authored = ("title", "question", "statement", "status", "gate", "evidence", "historical", "requirements",
+                "predictions", "assumptions", "limitations", "concerns", "measurement_needed")
     affected = {key for key in old_claims.keys() | new_claims.keys()
-                if old_claims.get(key) != new_claims.get(key)}
+                if {k: (old_claims.get(key) or {}).get(k) for k in authored}
+                != {k: (new_claims.get(key) or {}).get(k) for k in authored}}
+    touched = set(changed) | set(changed_records)
     for review in (old, new):
-        lookup = {a["id"]: a for a in review["artifacts"]}
         for claim in review["claims"]:
-            if any(lookup[ref]["path"] in changed for ref in claim["evidence"]):
+            if touched & set(claim["affected_by_changes"]):
                 affected.add(claim["id"])
-    # Classification and assumption edits matter even if the file bytes are identical.
-    old_meta = {a["id"]: a for a in old["artifacts"]}
-    new_meta = {a["id"]: a for a in new["artifacts"]}
-    changed_meta = {key for key in old_meta.keys() | new_meta.keys() if old_meta.get(key) != new_meta.get(key)}
-    for review in (old, new):
-        affected.update(c["id"] for c in review["claims"] if changed_meta.intersection(c["evidence"]))
+    requirement_changes = []
+    old_req = {r["id"]: r for r in old["requirements"]}
+    new_req = {r["id"]: r for r in new["requirements"]}
+    for key in sorted(old_req.keys() | new_req.keys()):
+        before_result = (old_req.get(key) or {}).get("result")
+        after_result = (new_req.get(key) or {}).get("result")
+        if before_result != after_result or (old_req.get(key) or {}).get("observed") != (new_req.get(key) or {}).get("observed"):
+            requirement_changes.append({"requirement": key, "before": before_result, "after": after_result})
+            affected.update((new_req.get(key) or old_req.get(key))["claims"])
+    old_disc = {d["id"]: d for d in old["discrepancies"]}
+    new_disc = {d["id"]: d for d in new["discrepancies"]}
+    discrepancy_changes = sorted(key for key in old_disc.keys() | new_disc.keys() if old_disc.get(key) != new_disc.get(key))
+    for key in discrepancy_changes:
+        affected.update((new_disc.get(key) or old_disc.get(key))["claims"])
     context_changed = any(old[key] != new[key] for key in ("project", "scope", "limitations"))
-    reviewer_files = [{item["path"]: item["sha256"] for item in manifest["files"]
-                       if item["path"].startswith("reviewer/")} for manifest in manifests]
+    reviewer_files = [{item["path"]: item["sha256"] for item in manifest["files"] if item["path"].startswith("reviewer/")}
+                      for manifest in (old_manifest, new_manifest)]
     reviewer_changed = reviewer_files[0] != reviewer_files[1]
     if context_changed or reviewer_changed:
         affected.update(old_claims.keys() | new_claims.keys())
-    return {"changed_artifacts": changed, "changed_artifact_records": sorted(changed_meta),
-            "affected_claims": sorted(affected), "provenance_changed": old["provenance"] != new["provenance"],
-            "review_context_changed": context_changed, "reviewer_changed": reviewer_changed,
-            "meaning": "Changed evidence needs review; this is not a performance comparison."}
+    return {
+        "changed_artifacts": changed, "changed_artifact_records": changed_records,
+        "affected_claims": sorted(affected),
+        "claim_status_changes": [{"claim": key, "before": (old_claims.get(key) or {}).get("status"),
+                                  "after": (new_claims.get(key) or {}).get("status")}
+                                 for key in sorted(old_claims.keys() | new_claims.keys())
+                                 if (old_claims.get(key) or {}).get("status") != (new_claims.get(key) or {}).get("status")],
+        "requirement_changes": requirement_changes, "discrepancy_changes": discrepancy_changes,
+        "provenance_changed": old["provenance"] != new["provenance"],
+        "review_context_changed": context_changed, "reviewer_changed": reviewer_changed,
+        "meaning": "Changed evidence needs review; this is not a performance comparison.",
+    }
+
+
+def drift(bundle, root, catalog_path="evidence/catalog.json"):
+    """Which files in the working tree differ from what a review packet recorded."""
+    review, _ = _load_review(bundle)
+    records = R.load(root, catalog_path)
+    current = E.load_artifact_data(records)
+    by_path = {item["path"]: key for key, item in records.artifacts.items()}
+    changed, missing, removed = [], [], []
+    for item in review["artifacts"]:
+        key = by_path.get(item["path"])
+        if key is None:
+            removed.append(item["path"])
+        elif current[key] is None:
+            missing.append(item["path"])
+        elif digest(current[key]) != item["sha256"]:
+            changed.append(item["path"])
+    added = sorted(set(by_path) - {item["path"] for item in review["artifacts"]})
+    return {"bundle_commit": review["provenance"].get("commit"),
+            "changed_since_bundle": sorted(changed), "missing_now": sorted(missing),
+            "no_longer_cataloged": sorted(removed), "newly_cataloged": added,
+            "impact": E.impact(records, sorted(changed + missing)),
+            "meaning": "The packet no longer describes these files. Its conclusions about affected claims are stale."}

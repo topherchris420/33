@@ -1,0 +1,177 @@
+{
+  "schema_version": 1,
+  "requirements": [
+    {
+      "id": "R-C1-CLOSURE", "claims": ["C1"], "check": "machine",
+      "text": "The baseline linkage closes (assembles) at every drive angle from 0 to 92 deg.",
+      "source": "Implicit precondition of the paper's four-bar deployment claim.",
+      "quantity": "baseline assemblable over the drive range", "unit": "boolean",
+      "bound": {"equals": true},
+      "value": {"artifact": "four_bar_data", "json": "/baseline/assemblable_over_range"},
+      "assumptions": ["Planar pin-jointed loop; lengths are pin-centre distances."],
+      "implementation": ["four_bar_source"], "tests": ["four_bar_tests"]
+    },
+    {
+      "id": "R-C1-TRANSMISSION", "claims": ["C1"], "check": "machine",
+      "text": "The transmission angle stays within 40-140 deg throughout deployment.",
+      "source": "Common linkage design guidance cited by the historical C1 note and tests.",
+      "quantity": "baseline transmission angle range", "unit": "deg",
+      "bound": {"min": 40, "max": 140},
+      "value": [{"artifact": "four_bar_data", "json": "/baseline/min_transmission_angle"},
+                {"artifact": "four_bar_data", "json": "/baseline/max_transmission_angle"}],
+      "assumptions": ["The angle is only defined for poses where the loop closes."],
+      "implementation": ["four_bar_source"], "tests": ["four_bar_tests"]
+    },
+    {
+      "id": "R-C1-LOCK", "claims": ["C1"], "check": "physical_measurement",
+      "text": "The over-center toggle holds the fin at the deployed position against the design hinge moment.",
+      "source": "Paper claim: over-center locking at a 92 deg toggle.",
+      "quantity": "holding moment at the deployed position", "unit": "N*m",
+      "assumptions": ["Requires a linkage that can be assembled (R-C1-CLOSURE)."],
+      "implementation": [], "tests": [],
+      "note": "Not modeled: the only over-center helper compares angles and ignores geometry."
+    },
+    {
+      "id": "R-C2-JITTER", "claims": ["C2"], "check": "physical_measurement",
+      "text": "Deploy-output timing jitter is below 1 ms relative to the trigger.",
+      "source": "Paper claim: sub-millisecond actuation jitter.",
+      "quantity": "peak absolute deviation of output edge from requested delay", "unit": "us",
+      "bound": {"max": 1000},
+      "measured_by": ["PRED-C2-DELAY"],
+      "assumptions": ["Measured with an instrument independent of the ESP32 clock."],
+      "implementation": ["timing_source", "rocket_firmware"], "tests": ["timing_tests"]
+    },
+    {
+      "id": "R-C2-NONBLOCKING", "claims": ["C2"], "check": "human_review",
+      "text": "Scheduling the deployment does not block the control loop.",
+      "source": "Paper claim: zero-blocking deployment.",
+      "assumptions": ["esp_timer callbacks run in the timer task and trigger_deployment_sequence returns immediately."],
+      "implementation": ["timing_source", "rocket_firmware"], "tests": []
+    },
+    {
+      "id": "R-C3-PROFILE", "claims": ["C3"], "check": "test",
+      "text": "Generated NACA 00xx coordinates scale to the chord and are symmetric about the chord line.",
+      "source": "NACA 4-digit definition.",
+      "tests_required": ["test_naca_fin_generator::test_naca_generator_scales_x_coordinates_to_configured_chord",
+                         "test_naca_fin_generator::test_naca_0012_coordinates_are_symmetric_about_chord_line",
+                         "test_naca_fin_generator::test_naca_00xx_symmetry_error",
+                         "test_naca_fin_generator::test_naca_generator_rejects_invalid_geometry_inputs"],
+      "assumptions": [], "implementation": ["cad_source"], "tests": ["cad_tests"]
+    },
+    {
+      "id": "R-C3-STEP", "claims": ["C3"], "check": "test",
+      "text": "The generator exports readable STEP solids with collision-free file names.",
+      "source": "C3 claim: STEP export for downstream CAD/CFD.",
+      "tests_required": ["test_naca_fin_generator::test_step_export_roundtrips",
+                         "test_naca_fin_generator::test_sweep_produces_unique_files"],
+      "assumptions": ["CadQuery version pinned in requirements-evidence.txt."], "implementation": ["cad_source"], "tests": ["cad_tests"]
+    },
+    {
+      "id": "R-C4-REDUCTION", "claims": ["C4"], "check": "machine",
+      "text": "Candidate materials reduce total mass by 30-40% relative to the baseline.",
+      "source": "Paper claim: 30-40% mass reduction.",
+      "quantity": "calculated mass reduction fraction", "unit": "fraction",
+      "bound": {"min": 0.30, "max": 0.40},
+      "value": {"artifact": "mass_summary", "json": "/reduction_fraction"},
+      "assumptions": ["The four listed parts are the relevant assembly."],
+      "implementation": ["mass_source", "mass_inputs"], "tests": ["mass_tests"]
+    },
+    {
+      "id": "R-C4-SCOPE", "claims": ["C4"], "check": "human_review",
+      "text": "The mass rollup's parts, volumes, and baseline materials describe the assembly being claimed.",
+      "source": "Needed for any mass claim to refer to a real design.",
+      "assumptions": [], "implementation": ["mass_inputs"], "tests": []
+    },
+    {
+      "id": "R-C5-WINDOW", "claims": ["C5"], "check": "machine",
+      "text": "Static margin stays between 1.5 and 2.0 calibers through the motor burn.",
+      "source": "Paper claim: 1.5-2.0 caliber static margin.",
+      "quantity": "static margin", "unit": "cal",
+      "bound": {"min": 1.5, "max": 2.0},
+      "value": {"artifact": "stability_data", "csv": "sm_calibers", "reduce": "values"},
+      "alternate_values": [
+        {"label": "textbook fin-term cross-check", "value": [{"artifact": "crosscheck_data", "json": "/sm_min_calibers"}, {"artifact": "crosscheck_data", "json": "/sm_max_calibers"}]}
+      ],
+      "assumptions": ["Barrowman static margin is the intended metric.", "The CG history uses the hard-coded Estes C6-5, not the OpenRocket file's G64W."],
+      "implementation": ["stability_source", "stability_inputs", "crosscheck_source"], "tests": ["stability_tests"]
+    },
+    {
+      "id": "R-C5-FORMULATION", "claims": ["C5"], "check": "human_review",
+      "text": "The static-margin formulation and its inputs are appropriate for this geometry and motor.",
+      "source": "Needed before any static-margin result can be relied on.",
+      "assumptions": [], "implementation": ["stability_source", "crosscheck_source"], "tests": []
+    },
+    {
+      "id": "R-C6-KMIN", "claims": ["C6"], "check": "machine",
+      "text": "The supplied spring rate is at least the calculated minimum.",
+      "source": "Paper claim: k >= 185 N*m/rad with k_supplied = 220 N*m/rad.",
+      "quantity": "margin fraction", "unit": "fraction",
+      "bound": {"min": 0.0},
+      "value": {"artifact": "spring_design_point", "json": "/margin_fraction"},
+      "assumptions": ["Margin = (k_supplied - k_min) / k_min."],
+      "implementation": ["spring_source"], "tests": ["spring_tests"]
+    },
+    {
+      "id": "R-C6-MARGIN", "claims": ["C6"], "check": "machine",
+      "text": "The supplied spring rate exceeds the calculated minimum by at least 20%.",
+      "source": "Paper claim: at least 20% margin.",
+      "quantity": "margin fraction", "unit": "fraction",
+      "bound": {"min": 0.20},
+      "value": {"artifact": "spring_design_point", "json": "/margin_fraction"},
+      "assumptions": ["Margin = (k_supplied - k_min) / k_min."],
+      "implementation": ["spring_source"], "tests": ["spring_tests"]
+    },
+    {
+      "id": "R-C6-SPRING-RATE", "claims": ["C6"], "check": "physical_measurement",
+      "text": "The supplied spring's measured rate is 220 N*m/rad within its stated tolerance.",
+      "source": "Paper value for k_supplied.",
+      "quantity": "torsion spring rate", "unit": "N*m/rad",
+      "measured_by": ["PRED-C6-SPRING-RATE"],
+      "assumptions": [], "implementation": [], "tests": []
+    },
+    {
+      "id": "R-C7-RELIABILITY", "claims": ["C7"], "check": "machine",
+      "text": "Simulated deployment succeeds in at least 99.9% of trials.",
+      "source": "Paper claim: at least 99.9% reliability from Monte Carlo.",
+      "quantity": "simulated success fraction", "unit": "fraction",
+      "bound": {"min": 0.999},
+      "value": {"artifact": "reliability_run_record", "json": "/success_fraction"},
+      "assumptions": ["The simulation's success criterion can fail; see D-013, which says it cannot for its velocity test."],
+      "implementation": ["reliability_source"], "tests": ["reliability_tests"]
+    },
+    {
+      "id": "R-C7-PHYSICAL", "claims": ["C7"], "check": "physical_measurement",
+      "text": "Repeated inert deployments of a physical mechanism lock at the deployed position.",
+      "source": "Needed before any reliability statement about hardware.",
+      "quantity": "fraction of trials that lock", "unit": "fraction",
+      "measured_by": ["PRED-C7-LOCK-FRACTION"],
+      "assumptions": ["Requires an assemblable mechanism (C1)."], "implementation": [], "tests": []
+    },
+    {
+      "id": "R-C8-MODULUS", "claims": ["C8"], "check": "machine",
+      "text": "The laminate's in-plane modulus matches or exceeds 6061-T6 aluminium (69 GPa).",
+      "source": "Paper claim: match or exceed aluminium stiffness.",
+      "quantity": "equivalent Ex", "unit": "GPa",
+      "bound": {"min": 69.0},
+      "value": {"artifact": "structural_data", "csv": "Value_GPa", "row": {"Property": "Ex"}},
+      "assumptions": ["The comparison is on material modulus, as in the historical note."],
+      "implementation": ["structural_source"], "tests": ["structural_tests"]
+    },
+    {
+      "id": "R-C8-COMPONENT-STIFFNESS", "claims": ["C8"], "check": "human_review",
+      "text": "At equal or lower mass, the CFRP fin section is at least as stiff in bending as the aluminium section it replaces.",
+      "source": "The thickness-compensation argument in the historical note.",
+      "assumptions": ["Requires section geometry for both designs; none is recorded."], "implementation": [], "tests": []
+    },
+    {
+      "id": "R-C8-HINGE-FOS", "claims": ["C8"], "check": "machine",
+      "text": "The hinge pin's factor of safety exceeds 1.5 under the 50 g deployment load.",
+      "source": "Paper claim: F.S. > 1.5 under 50 g shock.",
+      "quantity": "factor of safety against yield", "unit": "ratio",
+      "bound": {"min": 1.5},
+      "value": {"artifact": "hinge_data", "json": "/factor_of_safety"},
+      "assumptions": ["Double shear with central point-load bending; 154 g fin."],
+      "implementation": ["structural_source"], "tests": ["structural_tests"]
+    }
+  ]
+}

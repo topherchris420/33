@@ -21,7 +21,11 @@
     "CMD_REJECT_DASHBOARD_LAUNCH_DISABLED": "CMD_REJECT:dashboard_launch_disabled",
     "CMD_REJECT_PID_INVALID": "CMD_REJECT:pid_invalid",
     "CMD_REJECT_UNKNOWN_COMMAND": "CMD_REJECT:unknown_command",
-    "ABORT_PREFIX": "ABORT:"
+    "ABORT_PREFIX": "ABORT:",
+    "CMD_REJECT_ARM_NOT_IDLE": "CMD_REJECT:arm_not_idle",
+    "CMD_REJECT_IGNITE_NOT_ARMED": "CMD_REJECT:ignite_not_armed",
+    "CMD_REJECT_IGNITE_FINS_NOT_DEPLOYED": "CMD_REJECT:ignite_fins_not_deployed",
+    "CMD_REJECT_SENSOR_UNAVAILABLE": "CMD_REJECT:sensor_unavailable"
   },
   "messages": [
     {
@@ -83,6 +87,61 @@
       "direction": "Launcher -> Dashboard",
       "format": "CMD_REJECT:unknown_command",
       "purpose": "Dashboard command was not recognized by the launcher"
+    },
+    {
+      "direction": "Launcher -> Rocket",
+      "format": "CALIBRATE",
+      "purpose": "Re-zero the gyro offset; the rocket sends no acknowledgement"
+    },
+    {
+      "direction": "Launcher -> Rocket",
+      "format": "PID,<Kp>,<Kd>",
+      "purpose": "Set controller gains (each 0-10); invalid values return CMD_REJECT:pid_invalid"
+    },
+    {
+      "direction": "Rocket -> Launcher",
+      "format": "LOG_START,<count> ... LOG_END",
+      "purpose": "Bracket an onboard log dump so a partial dump is detectable"
+    },
+    {
+      "direction": "Rocket -> Launcher -> Dashboard",
+      "format": "CMD_REJECT:arm_not_idle",
+      "purpose": "ARM refused because the rocket is not IDLE"
+    },
+    {
+      "direction": "Rocket -> Launcher -> Dashboard",
+      "format": "CMD_REJECT:ignite_not_armed",
+      "purpose": "IGNITE refused because the rocket is not ARMED"
+    },
+    {
+      "direction": "Rocket -> Launcher -> Dashboard",
+      "format": "CMD_REJECT:ignite_fins_not_deployed",
+      "purpose": "IGNITE refused because the deploy flag is not set (see discrepancy D-017)"
+    },
+    {
+      "direction": "Rocket -> Launcher -> Dashboard",
+      "format": "CMD_REJECT:sensor_unavailable",
+      "purpose": "ARM or IGNITE refused because the MPU6050 is unavailable"
+    },
+    {
+      "direction": "Launcher -> Dashboard",
+      "format": "T,<launcher_ms>,<roll>,<rate>,<output>",
+      "purpose": "Live sample relayed from a DATA line; the time is the launcher's millis() at relay, not the rocket's sample time"
+    },
+    {
+      "direction": "Launcher -> Dashboard",
+      "format": "STATUS:<state>,<Kp>,<Kd>,<skew>",
+      "purpose": "Rocket state and active gains, sent after each T packet"
+    },
+    {
+      "direction": "Launcher -> Dashboard",
+      "format": "ENV,<lat>,<lon>,<alt>,<gps_state>",
+      "purpose": "Launcher environment; lat/lon are 0.0 placeholders unless gps_state is 2; alt is nan when the barometer is unavailable"
+    },
+    {
+      "direction": "Launcher -> Dashboard",
+      "format": "ABORT:<reason>",
+      "purpose": "Launcher abort reason (switch reset, rocket timeout, heartbeat loss, missing IGNITED ack)"
     }
   ]
 }

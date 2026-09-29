@@ -1,0 +1,61 @@
+{
+  "schema_version": 1,
+  "note": "Write the question, prediction, and interpretation rule before the test. Status 'proposed' means drafted, not adopted: only a named human may set 'registered'. A measurement must cite a registered entry and the fingerprint it was judged against, so a rule edited after the result is detectable.",
+  "preregistrations": [
+    {
+      "id": "P-001", "status": "proposed",
+      "title": "Deploy-output timing on inert hardware",
+      "claims": ["C2"], "predictions": ["PRED-C2-DELAY"], "requirements": ["R-C2-JITTER"],
+      "proposed_by": "Automated assistant during the 2026-09-28 evidence review",
+      "registered_by": null, "registered_on": null,
+      "question": "When the firmware requests a 50 ms deploy delay, when does GPIO 33 rise relative to the trigger, and how much does that vary?",
+      "prediction": "Edge at 50,000 us after the trigger reference; the paper claims jitter below 1,000 us. No model predicts the spread.",
+      "variables": {
+        "controlled": ["firmware revision", "requested delay 50,000 us", "supply voltage", "no load on GPIO 33"],
+        "measured": ["time from trigger-reference edge to GPIO 33 rising edge, per trial"],
+        "recorded": ["instrument model and sample rate", "trial count", "ambient temperature", "loop activity during trials"]
+      },
+      "interpretation_rule": "Report median, maximum absolute deviation from 50,000 us, and trial count. R-C2-JITTER is satisfied only if the maximum absolute deviation over at least 1,000 trials is below 1,000 us after subtracting the instrument's stated timing uncertainty. Fewer trials: report the observation, do not evaluate the requirement.",
+      "measurement_method": "Logic analyzer or oscilloscope sampling at 1 MHz or faster on GPIO 33 and on a second GPIO toggled immediately before trigger_deployment_sequence(); both channels share the instrument's clock.",
+      "known_limitations": ["The trigger-reference toggle itself adds a small, unmeasured offset.", "Bench conditions exclude flight vibration, temperature, and brownout."],
+      "safety": "Inert only: nothing connected to GPIO 33 except the instrument; ignition servo mechanically disconnected; no energetic material present."
+    },
+    {
+      "id": "P-002", "status": "proposed",
+      "title": "Torsion spring rate of the supplied spring",
+      "claims": ["C6"], "predictions": ["PRED-C6-SPRING-RATE"], "requirements": ["R-C6-SPRING-RATE"],
+      "proposed_by": "Automated assistant during the 2026-09-28 evidence review",
+      "registered_by": null, "registered_on": null,
+      "question": "What is the torque-angle rate of the spring that would be installed, and does it match the 220 N*m/rad in the claim?",
+      "prediction": "220 N*m/rad (paper value; no datasheet recorded).",
+      "variables": {
+        "controlled": ["spring specimen identity", "fixture lever arm", "angle steps"],
+        "measured": ["torque at each angle, loading and unloading"],
+        "recorded": ["torque instrument and calibration date", "angle measurement method", "specimen count"]
+      },
+      "interpretation_rule": "Fit torque against angle over the rated range; report slope with its standard error and the hysteresis. Compare with 220 N*m/rad; the acceptance tolerance must be written here by the registering human before testing.",
+      "measurement_method": "Static torque-angle fixture with a calibrated torque gauge or load cell at a known lever arm.",
+      "known_limitations": ["Static rate only; dynamic and temperature effects are not captured."],
+      "safety": "Stored-energy hazard: restrain the spring, wear eye protection, release slowly."
+    },
+    {
+      "id": "P-003", "status": "proposed",
+      "title": "Stationary roll-estimate drift",
+      "claims": [], "predictions": [], "requirements": [],
+      "roadmap_stage": "Stage 4: Control-System Refinement",
+      "proposed_by": "Automated assistant during the 2026-09-28 evidence review",
+      "registered_by": null, "registered_on": null,
+      "question": "How far does the firmware roll estimate drift over 10 minutes with the rocket stationary and level, after CALIBRATE?",
+      "prediction": "None. This is an exploratory characterization; no model predicts the drift.",
+      "variables": {
+        "controlled": ["orientation (fixture level)", "firmware revision and gains", "time since power-on"],
+        "measured": ["roll_deg from LOG rows (rocket clock) over 600 s"],
+        "recorded": ["ambient temperature", "whether CALIBRATE was sent and when", "session ID and audit digest"]
+      },
+      "interpretation_rule": "Report the roll change over 600 s and the maximum excursion. Because no prediction exists, the result describes this unit only and sets a baseline; it cannot pass or fail.",
+      "measurement_method": "Dashboard session with DUMPLOG every 10 s to capture rocket-clock LOG rows; audit with python -m evidence audit.",
+      "known_limitations": ["The ring buffer holds about 12 s; missed dumps leave gaps that must be reported, not interpolated."],
+      "safety": "Inert only: ignition servo disconnected; launcher left in SAFE."
+    }
+  ]
+}

@@ -1,0 +1,25 @@
+{
+  "schema": "project33.c5.barrowman_crosscheck/1",
+  "generator": "Simulation/barrowman_crosscheck.py",
+  "status": "unreviewed cross-check; not a replacement for static_margin.py",
+  "units": {
+    "length": "m",
+    "static_margin": "calibers"
+  },
+  "differs_from_reference_in": [
+    "fin CP sweep term uses X_R (tip leading-edge sweep)",
+    "fin normal-force term uses mid-chord line length"
+  ],
+  "shared_with_reference": [
+    "parsed geometry",
+    "nose term (ogive coefficient)",
+    "CG history from reference CSV",
+    "hard-coded motor assumption"
+  ],
+  "fin_cp_m": 0.415931,
+  "fin_normal_force_coefficient": 37.418828,
+  "midchord_length_m": 0.18,
+  "cp_m": 0.395728,
+  "sm_min_calibers": 0.7445,
+  "sm_max_calibers": 0.7576
+}

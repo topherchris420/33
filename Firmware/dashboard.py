@@ -9,10 +9,13 @@ from collections import deque
 import time
 import numpy as np
 import logging
-import atexit
+import math
+from datetime import datetime, timezone
 
 from analyze_pid import write_pid_report
+from live_quality import GAP_MS, LiveQuality
 from session_artifacts import TestSessionArtifacts
+from session_plot import break_at_gaps, render_session_graph
 from telemetry_log import TelemetryCsvLogger
 
 # Configure logging
@@ -48,12 +51,9 @@ class TelemetryApp:
         self.rate_data = deque()
         self.output_data = deque()
         
-        self.current_values = {
-            "Time": 0, "Roll": 0.0, "Rate": 0.0, "Output": 0.0, 
-            "State": "DISCONNECTED", "ActiveKp": 0.0, "ActiveKd": 0.0,
-            "Skew": 0.0,
-            "Lat": 0.0, "Lon": 0.0, "Alt": 0.0, "GPS_State": 0
-        }
+ 
+        # None means "not received". Unknown values are displayed as unknown, never as 0.
+        self.current_values = self.empty_values()
         
         self.mission_events = [] 
         self.last_state = "DISCONNECTED"
@@ -65,6 +65,7 @@ class TelemetryApp:
         self.running = True
         self.session = TestSessionArtifacts()
         self.telemetry_logger = TelemetryCsvLogger(self.session.telemetry_csv)
+        self.quality = LiveQuality()
 
         self.build_gui()
         
@@ -75,6 +76,12 @@ class TelemetryApp:
         self.watchdog_thread.start()
         
         self.gui_update_loop()
+
+    @staticmethod
+    def empty_values():
+        return {"Time": None, "Roll": None, "Rate": None, "Output": None, "State": "DISCONNECTED",
+                "ActiveKp": None, "ActiveKd": None, "Skew": None,
+                "Lat": None, "Lon": None, "Alt": None, "GPS_State": None}
 
     def s(self, val): return int(val * self.ui_scale)
     def f(self, size, weight="normal"): return ("Helvetica", self.s(size), weight)
@@ -110,7 +117,7 @@ class TelemetryApp:
         self.status_label.pack(side=tk.LEFT, padx=self.s(10))
         self.log_label = ttk.Label(
             control_frame,
-            text=f"Session: {self.session.session_id}",
+            text=f"Session: {self.session.session_id} · RAW SESSION (not evidence) · origin undeclared",
             foreground="gray",
             font=self.f(8),
         )
@@ -127,6 +134,13 @@ class TelemetryApp:
 
         ttk.Button(control_frame, text="Save Graph", command=self.save_graph).pack(side=tk.RIGHT, padx=self.s(10))
         ttk.Button(control_frame, text="Reset Data", command=self.reset_dashboard).pack(side=tk.RIGHT, padx=self.s(10))
+
+        evidence_frame = ttk.Frame(self.root, padding=(self.s(10), 0))
+        evidence_frame.pack(side=tk.TOP, fill=tk.X)
+        self.quality_label = ttk.Label(evidence_frame, text="Data quality: no packets yet", font=self.f(8))
+        self.quality_label.pack(side=tk.TOP, anchor="w")
+        self.config_label = ttk.Label(evidence_frame, text="Gains observed: not received", font=self.f(8))
+        self.config_label.pack(side=tk.TOP, anchor="w")
 
         mission_frame = ttk.LabelFrame(self.root, text="Mission Control", padding=self.s(10))
         mission_frame.pack(side=tk.TOP, fill=tk.X, padx=self.s(10), pady=self.s(5))
@@ -168,7 +182,7 @@ class TelemetryApp:
         ttk.Label(active_frame, text="ACTIVE HARDWARE SETTINGS:", font=self.f(8, "bold"), foreground="gray").pack(side=tk.TOP, anchor="w")
         display_container = tk.Frame(active_frame, bg="white", bd=1, relief=tk.SOLID, padx=self.s(10), pady=self.s(5))
         display_container.pack(side=tk.TOP, anchor="w", pady=(self.s(5), 0))
-        self.lbl_active_pid = tk.Label(display_container, text="Kp: --.---  |  Kd: --.---", font=self.fm(13), fg="#004488", bg="white")
+        self.lbl_active_pid = tk.Label(display_container, text="Kp: not received  |  Kd: not received", font=self.fm(13), fg="#004488", bg="white")
         self.lbl_active_pid.pack(side=tk.LEFT)
 
         # --- ENVIRONMENT & LOCATION FRAME ---
@@ -190,17 +204,17 @@ class TelemetryApp:
         self.lbl_gps_text = ttk.Label(bubble_frame, text="NO NMEA", font=self.f(10, "bold"), foreground="red")
         self.lbl_gps_text.pack(side=tk.LEFT, padx=self.s(5))
 
-        self.lbl_alt = self.create_stat_label(env_frame, "Altitude (m ASL)", 1)
+        self.lbl_alt = self.create_stat_label(env_frame, "Barometric altitude (m)", 1)
         self.lbl_lat = self.create_stat_label(env_frame, "Latitude", 2)
         self.lbl_lon = self.create_stat_label(env_frame, "Longitude", 3)
 
         # --- LIVE TELEMETRY FRAME ---
         stats_frame = ttk.LabelFrame(self.root, text="Live Telemetry", padding=self.s(10))
         stats_frame.pack(side=tk.TOP, fill=tk.X, padx=self.s(10), pady=self.s(5))
-        self.lbl_time = self.create_stat_label(stats_frame, "Time (ms)", 0)
+        self.lbl_time = self.create_stat_label(stats_frame, "Launcher relay time (ms)", 0)
         self.lbl_roll = self.create_stat_label(stats_frame, "Roll (°)", 1)
         self.lbl_rate = self.create_stat_label(stats_frame, "Rate (°/s)", 2)
-        self.lbl_out = self.create_stat_label(stats_frame, "Servo Output", 3)
+        self.lbl_out = self.create_stat_label(stats_frame, "Servo offset (°)", 3)
         self.lbl_skew = self.create_stat_label(stats_frame, "Skew (°)", 4)
 
     def create_stat_label(self, parent, title, col):
@@ -216,10 +230,10 @@ class TelemetryApp:
         self.fig, self.ax = plt.subplots(figsize=(8, 4), dpi=100)
         self.fig.patch.set_facecolor('#f0f0f0')
         self.line_roll, = self.ax.plot([], [], label='Roll Angle', color='tab:blue', linewidth=2)
-        self.line_rate, = self.ax.plot([], [], label=f'Roll Rate (x{RATE_SCALE})', color='tab:orange', linewidth=1.5)
-        self.ax.set_title("Rocket Stability Telemetry")
-        self.ax.set_xlabel("Time (ms)")
-        self.ax.set_ylabel("Value")
+        self.line_rate, = self.ax.plot([], [], label=f'Roll rate (deg/s) x{RATE_SCALE}, display scaling', color='tab:orange', linewidth=1.5)
+        self.ax.set_title("Live telemetry (raw session; not evidence)")
+        self.ax.set_xlabel("Launcher relay time (ms)")
+        self.ax.set_ylabel("Roll (deg) / scaled rate / servo offset (deg)")
         self.ax.grid(True, linestyle=':', alpha=0.6)
         
         from matplotlib.patches import Patch
@@ -235,12 +249,18 @@ class TelemetryApp:
         try:
             with socket.socket(socket.AF_INET, socket.SOCK_DGRAM) as sock:
                 sock.sendto(cmd.encode('utf-8'), (target_ip, UDP_PORT))
+            # UDP gives no delivery confirmation; "sent" means handed to the socket.
+            self.session.log_command(cmd, "sent")
+            return True
         except OSError as e:
+            self.session.log_command(cmd, f"send_failed: {e}")
             logger.warning("UDP send failed to %s: %s", target_ip, e)
             messagebox.showerror("Error", f"Network error sending '{cmd}':\n{e}")
         except Exception as e:
+            self.session.log_command(cmd, f"send_failed: {e}")
             logger.error("Unexpected error sending UDP: %s", e)
             messagebox.showerror("Error", f"Failed to send '{cmd}':\n{e}")
+        return False
 
     def send_launch_command(self):
         if messagebox.askyesno("CONFIRM LAUNCH", "Firmware rejects dashboard launch by default unless ENABLE_DASHBOARD_LAUNCH is intentionally enabled for an inert test.\nEnsure launcher is Armed and READY.\n\nSend launch request?"):
@@ -248,7 +268,8 @@ class TelemetryApp:
 
     def send_calibrate_command(self):
         if messagebox.askyesno("Confirm", "Keep rocket STILL. Zeroing Gyro. Proceed?"):
-            self._send_udp_command("calibrate")
+            if self._send_udp_command("calibrate"):
+                self.quality.calibration_sent(datetime.now(timezone.utc).strftime("%H:%M:%SZ"))
 
     def send_dump_log_command(self):
         self._send_udp_command("dumplog")
@@ -261,7 +282,8 @@ class TelemetryApp:
                 raise ValueError("PID values must be non-negative")
             if kp > 10 or kd > 10:
                 raise ValueError("PID values must not exceed 10.0")
-            self._send_udp_command(f"PID,{kp},{kd}")
+            if self._send_udp_command(f"PID,{kp},{kd}"):
+                self.quality.commanded(kp, kd)
         except ValueError as e:
             messagebox.showerror("Error", str(e))
         except Exception as e:
@@ -287,6 +309,7 @@ class TelemetryApp:
                 data, addr = sock.recvfrom(BUFFER_SIZE)
                 message = data.decode('utf-8').strip()
                 self.telemetry_logger.log_packet(message)
+                self.quality.observe(message)
                 if self.rocket_ip != addr[0]:
                     self.rocket_ip = addr[0]
                     self.root.after(0, lambda: self.status_label.config(text=f"Connected: {self.rocket_ip}", foreground="green"))
@@ -313,7 +336,9 @@ class TelemetryApp:
                 if len(parts) >= 4:
                     self.current_values["Lat"] = float(parts[1])
                     self.current_values["Lon"] = float(parts[2])
-                    self.current_values["Alt"] = float(parts[3])
+                    # The launcher sends nan when its barometer is unavailable.
+                    alt = float(parts[3])
+                    self.current_values["Alt"] = alt if math.isfinite(alt) else None
                 if len(parts) >= 5: # Safely get the new GPS state variable
                     self.current_values["GPS_State"] = int(parts[4])
 
@@ -322,6 +347,8 @@ class TelemetryApp:
                 parts = message.split(',')
                 if len(parts) >= 5:
                     t, r, rt, o = float(parts[1]), float(parts[2]), float(parts[3]), float(parts[4])
+                    if not all(math.isfinite(v) for v in (t, r, rt, o)):
+                        return  # counted by LiveQuality; never plotted as a value
                     with self._data_lock:
                         self.time_data.append(t)
                         self.roll_data.append(r)
@@ -331,7 +358,7 @@ class TelemetryApp:
                     
                     state = self.current_values.get("State", "DISCONNECTED")
                     if state != self.last_state:
-                        if self.last_state != "DISCONNECTED" and t > 0:
+                        if self.last_state != "DISCONNECTED":
                             self.mission_events.append({"time": t, "state": state})
                         self.last_state = state
         except ValueError as e:
@@ -344,36 +371,38 @@ class TelemetryApp:
             self.update_stats()
             self.root.after(100, self.gui_update_loop)
 
+    @staticmethod
+    def show(value, fmt, missing="—"):
+        return missing if value is None else format(value, fmt)
+
     def update_stats(self):
         if not hasattr(self, 'lbl_time') or not self.lbl_time.winfo_exists(): return
         vals = self.current_values
-        self.lbl_time.config(text=f"{int(vals['Time'])}")
-        self.lbl_roll.config(text=f"{vals['Roll']:.2f}")
-        self.lbl_rate.config(text=f"{vals['Rate']:.2f}")
-        self.lbl_out.config(text=f"{vals['Output']:.2f}")
-        self.lbl_skew.config(text=f"{vals['Skew']:.2f}")
-        
-        # New Environment UI Updates
+        self.lbl_time.config(text=self.show(vals['Time'], ".0f"))
+        self.lbl_roll.config(text=self.show(vals['Roll'], ".2f"))
+        self.lbl_rate.config(text=self.show(vals['Rate'], ".2f"))
+        self.lbl_out.config(text=self.show(vals['Output'], ".0f"))
+        self.lbl_skew.config(text=self.show(vals['Skew'], ".2f"))
+
         if hasattr(self, 'lbl_alt'):
-            self.lbl_alt.config(text=f"{vals['Alt']:.1f}")
-            self.lbl_lat.config(text=f"{vals['Lat']:.6f}")
-            self.lbl_lon.config(text=f"{vals['Lon']:.6f}")
-            
-            # Update GPS Status Bubble
-            gps_state = vals.get("GPS_State", 0)
-            if gps_state == 0:
-                self.gps_canvas.itemconfig(self.gps_dot, fill="red", outline="red")
-                self.lbl_gps_text.config(text="NO NMEA", foreground="red")
-            elif gps_state == 1:
-                self.gps_canvas.itemconfig(self.gps_dot, fill="orange", outline="orange")
-                self.lbl_gps_text.config(text="SEARCHING", foreground="orange")
-            elif gps_state == 2:
-                self.gps_canvas.itemconfig(self.gps_dot, fill="green", outline="green")
-                self.lbl_gps_text.config(text="FIX ACQUIRED", foreground="green")
-        
+            self.lbl_alt.config(text=self.show(vals['Alt'], ".1f", "not reported"))
+            gps_state = vals.get("GPS_State")
+            has_fix = gps_state == 2
+            # The launcher sends 0.0 placeholders without a fix; show that as no fix, not a position.
+            self.lbl_lat.config(text=self.show(vals['Lat'], ".6f") if has_fix else "no fix")
+            self.lbl_lon.config(text=self.show(vals['Lon'], ".6f") if has_fix else "no fix")
+            styles = {None: ("gray", "NO DATA"), 0: ("red", "NO NMEA"), 1: ("orange", "SEARCHING"), 2: ("green", "FIX ACQUIRED")}
+            colour, text = styles.get(gps_state, ("gray", f"UNKNOWN STATE {gps_state}"))
+            self.gps_canvas.itemconfig(self.gps_dot, fill=colour, outline=colour)
+            self.lbl_gps_text.config(text=text, foreground=colour)
+
         state = vals["State"]
         self.lbl_state_text.config(text=state)
-        self.lbl_active_pid.config(text=f"Kp: {vals['ActiveKp']:.3f}  |  Kd: {vals['ActiveKd']:.3f}")
+        self.lbl_active_pid.config(text=f"Kp: {self.show(vals['ActiveKp'], '.3f', 'not received')}  |  "
+                                        f"Kd: {self.show(vals['ActiveKd'], '.3f', 'not received')}")
+        if hasattr(self, 'quality_label'):
+            self.quality_label.config(text="Data quality: " + self.quality.status_line())
+            self.config_label.config(text=self.quality.gains_text() + " · " + self.quality.calibration_text())
 
         color_map = {"IDLE": "gray", "ARMED": "#F4D03F", "IGNITING": "#FF8C00", "FLIGHT": "green", "DISCONNECTED": "gray"}
         dot_color = color_map.get(state, "gray")
@@ -393,12 +422,16 @@ class TelemetryApp:
 
         rate_plot = [r * RATE_SCALE for r in rate]
 
-        self.line_roll.set_data(t, roll)
-        self.line_rate.set_data(t, rate_plot)
-        for collection in self.ax.collections:
+        # Break lines at gaps so missing time is not drawn as a connecting segment.
+        self.line_roll.set_data(*break_at_gaps(t, roll, GAP_MS))
+        self.line_rate.set_data(*break_at_gaps(t, rate_plot, GAP_MS))
+        for collection in list(self.ax.collections):
             collection.remove()
-        self.ax.fill_between(t, out, 0, where=(out >= 0), interpolate=True, color='green', alpha=0.3)
-        self.ax.fill_between(t, out, 0, where=(out < 0), interpolate=True, color='red', alpha=0.3)
+        t_fill, out_fill = break_at_gaps(t, out, GAP_MS)
+        out_array = np.array(out_fill, dtype=float)
+        with np.errstate(invalid="ignore"):  # NaN gap markers compare False, leaving the gap unfilled
+            self.ax.fill_between(t_fill, out_array, 0, where=(out_array >= 0), interpolate=True, color='green', alpha=0.3)
+            self.ax.fill_between(t_fill, out_array, 0, where=(out_array < 0), interpolate=True, color='red', alpha=0.3)
         self.ax.set_xlim(min(t), max(t) + 1)
 
         limit = 10.0
@@ -415,7 +448,7 @@ class TelemetryApp:
             self.rate_data.clear()
             self.output_data.clear()
         self.mission_events.clear()
-        self.current_values = {"Time": 0, "Roll": 0.0, "Rate": 0.0, "Output": 0.0, "State": "DISCONNECTED", "ActiveKp": 0.0, "ActiveKd": 0.0, "Skew": 0.0, "Lat": 0.0, "Lon": 0.0, "Alt": 0.0, "GPS_State": 0}
+        self.current_values = self.empty_values()
         self.last_state = "DISCONNECTED"
         self.update_stats()
 
@@ -423,34 +456,13 @@ class TelemetryApp:
         with self._data_lock:
             if not self.time_data:
                 return False
-            data_len = len(self.time_data)
             t = list(self.time_data)
             roll = list(self.roll_data)
             rate = list(self.rate_data)
             out = list(self.output_data)
-
-        width = max(12, min(200, data_len / 50))
-        save_fig, save_ax = plt.subplots(figsize=(width, 4), dpi=100)
-
-        rate_plot = [r * RATE_SCALE for r in rate]
-
-        save_ax.plot(t, roll, label='Roll Angle', color='tab:blue', linewidth=2)
-        save_ax.plot(t, rate_plot, label=f'Roll Rate (x{RATE_SCALE})', color='tab:orange', linewidth=1.5)
-        save_ax.fill_between(t, out, 0, where=(np.array(out) >= 0), interpolate=True, color='green', alpha=0.3)
-        save_ax.fill_between(t, out, 0, where=(np.array(out) < 0), interpolate=True, color='red', alpha=0.3)
-
-        y_max = max(max(roll) if roll else 10, max(rate_plot) if rate_plot else 10) * 0.9
-        for event in self.mission_events:
-            ev_time = event["time"]
-            ev_name = event["state"]
-            save_ax.axvline(x=ev_time, color='black', linestyle='--', alpha=0.6)
-            save_ax.text(ev_time, y_max, f" {ev_name}", rotation=90, verticalalignment='top', fontsize=9, fontweight='bold', color='black')
-
-        save_ax.set_title(f"Rocket Flight Data - {len(t)} points")
-        save_ax.legend()
-        save_ax.set_xlim(min(t), max(t) + 1)
-        save_fig.savefig(file_path, dpi=100, bbox_inches='tight')
-        plt.close(save_fig)
+        render_session_graph(file_path, t, roll, rate, out, session_id=self.session.session_id,
+                             events=list(self.mission_events), gains_text=self.quality.gains_text(),
+                             rate_scale=RATE_SCALE, gap_ms=GAP_MS)
         if notify:
             messagebox.showinfo("Success", f"Graph saved to:\n{file_path}")
         return True
@@ -480,14 +492,22 @@ class TelemetryApp:
         try:
             self._save_graph_to_path(self.session.graph_png, notify=False)
             write_pid_report(self.session.telemetry_csv, self.session.pid_markdown)
-            self.session.write_summary(packet_count=self.telemetry_logger.packet_count)
+            self.session.close(self.telemetry_logger.packet_count)
+            self.session.write_summary(packet_count=self.telemetry_logger.packet_count,
+                                       quality=self.quality.summary())
         except Exception as e:
             print(f"Error writing session artifacts: {e}")
 
     def on_close(self):
         self.running = False
+        if getattr(self, 'anim', None) is not None and self.anim.event_source:
+            self.anim.event_source.stop()
         self.telemetry_logger.close()
         self.write_session_artifacts()
+        # Figures made through pyplot keep their own manager alive; close them so
+        # the Tk main loop can end instead of hanging after the window closes.
+        plt.close('all')
+        self.root.quit()
         self.root.destroy()
 if __name__ == "__main__":
     root = tk.Tk()

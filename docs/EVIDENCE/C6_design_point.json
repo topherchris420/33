@@ -1,0 +1,35 @@
+{
+  "schema": "project33.c6.design_point/1",
+  "generator": "mechanism/spring_sizing.py",
+  "units": {
+    "v_egress": "m/s",
+    "c_fin": "m",
+    "S_fin": "m^2",
+    "t_deploy": "s",
+    "h_fin": "m",
+    "m_fin": "kg",
+    "k": "N*m/rad",
+    "margin_fraction": "(k_supplied - k_min) / k_min"
+  },
+  "inputs": {
+    "v_egress": 205.0,
+    "c_fin": 0.12,
+    "S_fin": 0.0216,
+    "t_deploy": 0.05,
+    "h_fin": 0.18,
+    "m_fin": 0.154,
+    "Cm_alpha_max": 0.8,
+    "damping_ratio": 0.7
+  },
+  "model_assumptions": [
+    "constant angular acceleration to 90 deg within t_deploy",
+    "thin-rod fin inertia about its end",
+    "peak aerodynamic hinge moment applied throughout deployment",
+    "damping handled by dividing by (1 - damping_ratio), a heuristic inflation",
+    "air density fixed at 1.225 kg/m^3"
+  ],
+  "k_min_N_m_rad": 184.8838,
+  "k_supplied_N_m_rad": 220.0,
+  "k_supplied_basis": "stated in source paper; not a measured spring rate",
+  "margin_fraction": 0.189936
+}

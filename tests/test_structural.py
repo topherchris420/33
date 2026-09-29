@@ -1,18 +1,25 @@
+"""C8 calculation checks. Requirement outcomes live in the evidence record."""
+
+import json
 import sys
 from pathlib import Path
-sys.path.insert(0, str(Path(__file__).resolve().parents[1] / 'structures'))
-import fea_lite
+
 import pytest
 
-def test_clt_stiffness():
-    Ex, Ey, Gxy = fea_lite.compute_clt_properties()
-    # Typical quasi-isotropic CFRP has Ex in 50-70 GPa range
-    assert 50 <= Ex <= 70
-    assert 50 <= Ey <= 70
+ROOT = Path(__file__).resolve().parents[1]
+sys.path.insert(0, str(ROOT / 'structures'))
+import fea_lite
 
-def test_hinge_pin_fos():
-    fos, vm, tau, sig = fea_lite.compute_hinge_fos()
-    # F.S. >= 1.5
-    assert fos >= 1.5
-    # Should be near paper's claimed 1.88 with the aligned parameters
-    assert 1.5 <= fos <= 3.0, f'FoS={fos:.2f} outside expected range [1.5, 3.0]'
+
+def test_quasi_isotropic_laminate_is_in_plane_isotropic():
+    Ex, Ey, Gxy = fea_lite.compute_clt_properties()
+    assert Ex == pytest.approx(Ey, rel=1e-9)
+    # For an in-plane isotropic laminate G = E / (2 (1 + nu)) with 0 < nu < 0.5.
+    assert Ex / 3 < Gxy < Ex / 2
+
+
+def test_hinge_record_reproduces_committed_values(tmp_path):
+    fea_lite.generate_reports(tmp_path / "clt.csv", tmp_path / "fos.json")
+    assert json.loads((tmp_path / "fos.json").read_text()) == \
+        json.loads((ROOT / "docs/EVIDENCE/C8_hinge_fos.json").read_text())
+    assert (tmp_path / "clt.csv").read_bytes() == (ROOT / "docs/EVIDENCE/C8_clt.csv").read_bytes()

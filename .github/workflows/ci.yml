@@ -17,6 +17,8 @@ jobs:
           python-version: "3.11"
       - name: Build and verify the committed evidence snapshot
         run: make review
+      - name: Strict record check (drift, stale reviews, consistency, stale generated docs and figures)
+        run: make check
       - name: Exercise the explicitly synthetic telemetry example
         run: make evidence-demo
       - name: Retain portable reports and source manifests
@@ -51,8 +53,22 @@ jobs:
           python -m pip install -r requirements-evidence.txt
       - name: Check generated protocol artifacts
         run: python tools/generate_protocol.py --check
-      - name: Run evidence scripts and tests
-        run: make evidence
+      # Tests, then regenerate every model output in a temporary directory and
+      # compare values with the committed artifacts. Nothing is overwritten.
+      - name: Tests, model reproduction, and a review packet with both run records
+        run: make review-full
+      - name: Retain the packet with attached run records
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: project33-evidence-full-${{ github.sha }}
+          path: |
+            build/review-full/
+            build/pytest.xml
+            build/reproduction.json
+          if-no-files-found: warn
+          include-hidden-files: true
+          retention-days: 30
 
   platformio-build:
     name: PlatformIO firmware build

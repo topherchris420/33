@@ -51,30 +51,43 @@ Safety behavior:
 ```mermaid
 stateDiagram-v2
     [*] --> IDLE
-    IDLE --> ARMED: ARM command
-    ARMED --> IGNITING: IGNITE command
+    IDLE --> ARMED: ARM (IMU healthy)
+    ARMED --> IGNITING: IGNITE and deploy flag set
+    ARMED --> ARMED: IGNITE without deploy flag / CMD_REJECT:ignite_fins_not_deployed
     IGNITING --> FLIGHT: 2.5 second ignition servo window complete
     FLIGHT --> FLIGHT: stabilization loop
 ```
 
 Safety behavior:
 
-- Rocket-side `IGNITE` is ignored unless the rocket is already `ARMED`.
-- Canards remain centered until `FLIGHT`.
-- Gyro calibration runs when entering `ARMED` and on explicit `CALIBRATE`.
-- Rocket telemetry samples are copied into a 240-sample RAM ring buffer that can be dumped after telemetry loss.
+- `ARM` is accepted only in `IDLE` with a healthy MPU6050; otherwise the rocket replies `CMD_REJECT:arm_not_idle` or `CMD_REJECT:sensor_unavailable`.
+- `IGNITE` is accepted only in `ARMED` with a healthy MPU6050 **and** the deploy flag set; otherwise the rocket replies `CMD_REJECT:ignite_not_armed`, `CMD_REJECT:sensor_unavailable`, or `CMD_REJECT:ignite_fins_not_deployed`. The launcher forwards every `CMD_REJECT:` line to the dashboard CSV.
+- The deploy flag is set only by the hardware-timer callback, which is armed by a >15 g x-axis reading while not `IDLE`. Under the nominal sequence (IGNITE before boost) the rocket therefore refuses IGNITE and the launcher aborts with "No IGNITED ACK received". This ordering is an open design question (D-017); on the bench it acts as an extra interlock and must not be removed without a safety review.
+- `FLIGHT` means "ignition actuation commanded"; it is not confirmation of ignition.
+- Canards remain centered until `FLIGHT`. Gyro calibration runs on entering `ARMED` and on explicit `CALIBRATE` (not acknowledged).
+- Telemetry samples go into a 240-sample RAM ring buffer that `DUMPLOG` returns as `LOG_START,<count>`, `LOG,...` rows, and `LOG_END`.
 
 ## Bench Evidence Flow
 
 The dashboard owns per-session evidence capture. Each run creates a local session folder containing raw CSV telemetry, an exported graph, a PID comparison report, and a summary. If live telemetry drops, the dashboard can request the rocket RAM ring buffer with `dumplog`; the launcher forwards the request as `DUMPLOG` and relays `LOG` rows back to the dashboard.
 
-## Offline Review Boundary
+## Evidence Architecture
 
-The [Evidence Observatory](EVIDENCE_OBSERVATORY.md) is a separate standard-library
-Python package. It reads committed files or a completed telemetry CSV, creates an
-HTML/JSON review and source manifest, and verifies portable bundles. It has no
-network or command-transport dependency. A successful integrity check cannot
-change an authored evidence classification or approve hardware readiness.
+```mermaid
+flowchart LR
+    Records[evidence/*.json<br>claims, requirements, predictions,<br>measurements, sessions, discrepancies] --> Validate[Structural validation<br>refuses promotion]
+    Artifacts[Cited artifacts<br>source, model outputs, tests] --> Evaluate
+    Validate --> Evaluate[Requirement evaluation<br>drift, freshness, support level]
+    Evaluate --> Packet[Portable review packet<br>scoped verification]
+    Evaluate --> Docs[Generated passports,<br>traceability, fragments]
+    Session[Dashboard raw session] --> Passport[Session passport<br>audit + declaration] --> Human{Named human<br>accepts?} --> Records
+```
+
+The [Evidence Observatory](EVIDENCE_OBSERVATORY.md) is a separate standard-library package with no network or command-transport dependency. It reads committed files or completed captures and writes review packets; it never talks to firmware. A successful check cannot change an evidence class, accept a session, or approve hardware readiness.
+
+## Clock Domains
+
+Live `T` packets are stamped with the launcher's `millis()` when it relays a rocket `DATA` line; `DATA` carries no rocket timestamp. Recovered `LOG` rows carry the rocket's `millis()` at sample time. The two clocks are never mixed in timing statistics (D-018).
 
 ## Protocol Reference
 

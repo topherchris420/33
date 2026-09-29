@@ -115,14 +115,18 @@ Connects to the launcher's WiFi AP and communicates with the launcher over UDP.
 The generated protocol reference is [PROTOCOL.md](PROTOCOL.md).
 | Direction | Format | Example |
 |-----------|--------|---------|
-| Launcher -> Dashboard | `T,<ms>,<roll>,<rate>,<output>` | `T,1234,5.2,-3.1,4` |
+| Launcher -> Dashboard | `T,<launcher_ms>,<roll>,<rate>,<output>` | `T,1234,5.2,-3.1,4` |
 | Launcher -> Dashboard | `STATUS:<state>,<Kp>,<Kd>,<skew>` | `STATUS:FLIGHT,0.5,0.2,1.3` |
-| Launcher -> Dashboard | `ENV,<lat>,<lon>,<alt>,<gps_state>` | `ENV,34.1467,-118.3885,200.5,2` |
+| Launcher -> Dashboard | `ENV,<lat>,<lon>,<alt>,<gps_state>` | `ENV,34.1467,-118.3885,200.5,2` or `ENV,0.000000,0.000000,nan,1` |
+| Launcher -> Dashboard | `CMD_REJECT:<reason>` / `ABORT:<reason>` | `CMD_REJECT:ignite_not_armed` |
 | Launcher -> Dashboard | `[FUSION] Hdg: <deg> \| Pitch: <deg>` | `[FUSION] Hdg: 104.5 \| Pitch: +02.1` |
 | Dashboard -> Launcher | `HELLO,<token>` | `HELLO,<DASHBOARD_AUTH_TOKEN>` |
 | Dashboard -> Launcher | `PID,<Kp>,<Kd>` | `PID,0.8,0.3` |
 | Dashboard -> Launcher | `launch` | `launch` |
 | Dashboard -> Launcher | `calibrate` | `calibrate` |
+| Dashboard -> Launcher | `dumplog` | `dumplog` |
+
+`<launcher_ms>` is the launcher's `millis()` when it relays the rocket's `DATA` line, not the rocket's sample time; only `LOG` rows carry the rocket clock. In `ENV`, latitude and longitude are 0.0 placeholders unless `gps_state` is 2, and altitude is `nan` when the barometer is unavailable. Missing is not zero.
 
 ### Rocket UART Protocol
 | Direction | Format | Example |
@@ -134,6 +138,9 @@ The generated protocol reference is [PROTOCOL.md](PROTOCOL.md).
 | Launcher -> Rocket | `IGNITE` | `IGNITE` |
 | Launcher -> Rocket | `CALIBRATE` | `CALIBRATE` |
 | Launcher -> Rocket | `PID,<Kp>,<Kd>` | `PID,0.8,0.3` |
+| Launcher -> Rocket | `DUMPLOG` | `DUMPLOG` |
+| Rocket -> Launcher | `LOG_START,<count>` / `LOG,...` / `LOG_END` | `LOG_START,240` |
+| Rocket -> Launcher | `CMD_REJECT:<reason>` | `CMD_REJECT:ignite_fins_not_deployed` |
 
 ### GPS State Codes
 | Code | Meaning |

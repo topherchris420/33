@@ -7,8 +7,9 @@ sys.path.insert(0, str(ROOT / 'Simulation'))
 import static_margin
 import pytest
 import csv
+import json
 
-def test_static_margin_in_window(tmp_path):
+def test_default_geometry_produces_physically_ordered_outputs(tmp_path):
     csv_path = tmp_path / "sm.csv"
     plot_path = tmp_path / "sm.png"
     static_margin.generate_reports(str(csv_path), str(plot_path))
@@ -26,12 +27,8 @@ def test_static_margin_in_window(tmp_path):
             cg_vals.append(float(row['cg_m']))
             cp_vals.append(float(row['cp_m']))
             
-    sm_min = min(sm_vals)
-    sm_max = max(sm_vals)
-    
-    assert 1.5 <= sm_min <= 2.0, f"Min SM {sm_min} not in [1.5, 2.0]"
-    assert 1.5 <= sm_max <= 2.0, f"Max SM {sm_max} not in [1.5, 2.0]"
-    
+    # Built-in defaults are not the modeled rocket; no window is asserted here.
+    assert sm_vals
     # Assert monotonic mass decrease -> cg moves forward (decreases value)
     for i in range(1, len(cg_vals)):
         assert cg_vals[i] <= cg_vals[i-1]
@@ -40,29 +37,18 @@ def test_static_margin_in_window(tmp_path):
     for cp, cg in zip(cp_vals, cg_vals):
         assert cp > cg
 
-def test_static_margin_with_ork(tmp_path):
-    csv_path = tmp_path / "sm_ork.csv"
-    plot_path = tmp_path / "sm_ork.png"
+def test_ork_run_reproduces_committed_outputs(tmp_path):
+    # Requirement R-C5-WINDOW (1.5-2.0 cal) is evaluated by the evidence record,
+    # together with the textbook cross-check that disagrees with this model.
+    csv_path = tmp_path / "C5_static_margin.csv"
     ork_path = ROOT / "Simulation" / "Folding Stabilized Rocket.ork"
-    
-    static_margin.generate_reports(str(csv_path), str(plot_path), str(ork_path))
-    
-    assert csv_path.exists()
-    
-    sm_vals = []
-    with open(csv_path, 'r') as f:
-        reader = csv.DictReader(f)
-        for row in reader:
-            sm_vals.append(float(row['sm_calibers']))
-            
-    sm_min = min(sm_vals)
-    sm_max = max(sm_vals)
-    
-    # With the updated .ork fin geometry (C_R=130mm, C_T=110mm, S=180mm),
-    # the static margin should now be within the paper's claimed [1.5, 2.0] window
-    assert 1.0 <= sm_min, f"SM_min={sm_min:.2f} too low — expected >= 1.0"
-    assert sm_max <= 2.5, f"SM_max={sm_max:.2f} too high — expected <= 2.5"
-    assert len(sm_vals) > 0
+    static_margin.generate_reports(str(csv_path), str(tmp_path / "sm.png"), str(ork_path))
+    committed = ROOT / "docs" / "EVIDENCE"
+    assert csv_path.read_bytes() == (committed / "C5_static_margin.csv").read_bytes()
+    produced = json.loads((tmp_path / "C5_static_margin_inputs.json").read_text())
+    expected = json.loads((committed / "C5_static_margin_inputs.json").read_text())
+    assert produced == expected
+    assert produced["ork_motor_designation"] == "G64W"
 
 
 def test_ork_parser_extracts_real_geometry():

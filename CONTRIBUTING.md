@@ -70,6 +70,22 @@ the synthetic fault example. See [Evidence Observatory](docs/EVIDENCE_OBSERVATOR
 before editing `evidence/catalog.json`; evidence kinds and limitations are required,
 and an available artifact is never automatically promoted to a validated claim.
 
+### Evidence Record Rules
+
+The record in `evidence/` is checked by `python -m evidence check` (CI fails on any finding):
+
+- **Change evidence, then re-review.** When a file a claim depends on changes, the claim's review becomes stale. Look at the claim, then run `python -m evidence snapshot --claims C? --note "what changed and why the claim still reads correctly"`. Add `--reviewer "Your Name"` only if you, a person, reviewed it.
+- **Regenerate views, never edit them.** Passports, traceability, the discrepancy register, and marked fragments (`<!-- evidence:... -->`) come from `python -m evidence docs`.
+- **Never edit a registered prediction.** Register a new one and mark the old one superseded.
+- **Never edit the failure archive.** Add superseded files to `evidence/archive/` with their digest; the archive is append-only.
+- **Record disagreements.** A mismatch between models, docs, firmware, CAD, or the BOM goes in `evidence/discrepancies.json` with both sides.
+- **Classes are claims too.** Synthetic data carries an in-band origin column; physical classes need a human-accepted session.
+- **Models emit data, not verdicts.** Scripts write structured JSON/CSV; interpretation lives in the record.
+- **Tests test software.** Do not assert in CI that a design meets its requirement; add or adjust the requirement in `evidence/requirements.json`.
+- **Automated contributors** (including AI assistants) may propose pre-registrations (`status: proposed`) and record `snapshot` reviews. They must not register pre-registrations, accept sessions, record human reviews, or add measurements.
+
+Use `python -m evidence impact PATH` before a change to see which claims, requirements, predictions, and checks it touches.
+
 ### Firmware Build (without hardware)
 
 ```bash
@@ -113,6 +129,7 @@ pio run -d Firmware/Launcher
    - Evidence added or updated
    - Testing performed
 4. **Before submitting**:
+   - Run `python -m evidence check` and `python tools/review_figures.py --check`
    - Run `python -m pytest tests Firmware/tests -q`
    - Verify PlatformIO builds pass (`pio run -d Firmware/Rocket` and `pio run -d Firmware/Launcher`)
    - Ensure protocol check passes (`python tools/generate_protocol.py --check`)

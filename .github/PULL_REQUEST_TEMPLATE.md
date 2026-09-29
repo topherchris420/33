@@ -21,8 +21,16 @@ Explain why this change is needed and what reviewer-facing claim it supports.
 
 List the source, test, CI, bench-session, image, CAD, or documentation artifacts that support this change.
 
+## Evidence Record
+
+- Claims whose review this change affects (`python -m evidence impact PATH`):
+- Were those reviews re-snapshotted? By tooling (`snapshot`) or by a named human (`--reviewer`)?
+- New or changed requirements, predictions, discrepancies, or pre-registrations:
+- Evidence class of anything new (a model is not a measurement; synthetic is never physical):
+
 ## Verification
 
+- [ ] Record check: `python -m evidence check`
 - [ ] Protocol check: `python tools/generate_protocol.py --check`
 - [ ] Python tests: `python -m pytest tests Firmware/tests -q`
 - [ ] Rocket firmware build: `pio run -d Firmware/Rocket`
