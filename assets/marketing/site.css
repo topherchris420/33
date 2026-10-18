@@ -102,13 +102,13 @@ button:hover {
   color: var(--accent);
   font-size: 23px;
 }
-nav {
+.nav nav {
   display: flex;
   gap: 32px;
   align-items: center;
   font-size: 12px;
 }
-nav a:last-child {
+.nav nav a:last-child {
   border: 1px solid #58614e;
   padding: 14px 18px;
 }
@@ -653,13 +653,13 @@ footer {
   .nav {
     height: 88px;
   }
-  nav {
+  .nav nav {
     gap: 12px;
   }
-  nav > a:not(:last-child) {
+  .nav nav > a:not(:last-child) {
     display: none;
   }
-  nav a:last-child {
+  .nav nav a:last-child {
     font-size: 9px;
     padding: 10px;
   }
