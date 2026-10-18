@@ -17,6 +17,15 @@ from evidence_project import Project
 ROOT = Path(__file__).resolve().parents[1]
 
 
+def _symlink_or_skip(link, target):
+    try:
+        link.symlink_to(target)
+    except OSError as error:
+        if getattr(error, "winerror", None) == 1314:
+            pytest.skip("Windows account lacks the symbolic-link privilege")
+        raise
+
+
 @pytest.fixture
 def project(tmp_path):
     return Project(tmp_path / "project")
@@ -104,7 +113,7 @@ def test_verifier_rejects_tampering(project, tmp_path, change):
         (output / "artifacts/unlisted.txt").write_text("not in manifest")
     elif change == "symlink":
         target.unlink()
-        target.symlink_to(project.root / "sample.csv")
+        _symlink_or_skip(target, project.root / "sample.csv")
     elif change == "manifest":
         (output / "manifest.json").write_text("{}")
     elif change == "record":
@@ -138,7 +147,7 @@ def test_source_symlink_is_rejected(project, tmp_path):
     (project.root / "sample.csv").unlink()
     external = tmp_path / "outside.csv"
     external.write_text("time_ms,value,origin\n0,1,synthetic\n")
-    (project.root / "sample.csv").symlink_to(external)
+    _symlink_or_skip(project.root / "sample.csv", external)
     with pytest.raises(EvidenceError, match="Symlinks"):
         build(project, tmp_path / "review")
 

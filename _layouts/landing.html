@@ -1,0 +1,306 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#101310" />
+    <title>Project 33 — Engineering, in the open.</title>
+    <meta
+      name="description"
+      content="An open aerospace research testbed. Explore the Fourier blueprint film, the engineering system, and the evidence behind every claim."
+    />
+    <meta
+      property="og:title"
+      content="Project 33 — Engineering, in the open."
+    />
+    <meta
+      property="og:description"
+      content="The rocket is the specimen. The evidence is the product. An open research project by Vers3Dynamics."
+    />
+    <meta property="og:type" content="website" />
+    <meta
+      property="og:image"
+      content="{{ '/assets/marketing/poster.jpg' | absolute_url }}"
+    />
+    <link
+      rel="icon"
+      href="{{ '/assets/marketing/mark.svg' | relative_url }}"
+      type="image/svg+xml"
+    />
+    <link
+      rel="stylesheet"
+      href="{{ '/assets/marketing/site.css' | relative_url }}"
+    />
+  </head>
+  <body>
+    <a class="skip" href="#main">Skip to content</a>
+    <header class="nav shell">
+      <a class="brand" href="#" aria-label="Vers3Dynamics Project 33 home"
+        ><span class="brand-mark" aria-hidden="true">V<span>3</span></span
+        ><span>VERS3DYNAMICS<small>APPLIED AEROSPACE RESEARCH</small></span></a
+      >
+      <nav aria-label="Main navigation">
+        <a href="#system">The project</a><a href="#evidence">The evidence</a
+        ><a class="repo-link" href="https://github.com/topherchris420/33"
+          >View repository <span aria-hidden="true">↗</span></a
+        >
+      </nav>
+    </header>
+    <main id="main">
+      <section class="hero shell" aria-labelledby="hero-title">
+        <div class="hero-copy">
+          <p class="eyebrow">
+            <span class="status-dot"></span> PROJECT 033
+            <span class="separator">/</span> OPEN RESEARCH
+          </p>
+          <h1 id="hero-title">Engineering,<br />in the <em>open.</em></h1>
+          <p class="intro">
+            A small rocket. A bigger question.<br />What does it take to make
+            every engineering claim inspectable?
+          </p>
+          <div class="hero-actions">
+            <a class="button primary" href="#system"
+              >Explore the project <span aria-hidden="true">↘</span></a
+            ><a class="text-link" href="{{ '/film.html' | relative_url }}"
+              ><span class="play-icon" aria-hidden="true">▶</span> Watch the
+              design film</a
+            >
+          </div>
+          <div class="hero-note">
+            <span class="tiny-cross" aria-hidden="true">+</span>
+            <p>
+              The rocket is the specimen.<br /><strong
+                >The evidence record is the product.</strong
+              >
+            </p>
+          </div>
+        </div>
+        <figure class="blueprint">
+          <div class="canvas-heading">
+            <span>033 / CONSTRUCTION STUDY</span
+            ><span class="live-label">● FOURIER SYNTHESIS</span>
+          </div>
+          <canvas
+            id="rocket"
+            aria-label="Illustrative 3D rocket blueprint: Fourier epicycles draw contours, parts assemble, and the completed form rotates."
+            role="img"
+          ></canvas>
+          <img
+            class="canvas-fallback"
+            src="{{ '/assets/marketing/poster.jpg' | relative_url }}"
+            alt="Project 33 illustrative rocket blueprint"
+            hidden
+          />
+          <figcaption class="player">
+            <div class="player-main">
+              <button id="toggle" type="button" aria-label="Pause animation">
+                Ⅱ</button
+              ><input
+                id="timeline"
+                type="range"
+                min="0"
+                max="32"
+                step="0.05"
+                value="0"
+                aria-label="Animation position in seconds"
+              /><output id="time" for="timeline">00 / 32</output
+              ><button
+                id="restart"
+                type="button"
+                aria-label="Restart animation"
+              >
+                ↺
+              </button>
+            </div>
+            <div class="player-bottom">
+              <span id="chapter">01 / THE IDEA</span>
+              <div class="view-switch" aria-label="Rendering style">
+                <button id="blueprint-mode" aria-pressed="true" type="button">
+                  Blueprint</button
+                ><button id="surface-mode" aria-pressed="false" type="button">
+                  Surface
+                </button>
+              </div>
+            </div>
+          </figcaption>
+          <noscript
+            ><style>
+              #rocket,
+              .player {
+                display: none;
+              }
+              .canvas-fallback[hidden] {
+                display: block;
+              }
+            </style>
+            <p>
+              The interactive animation needs JavaScript.
+              <a
+                href="{{ '/assets/marketing/project33-blueprint.mp4' | relative_url }}"
+                >Watch the MP4 film</a
+              >.
+            </p></noscript
+          >
+        </figure>
+      </section>
+      <div class="status-band">
+        <div class="shell">
+          <span
+            ><span class="status-dot"></span> BENCH-VALIDATION PROTOTYPE</span
+          >
+          <p>
+            Models are not measurements. Progress starts with knowing the
+            difference.
+          </p>
+          <a href="#research-record"
+            >Read the current record <span aria-hidden="true">↗</span></a
+          >
+        </div>
+      </div>
+      <section id="system" class="system shell">
+        <div class="section-heading">
+          <p class="eyebrow">01 / THE PROJECT</p>
+          <h2>Small scale.<br />Serious questions.</h2>
+          <p>
+            A folding-fin research testbed connecting design, software, and the
+            evidence needed to understand both.
+          </p>
+        </div>
+        <div class="system-grid">
+          <article>
+            <div class="card-top">
+              <span>01</span
+              ><svg viewBox="0 0 80 64" aria-hidden="true">
+                <path d="M8 48 40 8 72 48 40 58Z M8 48H72 M40 8V58 M23 30H57" />
+              </svg>
+            </div>
+            <h3>Design the question.</h3>
+            <p>
+              CAD, mechanism models, material estimates, and simulation make
+              assumptions visible before they become hardware.
+            </p>
+            <a href="{{ '/docs/CAD_ASSEMBLIES.html' | relative_url }}"
+              >Explore the design <span aria-hidden="true">↗</span></a
+            >
+          </article>
+          <article>
+            <div class="card-top">
+              <span>02</span
+              ><svg viewBox="0 0 80 64" aria-hidden="true">
+                <path
+                  d="M23 15H57V49H23Z M31 23H49V41H31Z M31 7V15 M40 7V15 M49 7V15 M31 49V57 M40 49V57 M49 49V57 M15 23H23 M15 32H23 M15 41H23 M57 23H65 M57 32H65 M57 41H65"
+                />
+              </svg>
+            </div>
+            <h3>Connect the system.</h3>
+            <p>
+              ESP32 firmware and a telemetry dashboard connect the specimen to a
+              reviewable record of what the software actually did.
+            </p>
+            <a href="{{ '/docs/ARCHITECTURE.html' | relative_url }}"
+              >See the architecture <span aria-hidden="true">↗</span></a
+            >
+          </article>
+          <article>
+            <div class="card-top">
+              <span>03</span
+              ><svg viewBox="0 0 80 64" aria-hidden="true">
+                <path
+                  d="M17 8H53L63 18V56H17Z M53 8V18H63 M26 29H53 M26 37H53 M26 45H43"
+                />
+                <circle cx="27" cy="19" r="2" />
+              </svg>
+            </div>
+            <h3>Show the evidence.</h3>
+            <p>
+              Claim passports expose the supporting files, contradictions, and
+              missing measurements. Unresolved is a valid engineering state.
+            </p>
+            <a href="{{ '/docs/EVIDENCE_OBSERVATORY.html' | relative_url }}"
+              >Enter the observatory <span aria-hidden="true">↗</span></a
+            >
+          </article>
+        </div>
+      </section>
+      <section class="film-callout shell" aria-labelledby="film-heading">
+        <div>
+          <p class="eyebrow">FROM FREQUENCY TO FORM</p>
+          <h2 id="film-heading">Watch an idea<br />take shape.</h2>
+          <p>
+            Rotating vectors trace a blueprint. The blueprint becomes an
+            assembly. A new perspective emerges.
+          </p>
+          <a class="button primary" href="{{ '/film.html' | relative_url }}"
+            >Play the 32-second film <span aria-hidden="true">↗</span></a
+          >
+        </div>
+        <div class="formula-art" aria-hidden="true">
+          <div class="orbit orbit-a"></div>
+          <div class="orbit orbit-b"></div>
+          <div class="orbit orbit-c"></div>
+          <span>∑</span><small>z(t) = ∑ cₖ eⁱ²πᵏᵗ</small>
+        </div>
+        <p class="film-footnote">
+          A visual design study inspired by the project. Illustrative geometry;
+          not a CAD export, measurement, or assembly procedure.
+        </p>
+      </section>
+      <section id="evidence" class="evidence shell">
+        <div class="section-heading">
+          <p class="eyebrow">02 / THE STANDARD</p>
+          <h2>Curiosity is the start.<br />Evidence is the work.</h2>
+          <p>
+            Project 33 is a bench-validation prototype. Physical performance is
+            not established. Follow the record from assumption to the
+            measurements still needed.
+          </p>
+        </div>
+        <div class="evidence-links">
+          <a href="{{ '/docs/claims/README.html' | relative_url }}"
+            ><span>01 / CLAIM PASSPORTS</span><strong>What can we say?</strong
+            ><span aria-hidden="true">↗</span></a
+          ><a href="{{ '/docs/DISCREPANCIES.html' | relative_url }}"
+            ><span>02 / DISCREPANCY REGISTER</span
+            ><strong>What disagrees?</strong
+            ><span aria-hidden="true">↗</span></a
+          ><a href="{{ '/docs/ROADMAP.html' | relative_url }}"
+            ><span>03 / VALIDATION ROADMAP</span
+            ><strong>What comes next?</strong
+            ><span aria-hidden="true">↗</span></a
+          >
+        </div>
+      </section>
+      <section id="research-record" class="research shell">
+        <details>
+          <summary>
+            <span
+              ><span class="eyebrow">THE COMPLETE RECORD</span
+              ><strong>Open the engineering brief</strong></span
+            ><span class="expand" aria-hidden="true">+</span>
+          </summary>
+          <div class="record-content">{{ content }}</div>
+        </details>
+      </section>
+      <section class="closing shell">
+        <p class="eyebrow">OPEN SOURCE. OPEN QUESTIONS.</p>
+        <h2>Follow the work.<br />Question everything.</h2>
+        <a class="button primary" href="https://github.com/topherchris420/33"
+          >Explore on GitHub <span aria-hidden="true">↗</span></a
+        ><a class="text-link" href="{{ '/CONTRIBUTING.html' | relative_url }}"
+          >Contribute to the research <span aria-hidden="true">↗</span></a
+        >
+      </section>
+    </main>
+    <footer class="shell">
+      <span>VERS3DYNAMICS <span class="muted">/ PROJECT 33</span></span
+      ><span>ENGINEERING, IN THE OPEN.</span
+      ><a href="{{ '/docs/SAFETY.html' | relative_url }}"
+        >Research boundaries ↗</a
+      >
+    </footer>
+    <script
+      type="module"
+      src="{{ '/assets/marketing/player.mjs' | relative_url }}"
+    ></script>
+  </body>
+</html>

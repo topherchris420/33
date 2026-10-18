@@ -1,0 +1,22 @@
+name: Project page and film
+on:
+  push:
+  pull_request:
+permissions:
+  contents: read
+jobs:
+  marketing:
+    name: Fourier math and GitHub Pages build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - name: Verify contour reconstruction and sampling
+        run: node --test tests/fourier.test.mjs
+      - name: Build the GitHub Pages site
+        uses: actions/jekyll-build-pages@v1
+        with:
+          source: ./
+          destination: ./build/site

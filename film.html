@@ -1,0 +1,161 @@
+---
+layout: null
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#101310" />
+    <title>From frequency to form — Project 33</title>
+    <meta
+      name="description"
+      content="A 32-second Fourier epicycle blueprint film by Vers3Dynamics. An illustrative rocket design study."
+    />
+    <link
+      rel="icon"
+      href="{{ '/assets/marketing/mark.svg' | relative_url }}"
+      type="image/svg+xml"
+    />
+    <link
+      rel="stylesheet"
+      href="{{ '/assets/marketing/site.css' | relative_url }}"
+    />
+    <style>
+      body {
+        min-height: 100vh;
+      }
+      .film-nav {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding-block: 28px;
+        font: 10px var(--mono);
+        letter-spacing: 1px;
+      }
+      .film-player {
+        width: min(1440px, 94%);
+        margin: 25px auto;
+        border: 1px solid #354b53;
+      }
+      #rocket {
+        width: 100%;
+        height: auto;
+        aspect-ratio: 16/9;
+      }
+      .film-description {
+        max-width: 800px;
+        margin: 28px auto 45px;
+        color: var(--muted);
+        font-size: 12px;
+        line-height: 1.8;
+        text-align: center;
+        padding: 0 20px;
+      }
+      .film-description a {
+        color: var(--accent);
+        text-decoration: underline;
+      }
+      .player {
+        padding-inline: 20px;
+      }
+      .film-download {
+        color: var(--accent);
+      }
+      @media (max-width: 720px) {
+        .film-nav {
+          font-size: 8px;
+          gap: 15px;
+        }
+        .film-player {
+          margin-top: 40px;
+        }
+        .film-description {
+          text-align: left;
+        }
+      }
+    </style>
+  </head>
+  <body data-cinematic="true">
+    <nav class="film-nav shell" aria-label="Film navigation">
+      <a href="{{ '/' | relative_url }}">← PROJECT 33</a
+      ><span>FROM FREQUENCY TO FORM</span
+      ><a
+        class="film-download"
+        href="{{ '/assets/marketing/project33-blueprint.mp4' | relative_url }}"
+        download
+        >DOWNLOAD MP4 ↓</a
+      >
+    </nav>
+    <main>
+      <div class="film-player">
+        <canvas
+          id="rocket"
+          role="img"
+          aria-label="A cinematic 3D blueprint animation. Fourier epicycles draw an illustrative rocket, components assemble, and the completed form rotates."
+        ></canvas>
+        <div class="player">
+          <div class="player-main">
+            <button id="toggle" type="button" aria-label="Pause animation">
+              Ⅱ</button
+            ><input
+              id="timeline"
+              type="range"
+              min="0"
+              max="32"
+              step="0.05"
+              value="0"
+              aria-label="Animation position in seconds"
+            /><output id="time" for="timeline">00 / 32</output
+            ><button id="restart" type="button" aria-label="Restart animation">
+              ↺
+            </button>
+          </div>
+          <div class="player-bottom">
+            <span id="chapter">01 / THE IDEA</span>
+            <div class="view-switch" aria-label="Rendering style">
+              <button id="blueprint-mode" aria-pressed="true" type="button">
+                Blueprint</button
+              ><button id="surface-mode" aria-pressed="false" type="button">
+                Surface
+              </button>
+            </div>
+          </div>
+        </div>
+        <noscript
+          ><style>
+            #rocket,
+            .player {
+              display: none !important;
+            }</style
+          ><video
+            controls
+            playsinline
+            poster="{{ '/assets/marketing/poster.jpg' | relative_url }}"
+            style="width: 100%"
+          >
+            <source
+              src="{{ '/assets/marketing/project33-blueprint.mp4' | relative_url }}"
+              type="video/mp4"
+            /></video
+        ></noscript>
+      </div>
+      <p class="film-description">
+        Rotating Fourier vectors trace closed contours in local planes,
+        projected into a three-dimensional blueprint. The parts come together
+        before the viewpoint turns around the assembly.
+        <strong>Illustrative geometry, not to scale.</strong> This design study
+        is not a CAD export or a physical-performance claim. Project 33 remains
+        a bench-validation prototype.
+        <a href="{{ '/#research-record' | relative_url }}"
+          >Read the research record</a
+        >.
+      </p>
+    </main>
+    <script
+      type="module"
+      src="{{ '/assets/marketing/player.mjs' | relative_url }}"
+    ></script>
+  </body>
+</html>
