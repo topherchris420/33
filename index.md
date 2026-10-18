@@ -1,5 +1,6 @@
 ---
 title: Project 33
+layout: landing
 ---
 
 # Project 33

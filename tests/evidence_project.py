@@ -83,7 +83,9 @@ class Project:
     def add_session(self, session_id, raw_text, stage="human_accepted", origin="bench"):
         folder = self.root / "sessions" / session_id
         folder.mkdir(parents=True, exist_ok=True)
-        (folder / "telemetry.csv").write_text(raw_text)
+        # The registry hashes these exact bytes; Windows text translation would
+        # invalidate the synthetic fixture before the behavior under test runs.
+        (folder / "telemetry.csv").write_bytes(raw_text.encode("utf-8"))
         entry = {"id": session_id, "stage": stage, "origin": origin, "declaration": True,
                  "raw_files": [{"path": f"sessions/{session_id}/telemetry.csv", "sha256": digest(raw_text.encode())}],
                  "audit_manifest_sha256": "a" * 64}

@@ -1,0 +1,8 @@
+# Evidence digests identify exact bytes. Keep text identical on Windows and Unix.
+* text=auto eol=lf
+*.png binary
+*.jpg binary
+*.gif binary
+*.mp4 binary
+*.f3d binary
+*.ork binary

@@ -193,7 +193,7 @@ def test_duplicate_measurements_do_not_count_as_repeats(project):
     project.claim["gate"] = "repeated_measurement"
     with pytest.raises(EvidenceError, match="claims gate"):
         assess(project)
-    (project.root / "sessions/S2/telemetry.csv").write_text("different raw bytes\n")
+    (project.root / "sessions/S2/telemetry.csv").write_bytes(b"different raw bytes\n")
     project.records["sessions.json"]["sessions"][1]["raw_files"][0]["sha256"] = digest(b"different raw bytes\n")
     review = assess(project)
     assert review["claims"][0]["support"] == "bench_measured"

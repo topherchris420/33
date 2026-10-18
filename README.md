@@ -9,6 +9,12 @@
 
 The rocket is the specimen. The record of how engineering knowledge moves from assumption to model to implementation to measurement is the product.
 
+## From frequency to form
+
+[![Animated Project 33 rocket blueprint: Fourier epicycles trace the contours, parts assemble, and the completed form rotates](assets/marketing/project33-blueprint.gif)](assets/marketing/project33-blueprint.mp4)
+
+The animation plays directly above. Click it to open the full 32-second film, [download the 1080p MP4](assets/marketing/project33-blueprint.mp4), or [use the interactive player](https://topherchris420.github.io/33/film.html) with pause and timeline controls. The geometry is illustrative, not a CAD export or physical-performance claim. See [the film notes and export workflow](docs/MARKETING_FILM.md).
+
 ## Current status
 
 Project 33 is a **bench-validation prototype**. It has models, CAD, firmware that compiles, a telemetry dashboard, and automated checks. **No physical measurement has been accepted into the evidence record.** Nothing here is flight-tested or flight-ready, and live propulsion is outside the repository's validation boundary.
