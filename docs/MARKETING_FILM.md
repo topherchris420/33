@@ -4,7 +4,7 @@ Project 33's project page and design film use the existing GitHub Pages / Jekyll
 
 ## The film
 
-The silent, 32-second film is available as an interactive Canvas animation and a 1920 × 1080, 24 fps H.264 MP4. Its three chapters are:
+The silent, 32-second film is available as an interactive Canvas animation and a 1920 × 1080, 24 fps H.264 MP4. The README embeds a looping 960 × 540, 12 fps GIF of the complete film so visitors see the actual animation directly on GitHub. Clicking it opens the full-resolution MP4. Its three chapters are:
 
 | Time | Chapter | Visual |
 | --- | --- | --- |
@@ -46,6 +46,16 @@ node tools/export_marketing_film.mjs http://127.0.0.1:4000/33/film.html build/pr
 ```
 
 FFmpeg must be on `PATH`; alternatively set `FFMPEG_PATH` to its executable. Set `CHROME_PATH` to use an existing Chrome executable instead of Playwright's bundled Chromium. The same environment variables work on other operating systems with their shell's assignment syntax. Export requires no credentials or hardware. Copy the approved output into `assets/marketing/project33-blueprint.mp4` and update `assets/marketing/poster.jpg` after visual changes so the downloadable film and page stay consistent.
+
+## Refresh the README animation
+
+The README uses a normal relative Markdown image pointing to `assets/marketing/project33-blueprint.gif`. This keeps the animated preview on the same branch as the source and does not depend on a Pages deployment. Regenerate it from the committed MP4 after updating the film:
+
+```powershell
+ffmpeg -y -i assets/marketing/project33-blueprint.mp4 -filter_complex "[0:v]fps=12,scale=960:-1:flags=lanczos,split[a][b];[a]palettegen=max_colors=128:stats_mode=diff[p];[b][p]paletteuse=dither=bayer:bayer_scale=3:diff_mode=rectangle" -loop 0 assets/marketing/project33-blueprint.gif
+```
+
+The 128-color palette, ordered dithering, and changed-region encoding keep the full-length GIF compact. The interactive player remains the option with pause, seek, and reduced-motion behavior; the GIF loops automatically.
 
 ## Exact bytes on Windows
 
