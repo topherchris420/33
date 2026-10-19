@@ -13,7 +13,6 @@ The rocket is the specimen. The record of how engineering knowledge moves from a
 
 [![Animated Project 33 rocket blueprint: Fourier epicycles trace the contours, parts assemble, and the completed form rotates](assets/marketing/project33-blueprint.gif)](assets/marketing/project33-blueprint.mp4)
 
-The animation plays directly above. Click it to open the full 32-second film, [download the 1080p MP4](assets/marketing/project33-blueprint.mp4), or [use the interactive player](https://topherchris420.github.io/33/film.html) with pause and timeline controls. The geometry is illustrative, not a CAD export or physical-performance claim. See [the film notes and export workflow](docs/MARKETING_FILM.md).
 
 ## Current status
 
