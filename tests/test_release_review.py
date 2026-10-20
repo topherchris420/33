@@ -5,6 +5,7 @@ import json
 from pathlib import Path
 import subprocess
 import sys
+import xml.etree.ElementTree as ET
 
 import pytest
 
@@ -119,6 +120,16 @@ def test_failed_builds_cannot_package_stale_binaries_or_sign_reviews(tmp_path, m
     before = registry_bytes()
 
     def failed_step(root, stage, name, args, **kwargs):
+        if name == "tests":
+            # Attach a synthetic software run record in this temporary unit
+            # fixture. Its enriched C3 view must not stale committed docs.
+            suite = ET.Element("testsuite")
+            requirements = json.loads((ROOT / "evidence/requirements.json").read_bytes())["requirements"]
+            for req in requirements:
+                for test in req.get("tests_required", []):
+                    module, function = test.split("::")
+                    ET.SubElement(suite, "testcase", classname=f"tests.{module}", name=function)
+            (stage / "tests.xml").write_bytes(ET.tostring(suite))
         return {"name": name, "result": "failed", "exit_code": 7}
 
     monkeypatch.setattr(release, "run_step", failed_step)
@@ -131,6 +142,7 @@ def test_failed_builds_cannot_package_stale_binaries_or_sign_reviews(tmp_path, m
     assert any(b.get("id") == "D-021" for b in result["blockers"])
     assert any(b["code"] == "procurement_incomplete" for b in result["blockers"])
     assert any(b.get("id") == "firmware-rocket" for b in result["blockers"])
+    assert not any(b["code"] == "stale_generated_doc" for b in result["blockers"])
     assert verify_bundle(output / "review")["bundle_integrity"] == "verified"
     assert not (output / "source/Firmware/Launcher/src/wifi_config.h").exists()
     assert (output / "source/docs/USER_GUIDE.md").exists()

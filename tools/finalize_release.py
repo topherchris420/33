@@ -22,7 +22,6 @@ sys.path.insert(0, str(ROOT))
 
 from evidence.bundle import build_review, provenance, verify_bundle
 from evidence.common import EvidenceError, canonical_json, digest, new_directory, read_bytes, safe_path
-from evidence.docs import check as check_docs
 
 
 def money(value):
@@ -149,7 +148,7 @@ def run_step(root, stage, name, args, *, timeout=900):
             "result": "passed" if code == 0 else "failed", "log": log.relative_to(stage).as_posix()}
 
 
-def release_blockers(assessment, procurement, checks, stale_docs):
+def release_blockers(assessment, procurement, checks):
     blockers = []
     for item in assessment["discrepancies"]:
         if item["status"] == "open":
@@ -162,8 +161,6 @@ def release_blockers(assessment, procurement, checks, stale_docs):
             blockers.append({"code": "claim_incomplete", "id": claim["id"], "detail": claim["status_label"]})
     for finding in assessment["violations"]:
         blockers.append({"code": "record_consistency", "detail": finding["message"]})
-    for path in stale_docs:
-        blockers.append({"code": "stale_generated_doc", "detail": path})
     for check in checks:
         if check["result"] != "passed":
             blockers.append({"code": "software_check_incomplete", "id": check["name"], "detail": check["result"]})
@@ -218,7 +215,10 @@ def finalize(root, output, *, skip_firmware=False):
                                   reproduction_record=stage / "reproduction.json" if (stage / "reproduction.json").exists() else None)
         verify_bundle(stage / "review")
         procurement = procurement_status(root)
-        blockers = release_blockers(assessment, procurement, checks, check_docs(root, assessment))
+        # record-check validates committed docs against the record alone.
+        # Attached execution records intentionally enrich the portable review;
+        # comparing that view with committed docs creates false stale warnings.
+        blockers = release_blockers(assessment, procurement, checks)
         wifi = root / "Firmware/Launcher/src/wifi_config.h"
         example = root / "Firmware/Launcher/src/wifi_config.h.example"
         wifi_hash = digest(read_bytes(wifi)) if wifi.exists() else None
