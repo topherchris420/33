@@ -11,6 +11,7 @@ import csv
 from datetime import datetime, timezone
 from decimal import Decimal, InvalidOperation
 import json
+import os
 from pathlib import Path
 import shutil
 import subprocess
@@ -101,16 +102,24 @@ def procurement_status(root):
 def source_inventory(root):
     """Git-selected source, including new files, excluding ignored/private builds."""
     try:
+        top = subprocess.run(["git", "rev-parse", "--show-toplevel"], cwd=root, check=True,
+                             capture_output=True, text=True, timeout=30).stdout.strip()
+        if Path(top).resolve() != root.resolve():
+            raise ValueError("Portable source directory is not the parent Git checkout")
         run = subprocess.run(["git", "ls-files", "--cached", "--others", "--exclude-standard", "-z"],
                              cwd=root, check=True, capture_output=True, timeout=30)
         names = run.stdout.decode("utf-8").strip("\0").split("\0")
-    except (OSError, subprocess.SubprocessError):
+    except (OSError, ValueError, subprocess.SubprocessError):
         # The portable source snapshot deliberately contains no .git directory.
         excluded = {".git", ".venv", "venv", "env", "node_modules", "build", "dist", ".pio",
                     ".pytest_cache", "__pycache__", "TestSessions", "TelemetryLogs"}
-        names = [p.relative_to(root).as_posix() for p in root.rglob("*")
-                 if p.is_file() and not excluded.intersection(p.relative_to(root).parts)
-                 and p.name != "wifi_config.h" and p.suffix not in (".pyc", ".log")]
+        names = []
+        for directory, subdirs, files in os.walk(root):
+            subdirs[:] = [name for name in subdirs if name not in excluded and not name.startswith(".evidence-")]
+            for name in files:
+                path = Path(directory) / name
+                if name != "wifi_config.h" and path.suffix not in (".pyc", ".log"):
+                    names.append(path.relative_to(root).as_posix())
     result = []
     for name in sorted(set(names)):
         if (not name or name == "Firmware/Launcher/src/wifi_config.h"

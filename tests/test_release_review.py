@@ -3,6 +3,7 @@
 import csv
 import json
 from pathlib import Path
+import subprocess
 import sys
 
 import pytest
@@ -134,3 +135,17 @@ def test_failed_builds_cannot_package_stale_binaries_or_sign_reviews(tmp_path, m
     assert not (output / "source/Firmware/Launcher/src/wifi_config.h").exists()
     assert (output / "source/docs/USER_GUIDE.md").exists()
     assert registry_bytes() == before
+
+
+def test_portable_source_inside_an_ignored_parent_checkout_is_still_inventoried(tmp_path):
+    parent = tmp_path / "parent"
+    parent.mkdir()
+    subprocess.run(["git", "init", str(parent)], check=True, capture_output=True)
+    (parent / ".gitignore").write_text("dist/\n", encoding="utf-8")
+    portable = parent / "dist/source"
+    portable.mkdir(parents=True)
+    (portable / "main.py").write_text("# synthetic source fixture\n", encoding="utf-8")
+    (portable / ".venv").mkdir()
+    (portable / ".venv/cache.py").write_text("# excluded cache\n", encoding="utf-8")
+    (portable / "wifi_config.h").write_text("// excluded private configuration\n", encoding="utf-8")
+    assert [p["path"] for p in release.source_inventory(portable)] == ["main.py"]

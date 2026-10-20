@@ -15,3 +15,4 @@ Firmware/Launcher/src/wifi_config.h
 # Portable evidence bundles contain copied inputs and are generated on demand.
 /build/
 /dist/
+/.evidence-*/
