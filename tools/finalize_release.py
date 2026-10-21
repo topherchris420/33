@@ -7,6 +7,7 @@ exit 2 means packaging failed. Exit 0 would still require a human release decisi
 """
 
 import argparse
+from collections import Counter
 import csv
 from datetime import datetime, timezone
 from decimal import Decimal, InvalidOperation
@@ -22,6 +23,12 @@ sys.path.insert(0, str(ROOT))
 
 from evidence.bundle import build_review, provenance, verify_bundle
 from evidence.common import EvidenceError, canonical_json, digest, new_directory, read_bytes, safe_path
+
+REQUIRED_CHECKS = (
+    "record-check", "protocol-check", "link-check", "figure-check", "openrocket-cache",
+    "tests", "reproduction", "firmware-rocket", "firmware-launcher",
+)
+BUILD_FILENAMES = ("firmware.bin", "firmware.elf", "bootloader.bin", "partitions.bin")
 
 
 def money(value):
@@ -161,15 +168,56 @@ def release_blockers(assessment, procurement, checks):
             blockers.append({"code": "claim_incomplete", "id": claim["id"], "detail": claim["status_label"]})
     for finding in assessment["violations"]:
         blockers.append({"code": "record_consistency", "detail": finding["message"]})
+    check_counts = Counter(check["name"] for check in checks)
+    for name in REQUIRED_CHECKS:
+        if check_counts[name] != 1:
+            blockers.append({"code": "software_check_inventory", "id": name,
+                             "detail": "Exactly one result is required for this check"})
     for check in checks:
-        if check["result"] != "passed":
+        if check["result"] != "passed" or check.get("exit_code") != 0:
             blockers.append({"code": "software_check_incomplete", "id": check["name"], "detail": check["result"]})
     execution = assessment.get("execution_record") or {}
+    if not execution.get("tests"):
+        blockers.append({"code": "execution_record_missing", "detail": "A nonempty software test run record is required"})
+    if execution.get("failed", 0):
+        blockers.append({"code": "tests_failed", "detail": "The software run record contains failed tests"})
     if execution.get("skipped", 0):
         blockers.append({"code": "tests_skipped", "detail": "Skipped software tests are not verified"})
+    # Partial reproduction is useful for investigation, but a full distribution
+    # must account for every declared recipe output exactly once.
+    expected = {(recipe["id"], artifact) for recipe in assessment["recipes"]
+                for artifact in recipe["outputs"]}
+    reproduced = (assessment.get("reproduction_record") or {}).get("results", [])
+    actual = Counter((row["recipe"], row["artifact"]) for row in reproduced)
+    if not expected or set(actual) != expected or any(count != 1 for count in actual.values()):
+        blockers.append({"code": "reproduction_coverage", "detail": "Every declared model output needs exactly one reproduction result"})
+    current = {artifact["id"]: artifact["sha256"] for artifact in assessment["artifacts"]}
+    for row in reproduced:
+        if row["result"] != "reproduced" or current.get(row["artifact"]) != row["committed_sha256"]:
+            blockers.append({"code": "reproduction_unverified", "id": row["artifact"],
+                             "detail": "Model result failed or refers to different committed bytes"})
     if procurement["acquisition_cost_usd"] is None:
         blockers.append({"code": "procurement_incomplete", "detail": "Paid acquisition cost is not established"})
     return blockers
+
+
+def copy_build_outputs(source, destination):
+    """Publish only a complete, nonempty set from a successful build.
+
+    Read all inputs before creating the output directory. Missing, empty or
+    unreadable inputs must not leave an apparently usable partial artifact set.
+    The caller remains responsible for checking the actual build exit code.
+    """
+    contents = {}
+    for filename in BUILD_FILENAMES:
+        raw = read_bytes(source / filename)
+        if not raw:
+            raise EvidenceError(f"Empty build output: {filename}")
+        contents[filename] = raw
+    with new_directory(destination) as stage:
+        for filename, raw in contents.items():
+            (stage / filename).write_bytes(raw)
+    return list(contents)
 
 
 def finalize(root, output, *, skip_firmware=False):
@@ -199,15 +247,12 @@ def finalize(root, output, *, skip_firmware=False):
             if check["result"] != "passed":
                 continue
             artifacts = []
-            for filename in ("firmware.bin", "firmware.elf", "bootloader.bin", "partitions.bin"):
-                source = root / "Firmware" / project / ".pio/build" / env / filename
-                if not source.is_file():
-                    check.update(result="failed", detail=f"Missing build output: {filename}")
-                    break
-                destination = stage / "firmware" / env / filename
-                destination.parent.mkdir(parents=True, exist_ok=True)
-                shutil.copyfile(source, destination)
-                artifacts.append(destination.relative_to(stage).as_posix())
+            try:
+                filenames = copy_build_outputs(root / "Firmware" / project / ".pio/build" / env,
+                                               stage / "firmware" / env)
+                artifacts = [f"firmware/{env}/{filename}" for filename in filenames]
+            except (OSError, EvidenceError) as exc:
+                check.update(result="failed", detail=f"Build outputs unavailable: {exc}")
             firmware.append({"project": project, "environment": env, "artifacts": artifacts,
                              "build": check, "hardware_validation": "NOT ESTABLISHED"})
         assessment = build_review(root, stage / "review",

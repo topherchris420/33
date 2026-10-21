@@ -1,6 +1,7 @@
 """Release tooling must preserve missing evidence, identity and failed builds."""
 
 import csv
+from copy import deepcopy
 import json
 from pathlib import Path
 import subprocess
@@ -161,3 +162,98 @@ def test_portable_source_inside_an_ignored_parent_checkout_is_still_inventoried(
     (portable / ".venv/cache.py").write_text("# excluded cache\n", encoding="utf-8")
     (portable / "wifi_config.h").write_text("// excluded private configuration\n", encoding="utf-8")
     assert [p["path"] for p in release.source_inventory(portable)] == ["main.py"]
+
+
+def complete_software_review():
+    """Small synthetic record for testing the software audit, not a real review."""
+    assessment = {
+        "discrepancies": [], "requirements": [], "claims": [], "violations": [],
+        "execution_record": {"tests": 1, "passed": 1, "failed": 0, "skipped": 0},
+        "recipes": [{"id": "fixture", "outputs": {"a": "a.json", "b": "b.json"}}],
+        "artifacts": [{"id": name, "sha256": "a" * 64} for name in ("a", "b")],
+        "reproduction_record": {"results": [
+            {"artifact": name, "recipe": "fixture", "committed_sha256": "a" * 64,
+             "result": "reproduced"} for name in ("a", "b")]},
+    }
+    checks = [{"name": name, "result": "passed", "exit_code": 0} for name in release.REQUIRED_CHECKS]
+    return assessment, {"acquisition_cost_usd": "8.00"}, checks
+
+
+@pytest.mark.parametrize("change", ["missing", "duplicate", "nonzero_exit", "no_exit_code"])
+def test_software_check_inventory_cannot_silently_drop_checks(change):
+    assessment, procurement, checks = complete_software_review()
+    if change == "missing":
+        checks.pop()
+    elif change == "duplicate":
+        checks.append(deepcopy(checks[-1]))
+    elif change == "nonzero_exit":
+        checks[-1]["exit_code"] = 7
+    else:
+        checks[-1].pop("exit_code")
+    blockers = release.release_blockers(assessment, procurement, checks)
+    assert any(b["code"] in ("software_check_inventory", "software_check_incomplete") for b in blockers)
+
+
+@pytest.mark.parametrize("record,code", [
+    (None, "execution_record_missing"),
+    ({"tests": 0}, "execution_record_missing"),
+    ({"tests": 1, "failed": 1}, "tests_failed"),
+    ({"tests": 1, "skipped": 1}, "tests_skipped"),
+])
+def test_successful_command_cannot_substitute_for_test_evidence(record, code):
+    assessment, procurement, checks = complete_software_review()
+    assessment["execution_record"] = record
+    assert code in {b["code"] for b in release.release_blockers(assessment, procurement, checks)}
+
+
+@pytest.mark.parametrize("change", ["missing", "empty", "partial", "duplicate", "wrong_recipe", "stale", "failed"])
+def test_complete_current_reproduction_evidence_is_required(change):
+    assessment, procurement, checks = complete_software_review()
+    rows = assessment["reproduction_record"]["results"]
+    if change == "missing":
+        assessment["reproduction_record"] = None
+    elif change == "empty":
+        rows.clear()
+    elif change == "partial":
+        rows.pop()
+    elif change == "duplicate":
+        rows.append(deepcopy(rows[0]))
+    elif change == "wrong_recipe":
+        rows[0]["recipe"] = "unrelated"
+    elif change == "stale":
+        rows[0]["committed_sha256"] = "b" * 64
+    else:
+        rows[0]["result"] = "differs"
+    assert any(b["code"].startswith("reproduction_")
+               for b in release.release_blockers(assessment, procurement, checks))
+
+
+def test_complete_software_evidence_does_not_create_false_blockers():
+    assert release.release_blockers(*complete_software_review()) == []
+
+
+@pytest.mark.parametrize("fault", ["missing", "empty"])
+def test_partial_build_cannot_publish_any_binary(tmp_path, fault):
+    source = tmp_path / "build"
+    source.mkdir()
+    for name in release.BUILD_FILENAMES[:-1]:
+        (source / name).write_bytes(b"SYNTHETIC SOFTWARE TEST, NOT FIRMWARE")
+    if fault == "empty":
+        (source / release.BUILD_FILENAMES[-1]).touch()
+    destination = tmp_path / "package"
+    with pytest.raises((OSError, EvidenceError)):
+        release.copy_build_outputs(source, destination)
+    assert not destination.exists()
+
+
+def test_complete_build_artifacts_preserve_exact_bytes_and_refuse_overwrite(tmp_path):
+    source = tmp_path / "build"
+    source.mkdir()
+    for name in release.BUILD_FILENAMES:
+        (source / name).write_bytes(f"SYNTHETIC TEST {name}, NOT FIRMWARE".encode())
+    destination = tmp_path / "package/board"
+    release.copy_build_outputs(source, destination)
+    assert {p.name: p.read_bytes() for p in destination.iterdir()} == {
+        p.name: p.read_bytes() for p in source.iterdir()}
+    with pytest.raises(EvidenceError):
+        release.copy_build_outputs(source, destination)
