@@ -2,6 +2,8 @@
 
 This checkout can produce a review distribution. It cannot establish a production software-hardware release: the evidence record has no accepted physical measurements, procurement is estimated, and engineering contradictions remain open. The release audit does not change models, predictions, measurement registries, reviews, or discrepancy status to manufacture passing results.
 
+The [engineering review](ENGINEERING_REVIEW.md) defines the next decisions and a bounded stationary-demonstrator milestone.
+
 ## Engineering dispositions
 
 | Request | Observed evidence | Required next evidence |
@@ -39,6 +41,8 @@ python tools/finalize_release.py --output dist
 ```
 
 The script runs record/protocol/document/figure checks, cached OpenRocket extraction, the Python suite, model reproduction, and both PlatformIO builds. It copies binaries only from successful builds; includes logs, source, a verified review packet, and file hashes; and writes `release-review.json`. It never uploads firmware, commands hardware, signs a review, or modifies evidence records. JUnit case totals count every parameterized execution; requirement lookup still requires every parameter to pass.
+
+Each named check must appear exactly once with a successful exit code. The audit requires a nonempty test run record and complete, current model-reproduction coverage. Skipped or failed tests remain blockers. Each firmware artifact set is published atomically only when all expected files are present and nonempty.
 
 Exit 1 means the review distribution was created with unresolved release blockers. Exit 2 means packaging failed. `--skip-firmware` supports an offline review but records missing firmware checks as blockers. Existing output directories are never overwritten. The launcher needs its local WiFi configuration before building; see the [user guide](USER_GUIDE.md).
 
