@@ -196,24 +196,27 @@ def parse_junit(data):
     except ET.ParseError as exc:
         raise EvidenceError(f"Invalid execution record: {exc}") from exc
     outcomes = {}
+    counts = {state: 0 for state in ("passed", "failed", "skipped")}
     for case in root.iter("testcase"):
         module = case.get("classname", "").split(".")[-1]
         name = case.get("name", "").split("[")[0]
         if not module or not name:
-            continue
+            raise EvidenceError("Execution record testcase needs a classname and name")
         if case.find("failure") is not None or case.find("error") is not None:
             outcome = "failed"
         elif case.find("skipped") is not None:
             outcome = "skipped"
         else:
             outcome = "passed"
+        # Count executed cases, including every parameter, while requirement
+        # lookup below keeps the most severe outcome for each test function.
+        counts[outcome] += 1
         key = f"{module}::{name}"
         # A parametrized test passes only if every parameter passed.
         outcomes[key] = max(outcomes.get(key, outcome), outcome, key=SEVERITY.index)
     if not outcomes:
         raise EvidenceError("Execution record contains no test cases")
-    counts = {state: sum(value == state for value in outcomes.values()) for state in ("passed", "failed", "skipped")}
-    return {"sha256": digest(data), "tests": len(outcomes), **counts, "outcomes": dict(sorted(outcomes.items()))}
+    return {"sha256": digest(data), "tests": sum(counts.values()), **counts, "outcomes": dict(sorted(outcomes.items()))}
 
 
 # --------------------------------------------------------------------------- requirements

@@ -1,0 +1,7 @@
+{
+  "schema": "project33.procurement/1",
+  "currency": "USD",
+  "record_kind": "purchase_records",
+  "note": "No purchase documents were supplied. Empty means NOT RECORDED. The $81 BOM figure remains a planning estimate, excluding tax, shipping and spares. D-021 remains open.",
+  "invoices": []
+}

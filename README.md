@@ -163,6 +163,8 @@ pio run -d Firmware/Launcher
 
 Dashboard: `python -m pip install -r Firmware/requirements.txt`, then `python Firmware/dashboard.py`. Each run writes a raw session folder under `Firmware/TestSessions/` (git-ignored); see [Bench Sessions](docs/BENCH_SESSIONS.md) for turning a run into reviewable evidence.
 
+For an inert review distribution with both firmware builds, software run records, source, hashes, and an explicit release-blocker report, run `python tools/finalize_release.py --output dist`. Exit 1 means the review package was created with unresolved blockers; it does not authorize deployment. See [User Guide](docs/USER_GUIDE.md) and [Release Readiness](docs/RELEASE_READINESS.md). The separate synthetic fixture generator exercises the dashboard CSV format without creating bench evidence or purchase records.
+
 Fusion 360 script: `python tools/install_fusion_script.py`, then run `Project33NacaFin` from **Utilities -> Scripts and Add-Ins**.
 
 ## Cost
