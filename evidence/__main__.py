@@ -12,6 +12,7 @@ from pathlib import Path
 import sys
 
 from . import docs as D
+from . import bench as B
 from . import evaluate as E
 from . import session as S
 from . import vocabulary as V
@@ -110,6 +111,17 @@ def main(argv=None):
     audit.add_argument("--output", type=Path, required=True)
     sample = commands.add_parser("demo", help="Create an explicitly synthetic fault-injection example")
     sample.add_argument("--output", type=Path, required=True)
+    bench = commands.add_parser("bench", help="Offline configuration and observation metadata workflow")
+    bench_steps = bench.add_subparsers(dest="step", required=True)
+    bench_init = bench_steps.add_parser("init", help="Create a proposed plan with unknown physical identities")
+    bench_init.add_argument("--output", type=Path, required=True)
+    bench_template = bench_steps.add_parser("template", help="Create an empty observation template bound to a plan")
+    bench_template.add_argument("plan", type=Path)
+    bench_template.add_argument("--output", type=Path, required=True)
+    bench_check = bench_steps.add_parser("check", help="Check metadata and file identity; never accept measurements")
+    bench_check.add_argument("plan", type=Path)
+    bench_check.add_argument("--observations", type=Path)
+    bench_check.add_argument("--output", type=Path, required=True)
     session = commands.add_parser("session", help="Bench-session declaration, passport, and ingestion")
     steps = session.add_subparsers(dest="step", required=True)
     declare = steps.add_parser("declare", help="Write the operator's declaration beside a raw session")
@@ -187,6 +199,22 @@ def main(argv=None):
                 code = 1 if stale else 0
             else:
                 result = {"written": D.write(args.root, assessment)}
+        elif args.command == "bench":
+            if args.step == "init":
+                plan = B.create_plan(args.root, args.output, catalog_path=args.catalog)
+                result = {"output": str(args.output), "plan_id": plan["id"], "stage": "proposal",
+                          "meaning": "Physical identities and test details must come from actual reviewed records"}
+            elif args.step == "template":
+                document = B.create_observation_template(args.plan, args.output)
+                result = {"output": str(args.output), "origin": document["origin"],
+                          "meaning": "Empty template; no measurements generated"}
+            else:
+                report = B.build_readiness(args.root, args.plan, args.output, args.observations,
+                                           catalog_path=args.catalog)
+                result = {"output": str(args.output), "stage": report["stage"],
+                          "findings": len(report["findings"]), "release_authorized": False,
+                          "measurement_acceptance": "NOT PERFORMED"}
+                code = 1 if report["findings"] else 0
         elif args.command == "session":
             if args.step == "declare":
                 fields = {key: getattr(args, key) for key in S.DECLARATION_FIELDS if getattr(args, key) is not None}

@@ -17,6 +17,7 @@ KINDS = {
     "project_review": {"records/catalog.json", "assessment.json", "questions.json"},
     "telemetry_quality": {"audit.json", "telemetry.csv"},
     "session_passport": {"passport.json", "audit.json", "session/telemetry.csv"},
+    "bench_readiness": {"readiness.json", "inputs/plan.json"},
 }
 
 
