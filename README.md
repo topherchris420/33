@@ -165,6 +165,8 @@ Dashboard: `python -m pip install -r Firmware/requirements.txt`, then `python Fi
 
 For an inert review distribution with both firmware builds, software run records, source, hashes, and an explicit release-blocker report, run `python tools/finalize_release.py --output dist`. Exit 1 means the review package was created with unresolved blockers; it does not authorize deployment. See [User Guide](docs/USER_GUIDE.md) and [Release Readiness](docs/RELEASE_READINESS.md). The separate synthetic fixture generator exercises the dashboard CSV format without creating bench evidence or purchase records.
 
+To prepare configuration-bound observation records, start with `python -m evidence bench init --output build/bench-plan`. The [bench configuration guide](docs/BENCH_CONFIGURATION.md) covers empty observation templates, raw instrument provenance, unit/source checks, and portable readiness packets. Missing measurements remain unknown; no session is automatically accepted.
+
 Fusion 360 script: `python tools/install_fusion_script.py`, then run `Project33NacaFin` from **Utilities -> Scripts and Add-Ins**.
 
 ## Cost

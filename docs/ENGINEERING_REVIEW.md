@@ -74,6 +74,11 @@ The next useful milestone is one independently accepted physical observation
 of a defined specimen. A global “100% verified” label would hide the missing
 design and measurement work.
 
+The [bench configuration workflow](BENCH_CONFIGURATION.md) now implements
+configuration snapshots, typed measurement records, provenance checks and
+portable readiness packets for this sequence. Physical identities, instrument
+records and human registration remain inputs supplied from actual reviewed work.
+
 ## Software corrections from this review
 
 The distribution audit now requires every named check exactly once and a

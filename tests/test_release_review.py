@@ -117,7 +117,8 @@ def test_failed_command_keeps_diagnostics(tmp_path):
     assert "test diagnostic" in (tmp_path / check["log"]).read_text()
 
 
-def test_failed_builds_cannot_package_stale_binaries_or_sign_reviews(tmp_path, monkeypatch):
+@pytest.mark.parametrize("include_bench", [False, True])
+def test_failed_builds_cannot_package_stale_binaries_or_sign_reviews(tmp_path, monkeypatch, include_bench):
     before = registry_bytes()
 
     def failed_step(root, stage, name, args, **kwargs):
@@ -135,11 +136,25 @@ def test_failed_builds_cannot_package_stale_binaries_or_sign_reviews(tmp_path, m
 
     monkeypatch.setattr(release, "run_step", failed_step)
     output = tmp_path / "review-dist"
-    result = release.finalize(ROOT, output)
+    kwargs = {}
+    if include_bench:
+        from evidence.bench import create_plan, create_observation_template
+        create_plan(ROOT, tmp_path / "bench-plan")
+        create_observation_template(tmp_path / "bench-plan/plan.json", tmp_path / "bench-capture")
+        kwargs = {"bench_plan": tmp_path / "bench-plan/plan.json",
+                  "bench_observations": tmp_path / "bench-capture/observations.json"}
+    result = release.finalize(ROOT, output, **kwargs)
     assert result["decision"] == "HOLD"
     assert result["release_authorized"] is False
     assert result["human_signoff"] is None
     assert not (output / "firmware").exists()
+    if include_bench:
+        assert result["bench_readiness"]["stage"] == "blocked"
+        assert any(b["code"] == "bench_observations_incomplete" for b in result["blockers"])
+        assert verify_bundle(output / "bench")["kind"] == "bench_readiness"
+    else:
+        assert result["bench_readiness"] is None
+        assert any(b["code"] == "bench_configuration_missing" for b in result["blockers"])
     assert any(b.get("id") == "D-021" for b in result["blockers"])
     assert any(b["code"] == "procurement_incomplete" for b in result["blockers"])
     assert any(b.get("id") == "firmware-rocket" for b in result["blockers"])
@@ -257,3 +272,9 @@ def test_complete_build_artifacts_preserve_exact_bytes_and_refuse_overwrite(tmp_
         p.name: p.read_bytes() for p in source.iterdir()}
     with pytest.raises(EvidenceError):
         release.copy_build_outputs(source, destination)
+
+
+def test_distribution_refuses_observations_without_their_plan(tmp_path):
+    with pytest.raises(EvidenceError, match="require their configuration plan"):
+        release.finalize(ROOT, tmp_path / "dist", bench_observations=tmp_path / "unbound.json")
+    assert not (tmp_path / "dist").exists()

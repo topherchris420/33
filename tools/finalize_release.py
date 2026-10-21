@@ -22,6 +22,7 @@ ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
 
 from evidence.bundle import build_review, provenance, verify_bundle
+from evidence.bench import build_readiness
 from evidence.common import EvidenceError, canonical_json, digest, new_directory, read_bytes, safe_path
 
 REQUIRED_CHECKS = (
@@ -220,7 +221,9 @@ def copy_build_outputs(source, destination):
     return list(contents)
 
 
-def finalize(root, output, *, skip_firmware=False):
+def finalize(root, output, *, skip_firmware=False, bench_plan=None, bench_observations=None):
+    if bench_observations is not None and bench_plan is None:
+        raise EvidenceError("Bench observations require their configuration plan")
     root = Path(root).resolve()
     before = source_inventory(root)
     with new_directory(output) as stage:
@@ -264,6 +267,14 @@ def finalize(root, output, *, skip_firmware=False):
         # Attached execution records intentionally enrich the portable review;
         # comparing that view with committed docs creates false stale warnings.
         blockers = release_blockers(assessment, procurement, checks)
+        bench = None
+        if bench_plan is None:
+            blockers.append({"code": "bench_configuration_missing", "detail": "No configuration-bound bench observation packet was supplied"})
+        else:
+            bench = build_readiness(root, bench_plan, stage / "bench", bench_observations)
+            verify_bundle(stage / "bench")
+            if bench["stage"] != "observation_review_candidate":
+                blockers.append({"code": "bench_observations_incomplete", "detail": "Bench configuration or observation metadata is incomplete; see bench/readiness.json"})
         wifi = root / "Firmware/Launcher/src/wifi_config.h"
         example = root / "Firmware/Launcher/src/wifi_config.h.example"
         wifi_hash = digest(read_bytes(wifi)) if wifi.exists() else None
@@ -282,6 +293,8 @@ def finalize(root, output, *, skip_firmware=False):
                       "source_sha256": cached["source_sha256"], "creator_as_saved": cached["creator_as_saved"],
                       "generating_geometry_sha256": None},
                   "provenance": provenance(root), "counts": assessment["counts"], "checks": checks,
+                  "bench_readiness": None if bench is None else {"artifact": "bench/readiness.json", "stage": bench["stage"],
+                                                                "measurement_acceptance": "NOT PERFORMED"},
                   "procurement": procurement, "firmware": firmware, "blockers": blockers,
                   "meaning": "SHA-256 hashes identify files; they are not signatures, measurements, or human approval."}
         (stage / "release-review.json").write_bytes(canonical_json(report))
@@ -311,9 +324,12 @@ def main(argv=None):
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--output", type=Path, default=ROOT / "dist", help="New directory; never overwritten")
     parser.add_argument("--skip-firmware", action="store_true", help="Offline review only; records firmware as NOT RUN")
+    parser.add_argument("--bench-plan", type=Path, help="Frozen configuration and measurement plan")
+    parser.add_argument("--bench-observations", type=Path, help="Actual observation metadata and relative raw-file references")
     args = parser.parse_args(argv)
     try:
-        report = finalize(ROOT, args.output, skip_firmware=args.skip_firmware)
+        report = finalize(ROOT, args.output, skip_firmware=args.skip_firmware,
+                          bench_plan=args.bench_plan, bench_observations=args.bench_observations)
         print(json.dumps({"output": str(args.output), "decision": report["decision"],
                           "blockers": len(report["blockers"]), "release_authorized": False}, indent=2))
         return 1 if report["blockers"] else 0

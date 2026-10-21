@@ -44,6 +44,8 @@ The script runs record/protocol/document/figure checks, cached OpenRocket extrac
 
 Each named check must appear exactly once with a successful exit code. The audit requires a nonempty test run record and complete, current model-reproduction coverage. Skipped or failed tests remain blockers. Each firmware artifact set is published atomically only when all expected files are present and nonempty.
 
+The [bench configuration workflow](BENCH_CONFIGURATION.md) adds configuration-bound observation metadata. Supply `--bench-plan` and `--bench-observations` to include its verified packet; missing or incomplete bench metadata adds a blocker. Complete metadata never substitutes for accepted physical measurements.
+
 Exit 1 means the review distribution was created with unresolved release blockers. Exit 2 means packaging failed. `--skip-firmware` supports an offline review but records missing firmware checks as blockers. Existing output directories are never overwritten. The launcher needs its local WiFi configuration before building; see the [user guide](USER_GUIDE.md).
 
 `python -m evidence check` returning 0 establishes record consistency only. Read requirement outcomes, open discrepancies, test skips, reproduction results, and measurement provenance separately. Package hashes identify bytes; independent human assessment establishes whether evidence supports a claim. No generated percentage or signature authorizes field use.

@@ -2,6 +2,8 @@
 
 Each dashboard run owns one session folder under `Firmware/TestSessions/` (git-ignored). A session folder is a **RAW SESSION**: raw capture plus what the dashboard itself knows. It becomes evidence only after it is audited, declared by the operator, and accepted by a named human.
 
+Use the [configuration-bound observation workflow](BENCH_CONFIGURATION.md) to record the planned specimen, installed binary identities, quantity semantics and independent-instrument provenance alongside the session passport. It supplies review metadata; it does not accept a session or establish physical performance.
+
 ```text
 Firmware/TestSessions/bench_YYYYMMDD_HHMMSS/
   telemetry.csv        every received packet, normalized; raw text kept in the raw column
