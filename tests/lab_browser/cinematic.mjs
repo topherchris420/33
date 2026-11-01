@@ -9,6 +9,7 @@ const browser = await chromium.launch({ args: ["--use-gl=angle", "--use-angle=sw
 const errors = [];
 const page = await browser.newPage({ viewport: { width: 1440, height: 860 } });
 page.setDefaultTimeout(180000);
+page.setDefaultNavigationTimeout(180000);
 page.on("console", (m) => { if (m.type() === "error") errors.push(m.text()); });
 page.on("pageerror", (e) => errors.push(e.message));
 await page.goto(`${base}/lab/cinematic.html`, { waitUntil: "networkidle" });
@@ -62,6 +63,8 @@ await at(36); const a = await page.locator("#tag").innerText();
 await at(12); await at(36); assert.equal(await page.locator("#tag").innerText(), a);
 // Mobile
 const m = await browser.newPage({ viewport: { width: 390, height: 844 } });
+m.setDefaultTimeout(180000);
+m.setDefaultNavigationTimeout(180000);
 m.on("pageerror", (e) => errors.push(e.message));
 await m.goto(`${base}/lab/cinematic.html?t=54`, { waitUntil: "networkidle" });
 await m.waitForFunction(() => window.__film, null, { timeout: 120000 });
