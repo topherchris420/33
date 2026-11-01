@@ -41,11 +41,17 @@
   .ctrl { display: grid; grid-template-columns: 74px 1fr; align-items: center; gap: var(--space-2) var(--space-3); }
   .ctrl h6 { margin: 0; font-size: 11px; color: color-mix(in srgb, var(--color-text) 65%, transparent); }
   .seg { width: 100%; }
-  .seg-opt { flex: 1; justify-content: center; font-family: var(--font-heading); font-weight: 600; font-size: 14px; }
+  .seg-opt { flex: 1; justify-content: center; padding-inline: 6px; white-space: nowrap; font-family: var(--font-heading); font-weight: 600; font-size: 14px; }
   .specs { display: grid; grid-template-columns: auto 1fr; gap: 2px var(--space-4); margin: 0; font-size: 13px; line-height: 1.4; }
   .specs dt { color: color-mix(in srgb, var(--color-text) 60%, transparent); }
   .specs dd { margin: 0; text-wrap: pretty; }
   .note { margin: 0; font-size: 12px; line-height: 1.5; color: color-mix(in srgb, var(--color-text) 66%, transparent); text-wrap: pretty; }
+  /* Narrow screens: model first, panel below it, so the panel never covers the model. */
+  @media (max-width: 760px) {
+    body { display: flex; flex-direction: column; }
+    three-d-stage { order: -1; height: 68vh; height: 68svh; }
+    .panel { position: static; width: auto; margin: var(--space-6) 16px 28px; background: transparent; }
+  }
 </style>
 </head>
 <body>
