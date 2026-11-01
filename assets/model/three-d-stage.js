@@ -110,6 +110,9 @@
       color: color-mix(in srgb, var(--color-text, #1a1915) 60%, transparent);
       user-select: none;
     }
+    @media (max-width: 560px) {
+      .note { display: none; }
+    }
     .err {
       position: absolute;
       inset: 0;

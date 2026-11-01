@@ -17,6 +17,8 @@ Project 33 investigates a low-cost folding-fin rocket concept through mechanical
 
 *Design visualization, not a flight test, physical assembly record, or evidence of deployment.*
 
+**[Turn the faceted 3D model in your browser](https://topherchris420.github.io/33/model.html)**: deployed and folded fins, exploded and assembled views, the launcher platform, and OBJ/GLB download. Also a design visualization, not evidence; [sources and assumptions](docs/MODEL_3D.md).
+
 ## V3D-TO-33-1 · Utility Bench Manual
 
 [![Illustrated cover of Project 33's claymation utility bench manual; click to open the film](assets/marketing/bench-manual-poster.svg)](project33-bench-manual-github-720p.mp4)
@@ -61,7 +63,7 @@ Unresolved is a valid engineering state. Several research claims are currently c
 
 | Your interest | Start here |
 |---|---|
-| **The concept and visuals** | [Live project page](https://topherchris420.github.io/33/) and [architecture](docs/ARCHITECTURE.md) |
+| **The concept and visuals** | [Live project page](https://topherchris420.github.io/33/), [3D model](https://topherchris420.github.io/33/model.html) and [architecture](docs/ARCHITECTURE.md) |
 | **The scientific record** | [Claim passports](docs/claims/README.md), [traceability](docs/TRACEABILITY.md), and [discrepancies](docs/DISCREPANCIES.md) |
 | **Reproducibility** | [Offline review commands](#reproduce-the-review) and [Evidence Observatory](docs/EVIDENCE_OBSERVATORY.md) |
 | **Working on the project** | [Roadmap](docs/ROADMAP.md), [tests](docs/TESTING.md), and [contribution guide](CONTRIBUTING.md) |
