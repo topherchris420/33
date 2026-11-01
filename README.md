@@ -19,7 +19,7 @@ The rocket is the specimen. The record of how engineering knowledge moves from a
 Project 33 is a **bench-validation prototype**. It has models, CAD, firmware that compiles, a telemetry dashboard, and automated checks. **No physical measurement has been accepted into the evidence record.** Nothing here is flight-tested or flight-ready, and live propulsion is outside the repository's validation boundary.
 
 <!-- evidence:counts -->
-**Record state:** 8 claims · 3 contradicted · 4 unresolved · 1 supported within stated limits · 0 accepted physical measurements · 17 open discrepancies of 24 · 5 of 5 predictions not measured.
+**Record state:** 8 claims · 3 contradicted · 4 unresolved · 1 supported within stated limits · 0 accepted physical measurements · 18 open discrepancies of 25 · 5 of 5 predictions not measured.
 <!-- /evidence:counts -->
 
 Unresolved is a valid engineering state. Several research claims are currently contradicted by their own models, and saying so is the point.
@@ -59,6 +59,7 @@ Software may propose an inert experiment and check it against machine-readable r
 | Rocket flight computer (ESP32) | `Firmware/Rocket/` | Compiles in CI; no bench capture |
 | Launcher ground station (ESP32) | `Firmware/Launcher/` | Compiles in CI; interlocks source-checked, not bench-verified |
 | Telemetry dashboard | `Firmware/dashboard.py` | Writes raw sessions with metadata, command log, and quality counters |
+| Status board | `Firmware/ground_status.py`, `Firmware/status_panel.py` | Read-only fault isolation pinned to firmware source; tested on synthetic packets, no fault injected on hardware |
 | Evidence Observatory | `evidence/` | Portable review packets, session passports, record checks |
 
 ```mermaid
@@ -76,12 +77,12 @@ Details: [Architecture](docs/ARCHITECTURE.md) · [Protocol](docs/PROTOCOL.md) ·
 ## Claim status
 
 <!-- evidence:claims-table -->
-**Record state:** 8 claims · 3 contradicted · 4 unresolved · 1 supported within stated limits · 0 accepted physical measurements · 17 open discrepancies of 24 · 5 of 5 predictions not measured.
+**Record state:** 8 claims · 3 contradicted · 4 unresolved · 1 supported within stated limits · 0 accepted physical measurements · 18 open discrepancies of 25 · 5 of 5 predictions not measured.
 
 | Claim | Subject | Status | Strongest accepted evidence | Failing or disputed requirements | Open discrepancies |
 |---|---|---|---|---|---|
 | [C1](docs/claims/C1.md) | Folding-fin mechanism model | **CONTRADICTED** | MODEL ONLY | R-C1-CLOSURE NOT SATISFIED | D-002, D-004, D-005 |
-| [C2](docs/claims/C2.md) | Deployment timing | **UNRESOLVED** | IMPLEMENTATION ONLY | none failing | D-017, D-018, D-024 |
+| [C2](docs/claims/C2.md) | Deployment timing | **UNRESOLVED** | IMPLEMENTATION ONLY | none failing | D-017, D-018, D-024, D-025 |
 | [C3](docs/claims/C3.md) | CAD generator software | **SUPPORTED WITHIN STATED LIMITS** | IMPLEMENTATION ONLY | none failing | none |
 | [C4](docs/claims/C4.md) | Material mass accounting | **UNRESOLVED** | MODEL ONLY | none failing | D-010, D-022 |
 | [C5](docs/claims/C5.md) | Static-stability model | **UNRESOLVED** | MODEL ONLY | R-C5-WINDOW MODELS DISAGREE | D-006, D-007, D-008, D-009, D-023 |
@@ -141,6 +142,8 @@ This repository is for inert bench validation, simulation, and engineering revie
 | `CAD Files/` | Fusion 360 archives, NACA fin generator, Fusion scripts |
 | `Firmware/Rocket/`, `Firmware/Launcher/` | PlatformIO firmware |
 | `Firmware/dashboard.py` | Tkinter telemetry dashboard (raw session capture) |
+| `Firmware/ground_status.py`, `Firmware/status_panel.py` | Read-only [status board](docs/GROUND_STATUS.md): fault isolation, attitude, gain confirmation, advisories, session replay |
+| `protocol/ground_status_model.json` | Source-pinned dependency model; generates [Degraded Modes](docs/DEGRADED_MODES.md) |
 | `protocol/` | Canonical protocol definition; generates the firmware header and [Protocol](docs/PROTOCOL.md) |
 | `tools/` | Protocol generator, documentation link checker, review figures, Fusion script installer |
 | `tests/`, `Firmware/tests/` | Regression and adversarial tests |

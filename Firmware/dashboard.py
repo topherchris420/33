@@ -13,9 +13,11 @@ import math
 from datetime import datetime, timezone
 
 from analyze_pid import write_pid_report
+from ground_status import GroundStatus, gains_line, parse_gain_entry
 from live_quality import GAP_MS, LiveQuality
 from session_artifacts import TestSessionArtifacts
 from session_plot import break_at_gaps, render_session_graph
+from status_panel import LEVEL_COLOURS, StatusPanel
 from telemetry_log import TelemetryCsvLogger
 
 # Configure logging
@@ -66,6 +68,8 @@ class TelemetryApp:
         self.session = TestSessionArtifacts()
         self.telemetry_logger = TelemetryCsvLogger(self.session.telemetry_csv)
         self.quality = LiveQuality()
+        self.status = GroundStatus()  # Read-only interpretation of packets; it sends nothing.
+        self.status_panel = None
 
         self.build_gui()
         
@@ -141,6 +145,10 @@ class TelemetryApp:
         self.quality_label.pack(side=tk.TOP, anchor="w")
         self.config_label = ttk.Label(evidence_frame, text="Gains observed: not received", font=self.f(8))
         self.config_label.pack(side=tk.TOP, anchor="w")
+        self.gains_label = ttk.Label(evidence_frame, text="", font=self.f(8))
+        self.gains_label.pack(side=tk.TOP, anchor="w")
+        self.advisory_label = ttk.Label(evidence_frame, text="", font=self.f(9, "bold"))
+        self.advisory_label.pack(side=tk.TOP, anchor="w")
 
         mission_frame = ttk.LabelFrame(self.root, text="Mission Control", padding=self.s(10))
         mission_frame.pack(side=tk.TOP, fill=tk.X, padx=self.s(10), pady=self.s(5))
@@ -160,6 +168,7 @@ class TelemetryApp:
         btn_frame = ttk.Frame(mission_frame)
         btn_frame.pack(side=tk.RIGHT)
         
+        ttk.Button(btn_frame, text="STATUS BOARD", command=self.open_status_board, width=int(14)).pack(side=tk.LEFT, padx=self.s(5))
         ttk.Button(btn_frame, text="CALIBRATE GYRO", command=self.send_calibrate_command, width=int(20)).pack(side=tk.LEFT, padx=self.s(5))
         ttk.Button(btn_frame, text="DUMP LOG", command=self.send_dump_log_command, width=int(14)).pack(side=tk.LEFT, padx=self.s(5))
         ttk.Button(btn_frame, text="DIGITAL LAUNCH", command=self.send_launch_command, width=int(20)).pack(side=tk.LEFT, padx=self.s(5))
@@ -251,6 +260,7 @@ class TelemetryApp:
                 sock.sendto(cmd.encode('utf-8'), (target_ip, UDP_PORT))
             # UDP gives no delivery confirmation; "sent" means handed to the socket.
             self.session.log_command(cmd, "sent")
+            self.status.command_sent(cmd)
             return True
         except OSError as e:
             self.session.log_command(cmd, f"send_failed: {e}")
@@ -261,6 +271,12 @@ class TelemetryApp:
             logger.error("Unexpected error sending UDP: %s", e)
             messagebox.showerror("Error", f"Failed to send '{cmd}':\n{e}")
         return False
+
+    def open_status_board(self):
+        if self.status_panel is not None and self.status_panel.exists():
+            self.status_panel.lift()
+        else:
+            self.status_panel = StatusPanel(self.root, self.status)
 
     def send_launch_command(self):
         if messagebox.askyesno("CONFIRM LAUNCH", "Firmware rejects dashboard launch by default unless ENABLE_DASHBOARD_LAUNCH is intentionally enabled for an inert test.\nEnsure launcher is Armed and READY.\n\nSend launch request?"):
@@ -276,12 +292,7 @@ class TelemetryApp:
 
     def send_pid_command(self):
         try:
-            kp = float(self.kp_var.get())
-            kd = float(self.kd_var.get())
-            if kp < 0 or kd < 0:
-                raise ValueError("PID values must be non-negative")
-            if kp > 10 or kd > 10:
-                raise ValueError("PID values must not exceed 10.0")
+            kp, kd = parse_gain_entry(self.kp_var.get(), self.kd_var.get())
             if self._send_udp_command(f"PID,{kp},{kd}"):
                 self.quality.commanded(kp, kd)
         except ValueError as e:
@@ -310,6 +321,7 @@ class TelemetryApp:
                 message = data.decode('utf-8').strip()
                 self.telemetry_logger.log_packet(message)
                 self.quality.observe(message)
+                self.status.observe(message)
                 if self.rocket_ip != addr[0]:
                     self.rocket_ip = addr[0]
                     self.root.after(0, lambda: self.status_label.config(text=f"Connected: {self.rocket_ip}", foreground="green"))
@@ -397,7 +409,18 @@ class TelemetryApp:
             self.lbl_gps_text.config(text=text, foreground=colour)
 
         state = vals["State"]
-        self.lbl_state_text.config(text=state)
+        self.status.preselect(self.kp_var.get(), self.kd_var.get())
+        board = self.status.snapshot()
+        rocket = board["rocket"]
+        self.lbl_state_text.config(text=rocket["display"] if rocket["state"] else state)
+        self.gains_label.config(text=gains_line(board["gains"]))
+        advisories = board["advisories"]
+        if advisories:
+            more = f" (+{len(advisories) - 1} more on the status board)" if len(advisories) > 1 else ""
+            self.advisory_label.config(text=f"{advisories[0]['level']}: {advisories[0]['text']}{more}",
+                                       foreground=LEVEL_COLOURS[advisories[0]["level"]])
+        else:
+            self.advisory_label.config(text="No active advisories", foreground="gray")
         self.lbl_active_pid.config(text=f"Kp: {self.show(vals['ActiveKp'], '.3f', 'not received')}  |  "
                                         f"Kd: {self.show(vals['ActiveKd'], '.3f', 'not received')}")
         if hasattr(self, 'quality_label'):
@@ -405,7 +428,9 @@ class TelemetryApp:
             self.config_label.config(text=self.quality.gains_text() + " · " + self.quality.calibration_text())
 
         color_map = {"IDLE": "gray", "ARMED": "#F4D03F", "IGNITING": "#FF8C00", "FLIGHT": "green", "DISCONNECTED": "gray"}
-        dot_color = color_map.get(state, "gray")
+        # A stale active state must not look current, and grey here means IDLE.
+        stale_active = rocket["stale"] and rocket["state"] != "IDLE"
+        dot_color = "red" if stale_active else color_map.get(state, "gray")
         self.state_canvas.itemconfig(self.state_dot, fill=dot_color, outline=dot_color)
 
     def update_plot(self, frame):

@@ -68,6 +68,7 @@ Every capture goes through the session workflow in [BENCH_SESSIONS.md](BENCH_SES
 | Launcher arming and aborts | Session showing READY, `ABORT:` rows, LED/buzzer video | Safety gates G-01 to G-03 |
 | Command rejection | `CMD_REJECT:dashboard_launch_disabled`, `CMD_REJECT:ignite_not_armed` rows | G-04, G-09, G-13 |
 | Onboard log dump | `LOG_START`, `LOG,...`, `LOG_END` rows; audit reports the dump complete | — |
+| Status board fault isolation | Inert session with one unit deliberately disconnected, compared with the board's diagnosis from `python Firmware/ground_status.py SESSION` | [Ground Status](GROUND_STATUS.md) |
 | Dry CG | Balance-point measurement of the inert airframe | PRED-C5-DRY-CG |
 | CAD assembly renders | Exports listed in [CAD_ASSEMBLIES.md](CAD_ASSEMBLIES.md) | D-005 |
 
@@ -77,4 +78,5 @@ Every capture goes through the session workflow in [BENCH_SESSIONS.md](BENCH_SES
 - Live telemetry has launcher relay timestamps and no sequence number or boot identifier.
 - Stabilization is roll-axis only; gyro integration drift is uncharacterized.
 - UDP does not guarantee delivery; the dashboard records "sent", not "received".
+- The status board has only seen synthetic packets; its diagnosis of real faults is unmeasured.
 - Servo authority under aerodynamic load is unmeasured and outside inert bench scope.
