@@ -47,7 +47,7 @@ export async function buildComparison(root, { ev }) {
     { min: cgMin * M, max: cgMax * M, color: "#f1e9d6", symbol: "cg", label: `CG ${(cgMin * M).toFixed(0)}–${(cgMax * M).toFixed(0)} mm · C5_static_margin.csv cg_m (burn history, hard-coded Estes C6-5 — D-007)` },
     { min: inputs.cp_m * M, color: "#67d8cf", symbol: "cp", label: `CP reference ${(inputs.cp_m * M).toFixed(1)} mm · C5_static_margin_inputs.json cp_m` },
     { min: cross.cp_m * M, color: "#e3c27a", symbol: "cp", label: `CP textbook ${(cross.cp_m * M).toFixed(1)} mm · C5_barrowman_crosscheck.json cp_m` },
-    { min: cgMin * M + win.min * dRef, max: cgMax * M + win.max * dRef, color: "#4cc9bb", dashed: true, label: `CP that would meet ${win.min}–${win.max} cal for this CG: x_CG + [${win.min}, ${win.max}]·d_ref (derived, d_ref ${dRef.toFixed(1)} mm)` },
+    { min: cgMax * M + win.min * dRef, max: cgMin * M + win.max * dRef, color: "#4cc9bb", dashed: true, label: `CP that would meet ${win.min}–${win.max} cal at every recorded CG: x_CG,max + ${win.min}·d_ref to x_CG,min + ${win.max}·d_ref (derived, d_ref ${dRef.toFixed(1)} mm)` },
     { min: obs.values_m.static_margin_inputs_X_f * M, color: "#e0a274", dashed: true, top: aft.rootRadius + aft.span, label: `fin LE X_f = ${(obs.values_m.static_margin_inputs_X_f * M).toFixed(0)} mm as read by static_margin.py` },
     { min: obs.values_m.ork_semantics * M, color: "#eef6f8", top: aft.rootRadius + aft.span, label: `fin LE ${(obs.values_m.ork_semantics * M).toFixed(0)} mm by OpenRocket "${aft.axialMethod}" semantics (LAB-OBS-1)` },
   ];
@@ -117,7 +117,7 @@ export async function buildComparison(root, { ev }) {
     reqLine(req["R-C6-MARGIN"]), reqLine(req["R-C6-KMIN"]), reqLine(req["R-C6-SPRING-RATE"]),
     h("h4", { style: { marginTop: "14px" } }, "Model assumptions (design-point record)"),
     h("ul", {}, c6.model_assumptions.map((x) => h("li", {}, x))),
-    h("p", { class: "mx-note mb0" }, `The shortfall is ${((req["R-C6-MARGIN"].bound.min - c6.margin_fraction) * 100).toFixed(2)} percentage points — small, but the record keeps the failed requirement rather than rounding it away (D-011). Both k values are model numbers; no spring has been measured.`)));
+    h("p", { class: "mx-note mb0" }, `The shortfall is ${((req["R-C6-MARGIN"].bound.min - c6.margin_fraction) * 100).toFixed(2)} percentage points — small, but the record keeps the failed requirement rather than rounding it away (D-011). One k is calculated by the model; the other is stated in the source paper. No spring has been measured.`)));
 
   /* ---------------- D-010 ---------------- */
   const sideOf = (artifact) => disc["D-010"].sides.find((sd) => sd.artifact === artifact)?.says || "";

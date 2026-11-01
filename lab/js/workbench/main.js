@@ -766,7 +766,7 @@ function fallback2D(or, step) {
     ${paths.map((p) => `<polyline points="${p.points.map(([x, y]) => `${x},${-y}`).join(" ")}" fill="${p.closed ? "rgba(103,216,207,0.08)" : "none"}" stroke="${p.fin ? "#e0a274" : "#eef6f8"}" stroke-width="${p.thin ? 0.6 : 1.2}" ${p.closed ? "" : ""}/>`).join("")}
   </svg>`;
   el.innerHTML = `<div class="cluster">${categoryBadge("research").outerHTML}${assetBadge("source-model").outerHTML}</div><h3>WebGL is not available — 2D side elevation</h3>${svg}
-    <p class="muted">Generated from ${or.current.source.path}. Overall length ${(or.current.overall_length_m * 1000).toFixed(1)} mm. The four-bar STEP parts measure ${step.parts.map((p) => `${p.role} ${p.pin_spacing_mm_measured} mm`).join(", ")} between pin axes.</p>`;
+    <p class="muted">Generated from ${or.current.source.path}. Overall length ${(or.current.overall_length_m * 1000).toFixed(1)} mm. The four-bar STEP parts measure ${step.parts.map((p) => `${p.role} ${p.pin_spacing_mm_brep} mm`).join(", ")} between pin axes (from the STEP B-rep).</p>`;
 }
 
 boot().catch((err) => {

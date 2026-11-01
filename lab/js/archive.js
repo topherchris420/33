@@ -10,13 +10,13 @@ mountShell();
 
 const MATRIX = [
   ["3D rocket assembly", "ok", "Simulation/Folding Stabilized Rocket.ork", "Parametric geometry from the design file with OpenRocket axial semantics; every dimension carries its XML path."],
-  ["Four-bar STEP inspection", "ok", "CAD Files/Four Bar Linkage.step", "Tessellated with OpenCascade (OCP); pin spacing measured from cylindrical faces; joint check from hole axes."],
+  ["Four-bar STEP inspection", "ok", "CAD Files/Four Bar Linkage.step", "Tessellated with OpenCascade (OCP); pin spacing taken from the B-rep's cylindrical faces; joint check from hole axes."],
   ["NACA 0012 profile", "ok", "CAD Files/naca_fin_generator.py", "Output of the tested generator. Span NOT SPECIFIED; extrusion shown only as an illustration."],
   ["Fusion 360 assemblies (.f3z)", "missing", "CAD Files/*.f3z", "Bodies are Autodesk ShapeManager B-rep with placements in proprietary streams. Inventoried (names, versions, B-rep statistics, embedded previews), not translated. Needs a STEP export from Fusion 360."],
   ["Exploded views", "partial", "Design-file positions", "Deterministic and reversible; separation paths are illustrative because no source records an assembly procedure."],
   ["Section planes, blueprint, x-ray, ortho views", "ok", "Displayed geometry", "Clipping with section hatching; feature edges and hidden lines in blueprint mode."],
   ["Mass, material, tolerance, manufacturing", "partial", "Design-file override inputs", "Shown only as simulation inputs where the file has them; otherwise NOT MEASURED / NOT SPECIFIED."],
-  ["Folding-fin closure failure", "ok", "docs/EVIDENCE/C1_four_bar_sweep.json, mechanism/four_bar.py", "JS port verified row-for-row against the committed sweep and against the Python model on closing configurations."],
+  ["Folding-fin closure failure", "ok", "docs/EVIDENCE/C1_four_bar_sweep.json, mechanism/four_bar.py", "JS port verified row-for-row against the committed sweep, and against the Python model on closing configurations wherever Python is available (CI included)."],
   ["Model comparison (C5, C6, D-009, D-010)", "ok", "docs/EVIDENCE/*, evidence/discrepancies.json", "No winner declared; candidate observation LAB-OBS-1 flagged for review."],
   ["Evidence Observatory constellation & passports", "ok", "evidence/*.json via python -m evidence assessment", "Statuses and support levels are computed by evidence/assess.py, not re-derived."],
   ["Telemetry theater", "ok", "python -m evidence demo fixture + declared seeded generator", "Synthetic only; no physical telemetry exists in the record."],
@@ -55,7 +55,8 @@ function obs(or) {
       h("p", {}, h("b", {}, "With the recorded ground (25 mm) and input (15 mm) links, no coupler/output pair satisfies both closure and R-C1-TRANSMISSION over 0–92°.")),
       h("p", {}, `Searched every integer coupler and output length from 1 to 200 mm (${checked.toLocaleString()} pairs, 1° steps, recomputed now in your browser): ${closing.toLocaleString()} close over the whole range; ${feasible} also keep the transmission angle within 40–140°.`),
       h("p", {}, `For the recorded output (15 mm), the coupler lengths that close are ${band.low.toFixed(1)}–${band.high.toFixed(1)} mm — and the 25 mm coupler drawn by the Fusion script (D-005) sits at a dead-centre pose at 0°.`),
-      h("p", { class: "muted" }, "Implication for review: D-002 asks which dimensions were intended. This suggests the ground and input lengths need review too, not only the coupler. Arithmetic on recorded values; not a design recommendation."),
+      h("p", { class: "muted" }, "Convention (mechanism/four_bar.py): drive angle 0° means the input link lies along the ground line, toward D. Under that convention the result holds for every real length, not only integers: the 40–140° band needs c·d ≥ 253 mm², while closing at 0° needs c² + d² − 1.532·c·d ≤ 100 mm², and the two cannot both hold. Shift the 92° window to start elsewhere (for example at 30°) and closing pairs exist."),
+      h("p", { class: "muted" }, "Implication for review: D-002 asks which dimensions were intended. This suggests the ground and input lengths, or the drive-angle origin and pivot layout, need review too — not only the coupler. Arithmetic on recorded values; not a design recommendation."),
       h("a", { class: "src", href: "mechanism.html" }, "Explore it in the Mechanism Lab sandbox"))),
   ];
 }

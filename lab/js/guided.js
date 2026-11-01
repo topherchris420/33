@@ -73,7 +73,7 @@ function lessons(ev, or, fixture, inputs) {
       tool: { href: "telemetry.html", label: "Open the Telemetry Theater" },
       q: "Live T packets carry a time field. Whose clock stamped it?",
       options: [{ t: "The rocket's millis() when the IMU was sampled" }, { t: "The launcher's millis() when it relayed the line", ok: true }, { t: "The dashboard computer's clock" }],
-      explain: `The launcher builds T packets as T,<launcher millis()>,… when it relays a rocket DATA line (D-018). Recovered LOG rows carry the rocket's own clock, so the two are never mixed. The fixture's audit lists ${fixture.audit.findings.length} findings.`,
+      explain: `The launcher builds T packets as T,<launcher millis()>,… when it relays a rocket DATA line (D-018). Recovered LOG rows carry the rocket's own clock; the audit labels the two as separate clock domains and keeps them in separate streams (D-018 remains open). The fixture's audit lists ${fixture.audit.findings.length} findings.`,
     },
     {
       id: "measured", n: 5, title: "What still must be measured?", cat: "research", sign: "WHAT'S\nMEASURED?", prop: "ledger",

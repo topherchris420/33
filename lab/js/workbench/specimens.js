@@ -141,7 +141,8 @@ function rocketMeta(p, model, extra) {
       intro: big ? "These large fins sit at the tail. Pushed by the airflow, they move the centre of pressure aft, which is what keeps a rocket pointing into the wind."
         : "A small fin set further forward. The firmware drives four canard servos, but this file does not say whether these fins model them.",
       engineering: big ? ["Barrowman fin CP term (textbook): \\(X_F = X_f + \\dfrac{X_R}{3}\\dfrac{C_R + 2C_T}{C_R + C_T} + \\dfrac{1}{6}\\left[(C_R + C_T) - \\dfrac{C_R C_T}{C_R + C_T}\\right]\\).",
-        "The reference script uses \\(C_R\\) where the textbook uses \\(X_R\\) (D-006), and records \\(X_f = 0.381\\,\\text{m}\\); OpenRocket's \"bottom\" placement puts the leading edge at \\(0.471\\,\\text{m}\\) (LAB-OBS-1, unreviewed)."]
+        "D-006 records two differences: the reference script uses \\(C_R\\) where the textbook uses \\(X_R\\), and its normal-force term uses the sweep length where the textbook uses the mid-chord line length. Neither formulation has been independently reviewed, so neither is declared correct.",
+        "The script records \\(X_f = 0.381\\,\\text{m}\\); OpenRocket's \"bottom\" placement puts the leading edge at \\(0.471\\,\\text{m}\\) (LAB-OBS-1, unreviewed)."]
         : ["Placed with method \"absolute\": 0.18 m from the nose tip regardless of the tube it belongs to.", "Rendered cross-section: flat plate with rounded edges (OpenRocket uses the cross-section setting for drag)."],
     };
     meta.limitations.push("Fixed fins in this file: no hinge, fold angle, or deployment geometry exists in the OpenRocket model.");
@@ -153,7 +154,7 @@ function rocketMeta(p, model, extra) {
     meta.assetClass = "source-model";
     meta.depths = {
       intro: "Only an envelope: the space the simulation file reserves for a motor. Nothing about propulsion is modelled or validated here.",
-      engineering: ["D-007: the static-margin script burns a hard-coded Estes C6-5 while this file specifies the motor shown. The two stability results therefore do not describe the same configuration."],
+      engineering: ["D-007: the static-margin script burns a hard-coded Estes C6-5 while this file specifies the motor shown. The script's CG history, which both CP formulations use, therefore does not describe this file's configuration."],
     };
     meta.limitations.push("Live propulsion is outside this repository's validation boundary.");
     meta.discrepancies = ["D-007"];
@@ -177,8 +178,8 @@ function stabilityOverlay(extra, parts) {
   const cgMin = Math.min(...cg), cgMax = Math.max(...cg);
   const dref = inputs.geometry.d_ref * 1000;
   const cpRef = inputs.cp_m * 1000, cpTxt = cross.cp_m * 1000;
-  group.add(stationBand({ x0: cgMin + 1.5 * dref, x1: cgMax + 2.0 * dref, radius: R + 7, color: 0x4cc9bb,
-    text: `R-C5-WINDOW · CP needed ${(cgMin + 1.5 * dref).toFixed(1)}–${(cgMax + 2.0 * dref).toFixed(1)} mm`, sub: "1.5–2.0 cal × d_ref 76.2 mm from recorded CG · derived for display" }));
+  group.add(stationBand({ x0: cgMax + 1.5 * dref, x1: cgMin + 2.0 * dref, radius: R + 7, color: 0x4cc9bb,
+    text: `R-C5-WINDOW · CP meeting 1.5–2.0 cal at every recorded CG: ${(cgMax + 1.5 * dref).toFixed(1)}–${(cgMin + 2.0 * dref).toFixed(1)} mm`, sub: `x_CG,max + 1.5·d_ref to x_CG,min + 2.0·d_ref, d_ref ${dref.toFixed(1)} mm · derived for display` }));
   group.add(stationRing({ x: (cgMin + cgMax) / 2, radius: R + 4, color: 0xf1e9d6, text: `CG ${cgMin.toFixed(0)}–${cgMax.toFixed(0)} mm`, sub: "docs/EVIDENCE/C5_static_margin.csv · cg_m" }));
   group.add(stationRing({ x: cpRef, radius: R + 4, color: 0x67d8cf, text: `CP reference ${cpRef.toFixed(1)} mm`, sub: "C5_static_margin_inputs.json · cp_m · SM 1.55–1.57 cal" }));
   group.add(stationRing({ x: cpTxt, radius: R + 4, color: 0xe07650, text: `CP textbook ${cpTxt.toFixed(1)} mm`, sub: "C5_barrowman_crosscheck.json · cp_m · SM 0.74–0.76 cal" }));
@@ -245,13 +246,13 @@ export function buildFourBar(step, evidence) {
   }
   const center = all.getCenter(new THREE.Vector3());
   root.position.set(-center.x, -center.y, -center.z);
-  // Pin-spacing dimensions measured from each link's cylindrical faces.
+  // Pin-spacing dimensions taken from each link's cylindrical faces in the STEP B-rep.
   const dimGroup = new THREE.Group();
   for (const part of parts) {
     const holes = part.step.cylindrical_features;
     if (holes.length !== 2) continue;
     const [h1, h2] = holes.map((h) => new THREE.Vector3(...h.axis_point));
-    const g = dimension({ id: `${part.id}-pins`, from: h1, to: h2, offsetDir: new THREE.Vector3(0, part.id === "coupler" ? 1 : -1, 0), offset: part.id === "coupler" ? 7 : (part.id === "ground" ? -12 : -6), text: `${part.step.pin_spacing_mm_measured.toFixed(3)} mm pin spacing`, source: `measured from STEP cylindrical faces · ${part.id}`, part: part.id, scale: 0.35 });
+    const g = dimension({ id: `${part.id}-pins`, from: h1, to: h2, offsetDir: new THREE.Vector3(0, part.id === "coupler" ? 1 : -1, 0), offset: part.id === "coupler" ? 7 : (part.id === "ground" ? -12 : -6), text: `${part.step.pin_spacing_mm_brep.toFixed(3)} mm pin spacing`, source: `from STEP B-rep cylindrical faces · ${part.id}`, part: part.id, scale: 0.35 });
     dimGroup.add(g);
   }
   root.add(dimGroup);
@@ -281,9 +282,9 @@ function fourBarMeta(p, step) {
   return {
     title: `${role.replace(/^./, (c) => c.toUpperCase())} link`, componentId: `STEP product #${p.name}`, sourceFile: step.source, sourcePath: p.chain.join(" › "), assetClass: "source-cad",
     dims: [
-      { q: "Pin spacing (measured)", v: `${p.pin_spacing_mm_measured?.toFixed(3) ?? "—"} mm`, src: "distance between cylindrical-face axes in the STEP B-rep" },
+      { q: "Pin spacing (STEP B-rep)", v: `${p.pin_spacing_mm_brep?.toFixed(3) ?? "—"} mm`, src: "distance between cylindrical-face axes in the STEP B-rep" },
       { q: "Recorded model length", v: recorded ? `${recorded} mm` : "NOT SPECIFIED", src: "mechanism/four_bar.py BASELINE" },
-      { q: "Hole radius (measured)", v: holes.map((h) => `${h.radius_mm.toFixed(3)} mm`).join(", "), src: "cylindrical faces" },
+      { q: "Hole radius (STEP B-rep)", v: holes.map((h) => `${h.radius_mm.toFixed(3)} mm`).join(", "), src: "cylindrical faces" },
       { q: "Bounding box", v: `${(p.bbox_mm[3] - p.bbox_mm[0]).toFixed(2)} × ${(p.bbox_mm[4] - p.bbox_mm[1]).toFixed(2)} × ${(p.bbox_mm[5] - p.bbox_mm[2]).toFixed(2)} mm`, src: "OCC bounding box (includes tessellation tolerance)" },
       { q: "Volume", v: `${p.volume_mm3.toFixed(1)} mm³`, src: "OCC volume properties of the solid" },
     ],
@@ -293,7 +294,7 @@ function fourBarMeta(p, step) {
     limitations: ["The STEP places four separate bars; it is not a constrained or closed mechanism (D-005).", "Display tessellation is not the B-rep; measurements here use the B-rep values exported by the converter."],
     claims: ["C1"], discrepancies: ["D-005", "D-002"], observations: [],
     depths: {
-      intro: role === "coupler" ? "The coupler is the long link that should join the input crank to the output rocker. At 60 mm it is too long for the 15 mm links to reach — the loop cannot close." : "Each bar is a link. Pins through the holes would make joints; the distance between hole centres is what kinematics cares about.",
+      intro: role === "coupler" ? "The coupler is the long link that should join the input link to the output link. At 60 mm it is too long for the 15 mm links to reach — the loop cannot close." : "Each bar is a link. Pins through the holes would make joints; the distance between hole centres is what kinematics cares about.",
       engineering: ["Pin-centre distance is the link length in the planar model. Grashof check for the recorded set: \\(s + l = 15 + 60 = 75 > p + q = 15 + 25 = 40\\), so non-Grashof.",
         "D-005: the Fusion sketch script draws this coupler from (0, 15) to (25, 15) — 25 mm — while the STEP and the model use 60 mm."],
     },
@@ -379,7 +380,7 @@ export function buildNaca(naca) {
     overlays: [{ id: "extrude", label: "Illustrative extrusion", title: "A 10 mm display depth. The span is NOT SPECIFIED by the generator.", build: null, target: extrusion, illustrative: true }],
     explodeNote: "A single profile has nothing to explode.", axis: [1, 0, 0], frameDir: new THREE.Vector3(0, 0, 1), lengthMM: 60, flat: true,
     info: `<b>${naca.designation}</b> · chord ${naca.chord_mm} mm · ${naca.upper.length} upper + ${naca.lower.length} lower stations (cosine spacing)<br>Span: <b>NOT SPECIFIED</b>`,
-    claims: ["C3"], discrepancies: ["D-010"], observations: [],
+    claims: ["C3"], discrepancies: [], observations: [],
   };
 }
 
@@ -388,7 +389,7 @@ function nacaMeta(naca) {
     title: "NACA 0012 profile", componentId: naca.designation, sourceFile: naca.generator, sourcePath: naca.function, assetClass: "source-model",
     dims: [{ q: "Chord", v: `${naca.chord_mm.toFixed(2)} mm`, src: naca.function }, { q: "Max thickness (sampled)", v: `${naca.max_thickness_mm_sampled.toFixed(3)} mm`, src: "max over stations of upper − lower" }, { q: "Span", v: "NOT SPECIFIED", src: naca.span }],
     mass: { text: "NOT SPECIFIED — a profile has no mass", src: null }, material: null,
-    assumptions: ["Symmetric 4-digit series: m = 0, p = 0, t = 0.12."], limitations: [naca.limitation, "Where this profile is used is not recorded; fin chords elsewhere in the record differ (D-010)."],
+    assumptions: ["Symmetric 4-digit series: m = 0, p = 0, t = 0.12."], limitations: [naca.limitation, "Where this profile is used is not recorded. Cross-reference: the reliability run also assumes a 60 mm chord, while the spring and OpenRocket models use other chords (see D-010, which does not cover C3)."],
     claims: ["C3"], discrepancies: [], observations: [],
     depths: {
       intro: "An airfoil is a carefully shaped cross-section. This one is symmetric and 12% as thick as it is long.",

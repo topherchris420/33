@@ -48,14 +48,14 @@ is written by a tool and pins the SHA-256 of every input it used:
 | `lab/data/openrocket.json` | `tools/export_lab_data.py` | `Simulation/Folding Stabilized Rocket.ork` and the archived pre-retune model, with OpenRocket axial-method stations |
 | `lab/data/naca0012.json` | `tools/export_lab_data.py` | `naca_4digit_coordinates()` from the tested generator |
 | `lab/data/telemetry_fixture.json` | `tools/export_lab_data.py` | `python -m evidence demo` |
-| `lab/data/cad/four_bar.json` | [`tools/cad_to_web.py`](../tools/cad_to_web.py) | `CAD Files/Four Bar Linkage.step`, tessellated with OCP; pin spacing measured from cylindrical faces |
+| `lab/data/cad/four_bar.json` | [`tools/cad_to_web.py`](../tools/cad_to_web.py) | `CAD Files/Four Bar Linkage.step`, tessellated with OCP; pin spacing taken from the B-rep's cylindrical faces |
 | `lab/data/cad/archives.json` and previews | `tools/cad_to_web.py` | The three `.f3z` archives, inventoried with [`tools/sab_inventory.py`](../tools/sab_inventory.py) |
 
 `python tools/export_lab_data.py --check` (run by `make check`) regenerates the standard-library views
 in memory, compares them byte for byte, and verifies the CAD manifest by digest. Change any input and
 the check fails until the view is regenerated. The JavaScript four-bar port is verified against the
 committed sweep and against `mechanism/four_bar.py` on configurations that do close
-(`tests/lab_math.test.mjs`).
+(`tests/lab_math.test.mjs`; the Python comparison runs wherever Python is available, including CI, and is skipped otherwise).
 
 ### Why the Fusion archives are not converted
 
@@ -78,8 +78,11 @@ register; the [archive](../lab/archive.html#observations) recomputes both live.
    formulation is not computed; that would be a third model.
 2. **LAB-OBS-2 (C1).** With the recorded ground (25 mm) and input (15 mm) links, no integer
    coupler/output pair from 1 to 200 mm both closes over 0–92° and keeps the transmission angle within
-   40–140°. D-002 asks which dimensions were intended; this suggests the ground and input need review
-   too.
+   40–140°. The search uses the model's convention that 0° puts the input along the ground line; under
+   it the result holds for every real length (the band needs c·d ≥ 253 mm², closing at 0° needs
+   c² + d² − 1.532·c·d ≤ 100 mm²). Shifting the 92° window to start elsewhere admits closing pairs.
+   D-002 asks which dimensions were intended; this suggests the ground and input lengths, or the
+   drive-angle origin and pivot layout, need review too.
 
 ## Source rights audit
 

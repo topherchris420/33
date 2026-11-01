@@ -56,7 +56,7 @@ def test_step_view_matches_recorded_linkage_and_source_digest():
     view = _json("lab/data/cad/four_bar.json")
     step = (ROOT / view["source"]).read_bytes()
     assert hashlib.sha256(step).hexdigest() == view["source_sha256"]
-    spacing = {p["role"]: p["pin_spacing_mm_measured"] for p in view["parts"]}
+    spacing = {p["role"]: p["pin_spacing_mm_brep"] for p in view["parts"]}
     assert spacing == {"ground": 25.0, "input": 15.0, "coupler": 60.0, "output": 15.0}
 
 

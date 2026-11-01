@@ -17,7 +17,7 @@ Project 33 investigates a low-cost folding-fin rocket concept through mechanical
 
 [![A clay engineer watches a scanning beam turn the clay Project 33 rocket into an engineering wireframe](lab/assets/poster.jpg)](https://topherchris420.github.io/33/lab/cinematic.html)
 
-The project site is now an interactive, read-only engineering laboratory. Rotate, explode, and section geometry generated from the OpenRocket design file and the STEP export; watch the four-bar linkage fail to close, from the committed model; walk the evidence constellation; read telemetry as evidence; and compare models that disagree without crowning either. Every value traces to a committed file with a pinned SHA-256, absent values read NOT SPECIFIED or NOT MEASURED, and no interaction can reach hardware. Details: [docs/LIVING_LAB.md](docs/LIVING_LAB.md).
+The project site is now an interactive, read-only engineering laboratory. Rotate, explode, and section geometry generated from the OpenRocket design file and the STEP export; watch the four-bar linkage fail to close, from the committed model; walk the evidence constellation; read telemetry as evidence; and compare models that disagree without crowning either. Values come from committed files (derived data views pin the SHA-256 of their inputs), absent values read NOT SPECIFIED or NOT MEASURED, and no interaction can reach hardware. Details: [docs/LIVING_LAB.md](docs/LIVING_LAB.md).
 
 *The film frame is a rendering of the design-file geometry, not a photograph, flight test, or physical assembly record.*
 

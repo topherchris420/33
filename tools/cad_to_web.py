@@ -212,7 +212,7 @@ def step_view(path):
             "bbox_mm": [round(v, 5) for v in (xmin, ymin, zmin, xmax, ymax, zmax)],
             "volume_mm3": round(props.Mass(), 4),
             "cylindrical_features": unique,
-            "pin_spacing_mm_measured": spacing,
+            "pin_spacing_mm_brep": spacing,
             "triangles": len(indices) // 3,
             "positions": positions, "indices": indices, "edges": edges,
         })

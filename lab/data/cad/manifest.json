@@ -85,7 +85,7 @@
   },
   {
    "path": "lab/data/cad/four_bar.json",
-   "sha256": "0817901a716ef30c70bacaa19009d5b6b68689e02d31febdd2232de7562e81b4",
+   "sha256": "a96c3f10ccab80d6016c2f4a371d561fec067c7aacf868aa6622c8c0afcb6ff3",
    "inputs": {
     "CAD Files/Four Bar Linkage.step": "7f4afad7b1d77b01b21a776c13eca2041daeae40b52a598f1537ec80b10a2c87"
    }

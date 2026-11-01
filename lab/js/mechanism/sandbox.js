@@ -93,7 +93,7 @@ export function buildSandbox(root, { baseline }) {
       `. This is arithmetic on recorded dimensions, not a design proposal: D-002 remains open, and the intended topology needs human review. The Fusion sketch's 25 mm coupler (D-005) sits at the band's upper edge, where μ = ${muFusion0.toFixed(0)}° at θ = 0° — a dead-centre pose — so it would not satisfy R-C1-TRANSMISSION (40–140°) either.`),
     h("p", { class: "mb0", style: { marginTop: "8px" } }, recWithin
       ? `With a = ${baseline.a} mm and b = ${baseline.b} mm, ${recWithin} coupler/output pairs between 1 and 200 mm (1 mm steps) close over 0–92° with μ inside 40–140°.`
-      : `Going further: with a = ${baseline.a} mm and b = ${baseline.b} mm, no coupler/output pair between 1 and 200 mm (checked in 1 mm steps) closes over 0–92° with μ inside 40–140°. If the 40–140° guidance applies, the recorded ground and input links would also need review — again arithmetic, not a finding of the record.`));
+      : `Going further: with a = ${baseline.a} mm and b = ${baseline.b} mm, no coupler/output pair between 1 and 200 mm (checked in 1 mm steps) closes over 0–92° with μ inside 40–140°. This assumes the model's convention that θ = 0 puts the input along the ground line; with that origin, if the 40–140° guidance applies, the ground and input lengths or the drive-angle origin and pivot layout would also need review — again arithmetic, not a finding of the record.`));
 
   for (const [k, input] of Object.entries(inputs)) {
     syncRange(input);

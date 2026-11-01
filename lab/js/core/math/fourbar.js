@@ -2,7 +2,7 @@
 // Convention (mm, degrees): ground pivot A at the origin, ground pivot D at (a, 0).
 // Input link AB rotates by the drive angle θ; coupler BC and output DC close the loop.
 // A pose that cannot close returns null — never a numeric placeholder (see D-003).
-// tests/lab_fourbar.test.mjs checks this port against the Python model and the committed sweep.
+// tests/lab_math.test.mjs checks this port against the Python model and the committed sweep.
 
 export const DRIVE_MIN_DEG = 0;
 export const DRIVE_MAX_DEG = 92;
