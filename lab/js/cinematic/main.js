@@ -295,10 +295,11 @@ function apply(t, dt) {
   wren.lookAt3(t < 14 ? new THREE.Vector3(-40, 0, 40) : new THREE.Vector3(120, 30, -60));
   // Tally: walks in at the freeze with the sign
   const tallyIn = ease(seg(t, 50.2, 52));
-  tally.position.lerpVectors(new THREE.Vector3(300, 0, 120), new THREE.Vector3(178, 0, 52), tallyIn);
+  tally.position.lerpVectors(new THREE.Vector3(300, 0, 90), new THREE.Vector3(146, 0, -4), tallyIn);
   if (t >= 51 && t < 57) { if (tally.signText !== "BUT DOES IT\nWORK?") tally.holdSign("BUT DOES IT\nWORK?"); tally.sign.visible = true; tally.action = "sign"; }
   else { tally.sign.visible = false; setAction(tally, t > 57 ? "notebook" : "idle", t); }
-  tally.rotation.y = -1.1 + 0.6 * tallyIn;
+  const faceCam = Math.atan2(camera.position.x - tally.position.x, camera.position.z - tally.position.z);
+  tally.rotation.y = -1.1 + (faceCam + 1.1) * tallyIn;
   tally.lookAt3(camera.position);
   // Pip walks along the back of the table carrying nothing in particular
   const pipT = (t * 0.06) % 1;

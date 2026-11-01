@@ -158,14 +158,16 @@ export class Claymate extends THREE.Group {
       const bridge = mesh(new THREE.CapsuleGeometry(0.45, 1.6, 4, 8), dark); bridge.rotation.z = Math.PI / 2; bridge.position.set(0, 3.4, 13); this.head.add(bridge);
     }
     // sign (hidden until held)
+    // The sign is mounted on the body (not the forearm) so it always faces forward and stays legible;
+    // the raised right hand meets the stick in the "sign" pose.
     this.sign = new THREE.Group();
     const stick = mesh(new THREE.CylinderGeometry(0.8, 0.8, 30, 8), m(0x9a6b3f, 0.05)); stick.position.y = -6;
     this.signBoard = new THREE.Mesh(new THREE.BoxGeometry(34, 20, 1.2), [m(0xb58a5c, 0.05), m(0xb58a5c, 0.05), m(0xb58a5c, 0.05), m(0xb58a5c, 0.05), new THREE.MeshStandardMaterial({ roughness: 0.9 }), m(0xb58a5c, 0.05)]);
     this.signBoard.position.y = 18; this.signBoard.castShadow = true;
     this.sign.add(stick, this.signBoard);
     this.sign.visible = false;
-    this.foreR.userData.end.add(this.sign);
-    this.sign.position.set(0, -1, 2.5);
+    this.root.add(this.sign);
+    this.sign.position.set(16, 52, 6);
     this.blinkAt = 1 + Math.random() * 3;
   }
 
@@ -214,7 +216,7 @@ export class Claymate extends THREE.Group {
         this.torso.rotation.x = 0.22 + 0.06 * s; this.root.position.z = 2 * s; mouthOpen = 0.4; browLift = -0.6; break;
       }
       case "sign": {
-        rA = [-2.35, 0, -0.2]; rF = [-0.6, 0, 0]; lA = [-0.6, 0, 0.4]; lF = [-1.4, 0, 0]; mouthOpen = 0.6; browLift = 0.8; headTilt = 0.18; break;
+        rA = [-0.35, 0, -2.45]; rF = [0, 0, 0.35]; lA = [-0.6, 0, 0.4]; lF = [-1.4, 0, 0]; mouthOpen = 0.6; browLift = 0.8; headTilt = 0.18; break;
       }
       case "lever": {
         const k = Math.min(a / 0.9, 1);
