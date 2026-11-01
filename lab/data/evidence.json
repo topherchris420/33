@@ -1,0 +1,4837 @@
+{
+ "schema": "project33.lab.evidence/1",
+ "generated_by": "tools/export_lab_data.py",
+ "inputs": {
+  ".github/workflows/ci.yml": "1aa2ade27c00d88217cce38b6b01b4dec8a845280bf52878c95a413a261fb04b",
+  "CAD Files/Four Bar Linkage.step": "7f4afad7b1d77b01b21a776c13eca2041daeae40b52a598f1537ec80b10a2c87",
+  "CAD Files/FusionScripts/Project33FourBar/Project33FourBar.py": "135baaed83dbb1d6957c664ede7de9e3509efeed0c90e59153ceb169117d8885",
+  "CAD Files/FusionScripts/Project33NacaFin/Project33NacaFin.py": "52754c73baf5a2d2f06dad2266c208f7dc6d3eb44e430f2b3ca8eb2c5d7ea7e7",
+  "CAD Files/naca_fin_generator.py": "9d19d2ce4f06daea7e8ca8f6a5f52c03f5540e9c0c3999204292449f05c8749f",
+  "Firmware/Launcher/src/main.cpp": "38574d843e1a37156d60c5cd94538bbb85fa3aa1550f42521ac04bb6a0c57e57",
+  "Firmware/Rocket/src/deploy_isr.cpp": "013cb6614c2cdb6b2d7a45cce893f89134e6f03cc5acc161dd36b5b23bec4028",
+  "Firmware/Rocket/src/deploy_isr.h": "cd28abe0e40b3a53f98a2f04c03ff740f24a1457bf2d0dd818267a5952c88c9f",
+  "Firmware/Rocket/src/main.cpp": "4a14aac55f7f658ad74cca2738ffa49652595d811e94da35915854bdd5aba926",
+  "Firmware/Rocket/tests/bench_deploy_isr.ino": "add4c75d552ef7640487daeb7eecf33def960ea100b510accad1590417658419",
+  "Simulation/Folding Stabilized Rocket.ork": "26087d70e4929b10acc960569d8211b4f2985004c545698ccd52e07eed02ae6a",
+  "Simulation/Stability_Graph.png": "899af6b7a02c5b229ffdb1cac48fa5eaa167b2c9f80bceddd756aefcf0327866",
+  "Simulation/barrowman_crosscheck.py": "844a03c57bed3292b205cf6225340c94f4e70162a0fb1d5793c619ddf18c0f1e",
+  "Simulation/reliability_sweep.py": "08c76f04ad0476372c26a25a0f51efe3e5002df92d1f92e9c8596b7c307bac99",
+  "Simulation/static_margin.py": "4e5749eb7ef8b3d0fa209980e1d999ce7535fc7d145496401876d656d4e4181b",
+  "docs/CAD_ASSEMBLIES.md": "4352bd376b309bc8e0ca856646b6d1c6e846fc40815f355387a47b139967c41d",
+  "docs/EVIDENCE/C1_four_bar_plot.png": "5097fb03a463ccdeaaee248a93d88414d4ecce3cb76c2500aaec5a0c352790a7",
+  "docs/EVIDENCE/C1_four_bar_sweep.json": "b5db59c4d5fcbc09379e046279f2cf5e778cb0d93f71a0df3ac0baba2ff4b0eb",
+  "docs/EVIDENCE/C2_latency.csv": "8cf6f0fe7a94d49f4c3a872fdd400437addce23f03057ae8abe22bb778e69467",
+  "docs/EVIDENCE/C4_mass_baseline.csv": "aa54a78f60d0af0382307032aa31fef2f13fafa79c39cc50dabf13d4c0d91868",
+  "docs/EVIDENCE/C4_mass_optimized.csv": "c6dff1a044a6a2fc22ee873671dacb616ffad05a8dc055edcb8c4b81656e8cd7",
+  "docs/EVIDENCE/C4_mass_summary.json": "f2987d38960196ad414a181cbb34e72a85be9245eda11271ca7eb84c51e8a832",
+  "docs/EVIDENCE/C5_barrowman_crosscheck.json": "bbf54cd31799f8d20b17ffc82de1e1cba337991a8eafb1277e018c0df24be7b5",
+  "docs/EVIDENCE/C5_static_margin.csv": "11dbead6cfeabb560443aff7536136816eb47eef446a0b9de4be19ffd702f0cc",
+  "docs/EVIDENCE/C5_static_margin.png": "f25b14f130e2ba14940f37abfbae4483f818ed10ab531bb901dfbe85b5866d17",
+  "docs/EVIDENCE/C5_static_margin_inputs.json": "642c367181cab4d0b1b66054ddc0ee6c1a31af8b9c62560b3454f56ab32da821",
+  "docs/EVIDENCE/C6_design_point.json": "85e82763995ff0f76e2c58b297a01fa844f00939d3c7f9ed6279aef7516823d0",
+  "docs/EVIDENCE/C6_spring_sweep.json": "9db0f75cf68ece3fed03cc87abbcda3f4c8af4edcb0c1a115679004f277208cc",
+  "docs/EVIDENCE/C6_spring_sweep_plot.png": "0708c30e661880a0bdf1c1f4c1b36644119670a76b1a63b9272786710a4c50ed",
+  "docs/EVIDENCE/C7_reliability.csv": "3eb6d15631e45528056f71c8a650326cceff2291ca6132766a2964482e1cc2b6",
+  "docs/EVIDENCE/C7_run_record.json": "1fb2b424083fdd19c5bc2b5645b67b3bbbe210a8adf08fd9d5636703ea427016",
+  "docs/EVIDENCE/C8_clt.csv": "67193424e7210d4f392760ef104911b2d0bcab7ebefe05b030185d9ca3a3b922",
+  "docs/EVIDENCE/C8_hinge_fos.json": "f04f43f57ff9a69e9226cabe2e727db134cdf3abedf5e4ddf19e8f45560c9f6e",
+  "docs/EVIDENCE/CHANGELOG.md": "ec9345c71ad5d118a307b40346e82ca9c45110643b673c681e21dd97ff2d8d69",
+  "docs/SAFETY.md": "bb3ac86410075443d0a32f146f80f8995262ef7612f16b4cdc610dc5377e20b7",
+  "docs/assets/review/c1_loop_closure.svg": "6eaf21321a2c3f8dc86af6c632a0336e9964676b62634251b3bcfda28f67d963",
+  "docs/assets/review/c3_naca0012_profile.svg": "6afe5f42d7e64820fb3aa08ebf4340dd4605e66b3f3cab70b8c9411480903663",
+  "evidence/archive/C1_four_bar_sweep.v1.json": "eef37dad4417978d43e63d245931e1cb5f3f1501cdbae260be1d8d58cdf0e8ac",
+  "evidence/archive/C5_openrocket_pre_retune.ork.xml": "082d383fb9626db223317b7fd008d4e12b4a5c443b448fb0e217a68d48090182",
+  "evidence/archive/index.json": "3917b12feadf5a39478f4e967bb94ef638ad9fdf55c2ec2b37ae62f6f406dc72",
+  "evidence/archive/notes-v1/C1_four_bar.md": "a0dd11767612799bdeb1a7a317d872cd6d2be7db10d7ffef4def50eb274d6e80",
+  "evidence/archive/notes-v1/C2_latency.md": "035ca7ce15936f085102b9ad08f2c477f4d647ef750e64de3011812e0dedbea0",
+  "evidence/archive/notes-v1/C3_naca_sweep.md": "cdb641b811bf5da2cf5f0687b36b7e0142044abeb593b1e46f6e0a24537f3988",
+  "evidence/archive/notes-v1/C4_delta.md": "04398da14590c78ed14abca439e5626de6f33af047c50badf982c0cd1b70c5d7",
+  "evidence/archive/notes-v1/C5_static_margin.md": "e745b40b923173fa75b74e78aa7b13650786598885b55ec0fab1a399ef53089e",
+  "evidence/archive/notes-v1/C6_spring_sizing.md": "72c3441853710c0e5dbb52586163e5a899a86270dc3f0c56d1d8fe22dbd0cd6f",
+  "evidence/archive/notes-v1/C7_reliability.md": "a16bbd0d799379c90587c7111bb2266c2a3aa9e811157017edef5b3d103877a5",
+  "evidence/archive/notes-v1/C8_clt.md": "dc6b467bcf69c37fa5e1a8b6534231465734995fc695895b28e3b965f5b17a7c",
+  "evidence/archive/notes-v1/C8_hinge_fos.md": "8f504151f5e0dc01b0a47f10908f8d047cbc5837091d440be1ee36e0145e9188",
+  "evidence/archive/test_four_bar.v1.py.txt": "4593d139cd18d013ae37af18e8fbcffc06b83f0e9e7eb754cf6cfefbadbcaae3",
+  "evidence/archive/test_spring_sizing.v1.py.txt": "4bb9eb28aff14d2f452356646e927ea405c116edc18299cf46f48e26f9ba7726",
+  "evidence/catalog.json": "b20586161c48e1fb39094a49361ee364dd74e170f908590ab240fc2a5de2456c",
+  "evidence/discrepancies.json": "458edd4696a1d59f2b6a35eace7d127d7f2d932be098165bccfec59d067d99b8",
+  "evidence/measurements.json": "7ad754f8947ac4fa9183b2da1b3d9735cdf8833af1965f91c116a072107b0e9d",
+  "evidence/predictions.json": "6aac364f253669cb33ed3aed7c0e53977376b60dad34511a0c819d868e57dd5c",
+  "evidence/preregistrations.json": "c069c66e1a7d46c1ff348a7a6db5e3257758350750620b8988b8d1691e674830",
+  "evidence/requirements.json": "ef365bb51d1cd2dbe0ccbc63608957e4e64fc705295193e14231dfabee7d4b94",
+  "evidence/reviews.json": "ef75f5a17d5ef6a294061e9c14950b00a0051709cc4750c73887bd53d29ff60a",
+  "evidence/safety_gates.json": "ab71eee7e344c78d16d5a39a864d56d636cc9446a88047ee57a2ba4f23790f13",
+  "evidence/sessions.json": "a8486b0ce83596a773a27761db12830209c274dff74a35deba1dc5d51bc5433b",
+  "materials/mass_rollup.py": "7e8b8ca2b46b20102721c645284fc7b1a81e8c4848e30ee4295a8a10260025ec",
+  "materials/parts.yaml": "b2b65a256c6bfb9fa911b2b79a457d56e8fdf3bf29667c33a936bcd676d70542",
+  "mechanism/four_bar.py": "c29b5f1905d006accd1d5d9636e531e603f266da1d35808c540c59f45a2dd1f0",
+  "mechanism/spring_sizing.py": "c19a9aadb9bc574cf732a49e7595d307a42de02956ea81db916430a52d1241d8",
+  "protocol/project33_protocol.json": "053b7d49aacfde767a986edf1e8b772a7562d5b6eba67dbabfdbd32da09e728e",
+  "structures/fea_lite.py": "f8a0d02ca9d9134604acf4141ce16c20aa27d2a9bc5e739f389824eeaf1fc6a6",
+  "tests/test_deploy_latency.py": "2012e20b2348325ddf94478678f8f8e053a5ad09e5b501ed9391797250fd8540",
+  "tests/test_firmware_safety.py": "ff5e17217ea229ee936dfa61180bb98c083475c4ce0ff1eb1f44aa348e466a77",
+  "tests/test_four_bar.py": "63215cc6d69d68ae06f47498f28c28c0a724fcfb98bacb0e640eb15d31a8e4fb",
+  "tests/test_fusion_script_install.py": "f02aa050624ebf98b8176f84e9d30f76b5434d987b4279c12ff24ddf9a1e0b17",
+  "tests/test_mass_rollup.py": "a553cf030873f9b6ec7a16c35556306a04c8f614de506dae0ccf711425fb6bbb",
+  "tests/test_naca_fin_generator.py": "4dba7f7013f2a2c3b902038062b7894ae239aa99b7b469b98b52cafb50ac96b5",
+  "tests/test_reliability.py": "59ebcda5985bd4a48ca0689df833591bef95690a7ef2b9fc8f1481ca51f9ef2f",
+  "tests/test_spring_sizing.py": "24e6e66c244c84fd95d3e462c07a0411ae34fc49ab589dfd84411ec68e8d6f38",
+  "tests/test_static_margin.py": "859d50abe84990d69446cff6b1e61afbdfc935efd1f3c5510aeabf322c782666",
+  "tests/test_structural.py": "3a6078b66cfcaa8b98f3508a08326ce8f7483f149363eba2f28f811691a487a8",
+  "tools/review_figures.py": "73d43e02f4f5b7820580b68f93f815fa975d58057cab476e2887b9d3c253e799"
+ },
+ "schema_version": 2,
+ "kind": "project_review",
+ "project": "Project 33",
+ "scope": "An inspectable record of an inert bench-validation prototype: what is claimed, which exact artifacts stand behind each claim, what class of evidence they are, which requirements they meet or miss, what contradicts them, and which measurements are still missing.",
+ "artifacts": [
+  {
+   "id": "c1_closure_figure",
+   "path": "docs/assets/review/c1_loop_closure.svg",
+   "class": "analytical",
+   "format": "file",
+   "derived_from": [
+    "four_bar_source",
+    "review_figures_tool"
+   ],
+   "description": "Loop-closure diagram: the output circle never meets the coupler circles over the drive range.",
+   "status": "current",
+   "sha256": "6eaf21321a2c3f8dc86af6c632a0336e9964676b62634251b3bcfda28f67d963",
+   "bytes": 3262,
+   "class_label": "ANALYTICAL",
+   "snapshot_path": "artifacts/docs/assets/review/c1_loop_closure.svg"
+  },
+  {
+   "id": "c1_note_v1",
+   "path": "evidence/archive/notes-v1/C1_four_bar.md",
+   "class": "specification",
+   "format": "file",
+   "status": "superseded",
+   "description": "Historical C1 note. Its Grashof, transmission-angle, and over-center statements are not supported by its own sweep.",
+   "sha256": "a0dd11767612799bdeb1a7a317d872cd6d2be7db10d7ffef4def50eb274d6e80",
+   "bytes": 888,
+   "class_label": "SPECIFICATION",
+   "snapshot_path": "artifacts/evidence/archive/notes-v1/C1_four_bar.md"
+  },
+  {
+   "id": "c1_sweep_v1",
+   "path": "evidence/archive/C1_four_bar_sweep.v1.json",
+   "class": "analytical",
+   "format": "json",
+   "status": "superseded",
+   "description": "Revision 1 sweep: every row reports 90 degrees and a 0.0 envelope, placeholders for linkages that cannot close.",
+   "sha256": "eef37dad4417978d43e63d245931e1cb5f3f1501cdbae260be1d8d58cdf0e8ac",
+   "bytes": 19685,
+   "class_label": "ANALYTICAL",
+   "snapshot_path": "artifacts/evidence/archive/C1_four_bar_sweep.v1.json"
+  },
+  {
+   "id": "c1_tests_v1",
+   "path": "evidence/archive/test_four_bar.v1.py.txt",
+   "class": "test_procedure",
+   "format": "file",
+   "status": "superseded",
+   "description": "Revision 1 tests that passed on placeholder values.",
+   "sha256": "4593d139cd18d013ae37af18e8fbcffc06b83f0e9e7eb754cf6cfefbadbcaae3",
+   "bytes": 1963,
+   "class_label": "TEST PROCEDURE",
+   "snapshot_path": "artifacts/evidence/archive/test_four_bar.v1.py.txt"
+  },
+  {
+   "id": "c2_note_v1",
+   "path": "evidence/archive/notes-v1/C2_latency.md",
+   "class": "specification",
+   "format": "file",
+   "status": "superseded",
+   "description": "Historical C2 note.",
+   "sha256": "035ca7ce15936f085102b9ad08f2c477f4d647ef750e64de3011812e0dedbea0",
+   "bytes": 736,
+   "class_label": "SPECIFICATION",
+   "snapshot_path": "artifacts/evidence/archive/notes-v1/C2_latency.md"
+  },
+  {
+   "id": "c3_note_v1",
+   "path": "evidence/archive/notes-v1/C3_naca_sweep.md",
+   "class": "specification",
+   "format": "file",
+   "status": "superseded",
+   "description": "Historical C3 note.",
+   "sha256": "cdb641b811bf5da2cf5f0687b36b7e0142044abeb593b1e46f6e0a24537f3988",
+   "bytes": 748,
+   "class_label": "SPECIFICATION",
+   "snapshot_path": "artifacts/evidence/archive/notes-v1/C3_naca_sweep.md"
+  },
+  {
+   "id": "c3_profile_figure",
+   "path": "docs/assets/review/c3_naca0012_profile.svg",
+   "class": "implementation",
+   "format": "file",
+   "derived_from": [
+    "cad_source",
+    "review_figures_tool"
+   ],
+   "description": "NACA 0012, 60 mm chord profile with chord and maximum-thickness dimensions. Geometry only.",
+   "status": "current",
+   "sha256": "6afe5f42d7e64820fb3aa08ebf4340dd4605e66b3f3cab70b8c9411480903663",
+   "bytes": 4193,
+   "class_label": "IMPLEMENTATION",
+   "snapshot_path": "artifacts/docs/assets/review/c3_naca0012_profile.svg"
+  },
+  {
+   "id": "c4_note_v1",
+   "path": "evidence/archive/notes-v1/C4_delta.md",
+   "class": "specification",
+   "format": "file",
+   "status": "superseded",
+   "description": "Historical C4 note.",
+   "sha256": "04398da14590c78ed14abca439e5626de6f33af047c50badf982c0cd1b70c5d7",
+   "bytes": 810,
+   "class_label": "SPECIFICATION",
+   "snapshot_path": "artifacts/evidence/archive/notes-v1/C4_delta.md"
+  },
+  {
+   "id": "c5_note_v1",
+   "path": "evidence/archive/notes-v1/C5_static_margin.md",
+   "class": "specification",
+   "format": "file",
+   "status": "superseded",
+   "description": "Historical C5 note, generated by the model script.",
+   "sha256": "e745b40b923173fa75b74e78aa7b13650786598885b55ec0fab1a399ef53089e",
+   "bytes": 596,
+   "class_label": "SPECIFICATION",
+   "snapshot_path": "artifacts/evidence/archive/notes-v1/C5_static_margin.md"
+  },
+  {
+   "id": "c6_note_v1",
+   "path": "evidence/archive/notes-v1/C6_spring_sizing.md",
+   "class": "specification",
+   "format": "file",
+   "status": "superseded",
+   "description": "Historical C6 note.",
+   "sha256": "72c3441853710c0e5dbb52586163e5a899a86270dc3f0c56d1d8fe22dbd0cd6f",
+   "bytes": 854,
+   "class_label": "SPECIFICATION",
+   "snapshot_path": "artifacts/evidence/archive/notes-v1/C6_spring_sizing.md"
+  },
+  {
+   "id": "c6_tests_v1",
+   "path": "evidence/archive/test_spring_sizing.v1.py.txt",
+   "class": "test_procedure",
+   "format": "file",
+   "status": "superseded",
+   "description": "Revision 1 test named for a 20% margin that accepted any k_required up to 1.2 x k_supplied.",
+   "sha256": "4bb9eb28aff14d2f452356646e927ea405c116edc18299cf46f48e26f9ba7726",
+   "bytes": 2121,
+   "class_label": "TEST PROCEDURE",
+   "snapshot_path": "artifacts/evidence/archive/test_spring_sizing.v1.py.txt"
+  },
+  {
+   "id": "c7_note_v1",
+   "path": "evidence/archive/notes-v1/C7_reliability.md",
+   "class": "specification",
+   "format": "file",
+   "status": "superseded",
+   "description": "Historical C7 note.",
+   "sha256": "a16bbd0d799379c90587c7111bb2266c2a3aa9e811157017edef5b3d103877a5",
+   "bytes": 659,
+   "class_label": "SPECIFICATION",
+   "snapshot_path": "artifacts/evidence/archive/notes-v1/C7_reliability.md"
+  },
+  {
+   "id": "c8_clt_note_v1",
+   "path": "evidence/archive/notes-v1/C8_clt.md",
+   "class": "specification",
+   "format": "file",
+   "status": "superseded",
+   "description": "Historical C8 laminate note.",
+   "sha256": "dc6b467bcf69c37fa5e1a8b6534231465734995fc695895b28e3b965f5b17a7c",
+   "bytes": 558,
+   "class_label": "SPECIFICATION",
+   "snapshot_path": "artifacts/evidence/archive/notes-v1/C8_clt.md"
+  },
+  {
+   "id": "c8_hinge_note_v1",
+   "path": "evidence/archive/notes-v1/C8_hinge_fos.md",
+   "class": "specification",
+   "format": "file",
+   "status": "superseded",
+   "description": "Historical C8 hinge note.",
+   "sha256": "8f504151f5e0dc01b0a47f10908f8d047cbc5837091d440be1ee36e0145e9188",
+   "bytes": 506,
+   "class_label": "SPECIFICATION",
+   "snapshot_path": "artifacts/evidence/archive/notes-v1/C8_hinge_fos.md"
+  },
+  {
+   "id": "cad_fusion_script",
+   "path": "CAD Files/FusionScripts/Project33NacaFin/Project33NacaFin.py",
+   "class": "implementation",
+   "format": "file",
+   "description": "Fusion 360 script package that sketches the NACA 0012, 60 mm profile.",
+   "status": "current",
+   "sha256": "52754c73baf5a2d2f06dad2266c208f7dc6d3eb44e430f2b3ca8eb2c5d7ea7e7",
+   "bytes": 2780,
+   "class_label": "IMPLEMENTATION",
+   "snapshot_path": "artifacts/CAD Files/FusionScripts/Project33NacaFin/Project33NacaFin.py"
+  },
+  {
+   "id": "cad_install_tests",
+   "path": "tests/test_fusion_script_install.py",
+   "class": "test_procedure",
+   "format": "file",
+   "description": "Fusion script packaging and installer tests.",
+   "status": "current",
+   "sha256": "f02aa050624ebf98b8176f84e9d30f76b5434d987b4279c12ff24ddf9a1e0b17",
+   "bytes": 2481,
+   "class_label": "TEST PROCEDURE",
+   "snapshot_path": "artifacts/tests/test_fusion_script_install.py"
+  },
+  {
+   "id": "cad_materials_doc",
+   "path": "docs/CAD_ASSEMBLIES.md",
+   "class": "specification",
+   "format": "file",
+   "description": "Prototype material plan: PLA+/PETG printed airframe and fins.",
+   "status": "current",
+   "sha256": "4352bd376b309bc8e0ca856646b6d1c6e846fc40815f355387a47b139967c41d",
+   "bytes": 6181,
+   "class_label": "SPECIFICATION",
+   "snapshot_path": "artifacts/docs/CAD_ASSEMBLIES.md"
+  },
+  {
+   "id": "cad_source",
+   "path": "CAD Files/naca_fin_generator.py",
+   "class": "implementation",
+   "format": "file",
+   "description": "NACA 4-digit coordinate generator with optional CadQuery STEP export.",
+   "status": "current",
+   "sha256": "9d19d2ce4f06daea7e8ca8f6a5f52c03f5540e9c0c3999204292449f05c8749f",
+   "bytes": 5518,
+   "class_label": "IMPLEMENTATION",
+   "snapshot_path": "artifacts/CAD Files/naca_fin_generator.py"
+  },
+  {
+   "id": "cad_tests",
+   "path": "tests/test_naca_fin_generator.py",
+   "class": "test_procedure",
+   "format": "file",
+   "description": "Coordinate, symmetry, input-validation, and STEP export tests.",
+   "status": "current",
+   "sha256": "4dba7f7013f2a2c3b902038062b7894ae239aa99b7b469b98b52cafb50ac96b5",
+   "bytes": 3300,
+   "class_label": "TEST PROCEDURE",
+   "snapshot_path": "artifacts/tests/test_naca_fin_generator.py"
+  },
+  {
+   "id": "ci",
+   "path": ".github/workflows/ci.yml",
+   "class": "implementation",
+   "format": "file",
+   "description": "CI configuration. A configuration is not a record that any particular run passed.",
+   "status": "current",
+   "sha256": "1aa2ade27c00d88217cce38b6b01b4dec8a845280bf52878c95a413a261fb04b",
+   "bytes": 3463,
+   "class_label": "IMPLEMENTATION",
+   "snapshot_path": "artifacts/.github/workflows/ci.yml"
+  },
+  {
+   "id": "crosscheck_data",
+   "path": "docs/EVIDENCE/C5_barrowman_crosscheck.json",
+   "class": "analytical",
+   "format": "json",
+   "derived_from": [
+    "crosscheck_source",
+    "stability_source",
+    "stability_inputs",
+    "stability_data"
+   ],
+   "description": "Cross-check static margin. Disagrees with the reference about the 1.5-2.0 cal window.",
+   "status": "current",
+   "sha256": "bbf54cd31799f8d20b17ffc82de1e1cba337991a8eafb1277e018c0df24be7b5",
+   "bytes": 747,
+   "class_label": "ANALYTICAL",
+   "snapshot_path": "artifacts/docs/EVIDENCE/C5_barrowman_crosscheck.json"
+  },
+  {
+   "id": "crosscheck_source",
+   "path": "Simulation/barrowman_crosscheck.py",
+   "class": "implementation",
+   "format": "file",
+   "description": "Unreviewed textbook re-derivation of the fin terms, sharing every other input with the reference.",
+   "status": "current",
+   "sha256": "844a03c57bed3292b205cf6225340c94f4e70162a0fb1d5793c619ddf18c0f1e",
+   "bytes": 3426,
+   "class_label": "IMPLEMENTATION",
+   "snapshot_path": "artifacts/Simulation/barrowman_crosscheck.py"
+  },
+  {
+   "id": "divergence_log",
+   "path": "docs/EVIDENCE/CHANGELOG.md",
+   "class": "specification",
+   "format": "file",
+   "description": "Historical log of model inputs changed to match paper targets.",
+   "status": "current",
+   "sha256": "ec9345c71ad5d118a307b40346e82ca9c45110643b673c681e21dd97ff2d8d69",
+   "bytes": 2666,
+   "class_label": "SPECIFICATION",
+   "snapshot_path": "artifacts/docs/EVIDENCE/CHANGELOG.md"
+  },
+  {
+   "id": "firmware_safety_tests",
+   "path": "tests/test_firmware_safety.py",
+   "class": "test_procedure",
+   "format": "file",
+   "description": "Source-level checks of deploy-trigger units, arming gates, refusal logging, and protocol substring hazards. Reading source is not observing hardware.",
+   "status": "current",
+   "sha256": "ff5e17217ea229ee936dfa61180bb98c083475c4ce0ff1eb1f44aa348e466a77",
+   "bytes": 8307,
+   "class_label": "TEST PROCEDURE",
+   "snapshot_path": "artifacts/tests/test_firmware_safety.py"
+  },
+  {
+   "id": "four_bar_cad_script",
+   "path": "CAD Files/FusionScripts/Project33FourBar/Project33FourBar.py",
+   "class": "implementation",
+   "format": "file",
+   "description": "Fusion sketch and CadQuery export for the baseline links. Its own comment calls the assembly purely illustrative.",
+   "status": "current",
+   "sha256": "135baaed83dbb1d6957c664ede7de9e3509efeed0c90e59153ceb169117d8885",
+   "bytes": 4486,
+   "class_label": "IMPLEMENTATION",
+   "snapshot_path": "artifacts/CAD Files/FusionScripts/Project33FourBar/Project33FourBar.py"
+  },
+  {
+   "id": "four_bar_data",
+   "path": "docs/EVIDENCE/C1_four_bar_sweep.json",
+   "class": "analytical",
+   "format": "json",
+   "derived_from": [
+    "four_bar_source"
+   ],
+   "description": "Baseline and 81-configuration sweep. Null values mean the linkage cannot close; no value exists.",
+   "status": "current",
+   "sha256": "b5db59c4d5fcbc09379e046279f2cf5e778cb0d93f71a0df3ac0baba2ff4b0eb",
+   "bytes": 27430,
+   "class_label": "ANALYTICAL",
+   "snapshot_path": "artifacts/docs/EVIDENCE/C1_four_bar_sweep.json"
+  },
+  {
+   "id": "four_bar_plot",
+   "path": "docs/EVIDENCE/C1_four_bar_plot.png",
+   "class": "analytical",
+   "format": "file",
+   "derived_from": [
+    "four_bar_source"
+   ],
+   "description": "Rendered loop-closure check for the baseline. Pixels are not reproduced byte for byte; the JSON carries the values.",
+   "status": "current",
+   "sha256": "5097fb03a463ccdeaaee248a93d88414d4ecce3cb76c2500aaec5a0c352790a7",
+   "bytes": 69706,
+   "class_label": "ANALYTICAL",
+   "snapshot_path": "artifacts/docs/EVIDENCE/C1_four_bar_plot.png"
+  },
+  {
+   "id": "four_bar_source",
+   "path": "mechanism/four_bar.py",
+   "class": "implementation",
+   "format": "file",
+   "description": "Planar four-bar kinematics, revision 2: loop closure by circle intersection; unassemblable poses report null.",
+   "status": "current",
+   "sha256": "c29b5f1905d006accd1d5d9636e531e603f266da1d35808c540c59f45a2dd1f0",
+   "bytes": 7685,
+   "class_label": "IMPLEMENTATION",
+   "snapshot_path": "artifacts/mechanism/four_bar.py"
+  },
+  {
+   "id": "four_bar_step",
+   "path": "CAD Files/Four Bar Linkage.step",
+   "class": "implementation",
+   "format": "file",
+   "derived_from": [
+    "four_bar_cad_script"
+   ],
+   "description": "Illustrative STEP of four separate bars. It is not a closed or kinematically constrained mechanism.",
+   "status": "current",
+   "sha256": "7f4afad7b1d77b01b21a776c13eca2041daeae40b52a598f1537ec80b10a2c87",
+   "bytes": 113929,
+   "class_label": "IMPLEMENTATION",
+   "snapshot_path": "artifacts/CAD Files/Four Bar Linkage.step"
+  },
+  {
+   "id": "four_bar_tests",
+   "path": "tests/test_four_bar.py",
+   "class": "test_procedure",
+   "format": "file",
+   "description": "Geometry and null-handling tests. Does not assert that the design meets a requirement.",
+   "status": "current",
+   "sha256": "63215cc6d69d68ae06f47498f28c28c0a724fcfb98bacb0e640eb15d31a8e4fb",
+   "bytes": 3406,
+   "class_label": "TEST PROCEDURE",
+   "snapshot_path": "artifacts/tests/test_four_bar.py"
+  },
+  {
+   "id": "hinge_data",
+   "path": "docs/EVIDENCE/C8_hinge_fos.json",
+   "class": "analytical",
+   "format": "json",
+   "derived_from": [
+    "structural_source"
+   ],
+   "description": "Hinge-pin stresses and factor of safety with inputs and load case.",
+   "status": "current",
+   "sha256": "f04f43f57ff9a69e9226cabe2e727db134cdf3abedf5e4ddf19e8f45560c9f6e",
+   "bytes": 777,
+   "class_label": "ANALYTICAL",
+   "snapshot_path": "artifacts/docs/EVIDENCE/C8_hinge_fos.json"
+  },
+  {
+   "id": "launcher_firmware",
+   "path": "Firmware/Launcher/src/main.cpp",
+   "class": "implementation",
+   "format": "file",
+   "description": "Launcher: arming switch, READY handshake, heartbeat abort, dashboard command gate, telemetry relay.",
+   "status": "current",
+   "sha256": "38574d843e1a37156d60c5cd94538bbb85fa3aa1550f42521ac04bb6a0c57e57",
+   "bytes": 19156,
+   "class_label": "IMPLEMENTATION",
+   "snapshot_path": "artifacts/Firmware/Launcher/src/main.cpp"
+  },
+  {
+   "id": "mass_baseline",
+   "path": "docs/EVIDENCE/C4_mass_baseline.csv",
+   "class": "analytical",
+   "format": "csv",
+   "columns": [
+    "part",
+    "subsystem",
+    "material",
+    "mass_kg"
+   ],
+   "min_rows": 1,
+   "derived_from": [
+    "mass_source",
+    "mass_inputs"
+   ],
+   "description": "Calculated baseline masses. Nothing was weighed.",
+   "status": "current",
+   "sha256": "aa54a78f60d0af0382307032aa31fef2f13fafa79c39cc50dabf13d4c0d91868",
+   "bytes": 206,
+   "class_label": "ANALYTICAL",
+   "snapshot_path": "artifacts/docs/EVIDENCE/C4_mass_baseline.csv",
+   "row_count": 4
+  },
+  {
+   "id": "mass_candidate",
+   "path": "docs/EVIDENCE/C4_mass_optimized.csv",
+   "class": "analytical",
+   "format": "csv",
+   "columns": [
+    "part",
+    "subsystem",
+    "material",
+    "mass_kg"
+   ],
+   "min_rows": 1,
+   "derived_from": [
+    "mass_source",
+    "mass_inputs"
+   ],
+   "description": "Calculated candidate masses. Nothing was weighed.",
+   "status": "current",
+   "sha256": "c6dff1a044a6a2fc22ee873671dacb616ffad05a8dc055edcb8c4b81656e8cd7",
+   "bytes": 237,
+   "class_label": "ANALYTICAL",
+   "snapshot_path": "artifacts/docs/EVIDENCE/C4_mass_optimized.csv",
+   "row_count": 4
+  },
+  {
+   "id": "mass_inputs",
+   "path": "materials/parts.yaml",
+   "class": "implementation",
+   "format": "file",
+   "description": "Authored part volumes and material choices for four parts.",
+   "status": "current",
+   "sha256": "b2b65a256c6bfb9fa911b2b79a457d56e8fdf3bf29667c33a936bcd676d70542",
+   "bytes": 526,
+   "class_label": "IMPLEMENTATION",
+   "snapshot_path": "artifacts/materials/parts.yaml"
+  },
+  {
+   "id": "mass_source",
+   "path": "materials/mass_rollup.py",
+   "class": "implementation",
+   "format": "file",
+   "description": "Volume-times-density mass rollup.",
+   "status": "current",
+   "sha256": "7e8b8ca2b46b20102721c645284fc7b1a81e8c4848e30ee4295a8a10260025ec",
+   "bytes": 3555,
+   "class_label": "IMPLEMENTATION",
+   "snapshot_path": "artifacts/materials/mass_rollup.py"
+  },
+  {
+   "id": "mass_summary",
+   "path": "docs/EVIDENCE/C4_mass_summary.json",
+   "class": "analytical",
+   "format": "json",
+   "derived_from": [
+    "mass_source",
+    "mass_inputs"
+   ],
+   "description": "Totals, reduction fraction, and the explicit list of what the rollup excludes.",
+   "status": "current",
+   "sha256": "f2987d38960196ad414a181cbb34e72a85be9245eda11271ca7eb84c51e8a832",
+   "bytes": 783,
+   "class_label": "ANALYTICAL",
+   "snapshot_path": "artifacts/docs/EVIDENCE/C4_mass_summary.json"
+  },
+  {
+   "id": "mass_tests",
+   "path": "tests/test_mass_rollup.py",
+   "class": "test_procedure",
+   "format": "file",
+   "description": "Regression checks against the committed summary.",
+   "status": "current",
+   "sha256": "a553cf030873f9b6ec7a16c35556306a04c8f614de506dae0ccf711425fb6bbb",
+   "bytes": 1319,
+   "class_label": "TEST PROCEDURE",
+   "snapshot_path": "artifacts/tests/test_mass_rollup.py"
+  },
+  {
+   "id": "openrocket_stability_graph",
+   "path": "Simulation/Stability_Graph.png",
+   "class": "simulated",
+   "format": "file",
+   "description": "OpenRocket export. The model revision and simulation settings that produced it are not recorded.",
+   "status": "current",
+   "sha256": "899af6b7a02c5b229ffdb1cac48fa5eaa167b2c9f80bceddd756aefcf0327866",
+   "bytes": 126936,
+   "class_label": "SIMULATED",
+   "snapshot_path": "artifacts/Simulation/Stability_Graph.png"
+  },
+  {
+   "id": "prior_ork",
+   "path": "evidence/archive/C5_openrocket_pre_retune.ork.xml",
+   "class": "implementation",
+   "format": "file",
+   "status": "superseded",
+   "description": "OpenRocket model XML before the fins were revised to meet the paper's margin target (20 mm root chord).",
+   "sha256": "082d383fb9626db223317b7fd008d4e12b4a5c443b448fb0e217a68d48090182",
+   "bytes": 207272,
+   "class_label": "IMPLEMENTATION",
+   "snapshot_path": "artifacts/evidence/archive/C5_openrocket_pre_retune.ork.xml"
+  },
+  {
+   "id": "protocol",
+   "path": "protocol/project33_protocol.json",
+   "class": "implementation",
+   "format": "json",
+   "description": "Canonical message definitions for interpreting captured records.",
+   "status": "current",
+   "sha256": "053b7d49aacfde767a986edf1e8b772a7562d5b6eba67dbabfdbd32da09e728e",
+   "bytes": 5256,
+   "class_label": "IMPLEMENTATION",
+   "snapshot_path": "artifacts/protocol/project33_protocol.json"
+  },
+  {
+   "id": "reliability_failures",
+   "path": "docs/EVIDENCE/C7_reliability.csv",
+   "class": "simulated",
+   "format": "csv",
+   "columns": [
+    "trial",
+    "theta_final",
+    "omega_final",
+    "v_egress",
+    "Cm_alpha"
+   ],
+   "min_rows": 0,
+   "derived_from": [
+    "reliability_source"
+   ],
+   "description": "Failure-only export. Zero rows is only meaningful together with the run record's denominator.",
+   "status": "current",
+   "sha256": "3eb6d15631e45528056f71c8a650326cceff2291ca6132766a2964482e1cc2b6",
+   "bytes": 48,
+   "class_label": "SIMULATED",
+   "snapshot_path": "artifacts/docs/EVIDENCE/C7_reliability.csv",
+   "row_count": 0
+  },
+  {
+   "id": "reliability_run_record",
+   "path": "docs/EVIDENCE/C7_run_record.json",
+   "class": "simulated",
+   "format": "json",
+   "derived_from": [
+    "reliability_source"
+   ],
+   "description": "Trials, successes, failures, seed, sampled ranges, success criterion, and model-structure notes.",
+   "status": "current",
+   "sha256": "1fb2b424083fdd19c5bc2b5645b67b3bbbe210a8adf08fd9d5636703ea427016",
+   "bytes": 1381,
+   "class_label": "SIMULATED",
+   "snapshot_path": "artifacts/docs/EVIDENCE/C7_run_record.json"
+  },
+  {
+   "id": "reliability_source",
+   "path": "Simulation/reliability_sweep.py",
+   "class": "implementation",
+   "format": "file",
+   "description": "Seeded Monte Carlo deployment simulation.",
+   "status": "current",
+   "sha256": "08c76f04ad0476372c26a25a0f51efe3e5002df92d1f92e9c8596b7c307bac99",
+   "bytes": 6404,
+   "class_label": "IMPLEMENTATION",
+   "snapshot_path": "artifacts/Simulation/reliability_sweep.py"
+  },
+  {
+   "id": "reliability_tests",
+   "path": "tests/test_reliability.py",
+   "class": "test_procedure",
+   "format": "file",
+   "description": "Denominator and model-structure checks; no reliability threshold is asserted by CI.",
+   "status": "current",
+   "sha256": "59ebcda5985bd4a48ca0689df833591bef95690a7ef2b9fc8f1481ca51f9ef2f",
+   "bytes": 1405,
+   "class_label": "TEST PROCEDURE",
+   "snapshot_path": "artifacts/tests/test_reliability.py"
+  },
+  {
+   "id": "review_figures_tool",
+   "path": "tools/review_figures.py",
+   "class": "implementation",
+   "format": "file",
+   "description": "Renders deterministic review figures from the tested geometry code; CI fails when a figure is stale.",
+   "status": "current",
+   "sha256": "73d43e02f4f5b7820580b68f93f815fa975d58057cab476e2887b9d3c253e799",
+   "bytes": 7634,
+   "class_label": "IMPLEMENTATION",
+   "snapshot_path": "artifacts/tools/review_figures.py"
+  },
+  {
+   "id": "rocket_firmware",
+   "path": "Firmware/Rocket/src/main.cpp",
+   "class": "implementation",
+   "format": "file",
+   "description": "Rocket loop: 15 g egress trigger, 50 ms requested deploy delay, arming and ignition gates, telemetry.",
+   "status": "current",
+   "sha256": "4a14aac55f7f658ad74cca2738ffa49652595d811e94da35915854bdd5aba926",
+   "bytes": 12956,
+   "class_label": "IMPLEMENTATION",
+   "snapshot_path": "artifacts/Firmware/Rocket/src/main.cpp"
+  },
+  {
+   "id": "scope",
+   "path": "docs/SAFETY.md",
+   "class": "specification",
+   "format": "file",
+   "description": "Current inert research boundary and safety gates.",
+   "status": "current",
+   "sha256": "bb3ac86410075443d0a32f146f80f8995262ef7612f16b4cdc610dc5377e20b7",
+   "bytes": 6520,
+   "class_label": "SPECIFICATION",
+   "snapshot_path": "artifacts/docs/SAFETY.md"
+  },
+  {
+   "id": "spring_data",
+   "path": "docs/EVIDENCE/C6_spring_sweep.json",
+   "class": "analytical",
+   "format": "json",
+   "derived_from": [
+    "spring_source"
+   ],
+   "description": "k_min over egress speed and hinge-moment coefficient. The design point (205 m/s) is not on this grid.",
+   "status": "current",
+   "sha256": "9db0f75cf68ece3fed03cc87abbcda3f4c8af4edcb0c1a115679004f277208cc",
+   "bytes": 7815,
+   "class_label": "ANALYTICAL",
+   "snapshot_path": "artifacts/docs/EVIDENCE/C6_spring_sweep.json"
+  },
+  {
+   "id": "spring_design_point",
+   "path": "docs/EVIDENCE/C6_design_point.json",
+   "class": "analytical",
+   "format": "json",
+   "derived_from": [
+    "spring_source"
+   ],
+   "description": "The single calculation the C6 claim rests on, with every input stated.",
+   "status": "current",
+   "sha256": "85e82763995ff0f76e2c58b297a01fa844f00939d3c7f9ed6279aef7516823d0",
+   "bytes": 985,
+   "class_label": "ANALYTICAL",
+   "snapshot_path": "artifacts/docs/EVIDENCE/C6_design_point.json"
+  },
+  {
+   "id": "spring_plot",
+   "path": "docs/EVIDENCE/C6_spring_sweep_plot.png",
+   "class": "analytical",
+   "format": "file",
+   "derived_from": [
+    "spring_source"
+   ],
+   "description": "Rendered sweep.",
+   "status": "current",
+   "sha256": "0708c30e661880a0bdf1c1f4c1b36644119670a76b1a63b9272786710a4c50ed",
+   "bytes": 59631,
+   "class_label": "ANALYTICAL",
+   "snapshot_path": "artifacts/docs/EVIDENCE/C6_spring_sweep_plot.png"
+  },
+  {
+   "id": "spring_source",
+   "path": "mechanism/spring_sizing.py",
+   "class": "implementation",
+   "format": "file",
+   "description": "Minimum spring-rate calculation and design-point record.",
+   "status": "current",
+   "sha256": "c19a9aadb9bc574cf732a49e7595d307a42de02956ea81db916430a52d1241d8",
+   "bytes": 5305,
+   "class_label": "IMPLEMENTATION",
+   "snapshot_path": "artifacts/mechanism/spring_sizing.py"
+  },
+  {
+   "id": "spring_tests",
+   "path": "tests/test_spring_sizing.py",
+   "class": "test_procedure",
+   "format": "file",
+   "description": "Input validation and margin-arithmetic checks.",
+   "status": "current",
+   "sha256": "24e6e66c244c84fd95d3e462c07a0411ae34fc49ab589dfd84411ec68e8d6f38",
+   "bytes": 2634,
+   "class_label": "TEST PROCEDURE",
+   "snapshot_path": "artifacts/tests/test_spring_sizing.py"
+  },
+  {
+   "id": "stability_data",
+   "path": "docs/EVIDENCE/C5_static_margin.csv",
+   "class": "analytical",
+   "format": "csv",
+   "columns": [
+    "time_s",
+    "cg_m",
+    "cp_m",
+    "sm_calibers"
+   ],
+   "min_rows": 1,
+   "derived_from": [
+    "stability_source",
+    "stability_inputs"
+   ],
+   "description": "Reference model static margin during the assumed burn.",
+   "status": "current",
+   "sha256": "11dbead6cfeabb560443aff7536136816eb47eef446a0b9de4be19ffd702f0cc",
+   "bytes": 447,
+   "class_label": "ANALYTICAL",
+   "snapshot_path": "artifacts/docs/EVIDENCE/C5_static_margin.csv",
+   "row_count": 19
+  },
+  {
+   "id": "stability_inputs",
+   "path": "Simulation/Folding Stabilized Rocket.ork",
+   "class": "implementation",
+   "format": "file",
+   "description": "Current OpenRocket model (fins revised to 130/110/180 mm; motor G64W).",
+   "status": "current",
+   "sha256": "26087d70e4929b10acc960569d8211b4f2985004c545698ccd52e07eed02ae6a",
+   "bytes": 51599,
+   "class_label": "IMPLEMENTATION",
+   "snapshot_path": "artifacts/Simulation/Folding Stabilized Rocket.ork"
+  },
+  {
+   "id": "stability_plot",
+   "path": "docs/EVIDENCE/C5_static_margin.png",
+   "class": "analytical",
+   "format": "file",
+   "derived_from": [
+    "stability_source",
+    "stability_inputs"
+   ],
+   "description": "Rendered reference-model margin. Values are in the CSV.",
+   "status": "current",
+   "sha256": "f25b14f130e2ba14940f37abfbae4483f818ed10ab531bb901dfbe85b5866d17",
+   "bytes": 41087,
+   "class_label": "ANALYTICAL",
+   "snapshot_path": "artifacts/docs/EVIDENCE/C5_static_margin.png"
+  },
+  {
+   "id": "stability_record",
+   "path": "docs/EVIDENCE/C5_static_margin_inputs.json",
+   "class": "analytical",
+   "format": "json",
+   "derived_from": [
+    "stability_source",
+    "stability_inputs"
+   ],
+   "description": "Every input the reference calculation used, including the motor it assumed and the one the OpenRocket file specifies.",
+   "status": "current",
+   "sha256": "642c367181cab4d0b1b66054ddc0ee6c1a31af8b9c62560b3454f56ab32da821",
+   "bytes": 1229,
+   "class_label": "ANALYTICAL",
+   "snapshot_path": "artifacts/docs/EVIDENCE/C5_static_margin_inputs.json"
+  },
+  {
+   "id": "stability_source",
+   "path": "Simulation/static_margin.py",
+   "class": "implementation",
+   "format": "file",
+   "description": "Reference Barrowman static-margin script with a hard-coded motor burn.",
+   "status": "current",
+   "sha256": "4e5749eb7ef8b3d0fa209980e1d999ce7535fc7d145496401876d656d4e4181b",
+   "bytes": 9972,
+   "class_label": "IMPLEMENTATION",
+   "snapshot_path": "artifacts/Simulation/static_margin.py"
+  },
+  {
+   "id": "stability_tests",
+   "path": "tests/test_static_margin.py",
+   "class": "test_procedure",
+   "format": "file",
+   "description": "Parser and regression checks; no stability window is asserted by CI.",
+   "status": "current",
+   "sha256": "859d50abe84990d69446cff6b1e61afbdfc935efd1f3c5510aeabf322c782666",
+   "bytes": 3062,
+   "class_label": "TEST PROCEDURE",
+   "snapshot_path": "artifacts/tests/test_static_margin.py"
+  },
+  {
+   "id": "structural_data",
+   "path": "docs/EVIDENCE/C8_clt.csv",
+   "class": "analytical",
+   "format": "csv",
+   "columns": [
+    "Property",
+    "Value_GPa"
+   ],
+   "min_rows": 1,
+   "derived_from": [
+    "structural_source"
+   ],
+   "description": "Laminate equivalent moduli.",
+   "status": "current",
+   "sha256": "67193424e7210d4f392760ef104911b2d0bcab7ebefe05b030185d9ca3a3b922",
+   "bytes": 47,
+   "class_label": "ANALYTICAL",
+   "snapshot_path": "artifacts/docs/EVIDENCE/C8_clt.csv",
+   "row_count": 3
+  },
+  {
+   "id": "structural_source",
+   "path": "structures/fea_lite.py",
+   "class": "implementation",
+   "format": "file",
+   "description": "Classical laminate theory and closed-form hinge-pin check.",
+   "status": "current",
+   "sha256": "f8a0d02ca9d9134604acf4141ce16c20aa27d2a9bc5e739f389824eeaf1fc6a6",
+   "bytes": 4101,
+   "class_label": "IMPLEMENTATION",
+   "snapshot_path": "artifacts/structures/fea_lite.py"
+  },
+  {
+   "id": "structural_tests",
+   "path": "tests/test_structural.py",
+   "class": "test_procedure",
+   "format": "file",
+   "description": "Laminate isotropy and regression checks.",
+   "status": "current",
+   "sha256": "3a6078b66cfcaa8b98f3508a08326ce8f7483f149363eba2f28f811691a487a8",
+   "bytes": 896,
+   "class_label": "TEST PROCEDURE",
+   "snapshot_path": "artifacts/tests/test_structural.py"
+  },
+  {
+   "id": "timing_bench_sketch",
+   "path": "Firmware/Rocket/tests/bench_deploy_isr.ino",
+   "class": "implementation",
+   "format": "file",
+   "description": "Bench sketch that times the deploy callback with the same esp_timer clock it is measuring.",
+   "status": "current",
+   "sha256": "add4c75d552ef7640487daeb7eecf33def960ea100b510accad1590417658419",
+   "bytes": 973,
+   "class_label": "IMPLEMENTATION",
+   "snapshot_path": "artifacts/Firmware/Rocket/tests/bench_deploy_isr.ino"
+  },
+  {
+   "id": "timing_fixture",
+   "path": "docs/EVIDENCE/C2_latency.csv",
+   "class": "synthetic",
+   "format": "csv",
+   "columns": [
+    "trial",
+    "requested_us",
+    "actual_us",
+    "jitter_us",
+    "origin"
+   ],
+   "min_rows": 1,
+   "origin_column": "origin",
+   "description": "Synthetic timing fixture with the bench sketch's column layout. Every row carries origin=synthetic-fixture.",
+   "status": "current",
+   "sha256": "8cf6f0fe7a94d49f4c3a872fdd400437addce23f03057ae8abe22bb778e69467",
+   "bytes": 794,
+   "class_label": "SYNTHETIC",
+   "snapshot_path": "artifacts/docs/EVIDENCE/C2_latency.csv",
+   "row_count": 21,
+   "origins_in_data": [
+    "synthetic-fixture"
+   ]
+  },
+  {
+   "id": "timing_header",
+   "path": "Firmware/Rocket/src/deploy_isr.h",
+   "class": "implementation",
+   "format": "file",
+   "description": "Deploy-timer interface and threshold constants.",
+   "status": "current",
+   "sha256": "cd28abe0e40b3a53f98a2f04c03ff740f24a1457bf2d0dd818267a5952c88c9f",
+   "bytes": 1002,
+   "class_label": "IMPLEMENTATION",
+   "snapshot_path": "artifacts/Firmware/Rocket/src/deploy_isr.h"
+  },
+  {
+   "id": "timing_source",
+   "path": "Firmware/Rocket/src/deploy_isr.cpp",
+   "class": "implementation",
+   "format": "file",
+   "description": "One-shot esp_timer callback that latches the deploy output on GPIO 33.",
+   "status": "current",
+   "sha256": "013cb6614c2cdb6b2d7a45cce893f89134e6f03cc5acc161dd36b5b23bec4028",
+   "bytes": 1891,
+   "class_label": "IMPLEMENTATION",
+   "snapshot_path": "artifacts/Firmware/Rocket/src/deploy_isr.cpp"
+  },
+  {
+   "id": "timing_tests",
+   "path": "tests/test_deploy_latency.py",
+   "class": "test_procedure",
+   "format": "file",
+   "description": "Checks fixture labeling and summary arithmetic; not a timing benchmark.",
+   "status": "current",
+   "sha256": "2012e20b2348325ddf94478678f8f8e053a5ad09e5b501ed9391797250fd8540",
+   "bytes": 1480,
+   "class_label": "TEST PROCEDURE",
+   "snapshot_path": "artifacts/tests/test_deploy_latency.py"
+  }
+ ],
+ "claims": [
+  {
+   "id": "C1",
+   "title": "Folding-fin mechanism model",
+   "question": "Can the specified four-bar linkage carry the fin from folded (0 deg) to 92 deg and hold it over-center?",
+   "statement": "In the planar model, the specified baseline linkage (ground 25, coupler 60, input 15, output 15 mm) cannot close at any drive angle from 0 to 92 deg, and none of the 81 swept variants can. Transmission-angle and envelope requirements therefore cannot be evaluated, and over-center locking is not modeled.",
+   "status": "contradicted",
+   "gate": "analytical_model",
+   "evidence": [
+    "four_bar_source",
+    "four_bar_data",
+    "four_bar_plot",
+    "c1_closure_figure",
+    "four_bar_tests",
+    "four_bar_cad_script",
+    "four_bar_step"
+   ],
+   "historical": [
+    "c1_note_v1",
+    "c1_sweep_v1",
+    "c1_tests_v1"
+   ],
+   "requirements": [
+    "R-C1-CLOSURE",
+    "R-C1-TRANSMISSION",
+    "R-C1-LOCK"
+   ],
+   "predictions": [],
+   "assumptions": [
+    "The mechanism is a planar, pin-jointed four-bar loop.",
+    "Link lengths are pin-centre distances in millimetres.",
+    "The drive angle is measured from the folded position."
+   ],
+   "limitations": [
+    "A planar model cannot tell whether a different topology or pivot layout was intended.",
+    "Loop geometry says nothing about loads, clearance, compliance, or locking torque.",
+    "Rendered or exported CAD of the links is not evidence that the mechanism assembles."
+   ],
+   "concerns": [
+    "Which topology and dimensions were intended? The recorded dimensions cannot form a closed loop (D-002)."
+   ],
+   "measurement_needed": [
+    "Reviewer confirmation of the intended link dimensions and topology.",
+    "A revised, reviewed model; only then an inert, instrumented deployment test of a printed linkage."
+   ],
+   "measurement_tags": [
+    "mechanism"
+   ],
+   "status_label": "CONTRADICTED",
+   "status_meaning": "Current evidence contradicts the claim or one of its requirements.",
+   "gate_label": "ANALYTICAL MODEL",
+   "support": "model",
+   "support_label": "MODEL ONLY",
+   "evidence_classes": [
+    "implementation",
+    "test_procedure",
+    "analytical"
+   ],
+   "has_accepted_physical_evidence": false,
+   "has_synthetic_only_data": false,
+   "requirement_results": [
+    {
+     "id": "R-C1-CLOSURE",
+     "result": "not_satisfied",
+     "label": "NOT SATISFIED",
+     "evidence_class": "analytical"
+    },
+    {
+     "id": "R-C1-TRANSMISSION",
+     "result": "not_evaluable",
+     "label": "NOT EVALUABLE",
+     "evidence_class": "analytical"
+    },
+    {
+     "id": "R-C1-LOCK",
+     "result": "not_measured",
+     "label": "NOT MEASURED",
+     "evidence_class": null
+    }
+   ],
+   "discrepancies_open": [
+    "D-002",
+    "D-004",
+    "D-005"
+   ],
+   "discrepancies_resolved": [
+    "D-001",
+    "D-003"
+   ],
+   "known_contradictions": [
+    "R-C1-CLOSURE",
+    "D-002",
+    "D-004"
+   ],
+   "preregistrations": [],
+   "freshness": {
+    "state": "current",
+    "states": [
+     "current"
+    ],
+    "changed": [],
+    "missing": [],
+    "review": {
+     "kind": "snapshot",
+     "recorded": "2026-09-28",
+     "recorded_by": "tooling snapshot (no human review)",
+     "note": "Added the loop-closure review figure; D-002 now states the 0-92 deg B-D maximum (29.6 mm) precisely. Claim statement unchanged.",
+     "independent": false
+    }
+   },
+   "freshness_label": "CURRENT",
+   "affected_by_changes": [
+    "CAD Files/Four Bar Linkage.step",
+    "CAD Files/FusionScripts/Project33FourBar/Project33FourBar.py",
+    "docs/EVIDENCE/C1_four_bar_plot.png",
+    "docs/EVIDENCE/C1_four_bar_sweep.json",
+    "docs/assets/review/c1_loop_closure.svg",
+    "mechanism/four_bar.py",
+    "tests/test_four_bar.py",
+    "tools/review_figures.py"
+   ],
+   "not_established": [
+    "Any inert physical measurement: none has been accepted for this claim.",
+    "Physical performance of any hardware.",
+    "Flight readiness or safety for live propulsion."
+   ]
+  },
+  {
+   "id": "C2",
+   "title": "Deployment timing",
+   "question": "Does the hardware-timed deploy output fire at the requested delay with sub-millisecond jitter, without blocking the control loop?",
+   "statement": "Firmware schedules the deploy output with a one-shot esp_timer at a requested 50 ms delay. No hardware timing has been measured; the only timing data is a 21-row synthetic fixture that exercises report arithmetic.",
+   "status": "open",
+   "gate": "synthetic_test",
+   "evidence": [
+    "timing_source",
+    "timing_header",
+    "rocket_firmware",
+    "timing_fixture",
+    "timing_tests",
+    "firmware_safety_tests",
+    "timing_bench_sketch"
+   ],
+   "historical": [
+    "c2_note_v1"
+   ],
+   "requirements": [
+    "R-C2-JITTER",
+    "R-C2-NONBLOCKING"
+   ],
+   "predictions": [
+    "PRED-C2-DELAY"
+   ],
+   "assumptions": [
+    "The requested delay in firmware is the intended deployment delay.",
+    "Jitter means the spread of output-edge time relative to the trigger, measured by an instrument independent of the ESP32 clock."
+   ],
+   "limitations": [
+    "Synthetic values do not demonstrate timer, scheduler, or actuator behavior.",
+    "Twenty-one rows cannot bound a tail latency even if they were real.",
+    "The existing bench sketch times the callback with the clock it is measuring (D-024)."
+   ],
+   "concerns": [
+    "No hardware timing capture exists."
+   ],
+   "measurement_needed": [
+    "Inert GPIO 33 edge timing against an external trigger reference, per proposed pre-registration P-001."
+   ],
+   "measurement_tags": [
+    "timing"
+   ],
+   "status_label": "UNRESOLVED",
+   "status_meaning": "An open question, conflict, or missing measurement blocks a stronger statement.",
+   "gate_label": "SYNTHETIC TEST",
+   "support": "implementation",
+   "support_label": "IMPLEMENTATION ONLY",
+   "evidence_classes": [
+    "implementation",
+    "synthetic",
+    "test_procedure"
+   ],
+   "has_accepted_physical_evidence": false,
+   "has_synthetic_only_data": true,
+   "requirement_results": [
+    {
+     "id": "R-C2-JITTER",
+     "result": "not_measured",
+     "label": "NOT MEASURED",
+     "evidence_class": null
+    },
+    {
+     "id": "R-C2-NONBLOCKING",
+     "result": "requires_human_review",
+     "label": "REQUIRES HUMAN REVIEW",
+     "evidence_class": null
+    }
+   ],
+   "discrepancies_open": [
+    "D-017",
+    "D-018",
+    "D-024",
+    "D-025"
+   ],
+   "discrepancies_resolved": [
+    "D-016"
+   ],
+   "known_contradictions": [],
+   "preregistrations": [
+    "P-001"
+   ],
+   "freshness": {
+    "state": "current",
+    "states": [
+     "current"
+    ],
+    "changed": [],
+    "missing": [],
+    "review": {
+     "kind": "snapshot",
+     "recorded": "2026-11-01",
+     "recorded_by": "tooling snapshot (no human review)",
+     "note": "Added D-025 from reading the abort path in both firmwares: a launcher abort leaves an armed rocket armed. It is informational for C2 because deployment timing is unchanged; it does affect when the deploy trigger is live. No firmware changed. Automated snapshot, not a human review.",
+     "independent": false
+    }
+   },
+   "freshness_label": "CURRENT",
+   "affected_by_changes": [
+    "Firmware/Rocket/src/deploy_isr.cpp",
+    "Firmware/Rocket/src/deploy_isr.h",
+    "Firmware/Rocket/src/main.cpp",
+    "Firmware/Rocket/tests/bench_deploy_isr.ino",
+    "docs/EVIDENCE/C2_latency.csv",
+    "tests/test_deploy_latency.py",
+    "tests/test_firmware_safety.py"
+   ],
+   "not_established": [
+    "Any inert physical measurement: none has been accepted for this claim.",
+    "Physical performance of any hardware.",
+    "Flight readiness or safety for live propulsion."
+   ]
+  },
+  {
+   "id": "C3",
+   "title": "CAD generator software",
+   "question": "Does the parametric generator produce correct NACA 4-digit coordinates and exportable solids?",
+   "statement": "The NACA 4-digit generator's coordinates, symmetry, input validation, and STEP export are covered by automated tests. Test source is committed; a record that the tests ran exists only in reviews built with an execution record.",
+   "status": "supported_within_limits",
+   "gate": "software_reproduction",
+   "evidence": [
+    "cad_source",
+    "cad_fusion_script",
+    "c3_profile_figure",
+    "cad_tests",
+    "cad_install_tests",
+    "ci"
+   ],
+   "historical": [
+    "c3_note_v1"
+   ],
+   "requirements": [
+    "R-C3-PROFILE",
+    "R-C3-STEP"
+   ],
+   "predictions": [],
+   "assumptions": [
+    "The pinned CadQuery version and the test environment match the CI workflow."
+   ],
+   "limitations": [
+    "Generating a solid does not establish aerodynamic or structural performance.",
+    "Fusion 360 behavior is not exercised by CI; only the geometry module and packaging are."
+   ],
+   "concerns": [],
+   "measurement_needed": [
+    "Independent inspection of an exported fin profile against the NACA definition."
+   ],
+   "measurement_tags": [],
+   "status_label": "SUPPORTED WITHIN STATED LIMITS",
+   "status_meaning": "Evidence supports the statement as worded, at its evidence class only.",
+   "gate_label": "SOFTWARE REPRODUCTION",
+   "support": "implementation",
+   "support_label": "IMPLEMENTATION ONLY",
+   "evidence_classes": [
+    "implementation",
+    "test_procedure"
+   ],
+   "has_accepted_physical_evidence": false,
+   "has_synthetic_only_data": false,
+   "requirement_results": [
+    {
+     "id": "R-C3-PROFILE",
+     "result": "not_evaluated",
+     "label": "NOT EVALUATED IN THIS BUILD",
+     "evidence_class": null
+    },
+    {
+     "id": "R-C3-STEP",
+     "result": "not_evaluated",
+     "label": "NOT EVALUATED IN THIS BUILD",
+     "evidence_class": null
+    }
+   ],
+   "discrepancies_open": [],
+   "discrepancies_resolved": [],
+   "known_contradictions": [],
+   "preregistrations": [],
+   "freshness": {
+    "state": "current",
+    "states": [
+     "current"
+    ],
+    "changed": [],
+    "missing": [],
+    "review": {
+     "kind": "snapshot",
+     "recorded": "2026-09-29",
+     "recorded_by": "tooling snapshot (no human review)",
+     "note": "CI job display name restored to 'Python docs and telemetry checks' so required-check settings keep matching; job steps unchanged.",
+     "independent": false
+    }
+   },
+   "freshness_label": "CURRENT",
+   "affected_by_changes": [
+    ".github/workflows/ci.yml",
+    "CAD Files/FusionScripts/Project33NacaFin/Project33NacaFin.py",
+    "CAD Files/naca_fin_generator.py",
+    "docs/assets/review/c3_naca0012_profile.svg",
+    "tests/test_fusion_script_install.py",
+    "tests/test_naca_fin_generator.py",
+    "tools/review_figures.py"
+   ],
+   "not_established": [
+    "Any inert physical measurement: none has been accepted for this claim.",
+    "Physical performance of any hardware.",
+    "Flight readiness or safety for live propulsion."
+   ]
+  },
+  {
+   "id": "C4",
+   "title": "Material mass accounting",
+   "question": "Does substituting CFRP and Ti-6Al-4V for the baseline materials reduce mass by 30-40%?",
+   "statement": "For the four parts listed in parts.yaml, substituting CFRP and Ti-6Al-4V for 7075-T6 reduces calculated mass by 36.0% (98.1 g to 62.8 g). No part has been weighed, the listed baseline is not the PLA/PETG prototype, and the listed fin volume is inconsistent with the fin mass used by C6 and C8.",
+   "status": "open",
+   "gate": "software_reproduction",
+   "evidence": [
+    "mass_source",
+    "mass_inputs",
+    "mass_baseline",
+    "mass_candidate",
+    "mass_summary",
+    "mass_tests",
+    "cad_materials_doc"
+   ],
+   "historical": [
+    "c4_note_v1"
+   ],
+   "requirements": [
+    "R-C4-REDUCTION",
+    "R-C4-SCOPE"
+   ],
+   "predictions": [],
+   "assumptions": [
+    "Part volumes, densities, and the four-part scope represent the assembly the claim is about."
+   ],
+   "limitations": [
+    "Calculated differences are not measured savings.",
+    "Electronics, servos, fasteners, motor, and manufacturing variation are excluded.",
+    "The candidate materials have not been built."
+   ],
+   "concerns": [
+    "The rollup's fin (about 5 g in CFRP) and the 154 g fin used by C6 and C8 cannot both describe the same design (D-010).",
+    "The 7075-T6 baseline is not the printed prototype (D-022)."
+   ],
+   "measurement_needed": [
+    "One reconciled design point shared by C4, C6, C7, and C8.",
+    "As-built part masses on a calibrated scale for whatever is actually built."
+   ],
+   "measurement_tags": [
+    "mass"
+   ],
+   "status_label": "UNRESOLVED",
+   "status_meaning": "An open question, conflict, or missing measurement blocks a stronger statement.",
+   "gate_label": "SOFTWARE REPRODUCTION",
+   "support": "model",
+   "support_label": "MODEL ONLY",
+   "evidence_classes": [
+    "specification",
+    "implementation",
+    "test_procedure",
+    "analytical"
+   ],
+   "has_accepted_physical_evidence": false,
+   "has_synthetic_only_data": false,
+   "requirement_results": [
+    {
+     "id": "R-C4-REDUCTION",
+     "result": "satisfied",
+     "label": "SATISFIED",
+     "evidence_class": "analytical"
+    },
+    {
+     "id": "R-C4-SCOPE",
+     "result": "requires_human_review",
+     "label": "REQUIRES HUMAN REVIEW",
+     "evidence_class": null
+    }
+   ],
+   "discrepancies_open": [
+    "D-010",
+    "D-022"
+   ],
+   "discrepancies_resolved": [],
+   "known_contradictions": [],
+   "preregistrations": [],
+   "freshness": {
+    "state": "current",
+    "states": [
+     "current"
+    ],
+    "changed": [],
+    "missing": [],
+    "review": {
+     "kind": "snapshot",
+     "recorded": "2026-09-28",
+     "recorded_by": "tooling snapshot (no human review)",
+     "note": "CAD_ASSEMBLIES.md gained review figures and a CAD-versus-model discrepancy table; material plan unchanged.",
+     "independent": false
+    }
+   },
+   "freshness_label": "CURRENT",
+   "affected_by_changes": [
+    "docs/CAD_ASSEMBLIES.md",
+    "docs/EVIDENCE/C4_mass_baseline.csv",
+    "docs/EVIDENCE/C4_mass_optimized.csv",
+    "docs/EVIDENCE/C4_mass_summary.json",
+    "materials/mass_rollup.py",
+    "materials/parts.yaml",
+    "tests/test_mass_rollup.py"
+   ],
+   "not_established": [
+    "Any inert physical measurement: none has been accepted for this claim.",
+    "Physical performance of any hardware.",
+    "Flight readiness or safety for live propulsion."
+   ]
+  },
+  {
+   "id": "C5",
+   "title": "Static-stability model",
+   "question": "Does the modeled rocket keep a static margin of 1.5-2.0 calibers through the motor burn?",
+   "statement": "The reference Barrowman script reports 1.55-1.57 cal during a hard-coded Estes C6-5 burn. An unreviewed textbook re-derivation of the fin terms, sharing every other input, gives 0.74-0.76 cal. The two disagree about the 1.5-2.0 cal window, and the script's motor differs from the OpenRocket model's AeroTech G64W.",
+   "status": "open",
+   "gate": "software_reproduction",
+   "evidence": [
+    "stability_source",
+    "stability_inputs",
+    "stability_data",
+    "stability_record",
+    "stability_plot",
+    "crosscheck_source",
+    "crosscheck_data",
+    "openrocket_stability_graph",
+    "stability_tests",
+    "divergence_log"
+   ],
+   "historical": [
+    "c5_note_v1",
+    "prior_ork"
+   ],
+   "requirements": [
+    "R-C5-WINDOW",
+    "R-C5-FORMULATION"
+   ],
+   "predictions": [
+    "PRED-C5-DRY-CG"
+   ],
+   "assumptions": [
+    "The OpenRocket file's geometry and override masses describe the intended rocket.",
+    "A Barrowman static margin is the quantity the 1.5-2.0 cal target refers to."
+   ],
+   "limitations": [
+    "A static margin does not establish dynamic stability or flight readiness.",
+    "The fin geometry was revised to meet the target; matching a target is not validation (D-009).",
+    "Neither model has been independently reviewed."
+   ],
+   "concerns": [
+    "Which fin-term formulation is correct for this geometry (D-006)?",
+    "Which motor should the CG history use (D-007)?"
+   ],
+   "measurement_needed": [
+    "Independent review of the Barrowman formulation and inputs.",
+    "An inert balance-point measurement of the assembled airframe's dry CG (compare to PRED-C5-DRY-CG)."
+   ],
+   "measurement_tags": [
+    "mass",
+    "cg"
+   ],
+   "status_label": "UNRESOLVED",
+   "status_meaning": "An open question, conflict, or missing measurement blocks a stronger statement.",
+   "gate_label": "SOFTWARE REPRODUCTION",
+   "support": "model",
+   "support_label": "MODEL ONLY",
+   "evidence_classes": [
+    "specification",
+    "implementation",
+    "test_procedure",
+    "analytical",
+    "simulated"
+   ],
+   "has_accepted_physical_evidence": false,
+   "has_synthetic_only_data": false,
+   "requirement_results": [
+    {
+     "id": "R-C5-WINDOW",
+     "result": "conflicting",
+     "label": "MODELS DISAGREE",
+     "evidence_class": "analytical"
+    },
+    {
+     "id": "R-C5-FORMULATION",
+     "result": "requires_human_review",
+     "label": "REQUIRES HUMAN REVIEW",
+     "evidence_class": null
+    }
+   ],
+   "discrepancies_open": [
+    "D-006",
+    "D-007",
+    "D-008",
+    "D-009",
+    "D-023"
+   ],
+   "discrepancies_resolved": [],
+   "known_contradictions": [
+    "R-C5-WINDOW",
+    "D-006"
+   ],
+   "preregistrations": [],
+   "freshness": {
+    "state": "current",
+    "states": [
+     "current"
+    ],
+    "changed": [],
+    "missing": [],
+    "review": {
+     "kind": "snapshot",
+     "recorded": "2026-09-28",
+     "recorded_by": "tooling snapshot (no human review)",
+     "note": "Divergence log prefaced as a superseded historical record; content unchanged.",
+     "independent": false
+    }
+   },
+   "freshness_label": "CURRENT",
+   "affected_by_changes": [
+    "Simulation/Folding Stabilized Rocket.ork",
+    "Simulation/Stability_Graph.png",
+    "Simulation/barrowman_crosscheck.py",
+    "Simulation/static_margin.py",
+    "docs/EVIDENCE/C5_barrowman_crosscheck.json",
+    "docs/EVIDENCE/C5_static_margin.csv",
+    "docs/EVIDENCE/C5_static_margin.png",
+    "docs/EVIDENCE/C5_static_margin_inputs.json",
+    "docs/EVIDENCE/CHANGELOG.md",
+    "tests/test_static_margin.py"
+   ],
+   "not_established": [
+    "Any inert physical measurement: none has been accepted for this claim.",
+    "Physical performance of any hardware.",
+    "Flight readiness or safety for live propulsion."
+   ]
+  },
+  {
+   "id": "C6",
+   "title": "Spring margin consistency",
+   "question": "Does the stated 220 N*m/rad torsion spring exceed the calculated minimum rate by at least 20%?",
+   "statement": "At the stated design point the calculated minimum spring rate is 184.9 N*m/rad. The stated 220 N*m/rad spring gives a 19.0% margin, below the stated requirement of at least 20%. No spring has been characterized.",
+   "status": "contradicted",
+   "gate": "software_reproduction",
+   "evidence": [
+    "spring_source",
+    "spring_data",
+    "spring_design_point",
+    "spring_plot",
+    "spring_tests"
+   ],
+   "historical": [
+    "c6_note_v1",
+    "c6_tests_v1"
+   ],
+   "requirements": [
+    "R-C6-KMIN",
+    "R-C6-MARGIN",
+    "R-C6-SPRING-RATE"
+   ],
+   "predictions": [
+    "PRED-C6-SPRING-RATE"
+   ],
+   "assumptions": [
+    "The requirement and the reported margin use the same definition: (k_supplied - k_min) / k_min.",
+    "The design point (205 m/s, 120 mm chord, 154 g fin, 50 ms deployment) is the intended one."
+   ],
+   "limitations": [
+    "The damping treatment divides by (1 - damping ratio), a heuristic.",
+    "Design-point inputs were revised to match the paper's k_min (D-009).",
+    "No component has been measured."
+   ],
+   "concerns": [
+    "The calculated margin is below the stated requirement (D-011)."
+   ],
+   "measurement_needed": [
+    "A decision on the requirement or the spring, recorded by a human.",
+    "Inert torque-angle characterization of the supplied spring (proposed pre-registration P-002)."
+   ],
+   "measurement_tags": [
+    "spring"
+   ],
+   "status_label": "CONTRADICTED",
+   "status_meaning": "Current evidence contradicts the claim or one of its requirements.",
+   "gate_label": "SOFTWARE REPRODUCTION",
+   "support": "model",
+   "support_label": "MODEL ONLY",
+   "evidence_classes": [
+    "implementation",
+    "test_procedure",
+    "analytical"
+   ],
+   "has_accepted_physical_evidence": false,
+   "has_synthetic_only_data": false,
+   "requirement_results": [
+    {
+     "id": "R-C6-KMIN",
+     "result": "satisfied",
+     "label": "SATISFIED",
+     "evidence_class": "analytical"
+    },
+    {
+     "id": "R-C6-MARGIN",
+     "result": "not_satisfied",
+     "label": "NOT SATISFIED",
+     "evidence_class": "analytical"
+    },
+    {
+     "id": "R-C6-SPRING-RATE",
+     "result": "not_measured",
+     "label": "NOT MEASURED",
+     "evidence_class": null
+    }
+   ],
+   "discrepancies_open": [
+    "D-009",
+    "D-010",
+    "D-011"
+   ],
+   "discrepancies_resolved": [
+    "D-012"
+   ],
+   "known_contradictions": [
+    "R-C6-MARGIN",
+    "D-011"
+   ],
+   "preregistrations": [
+    "P-002"
+   ],
+   "freshness": {
+    "state": "current",
+    "states": [
+     "current"
+    ],
+    "changed": [],
+    "missing": [],
+    "review": {
+     "kind": "snapshot",
+     "recorded": "2026-09-28",
+     "recorded_by": "tooling snapshot (no human review)",
+     "note": "Baseline snapshot after the evidence-discipline rewrite; detects later change. Not an engineering review.",
+     "independent": false
+    }
+   },
+   "freshness_label": "CURRENT",
+   "affected_by_changes": [
+    "docs/EVIDENCE/C6_design_point.json",
+    "docs/EVIDENCE/C6_spring_sweep.json",
+    "docs/EVIDENCE/C6_spring_sweep_plot.png",
+    "mechanism/spring_sizing.py",
+    "tests/test_spring_sizing.py"
+   ],
+   "not_established": [
+    "Any inert physical measurement: none has been accepted for this claim.",
+    "Physical performance of any hardware.",
+    "Flight readiness or safety for live propulsion."
+   ]
+  },
+  {
+   "id": "C7",
+   "title": "Deployment reliability evidence",
+   "question": "Does simulated deployment succeed in at least 99.9% of trials under manufacturing tolerances, and is that simulation informative?",
+   "statement": "A seeded 10,000-trial deployment simulation records 10,000 successes, and the denominator is now explicit. The model cannot fail its velocity criterion for a locked trial and uses a different fin and speed than C6, so the 100% figure does not discriminate between designs. No physical deployment has been observed.",
+   "status": "open",
+   "gate": "software_reproduction",
+   "evidence": [
+    "reliability_source",
+    "reliability_failures",
+    "reliability_run_record",
+    "reliability_tests"
+   ],
+   "historical": [
+    "c7_note_v1"
+   ],
+   "requirements": [
+    "R-C7-RELIABILITY",
+    "R-C7-PHYSICAL"
+   ],
+   "predictions": [
+    "PRED-C7-LOCK-FRACTION"
+   ],
+   "assumptions": [
+    "A reliability statement needs a trial count, seed, model revision, and outcome definition."
+   ],
+   "limitations": [
+    "Simulation outcomes do not measure physical reliability.",
+    "No empirical confidence bound is asserted.",
+    "The simulated fin, speed, and spring treatment differ from C6 (D-010, D-013)."
+   ],
+   "concerns": [
+    "The success criterion cannot fail for a locked trial, so the result cannot discriminate designs (D-013)."
+   ],
+   "measurement_needed": [
+    "A reviewed model whose failure modes can occur, run at the shared design point.",
+    "Repeated inert deployment trials of a physical mechanism once C1 is resolved."
+   ],
+   "measurement_tags": [
+    "mechanism"
+   ],
+   "status_label": "UNRESOLVED",
+   "status_meaning": "An open question, conflict, or missing measurement blocks a stronger statement.",
+   "gate_label": "SOFTWARE REPRODUCTION",
+   "support": "model",
+   "support_label": "MODEL ONLY",
+   "evidence_classes": [
+    "implementation",
+    "test_procedure",
+    "simulated"
+   ],
+   "has_accepted_physical_evidence": false,
+   "has_synthetic_only_data": false,
+   "requirement_results": [
+    {
+     "id": "R-C7-RELIABILITY",
+     "result": "satisfied",
+     "label": "SATISFIED",
+     "evidence_class": "simulated"
+    },
+    {
+     "id": "R-C7-PHYSICAL",
+     "result": "not_measured",
+     "label": "NOT MEASURED",
+     "evidence_class": null
+    }
+   ],
+   "discrepancies_open": [
+    "D-010",
+    "D-013"
+   ],
+   "discrepancies_resolved": [
+    "D-014"
+   ],
+   "known_contradictions": [],
+   "preregistrations": [],
+   "freshness": {
+    "state": "current",
+    "states": [
+     "current"
+    ],
+    "changed": [],
+    "missing": [],
+    "review": {
+     "kind": "snapshot",
+     "recorded": "2026-09-28",
+     "recorded_by": "tooling snapshot (no human review)",
+     "note": "Baseline snapshot after the evidence-discipline rewrite; detects later change. Not an engineering review.",
+     "independent": false
+    }
+   },
+   "freshness_label": "CURRENT",
+   "affected_by_changes": [
+    "Simulation/reliability_sweep.py",
+    "docs/EVIDENCE/C7_reliability.csv",
+    "docs/EVIDENCE/C7_run_record.json",
+    "tests/test_reliability.py"
+   ],
+   "not_established": [
+    "Any inert physical measurement: none has been accepted for this claim.",
+    "Physical performance of any hardware.",
+    "Flight readiness or safety for live propulsion."
+   ]
+  },
+  {
+   "id": "C8",
+   "title": "Structural claim boundaries",
+   "question": "Does the quasi-isotropic CFRP fin match or exceed aluminium stiffness, and does the Ti-6Al-4V hinge pin keep a factor of safety above 1.5?",
+   "statement": "Classical laminate theory gives Ex = 56.68 GPa for the quasi-isotropic layup, below the 69 GPa aluminium comparison, so the stiffness claim is not met on modulus. A closed-form hinge-pin check gives a factor of safety of 1.88 against a 1.5 threshold. Neither is a physical test.",
+   "status": "contradicted",
+   "gate": "software_reproduction",
+   "evidence": [
+    "structural_source",
+    "structural_data",
+    "hinge_data",
+    "structural_tests"
+   ],
+   "historical": [
+    "c8_clt_note_v1",
+    "c8_hinge_note_v1"
+   ],
+   "requirements": [
+    "R-C8-MODULUS",
+    "R-C8-COMPONENT-STIFFNESS",
+    "R-C8-HINGE-FOS"
+   ],
+   "predictions": [],
+   "assumptions": [
+    "Handbook lamina properties, ideal layup, and the stated 50 g load case represent the design."
+   ],
+   "limitations": [
+    "Material modulus and component bending stiffness are different quantities.",
+    "An analytical factor of safety is not a qualification test.",
+    "Manufacturing defects and actual loads are unmeasured.",
+    "The hinge load uses the 154 g fin whose mass conflicts with C4 (D-010)."
+   ],
+   "concerns": [
+    "The modulus result is below the comparison material (D-015); a thickness-compensation argument has not been calculated."
+   ],
+   "measurement_needed": [
+    "A component bending-stiffness calculation for equal-mass sections, reviewed.",
+    "Coupon or component stiffness measurement if a CFRP fin is ever made."
+   ],
+   "measurement_tags": [
+    "structure"
+   ],
+   "status_label": "CONTRADICTED",
+   "status_meaning": "Current evidence contradicts the claim or one of its requirements.",
+   "gate_label": "SOFTWARE REPRODUCTION",
+   "support": "model",
+   "support_label": "MODEL ONLY",
+   "evidence_classes": [
+    "implementation",
+    "test_procedure",
+    "analytical"
+   ],
+   "has_accepted_physical_evidence": false,
+   "has_synthetic_only_data": false,
+   "requirement_results": [
+    {
+     "id": "R-C8-MODULUS",
+     "result": "not_satisfied",
+     "label": "NOT SATISFIED",
+     "evidence_class": "analytical"
+    },
+    {
+     "id": "R-C8-COMPONENT-STIFFNESS",
+     "result": "requires_human_review",
+     "label": "REQUIRES HUMAN REVIEW",
+     "evidence_class": null
+    },
+    {
+     "id": "R-C8-HINGE-FOS",
+     "result": "satisfied",
+     "label": "SATISFIED",
+     "evidence_class": "analytical"
+    }
+   ],
+   "discrepancies_open": [
+    "D-009",
+    "D-010",
+    "D-015"
+   ],
+   "discrepancies_resolved": [],
+   "known_contradictions": [
+    "R-C8-MODULUS",
+    "D-015"
+   ],
+   "preregistrations": [],
+   "freshness": {
+    "state": "current",
+    "states": [
+     "current"
+    ],
+    "changed": [],
+    "missing": [],
+    "review": {
+     "kind": "snapshot",
+     "recorded": "2026-09-28",
+     "recorded_by": "tooling snapshot (no human review)",
+     "note": "Baseline snapshot after the evidence-discipline rewrite; detects later change. Not an engineering review.",
+     "independent": false
+    }
+   },
+   "freshness_label": "CURRENT",
+   "affected_by_changes": [
+    "docs/EVIDENCE/C8_clt.csv",
+    "docs/EVIDENCE/C8_hinge_fos.json",
+    "structures/fea_lite.py",
+    "tests/test_structural.py"
+   ],
+   "not_established": [
+    "Any inert physical measurement: none has been accepted for this claim.",
+    "Physical performance of any hardware.",
+    "Flight readiness or safety for live propulsion."
+   ]
+  }
+ ],
+ "requirements": [
+  {
+   "id": "R-C1-CLOSURE",
+   "check": "machine",
+   "text": "The baseline linkage closes (assembles) at every drive angle from 0 to 92 deg.",
+   "bound": {
+    "equals": true
+   },
+   "unit": "boolean",
+   "observed": [
+    false
+   ],
+   "evidence_class": "analytical",
+   "alternates": [],
+   "reason": null,
+   "result": "not_satisfied",
+   "label": "NOT SATISFIED",
+   "claims": [
+    "C1"
+   ],
+   "source": "Implicit precondition of the paper's four-bar deployment claim.",
+   "quantity": "baseline assemblable over the drive range",
+   "assumptions": [
+    "Planar pin-jointed loop; lengths are pin-centre distances."
+   ],
+   "implementation": [
+    "four_bar_source"
+   ],
+   "tests": [
+    "four_bar_tests"
+   ],
+   "check_label": "Evaluated automatically from a committed artifact value."
+  },
+  {
+   "id": "R-C1-LOCK",
+   "check": "physical_measurement",
+   "text": "The over-center toggle holds the fin at the deployed position against the design hinge moment.",
+   "bound": null,
+   "unit": "N*m",
+   "observed": null,
+   "evidence_class": null,
+   "alternates": [],
+   "reason": "No accepted inert measurement exists.",
+   "result": "not_measured",
+   "label": "NOT MEASURED",
+   "claims": [
+    "C1"
+   ],
+   "source": "Paper claim: over-center locking at a 92 deg toggle.",
+   "quantity": "holding moment at the deployed position",
+   "assumptions": [
+    "Requires a linkage that can be assembled (R-C1-CLOSURE)."
+   ],
+   "implementation": [],
+   "tests": [],
+   "check_label": "Needs an inert physical measurement; software cannot close it."
+  },
+  {
+   "id": "R-C1-TRANSMISSION",
+   "check": "machine",
+   "text": "The transmission angle stays within 40-140 deg throughout deployment.",
+   "bound": {
+    "min": 40,
+    "max": 140
+   },
+   "unit": "deg",
+   "observed": null,
+   "evidence_class": "analytical",
+   "alternates": [],
+   "reason": "artifact reports no value (null means no value exists)",
+   "result": "not_evaluable",
+   "label": "NOT EVALUABLE",
+   "claims": [
+    "C1"
+   ],
+   "source": "Common linkage design guidance cited by the historical C1 note and tests.",
+   "quantity": "baseline transmission angle range",
+   "assumptions": [
+    "The angle is only defined for poses where the loop closes."
+   ],
+   "implementation": [
+    "four_bar_source"
+   ],
+   "tests": [
+    "four_bar_tests"
+   ],
+   "check_label": "Evaluated automatically from a committed artifact value."
+  },
+  {
+   "id": "R-C2-JITTER",
+   "check": "physical_measurement",
+   "text": "Deploy-output timing jitter is below 1 ms relative to the trigger.",
+   "bound": {
+    "max": 1000
+   },
+   "unit": "us",
+   "observed": null,
+   "evidence_class": null,
+   "alternates": [],
+   "reason": "No accepted inert measurement exists.",
+   "result": "not_measured",
+   "label": "NOT MEASURED",
+   "claims": [
+    "C2"
+   ],
+   "source": "Paper claim: sub-millisecond actuation jitter.",
+   "quantity": "peak absolute deviation of output edge from requested delay",
+   "assumptions": [
+    "Measured with an instrument independent of the ESP32 clock."
+   ],
+   "implementation": [
+    "timing_source",
+    "rocket_firmware"
+   ],
+   "tests": [
+    "timing_tests"
+   ],
+   "check_label": "Needs an inert physical measurement; software cannot close it."
+  },
+  {
+   "id": "R-C2-NONBLOCKING",
+   "check": "human_review",
+   "text": "Scheduling the deployment does not block the control loop.",
+   "bound": null,
+   "unit": null,
+   "observed": null,
+   "evidence_class": null,
+   "alternates": [],
+   "reason": "Engineering judgement; software cannot close it.",
+   "result": "requires_human_review",
+   "label": "REQUIRES HUMAN REVIEW",
+   "claims": [
+    "C2"
+   ],
+   "source": "Paper claim: zero-blocking deployment.",
+   "quantity": null,
+   "assumptions": [
+    "esp_timer callbacks run in the timer task and trigger_deployment_sequence returns immediately."
+   ],
+   "implementation": [
+    "timing_source",
+    "rocket_firmware"
+   ],
+   "tests": [],
+   "check_label": "Needs engineering judgement; software cannot close it."
+  },
+  {
+   "id": "R-C3-PROFILE",
+   "check": "test",
+   "text": "Generated NACA 00xx coordinates scale to the chord and are symmetric about the chord line.",
+   "bound": null,
+   "unit": null,
+   "observed": null,
+   "evidence_class": null,
+   "alternates": [],
+   "reason": "No execution record attached; test source alone is not a run.",
+   "result": "not_evaluated",
+   "label": "NOT EVALUATED IN THIS BUILD",
+   "claims": [
+    "C3"
+   ],
+   "source": "NACA 4-digit definition.",
+   "quantity": null,
+   "assumptions": [],
+   "implementation": [
+    "cad_source"
+   ],
+   "tests": [
+    "cad_tests"
+   ],
+   "check_label": "Evaluated from an attached execution record of named automated tests."
+  },
+  {
+   "id": "R-C3-STEP",
+   "check": "test",
+   "text": "The generator exports readable STEP solids with collision-free file names.",
+   "bound": null,
+   "unit": null,
+   "observed": null,
+   "evidence_class": null,
+   "alternates": [],
+   "reason": "No execution record attached; test source alone is not a run.",
+   "result": "not_evaluated",
+   "label": "NOT EVALUATED IN THIS BUILD",
+   "claims": [
+    "C3"
+   ],
+   "source": "C3 claim: STEP export for downstream CAD/CFD.",
+   "quantity": null,
+   "assumptions": [
+    "CadQuery version pinned in requirements-evidence.txt."
+   ],
+   "implementation": [
+    "cad_source"
+   ],
+   "tests": [
+    "cad_tests"
+   ],
+   "check_label": "Evaluated from an attached execution record of named automated tests."
+  },
+  {
+   "id": "R-C4-REDUCTION",
+   "check": "machine",
+   "text": "Candidate materials reduce total mass by 30-40% relative to the baseline.",
+   "bound": {
+    "min": 0.3,
+    "max": 0.4
+   },
+   "unit": "fraction",
+   "observed": [
+    0.359949
+   ],
+   "evidence_class": "analytical",
+   "alternates": [],
+   "reason": null,
+   "result": "satisfied",
+   "label": "SATISFIED",
+   "claims": [
+    "C4"
+   ],
+   "source": "Paper claim: 30-40% mass reduction.",
+   "quantity": "calculated mass reduction fraction",
+   "assumptions": [
+    "The four listed parts are the relevant assembly."
+   ],
+   "implementation": [
+    "mass_source",
+    "mass_inputs"
+   ],
+   "tests": [
+    "mass_tests"
+   ],
+   "check_label": "Evaluated automatically from a committed artifact value."
+  },
+  {
+   "id": "R-C4-SCOPE",
+   "check": "human_review",
+   "text": "The mass rollup's parts, volumes, and baseline materials describe the assembly being claimed.",
+   "bound": null,
+   "unit": null,
+   "observed": null,
+   "evidence_class": null,
+   "alternates": [],
+   "reason": "Engineering judgement; software cannot close it.",
+   "result": "requires_human_review",
+   "label": "REQUIRES HUMAN REVIEW",
+   "claims": [
+    "C4"
+   ],
+   "source": "Needed for any mass claim to refer to a real design.",
+   "quantity": null,
+   "assumptions": [],
+   "implementation": [
+    "mass_inputs"
+   ],
+   "tests": [],
+   "check_label": "Needs engineering judgement; software cannot close it."
+  },
+  {
+   "id": "R-C5-FORMULATION",
+   "check": "human_review",
+   "text": "The static-margin formulation and its inputs are appropriate for this geometry and motor.",
+   "bound": null,
+   "unit": null,
+   "observed": null,
+   "evidence_class": null,
+   "alternates": [],
+   "reason": "Engineering judgement; software cannot close it.",
+   "result": "requires_human_review",
+   "label": "REQUIRES HUMAN REVIEW",
+   "claims": [
+    "C5"
+   ],
+   "source": "Needed before any static-margin result can be relied on.",
+   "quantity": null,
+   "assumptions": [],
+   "implementation": [
+    "stability_source",
+    "crosscheck_source"
+   ],
+   "tests": [],
+   "check_label": "Needs engineering judgement; software cannot close it."
+  },
+  {
+   "id": "R-C5-WINDOW",
+   "check": "machine",
+   "text": "Static margin stays between 1.5 and 2.0 calibers through the motor burn.",
+   "bound": {
+    "min": 1.5,
+    "max": 2.0
+   },
+   "unit": "cal",
+   "observed": [
+    1.55,
+    1.57
+   ],
+   "evidence_class": "analytical",
+   "alternates": [
+    {
+     "label": "textbook fin-term cross-check",
+     "result": "not_satisfied",
+     "observed": [
+      0.7445,
+      0.7576
+     ],
+     "evidence_class": "analytical",
+     "reason": null
+    }
+   ],
+   "reason": "Models that are both on record disagree about this requirement.",
+   "result": "conflicting",
+   "label": "MODELS DISAGREE",
+   "claims": [
+    "C5"
+   ],
+   "source": "Paper claim: 1.5-2.0 caliber static margin.",
+   "quantity": "static margin",
+   "assumptions": [
+    "Barrowman static margin is the intended metric.",
+    "The CG history uses the hard-coded Estes C6-5, not the OpenRocket file's G64W."
+   ],
+   "implementation": [
+    "stability_source",
+    "stability_inputs",
+    "crosscheck_source"
+   ],
+   "tests": [
+    "stability_tests"
+   ],
+   "check_label": "Evaluated automatically from a committed artifact value."
+  },
+  {
+   "id": "R-C6-KMIN",
+   "check": "machine",
+   "text": "The supplied spring rate is at least the calculated minimum.",
+   "bound": {
+    "min": 0.0
+   },
+   "unit": "fraction",
+   "observed": [
+    0.189936
+   ],
+   "evidence_class": "analytical",
+   "alternates": [],
+   "reason": null,
+   "result": "satisfied",
+   "label": "SATISFIED",
+   "claims": [
+    "C6"
+   ],
+   "source": "Paper claim: k >= 185 N*m/rad with k_supplied = 220 N*m/rad.",
+   "quantity": "margin fraction",
+   "assumptions": [
+    "Margin = (k_supplied - k_min) / k_min."
+   ],
+   "implementation": [
+    "spring_source"
+   ],
+   "tests": [
+    "spring_tests"
+   ],
+   "check_label": "Evaluated automatically from a committed artifact value."
+  },
+  {
+   "id": "R-C6-MARGIN",
+   "check": "machine",
+   "text": "The supplied spring rate exceeds the calculated minimum by at least 20%.",
+   "bound": {
+    "min": 0.2
+   },
+   "unit": "fraction",
+   "observed": [
+    0.189936
+   ],
+   "evidence_class": "analytical",
+   "alternates": [],
+   "reason": null,
+   "result": "not_satisfied",
+   "label": "NOT SATISFIED",
+   "claims": [
+    "C6"
+   ],
+   "source": "Paper claim: at least 20% margin.",
+   "quantity": "margin fraction",
+   "assumptions": [
+    "Margin = (k_supplied - k_min) / k_min."
+   ],
+   "implementation": [
+    "spring_source"
+   ],
+   "tests": [
+    "spring_tests"
+   ],
+   "check_label": "Evaluated automatically from a committed artifact value."
+  },
+  {
+   "id": "R-C6-SPRING-RATE",
+   "check": "physical_measurement",
+   "text": "The supplied spring's measured rate is 220 N*m/rad within its stated tolerance.",
+   "bound": null,
+   "unit": "N*m/rad",
+   "observed": null,
+   "evidence_class": null,
+   "alternates": [],
+   "reason": "No accepted inert measurement exists.",
+   "result": "not_measured",
+   "label": "NOT MEASURED",
+   "claims": [
+    "C6"
+   ],
+   "source": "Paper value for k_supplied.",
+   "quantity": "torsion spring rate",
+   "assumptions": [],
+   "implementation": [],
+   "tests": [],
+   "check_label": "Needs an inert physical measurement; software cannot close it."
+  },
+  {
+   "id": "R-C7-PHYSICAL",
+   "check": "physical_measurement",
+   "text": "Repeated inert deployments of a physical mechanism lock at the deployed position.",
+   "bound": null,
+   "unit": "fraction",
+   "observed": null,
+   "evidence_class": null,
+   "alternates": [],
+   "reason": "No accepted inert measurement exists.",
+   "result": "not_measured",
+   "label": "NOT MEASURED",
+   "claims": [
+    "C7"
+   ],
+   "source": "Needed before any reliability statement about hardware.",
+   "quantity": "fraction of trials that lock",
+   "assumptions": [
+    "Requires an assemblable mechanism (C1)."
+   ],
+   "implementation": [],
+   "tests": [],
+   "check_label": "Needs an inert physical measurement; software cannot close it."
+  },
+  {
+   "id": "R-C7-RELIABILITY",
+   "check": "machine",
+   "text": "Simulated deployment succeeds in at least 99.9% of trials.",
+   "bound": {
+    "min": 0.999
+   },
+   "unit": "fraction",
+   "observed": [
+    1.0
+   ],
+   "evidence_class": "simulated",
+   "alternates": [],
+   "reason": null,
+   "result": "satisfied",
+   "label": "SATISFIED",
+   "claims": [
+    "C7"
+   ],
+   "source": "Paper claim: at least 99.9% reliability from Monte Carlo.",
+   "quantity": "simulated success fraction",
+   "assumptions": [
+    "The simulation's success criterion can fail; see D-013, which says it cannot for its velocity test."
+   ],
+   "implementation": [
+    "reliability_source"
+   ],
+   "tests": [
+    "reliability_tests"
+   ],
+   "check_label": "Evaluated automatically from a committed artifact value."
+  },
+  {
+   "id": "R-C8-COMPONENT-STIFFNESS",
+   "check": "human_review",
+   "text": "At equal or lower mass, the CFRP fin section is at least as stiff in bending as the aluminium section it replaces.",
+   "bound": null,
+   "unit": null,
+   "observed": null,
+   "evidence_class": null,
+   "alternates": [],
+   "reason": "Engineering judgement; software cannot close it.",
+   "result": "requires_human_review",
+   "label": "REQUIRES HUMAN REVIEW",
+   "claims": [
+    "C8"
+   ],
+   "source": "The thickness-compensation argument in the historical note.",
+   "quantity": null,
+   "assumptions": [
+    "Requires section geometry for both designs; none is recorded."
+   ],
+   "implementation": [],
+   "tests": [],
+   "check_label": "Needs engineering judgement; software cannot close it."
+  },
+  {
+   "id": "R-C8-HINGE-FOS",
+   "check": "machine",
+   "text": "The hinge pin's factor of safety exceeds 1.5 under the 50 g deployment load.",
+   "bound": {
+    "min": 1.5
+   },
+   "unit": "ratio",
+   "observed": [
+    1.8847
+   ],
+   "evidence_class": "analytical",
+   "alternates": [],
+   "reason": null,
+   "result": "satisfied",
+   "label": "SATISFIED",
+   "claims": [
+    "C8"
+   ],
+   "source": "Paper claim: F.S. > 1.5 under 50 g shock.",
+   "quantity": "factor of safety against yield",
+   "assumptions": [
+    "Double shear with central point-load bending; 154 g fin."
+   ],
+   "implementation": [
+    "structural_source"
+   ],
+   "tests": [
+    "structural_tests"
+   ],
+   "check_label": "Evaluated automatically from a committed artifact value."
+  },
+  {
+   "id": "R-C8-MODULUS",
+   "check": "machine",
+   "text": "The laminate's in-plane modulus matches or exceeds 6061-T6 aluminium (69 GPa).",
+   "bound": {
+    "min": 69.0
+   },
+   "unit": "GPa",
+   "observed": [
+    56.68
+   ],
+   "evidence_class": "analytical",
+   "alternates": [],
+   "reason": null,
+   "result": "not_satisfied",
+   "label": "NOT SATISFIED",
+   "claims": [
+    "C8"
+   ],
+   "source": "Paper claim: match or exceed aluminium stiffness.",
+   "quantity": "equivalent Ex",
+   "assumptions": [
+    "The comparison is on material modulus, as in the historical note."
+   ],
+   "implementation": [
+    "structural_source"
+   ],
+   "tests": [
+    "structural_tests"
+   ],
+   "check_label": "Evaluated automatically from a committed artifact value."
+  }
+ ],
+ "predictions": [
+  {
+   "id": "PRED-C2-DELAY",
+   "claims": [
+    "C2"
+   ],
+   "status": "active",
+   "quantity": "delay from deploy trigger call to GPIO 33 rising edge",
+   "unit": "us",
+   "condition": "rocket firmware as committed; inert bench; no load on GPIO 33",
+   "predicted": 50000,
+   "model_uncertainty": null,
+   "evidence_class": "implementation",
+   "basis": "Requested delay in firmware. This is a setpoint, not a model of achieved timing.",
+   "measurement_method": "External logic analyzer on GPIO 33 and a trigger-reference GPIO; see P-001.",
+   "acceptance": null,
+   "preregistration": "P-001",
+   "registered": "2026-09-28",
+   "measurements": [],
+   "result": "not_measured",
+   "drift": null,
+   "result_label": "NOT MEASURED"
+  },
+  {
+   "id": "PRED-C5-DRY-CG",
+   "claims": [
+    "C5"
+   ],
+   "status": "active",
+   "quantity": "dry centre of gravity from nose tip",
+   "unit": "m",
+   "condition": "OpenRocket override masses of the body tubes only; no motor",
+   "predicted": 0.335817,
+   "model_uncertainty": null,
+   "evidence_class": "analytical",
+   "basis": "Reference script's aggregation of body-tube override masses (excludes the nose-cone override mass; D-008).",
+   "measurement_method": "Balance point of the assembled inert airframe, fins deployed, motor mount empty.",
+   "acceptance": null,
+   "preregistration": null,
+   "registered": "2026-09-28",
+   "measurements": [],
+   "result": "not_measured",
+   "drift": null,
+   "result_label": "NOT MEASURED"
+  },
+  {
+   "id": "PRED-C6-SPRING-RATE",
+   "claims": [
+    "C6"
+   ],
+   "status": "active",
+   "quantity": "torsion spring rate of the supplied spring",
+   "unit": "N*m/rad",
+   "condition": "spring as supplied, room temperature, within its rated angle",
+   "predicted": 220.0,
+   "model_uncertainty": null,
+   "evidence_class": "specification",
+   "basis": "Value stated in the source paper; no datasheet or measurement is recorded.",
+   "measurement_method": "Inert torque-angle characterization; see P-002.",
+   "acceptance": null,
+   "preregistration": "P-002",
+   "registered": "2026-09-28",
+   "measurements": [],
+   "result": "not_measured",
+   "drift": null,
+   "result_label": "NOT MEASURED"
+  },
+  {
+   "id": "PRED-C7-LOCK-FRACTION",
+   "claims": [
+    "C7"
+   ],
+   "status": "active",
+   "quantity": "fraction of deployments that reach and hold the lock position",
+   "unit": "fraction",
+   "condition": "simulated tolerance ranges of the C7 run record",
+   "predicted": 1.0,
+   "model_uncertainty": null,
+   "evidence_class": "simulated",
+   "basis": "Simulation whose velocity criterion cannot fail for a locked trial (D-013).",
+   "measurement_method": "Repeated inert spring deployments of a printed mechanism; requires C1 to be resolved first.",
+   "acceptance": null,
+   "preregistration": null,
+   "registered": "2026-09-28",
+   "measurements": [],
+   "result": "not_measured",
+   "drift": null,
+   "result_label": "NOT MEASURED"
+  },
+  {
+   "id": "PRED-TLM-T-INTERVAL",
+   "claims": [],
+   "status": "active",
+   "quantity": "interval between successive rocket DATA packets",
+   "unit": "ms",
+   "condition": "rocket firmware as committed, MPU6050 healthy",
+   "predicted": 50,
+   "model_uncertainty": null,
+   "evidence_class": "implementation",
+   "basis": "Firmware send period. Live T packets are stamped with launcher relay time, so their spacing measures relay cadence (D-018).",
+   "measurement_method": "LOG-stream intervals from an onboard log dump (rocket clock), audited with python -m evidence audit.",
+   "acceptance": null,
+   "preregistration": null,
+   "registered": "2026-09-28",
+   "measurements": [],
+   "result": "not_measured",
+   "drift": null,
+   "result_label": "NOT MEASURED"
+  }
+ ],
+ "consistency": [
+  {
+   "id": "K-C4-BASELINE-TOTAL",
+   "description": "Baseline CSV masses sum to the summary total.",
+   "claims": [
+    "C4"
+   ],
+   "result": "passed",
+   "left": 0.09811399999999998,
+   "right": 0.098114,
+   "tolerance": 1e-06
+  },
+  {
+   "id": "K-C4-CANDIDATE-TOTAL",
+   "description": "Candidate CSV masses sum to the summary total.",
+   "claims": [
+    "C4"
+   ],
+   "result": "passed",
+   "left": 0.06279799999999999,
+   "right": 0.062798,
+   "tolerance": 1e-06
+  },
+  {
+   "id": "K-C5-MINIMUM",
+   "description": "The reference CSV minimum matches the reference record (CSV is rounded to 0.01 cal).",
+   "claims": [
+    "C5"
+   ],
+   "result": "passed",
+   "left": 1.55,
+   "right": 1.5484,
+   "tolerance": 0.006
+  },
+  {
+   "id": "K-C7-DENOMINATOR",
+   "description": "Successes plus failures equal the stated number of trials.",
+   "claims": [
+    "C7"
+   ],
+   "result": "passed",
+   "left": 10000,
+   "right": 10000,
+   "tolerance": 0
+  },
+  {
+   "id": "K-C7-FAILURE-ROWS",
+   "description": "The failure CSV has exactly one row per recorded failure.",
+   "claims": [
+    "C7"
+   ],
+   "result": "passed",
+   "left": 0,
+   "right": 0,
+   "tolerance": 0
+  },
+  {
+   "id": "K-C6-MARGIN",
+   "description": "The recorded margin follows from the recorded k_min and k_supplied.",
+   "claims": [
+    "C6"
+   ],
+   "result": "passed",
+   "left": 0.189936,
+   "right": 0.18993659801453663,
+   "tolerance": 1e-05
+  }
+ ],
+ "discrepancies": [
+  {
+   "id": "D-001",
+   "kind": "claim_vs_artifact",
+   "claims": [
+    "C1"
+   ],
+   "effect": "contradicts_claim",
+   "status": "resolved",
+   "title": "Historical C1 note contradicts its own sweep",
+   "sides": [
+    {
+     "artifact": "c1_note_v1",
+     "says": "Baseline is a change-point linkage with a 78.46-101.54 deg transmission angle and confirmed over-center locking."
+    },
+    {
+     "artifact": "c1_sweep_v1",
+     "says": "Baseline row: non-Grashof, 90.0/90.0 deg, envelope 0.0; every one of 81 rows is identical."
+    }
+   ],
+   "found_by": "Reading the committed JSON against the note during the evidence review of 2026-09-28.",
+   "next_action": "None for the record; the design question continues as D-002.",
+   "resolution": "The note is archived as superseded and the claim no longer repeats its figures.",
+   "resolved_by": "Record correction in the evidence-discipline change; not an engineering review."
+  },
+  {
+   "id": "D-002",
+   "kind": "requirement_vs_model",
+   "claims": [
+    "C1"
+   ],
+   "effect": "contradicts_claim",
+   "status": "open",
+   "title": "The specified four-bar cannot be assembled",
+   "sides": [
+    {
+     "artifact": "c1_note_v1",
+     "says": "Ground 25, coupler 60, input 15, output 15 mm deploys the fin 0-92 deg."
+    },
+    {
+     "artifact": "four_bar_data",
+     "says": "Over the 0-92 deg drive range the B-D distance never exceeds 29.6 mm (40 mm at any angle), but the coupler and output circles only meet at 45 mm or more; no pose closes. None of the 81 variants closes at any pose."
+    }
+   ],
+   "found_by": "Loop-closure check (circle intersection) added in model revision 2.",
+   "next_action": "A human confirms the intended topology and link dimensions; then the model is re-run and reviewed.",
+   "resolution": null,
+   "resolved_by": null
+  },
+  {
+   "id": "D-003",
+   "kind": "implementation_defect",
+   "claims": [
+    "C1"
+   ],
+   "effect": "contradicts_claim",
+   "status": "resolved",
+   "title": "C1 model revision 1 reported placeholders as results, and its tests passed on them",
+   "sides": [
+    {
+     "artifact": "c1_sweep_v1",
+     "says": "transmission_angle() returned 90.0 for poses that cannot close; an empty trajectory produced an envelope of 0.0; the Freudenstein constants were misassigned."
+    },
+    {
+     "artifact": "c1_tests_v1",
+     "says": "Tests asserted 40-140 deg and a bounded envelope, and passed because the placeholders sat inside those bounds."
+    }
+   ],
+   "found_by": "Comparing compute_theta4 with direct circle intersection for a linkage that does close.",
+   "next_action": "None; keep revision 1 archived as a worked example of a vacuous pass.",
+   "resolution": "Revision 2 returns null for unassemblable poses and solves closure by circle intersection; tests check geometry and null handling.",
+   "resolved_by": "Model and test correction in the evidence-discipline change; software-tested, not engineering-reviewed."
+  },
+  {
+   "id": "D-004",
+   "kind": "claim_vs_artifact",
+   "claims": [
+    "C1"
+   ],
+   "effect": "contradicts_claim",
+   "status": "open",
+   "title": "Over-center locking is claimed but not modeled",
+   "sides": [
+    {
+     "artifact": "c1_note_v1",
+     "says": "Over-center detection: confirmed (moment sign flips at toggle)."
+    },
+    {
+     "artifact": "four_bar_source",
+     "says": "over_center_moment_sign() compares the drive angle with 92 deg and ignores every link length."
+    }
+   ],
+   "found_by": "Reading the helper's implementation.",
+   "next_action": "Model the locking moment for an assemblable linkage, or state that locking is a physical-test question only.",
+   "resolution": null,
+   "resolved_by": null
+  },
+  {
+   "id": "D-005",
+   "kind": "simulation_vs_cad",
+   "claims": [
+    "C1"
+   ],
+   "effect": "weakens_claim",
+   "status": "open",
+   "title": "C1 CAD artifacts are illustrative bars, not the modeled mechanism",
+   "sides": [
+    {
+     "artifact": "four_bar_cad_script",
+     "says": "The Fusion sketch draws the coupler from (0, 15) to (25, 15) mm, 25 mm long, and dimensions it as drawn; the CadQuery export places four separate bars and calls the assembly purely illustrative."
+    },
+    {
+     "artifact": "four_bar_data",
+     "says": "The modeled coupler is 60 mm and the loop cannot close."
+    }
+   ],
+   "found_by": "Reading the CAD script coordinates against the model inputs.",
+   "next_action": "Regenerate CAD only after D-002 is resolved; never cite the STEP as evidence the mechanism assembles.",
+   "resolution": null,
+   "resolved_by": null
+  },
+  {
+   "id": "D-006",
+   "kind": "model_vs_model",
+   "claims": [
+    "C5"
+   ],
+   "effect": "contradicts_claim",
+   "status": "open",
+   "title": "Reference and textbook fin-term formulations disagree about the static-margin window",
+   "sides": [
+    {
+     "artifact": "stability_record",
+     "says": "Fin CP sweep term uses the root chord; margin 1.55-1.57 cal (inside 1.5-2.0)."
+    },
+    {
+     "artifact": "crosscheck_data",
+     "says": "Textbook Barrowman sweep term (tip leading-edge sweep X_R) and mid-chord line length give 0.74-0.76 cal (outside 1.5-2.0)."
+    }
+   ],
+   "found_by": "Independent re-derivation of the fin terms during the 2026-09-28 review.",
+   "next_action": "A human reviews both formulations against Barrowman (1967) or OpenRocket's component CP output.",
+   "resolution": null,
+   "resolved_by": null
+  },
+  {
+   "id": "D-007",
+   "kind": "model_vs_input",
+   "claims": [
+    "C5"
+   ],
+   "effect": "weakens_claim",
+   "status": "open",
+   "title": "The static-margin script burns a different motor than the OpenRocket model",
+   "sides": [
+    {
+     "artifact": "stability_inputs",
+     "says": "Motor configuration: AeroTech G64W (29 mm reload)."
+    },
+    {
+     "artifact": "stability_source",
+     "says": "Hard-coded Estes C6-5: 24 g wet, 11 g dry, 1.8 s burn, CG at 0.520 m."
+    }
+   ],
+   "found_by": "Parsing the motor designation from the .ork file.",
+   "next_action": "Use the OpenRocket motor (or justify the substitute) and record the motor mass data source.",
+   "resolution": null,
+   "resolved_by": null
+  },
+  {
+   "id": "D-008",
+   "kind": "model_vs_input",
+   "claims": [
+    "C5"
+   ],
+   "effect": "weakens_claim",
+   "status": "open",
+   "title": "Static-margin inputs omit or misread parts of the OpenRocket model",
+   "sides": [
+    {
+     "artifact": "stability_inputs",
+     "says": "Ellipsoid nose cone with a 0.067 kg override mass."
+    },
+    {
+     "artifact": "stability_source",
+     "says": "Uses the ogive nose CP coefficient (0.466) and sums only body-tube override masses (1.185 kg)."
+    }
+   ],
+   "found_by": "Comparing parse_ork() with the .ork XML.",
+   "next_action": "Reviewer decides whether the omissions matter at the required precision.",
+   "resolution": null,
+   "resolved_by": null
+  },
+  {
+   "id": "D-009",
+   "kind": "model_tuned_to_target",
+   "claims": [
+    "C5",
+    "C6",
+    "C8"
+   ],
+   "effect": "weakens_claim",
+   "status": "open",
+   "title": "Model inputs were revised until paper targets were met",
+   "sides": [
+    {
+     "artifact": "divergence_log",
+     "says": "C5 fins, C6 design point, and C8 fin mass were changed so results match the paper; entries are marked RESOLVED."
+    },
+    {
+     "artifact": "prior_ork",
+     "says": "Before the change the OpenRocket fins had a 20 mm root chord; the reference script then gave 0.08-0.10 cal."
+    }
+   ],
+   "found_by": "Reading the divergence log and the preserved pre-change model.",
+   "next_action": "Record an independent source for each revised input (drawing, datasheet, measurement), or keep the claims open.",
+   "resolution": null,
+   "resolved_by": null
+  },
+  {
+   "id": "D-010",
+   "kind": "model_vs_model",
+   "claims": [
+    "C4",
+    "C6",
+    "C7",
+    "C8"
+   ],
+   "effect": "weakens_claim",
+   "status": "open",
+   "title": "No shared design point across the mass, spring, reliability, and structural models",
+   "sides": [
+    {
+     "artifact": "mass_inputs",
+     "says": "Fin volume 3.4 cm^3 each: about 5.3 g in CFRP; four listed parts total 98.1 g."
+    },
+    {
+     "artifact": "spring_design_point",
+     "says": "154 g fin, 120 mm chord, 180 mm span, 205 m/s egress."
+    },
+    {
+     "artifact": "reliability_run_record",
+     "says": "15 g fin, 60 mm, 70 m/s egress."
+    },
+    {
+     "artifact": "stability_record",
+     "says": "Body-tube dry mass 1.185 kg."
+    }
+   ],
+   "found_by": "Cross-reading model inputs during the 2026-09-28 review.",
+   "next_action": "Define one design point in a single reviewed input file that every model reads.",
+   "resolution": null,
+   "resolved_by": null
+  },
+  {
+   "id": "D-011",
+   "kind": "requirement_vs_model",
+   "claims": [
+    "C6"
+   ],
+   "effect": "contradicts_claim",
+   "status": "open",
+   "title": "Calculated spring margin is below the stated requirement",
+   "sides": [
+    {
+     "artifact": "c6_note_v1",
+     "says": "Requirement: at least 20% margin."
+    },
+    {
+     "artifact": "spring_design_point",
+     "says": "Margin 0.189936 (19.0%)."
+    }
+   ],
+   "found_by": "Requirement R-C6-MARGIN evaluated from the design-point record.",
+   "next_action": "A human changes the spring, the requirement, or the design point, and records why.",
+   "resolution": null,
+   "resolved_by": null
+  },
+  {
+   "id": "D-012",
+   "kind": "test_vs_requirement",
+   "claims": [
+    "C6"
+   ],
+   "effect": "weakens_claim",
+   "status": "resolved",
+   "title": "Test named for a 20% margin did not enforce it",
+   "sides": [
+    {
+     "artifact": "c6_tests_v1",
+     "says": "test_design_point_has_20_percent_margin asserted k_required <= 1.2 * k_supplied, which accepts negative margins."
+    },
+    {
+     "artifact": "spring_tests",
+     "says": "Margin arithmetic is tested directly; the requirement is evaluated by the evidence record."
+    }
+   ],
+   "found_by": "Reading the assertion against the test name.",
+   "next_action": "None.",
+   "resolution": "Test replaced; revision 1 archived.",
+   "resolved_by": "Test correction in the evidence-discipline change."
+  },
+  {
+   "id": "D-013",
+   "kind": "implementation_defect",
+   "claims": [
+    "C7"
+   ],
+   "effect": "weakens_claim",
+   "status": "open",
+   "title": "The reliability simulation cannot produce the failures it counts",
+   "sides": [
+    {
+     "artifact": "reliability_source",
+     "says": "omega_final is forced to 0 when the toggle event fires; k (N*m/rad) is applied as a constant torque (N*m); latency shifts start time only."
+    },
+    {
+     "artifact": "reliability_run_record",
+     "says": "10,000 of 10,000 trials succeed."
+    }
+   ],
+   "found_by": "Reading the success criterion against the integrator's event handling.",
+   "next_action": "Rebuild the simulation so each failure mode it counts can occur, at the shared design point (D-010).",
+   "resolution": null,
+   "resolved_by": null
+  },
+  {
+   "id": "D-014",
+   "kind": "claim_vs_artifact",
+   "claims": [
+    "C7"
+   ],
+   "effect": "weakens_claim",
+   "status": "resolved",
+   "title": "The historical 10,000-trial summary could not be reconstructed from its CSV",
+   "sides": [
+    {
+     "artifact": "c7_note_v1",
+     "says": "Trials 10000, successes 10000."
+    },
+    {
+     "artifact": "reliability_failures",
+     "says": "Header only: a failure-only export cannot state how many trials ran."
+    }
+   ],
+   "found_by": "Evidence Observatory row count (0 data rows).",
+   "next_action": "None.",
+   "resolution": "The simulation now writes a run record with trials, successes, failures, and seed; consistency checks K-C7-DENOMINATOR and K-C7-FAILURE-ROWS tie it to the CSV.",
+   "resolved_by": "Record correction; reproduction is checked by CI."
+  },
+  {
+   "id": "D-015",
+   "kind": "requirement_vs_model",
+   "claims": [
+    "C8"
+   ],
+   "effect": "contradicts_claim",
+   "status": "open",
+   "title": "Laminate modulus is below the aluminium comparison",
+   "sides": [
+    {
+     "artifact": "c8_clt_note_v1",
+     "says": "Claim: match or exceed aluminium stiffness; relies on increased section thickness."
+    },
+    {
+     "artifact": "structural_data",
+     "says": "Ex = 56.68 GPa, below 69.0 GPa."
+    }
+   ],
+   "found_by": "Requirement R-C8-MODULUS evaluated from the CLT output.",
+   "next_action": "Calculate equal-mass section bending stiffness (R-C8-COMPONENT-STIFFNESS) or restate the claim.",
+   "resolution": null,
+   "resolved_by": null
+  },
+  {
+   "id": "D-016",
+   "kind": "documentation_vs_implementation",
+   "claims": [
+    "C2"
+   ],
+   "effect": "informational",
+   "status": "resolved",
+   "title": "Architecture diagram omitted the rocket's fins-deployed ignition gate",
+   "sides": [
+    {
+     "path": "docs/ARCHITECTURE.md",
+     "says": "ARMED --> IGNITING on the IGNITE command."
+    },
+    {
+     "artifact": "rocket_firmware",
+     "says": "IGNITE is refused unless is_fins_deployed(); the refusal was printed to USB serial only and never reached the telemetry record."
+    }
+   ],
+   "found_by": "Reading the IGNITE branch in processSerialCommands().",
+   "next_action": "Bench-verify that the refusal now reaches the dashboard CSV.",
+   "resolution": "Diagram updated; the rocket now reports CMD_REJECT:ignite_fins_not_deployed and CMD_REJECT:ignite_not_armed over UART, which the launcher already forwards. Compile-verified only.",
+   "resolved_by": "Documentation and firmware logging change; not bench-verified."
+  },
+  {
+   "id": "D-017",
+   "kind": "design_logic",
+   "claims": [
+    "C2"
+   ],
+   "effect": "weakens_claim",
+   "status": "open",
+   "title": "Ignition requires deployed fins, but deployment requires a boost-level acceleration",
+   "sides": [
+    {
+     "artifact": "rocket_firmware",
+     "says": "Deploy fires only after a >15 g x-axis reading while not IDLE; IGNITE is refused unless the deploy flag is set."
+    },
+    {
+     "artifact": "launcher_firmware",
+     "says": "After sending IGNITE the launcher waits 5 s for IGNITED, then aborts."
+    }
+   ],
+   "found_by": "Tracing the nominal command sequence through both firmwares.",
+   "next_action": "A human decides the intended ordering. On the bench this ordering acts as an extra interlock; do not remove it without a safety review.",
+   "resolution": null,
+   "resolved_by": null
+  },
+  {
+   "id": "D-018",
+   "kind": "telemetry_vs_expected",
+   "claims": [
+    "C2"
+   ],
+   "effect": "informational",
+   "status": "open",
+   "title": "Live telemetry timestamps are launcher relay times, not rocket sample times",
+   "sides": [
+    {
+     "artifact": "launcher_firmware",
+     "says": "T packets are built as T,<launcher millis()>,... when a DATA line is relayed."
+    },
+    {
+     "path": "docs/WIRING.md",
+     "says": "T,<ms>,... without saying whose clock."
+    }
+   ],
+   "found_by": "Reading processSerial2() in the launcher.",
+   "next_action": "Proposed protocol change: carry rocket millis, a sequence number, and a boot identifier in DATA. Needs a bench-tested firmware revision.",
+   "progress": "The audit labels T as launcher_relay_millis and LOG as rocket_millis, and the docs state each clock domain.",
+   "resolution": null,
+   "resolved_by": null
+  },
+  {
+   "id": "D-019",
+   "kind": "documentation_vs_implementation",
+   "claims": [],
+   "effect": "informational",
+   "status": "resolved",
+   "title": "Launcher reported 0.0 m altitude when the barometer was missing",
+   "sides": [
+    {
+     "artifact": "launcher_firmware",
+     "says": "filteredAlt was initialized to 0.0 and sent unchanged when bmpHealthy was false."
+    },
+    {
+     "path": "docs/WIRING.md",
+     "says": "ENV altitude field documented as altitude, with no missing-value convention."
+    }
+   ],
+   "found_by": "Unknown-is-not-zero audit of telemetry fields.",
+   "next_action": "Bench-verify that ENV carries nan with the barometer disconnected.",
+   "resolution": "The launcher sends nan for altitude when the barometer is unavailable; the dashboard shows 'not reported'. Compile-verified only.",
+   "resolved_by": "Firmware change; not bench-verified."
+  },
+  {
+   "id": "D-020",
+   "kind": "implementation_defect",
+   "claims": [],
+   "effect": "informational",
+   "status": "resolved",
+   "title": "PID comparison fragmented windows, merged streams, and zero-filled bad samples",
+   "sides": [
+    {
+     "path": "docs/PID_TUNING.md",
+     "says": "Samples are grouped by PID setting."
+    },
+    {
+     "path": "Firmware/analyze_pid.py",
+     "says": "A new window started at every STATUS packet (one per telemetry packet); LOG and T rows shared windows; unparseable values became 0.0."
+    }
+   ],
+   "found_by": "Tracing the launcher's T-then-STATUS packet order through the analyzer.",
+   "next_action": "None.",
+   "resolution": "Windows change only when gains change; T and LOG are summarized separately; invalid samples are counted and excluded.",
+   "resolved_by": "Software change with regression tests."
+  },
+  {
+   "id": "D-021",
+   "kind": "bom_vs_design",
+   "claims": [],
+   "effect": "informational",
+   "status": "open",
+   "title": "Bill of materials does not match the actuators in firmware and CAD",
+   "sides": [
+    {
+     "path": "materials/bom.csv",
+     "says": "Five SG90-class servos."
+    },
+    {
+     "artifact": "rocket_firmware",
+     "says": "Rocket drives five servos (four canards plus ignition); the launcher drives a sixth. The folding-rocket CAD archive references an MG996R."
+    }
+   ],
+   "found_by": "Counting Servo.attach() calls against the BOM.",
+   "next_action": "Reconcile the BOM with an as-built inventory; record purchased prices where known.",
+   "resolution": null,
+   "resolved_by": null
+  },
+  {
+   "id": "D-022",
+   "kind": "model_vs_input",
+   "claims": [
+    "C4"
+   ],
+   "effect": "weakens_claim",
+   "status": "open",
+   "title": "The C4 baseline is not the printed prototype",
+   "sides": [
+    {
+     "artifact": "mass_inputs",
+     "says": "Baseline body tube and fins in 7075-T6."
+    },
+    {
+     "artifact": "cad_materials_doc",
+     "says": "Prototype airframe and folding-fin structure in PLA+ or PETG."
+    }
+   ],
+   "found_by": "Comparing material tables.",
+   "next_action": "State which assembly the 30-40% claim compares, and make the baseline match it.",
+   "resolution": null,
+   "resolved_by": null
+  },
+  {
+   "id": "D-023",
+   "kind": "provenance_gap",
+   "claims": [
+    "C5"
+   ],
+   "effect": "informational",
+   "status": "open",
+   "title": "OpenRocket screenshots have no recorded model revision",
+   "sides": [
+    {
+     "artifact": "openrocket_stability_graph",
+     "says": "An OpenRocket stability plot with no settings, date, or model hash."
+    },
+    {
+     "artifact": "prior_ork",
+     "says": "The fins changed substantially in a later revision; the plot may predate it."
+    }
+   ],
+   "found_by": "Provenance review of committed images.",
+   "next_action": "Re-export from the current .ork with its hash and settings recorded, or label the images historical.",
+   "resolution": null,
+   "resolved_by": null
+  },
+  {
+   "id": "D-024",
+   "kind": "measurement_method",
+   "claims": [
+    "C2"
+   ],
+   "effect": "informational",
+   "status": "open",
+   "title": "The deploy bench sketch measures a timer with the same timer",
+   "sides": [
+    {
+     "artifact": "timing_bench_sketch",
+     "says": "Elapsed time from esp_timer_get_time(), polled every 10 us until the callback's flag changes."
+    },
+    {
+     "artifact": "timing_fixture",
+     "says": "Same column layout, synthetic values."
+    }
+   ],
+   "found_by": "Reading the sketch against requirement R-C2-JITTER.",
+   "next_action": "Use an external instrument on GPIO 33 (P-001). Sketch output can only describe callback-to-poll latency.",
+   "resolution": null,
+   "resolved_by": null
+  },
+  {
+   "id": "D-025",
+   "kind": "design_logic",
+   "claims": [
+    "C2"
+   ],
+   "effect": "informational",
+   "status": "open",
+   "title": "A launcher abort leaves an armed rocket armed, and the launcher cannot re-arm it",
+   "sides": [
+    {
+     "artifact": "launcher_firmware",
+     "says": "abortSequence returns the launcher to SAFE and sends the rocket nothing. Re-arming waits for a rocket READY line and aborts with Rocket Timeout after 8 s."
+    },
+    {
+     "artifact": "rocket_firmware",
+     "says": "sysState moves IDLE, ARMED, IGNITING, FLIGHT with no path back, so only a restart returns it to IDLE. READY is sent only in IDLE, and the deploy trigger stays live in any non-IDLE state."
+    }
+   ],
+   "found_by": "Tracing the abort path through both firmwares while building the ground status model. Source reading only; not observed on hardware.",
+   "next_action": "A human decides the intended behavior under a separate safety review, for example a disarm command sent on abort. No gate was changed. Until then the status board raises W-ARMED-AFTER-ABORT, and an aborted rocket should be treated as armed until it is restarted.",
+   "resolution": null,
+   "resolved_by": null
+  }
+ ],
+ "preregistrations": [
+  {
+   "id": "P-001",
+   "status": "proposed",
+   "title": "Deploy-output timing on inert hardware",
+   "claims": [
+    "C2"
+   ],
+   "predictions": [
+    "PRED-C2-DELAY"
+   ],
+   "requirements": [
+    "R-C2-JITTER"
+   ],
+   "proposed_by": "Automated assistant during the 2026-09-28 evidence review",
+   "registered_by": null,
+   "registered_on": null,
+   "question": "When the firmware requests a 50 ms deploy delay, when does GPIO 33 rise relative to the trigger, and how much does that vary?",
+   "prediction": "Edge at 50,000 us after the trigger reference; the paper claims jitter below 1,000 us. No model predicts the spread.",
+   "variables": {
+    "controlled": [
+     "firmware revision",
+     "requested delay 50,000 us",
+     "supply voltage",
+     "no load on GPIO 33"
+    ],
+    "measured": [
+     "time from trigger-reference edge to GPIO 33 rising edge, per trial"
+    ],
+    "recorded": [
+     "instrument model and sample rate",
+     "trial count",
+     "ambient temperature",
+     "loop activity during trials"
+    ]
+   },
+   "interpretation_rule": "Report median, maximum absolute deviation from 50,000 us, and trial count. R-C2-JITTER is satisfied only if the maximum absolute deviation over at least 1,000 trials is below 1,000 us after subtracting the instrument's stated timing uncertainty. Fewer trials: report the observation, do not evaluate the requirement.",
+   "measurement_method": "Logic analyzer or oscilloscope sampling at 1 MHz or faster on GPIO 33 and on a second GPIO toggled immediately before trigger_deployment_sequence(); both channels share the instrument's clock.",
+   "known_limitations": [
+    "The trigger-reference toggle itself adds a small, unmeasured offset.",
+    "Bench conditions exclude flight vibration, temperature, and brownout."
+   ],
+   "safety": "Inert only: nothing connected to GPIO 33 except the instrument; ignition servo mechanically disconnected; no energetic material present."
+  },
+  {
+   "id": "P-002",
+   "status": "proposed",
+   "title": "Torsion spring rate of the supplied spring",
+   "claims": [
+    "C6"
+   ],
+   "predictions": [
+    "PRED-C6-SPRING-RATE"
+   ],
+   "requirements": [
+    "R-C6-SPRING-RATE"
+   ],
+   "proposed_by": "Automated assistant during the 2026-09-28 evidence review",
+   "registered_by": null,
+   "registered_on": null,
+   "question": "What is the torque-angle rate of the spring that would be installed, and does it match the 220 N*m/rad in the claim?",
+   "prediction": "220 N*m/rad (paper value; no datasheet recorded).",
+   "variables": {
+    "controlled": [
+     "spring specimen identity",
+     "fixture lever arm",
+     "angle steps"
+    ],
+    "measured": [
+     "torque at each angle, loading and unloading"
+    ],
+    "recorded": [
+     "torque instrument and calibration date",
+     "angle measurement method",
+     "specimen count"
+    ]
+   },
+   "interpretation_rule": "Fit torque against angle over the rated range; report slope with its standard error and the hysteresis. Compare with 220 N*m/rad; the acceptance tolerance must be written here by the registering human before testing.",
+   "measurement_method": "Static torque-angle fixture with a calibrated torque gauge or load cell at a known lever arm.",
+   "known_limitations": [
+    "Static rate only; dynamic and temperature effects are not captured."
+   ],
+   "safety": "Stored-energy hazard: restrain the spring, wear eye protection, release slowly."
+  },
+  {
+   "id": "P-003",
+   "status": "proposed",
+   "title": "Stationary roll-estimate drift",
+   "claims": [],
+   "predictions": [],
+   "requirements": [],
+   "roadmap_stage": "Stage 4: Control-System Refinement",
+   "proposed_by": "Automated assistant during the 2026-09-28 evidence review",
+   "registered_by": null,
+   "registered_on": null,
+   "question": "How far does the firmware roll estimate drift over 10 minutes with the rocket stationary and level, after CALIBRATE?",
+   "prediction": "None. This is an exploratory characterization; no model predicts the drift.",
+   "variables": {
+    "controlled": [
+     "orientation (fixture level)",
+     "firmware revision and gains",
+     "time since power-on"
+    ],
+    "measured": [
+     "roll_deg from LOG rows (rocket clock) over 600 s"
+    ],
+    "recorded": [
+     "ambient temperature",
+     "whether CALIBRATE was sent and when",
+     "session ID and audit digest"
+    ]
+   },
+   "interpretation_rule": "Report the roll change over 600 s and the maximum excursion. Because no prediction exists, the result describes this unit only and sets a baseline; it cannot pass or fail.",
+   "measurement_method": "Dashboard session with DUMPLOG every 10 s to capture rocket-clock LOG rows; audit with python -m evidence audit.",
+   "known_limitations": [
+    "The ring buffer holds about 12 s; missed dumps leave gaps that must be reported, not interpolated."
+   ],
+   "safety": "Inert only: ignition servo disconnected; launcher left in SAFE."
+  }
+ ],
+ "sessions": [],
+ "measurements": [],
+ "archive": [
+  {
+   "path": "evidence/archive/C1_four_bar_sweep.v1.json",
+   "original_path": "docs/EVIDENCE/C1_four_bar_sweep.json",
+   "sha256": "eef37dad4417978d43e63d245931e1cb5f3f1501cdbae260be1d8d58cdf0e8ac",
+   "kind": "superseded_model_output",
+   "archived": "2026-09-28",
+   "reason": "Placeholder values (90 deg, 0.0 envelope) reported for linkages that cannot close.",
+   "discrepancies": [
+    "D-001",
+    "D-003"
+   ],
+   "superseded_by": "four_bar_data"
+  },
+  {
+   "path": "evidence/archive/C5_openrocket_pre_retune.ork.xml",
+   "original_path": "scratch/ork_unzip/rocket.ork",
+   "sha256": "082d383fb9626db223317b7fd008d4e12b4a5c443b448fb0e217a68d48090182",
+   "kind": "prior_model",
+   "archived": "2026-09-28",
+   "reason": "OpenRocket model before the fins were revised to meet the paper's margin target.",
+   "discrepancies": [
+    "D-009",
+    "D-023"
+   ],
+   "superseded_by": "stability_inputs"
+  },
+  {
+   "path": "evidence/archive/notes-v1/C1_four_bar.md",
+   "original_path": "docs/EVIDENCE/C1_four_bar.md",
+   "sha256": "a0dd11767612799bdeb1a7a317d872cd6d2be7db10d7ffef4def50eb274d6e80",
+   "kind": "historical_claim",
+   "archived": "2026-09-28",
+   "reason": "Statements contradicted by its own sweep.",
+   "discrepancies": [
+    "D-001",
+    "D-004"
+   ],
+   "superseded_by": null
+  },
+  {
+   "path": "evidence/archive/notes-v1/C2_latency.md",
+   "original_path": "docs/EVIDENCE/C2_latency.md",
+   "sha256": "035ca7ce15936f085102b9ad08f2c477f4d647ef750e64de3011812e0dedbea0",
+   "kind": "historical_claim",
+   "archived": "2026-09-28",
+   "reason": "Replaced by the generated claim passport.",
+   "discrepancies": [],
+   "superseded_by": null
+  },
+  {
+   "path": "evidence/archive/notes-v1/C3_naca_sweep.md",
+   "original_path": "docs/EVIDENCE/C3_naca_sweep.md",
+   "sha256": "cdb641b811bf5da2cf5f0687b36b7e0142044abeb593b1e46f6e0a24537f3988",
+   "kind": "historical_claim",
+   "archived": "2026-09-28",
+   "reason": "Replaced by the generated claim passport.",
+   "discrepancies": [],
+   "superseded_by": null
+  },
+  {
+   "path": "evidence/archive/notes-v1/C4_delta.md",
+   "original_path": "docs/EVIDENCE/C4_delta.md",
+   "sha256": "04398da14590c78ed14abca439e5626de6f33af047c50badf982c0cd1b70c5d7",
+   "kind": "historical_claim",
+   "archived": "2026-09-28",
+   "reason": "Replaced by the generated claim passport.",
+   "discrepancies": [
+    "D-010",
+    "D-022"
+   ],
+   "superseded_by": null
+  },
+  {
+   "path": "evidence/archive/notes-v1/C5_static_margin.md",
+   "original_path": "docs/EVIDENCE/C5_static_margin.md",
+   "sha256": "e745b40b923173fa75b74e78aa7b13650786598885b55ec0fab1a399ef53089e",
+   "kind": "historical_claim",
+   "archived": "2026-09-28",
+   "reason": "Generated by the model script with a 'confirms' verdict; replaced by the passport.",
+   "discrepancies": [
+    "D-006",
+    "D-007"
+   ],
+   "superseded_by": null
+  },
+  {
+   "path": "evidence/archive/notes-v1/C6_spring_sizing.md",
+   "original_path": "docs/EVIDENCE/C6_spring_sizing.md",
+   "sha256": "72c3441853710c0e5dbb52586163e5a899a86270dc3f0c56d1d8fe22dbd0cd6f",
+   "kind": "historical_claim",
+   "archived": "2026-09-28",
+   "reason": "Replaced by the generated claim passport.",
+   "discrepancies": [
+    "D-011"
+   ],
+   "superseded_by": null
+  },
+  {
+   "path": "evidence/archive/notes-v1/C7_reliability.md",
+   "original_path": "docs/EVIDENCE/C7_reliability.md",
+   "sha256": "a16bbd0d799379c90587c7111bb2266c2a3aa9e811157017edef5b3d103877a5",
+   "kind": "historical_claim",
+   "archived": "2026-09-28",
+   "reason": "Summary not reconstructable from its CSV; replaced by the run record and passport.",
+   "discrepancies": [
+    "D-014"
+   ],
+   "superseded_by": null
+  },
+  {
+   "path": "evidence/archive/notes-v1/C8_clt.md",
+   "original_path": "docs/EVIDENCE/C8_clt.md",
+   "sha256": "dc6b467bcf69c37fa5e1a8b6534231465734995fc695895b28e3b965f5b17a7c",
+   "kind": "historical_claim",
+   "archived": "2026-09-28",
+   "reason": "Replaced by the generated claim passport.",
+   "discrepancies": [
+    "D-015"
+   ],
+   "superseded_by": null
+  },
+  {
+   "path": "evidence/archive/notes-v1/C8_hinge_fos.md",
+   "original_path": "docs/EVIDENCE/C8_hinge_fos.md",
+   "sha256": "8f504151f5e0dc01b0a47f10908f8d047cbc5837091d440be1ee36e0145e9188",
+   "kind": "historical_claim",
+   "archived": "2026-09-28",
+   "reason": "Model output is now structured JSON; replaced by the passport.",
+   "discrepancies": [],
+   "superseded_by": null
+  },
+  {
+   "path": "evidence/archive/test_four_bar.v1.py.txt",
+   "original_path": "tests/test_four_bar.py",
+   "sha256": "4593d139cd18d013ae37af18e8fbcffc06b83f0e9e7eb754cf6cfefbadbcaae3",
+   "kind": "rejected_test",
+   "archived": "2026-09-28",
+   "reason": "Passed vacuously on placeholder values.",
+   "discrepancies": [
+    "D-003"
+   ],
+   "superseded_by": "four_bar_tests"
+  },
+  {
+   "path": "evidence/archive/test_spring_sizing.v1.py.txt",
+   "original_path": "tests/test_spring_sizing.py",
+   "sha256": "4bb9eb28aff14d2f452356646e927ea405c116edc18299cf46f48e26f9ba7726",
+   "kind": "rejected_test",
+   "archived": "2026-09-28",
+   "reason": "Named for a 20% margin but accepted negative margins.",
+   "discrepancies": [
+    "D-012"
+   ],
+   "superseded_by": "spring_tests"
+  }
+ ],
+ "recipes": [
+  {
+   "id": "four_bar",
+   "command": [
+    "{python}",
+    "mechanism/four_bar.py",
+    "--emit",
+    "{out}/C1_four_bar_sweep.json"
+   ],
+   "outputs": {
+    "four_bar_data": "C1_four_bar_sweep.json"
+   }
+  },
+  {
+   "id": "mass",
+   "command": [
+    "{python}",
+    "materials/mass_rollup.py",
+    "--emit",
+    "{out}/C4_mass_baseline.csv",
+    "{out}/C4_mass_optimized.csv"
+   ],
+   "outputs": {
+    "mass_baseline": "C4_mass_baseline.csv",
+    "mass_candidate": "C4_mass_optimized.csv",
+    "mass_summary": "C4_mass_summary.json"
+   }
+  },
+  {
+   "id": "stability",
+   "command": [
+    "{python}",
+    "Simulation/static_margin.py",
+    "--emit",
+    "{out}/C5_static_margin.csv",
+    "{out}/C5_static_margin.png",
+    "--ork",
+    "Simulation/Folding Stabilized Rocket.ork"
+   ],
+   "outputs": {
+    "stability_data": "C5_static_margin.csv",
+    "stability_record": "C5_static_margin_inputs.json"
+   }
+  },
+  {
+   "id": "crosscheck",
+   "command": [
+    "{python}",
+    "Simulation/barrowman_crosscheck.py",
+    "--ork",
+    "Simulation/Folding Stabilized Rocket.ork",
+    "--reference-csv",
+    "{out}/C5_static_margin.csv",
+    "--emit",
+    "{out}/C5_barrowman_crosscheck.json"
+   ],
+   "outputs": {
+    "crosscheck_data": "C5_barrowman_crosscheck.json"
+   }
+  },
+  {
+   "id": "spring",
+   "command": [
+    "{python}",
+    "mechanism/spring_sizing.py",
+    "--emit",
+    "{out}/C6_spring_sweep.json"
+   ],
+   "outputs": {
+    "spring_data": "C6_spring_sweep.json",
+    "spring_design_point": "C6_design_point.json"
+   }
+  },
+  {
+   "id": "reliability",
+   "command": [
+    "{python}",
+    "Simulation/reliability_sweep.py",
+    "--emit",
+    "{out}/C7_reliability.csv"
+   ],
+   "outputs": {
+    "reliability_failures": "C7_reliability.csv",
+    "reliability_run_record": "C7_run_record.json"
+   }
+  },
+  {
+   "id": "structural",
+   "command": [
+    "{python}",
+    "structures/fea_lite.py",
+    "--emit",
+    "{out}/C8_clt.csv",
+    "{out}/C8_hinge_fos.json"
+   ],
+   "outputs": {
+    "structural_data": "C8_clt.csv",
+    "hinge_data": "C8_hinge_fos.json"
+   }
+  }
+ ],
+ "records_kept": [
+  "archive",
+  "discrepancies",
+  "measurements",
+  "predictions",
+  "preregistrations",
+  "requirements",
+  "reviews",
+  "sessions"
+ ],
+ "execution_record": null,
+ "reproduction_record": null,
+ "violations": [],
+ "counts": {
+  "claims": 8,
+  "artifacts": 67,
+  "current_artifacts": 54,
+  "declared_physical_artifacts": 0,
+  "accepted_physical_measurements": 0,
+  "claim_status": {
+   "contradicted": 3,
+   "open": 4,
+   "supported_within_limits": 1
+  },
+  "unresolved_claims": 7,
+  "requirement_results": {
+   "conflicting": 1,
+   "not_evaluable": 1,
+   "not_evaluated": 2,
+   "not_measured": 4,
+   "not_satisfied": 3,
+   "requires_human_review": 4,
+   "satisfied": 4
+  },
+  "discrepancies_open": 18,
+  "discrepancies_total": 25,
+  "predictions_not_measured": 5,
+  "predictions_total": 5,
+  "archived_items": 13
+ },
+ "questions": [
+  {
+   "id": "unresolved",
+   "question": "Which claims are unresolved, and why?",
+   "answer": [
+    {
+     "claim": "C1",
+     "status": "CONTRADICTED",
+     "because": [
+      "Which topology and dimensions were intended? The recorded dimensions cannot form a closed loop (D-002).",
+      "R-C1-CLOSURE",
+      "D-002",
+      "D-004"
+     ]
+    },
+    {
+     "claim": "C2",
+     "status": "UNRESOLVED",
+     "because": [
+      "No hardware timing capture exists."
+     ]
+    },
+    {
+     "claim": "C4",
+     "status": "UNRESOLVED",
+     "because": [
+      "The rollup's fin (about 5 g in CFRP) and the 154 g fin used by C6 and C8 cannot both describe the same design (D-010).",
+      "The 7075-T6 baseline is not the printed prototype (D-022)."
+     ]
+    },
+    {
+     "claim": "C5",
+     "status": "UNRESOLVED",
+     "because": [
+      "Which fin-term formulation is correct for this geometry (D-006)?",
+      "Which motor should the CG history use (D-007)?",
+      "R-C5-WINDOW",
+      "D-006"
+     ]
+    },
+    {
+     "claim": "C6",
+     "status": "CONTRADICTED",
+     "because": [
+      "The calculated margin is below the stated requirement (D-011).",
+      "R-C6-MARGIN",
+      "D-011"
+     ]
+    },
+    {
+     "claim": "C7",
+     "status": "UNRESOLVED",
+     "because": [
+      "The success criterion cannot fail for a locked trial, so the result cannot discriminate designs (D-013)."
+     ]
+    },
+    {
+     "claim": "C8",
+     "status": "CONTRADICTED",
+     "because": [
+      "The modulus result is below the comparison material (D-015); a thickness-compensation argument has not been calculated.",
+      "R-C8-MODULUS",
+      "D-015"
+     ]
+    }
+   ]
+  },
+  {
+   "id": "model_only",
+   "question": "Which claims rest only on models or implementation, with no accepted physical evidence?",
+   "answer": [
+    "C1",
+    "C2",
+    "C3",
+    "C4",
+    "C5",
+    "C6",
+    "C7",
+    "C8"
+   ]
+  },
+  {
+   "id": "conflicts",
+   "question": "Which requirements currently conflict with their results?",
+   "answer": [
+    {
+     "requirement": "R-C1-CLOSURE",
+     "result": "NOT SATISFIED",
+     "observed": [
+      false
+     ],
+     "bound": {
+      "equals": true
+     },
+     "evidence_class": "analytical"
+    },
+    {
+     "requirement": "R-C5-WINDOW",
+     "result": "MODELS DISAGREE",
+     "observed": [
+      1.55,
+      1.57
+     ],
+     "bound": {
+      "min": 1.5,
+      "max": 2.0
+     },
+     "evidence_class": "analytical"
+    },
+    {
+     "requirement": "R-C6-MARGIN",
+     "result": "NOT SATISFIED",
+     "observed": [
+      0.189936
+     ],
+     "bound": {
+      "min": 0.2
+     },
+     "evidence_class": "analytical"
+    },
+    {
+     "requirement": "R-C8-MODULUS",
+     "result": "NOT SATISFIED",
+     "observed": [
+      56.68
+     ],
+     "bound": {
+      "min": 69.0
+     },
+     "evidence_class": "analytical"
+    }
+   ]
+  },
+  {
+   "id": "missing_measurements",
+   "question": "Which measurements are still missing?",
+   "answer": [
+    {
+     "requirement": "R-C1-LOCK",
+     "text": "The over-center toggle holds the fin at the deployed position against the design hinge moment."
+    },
+    {
+     "requirement": "R-C2-JITTER",
+     "text": "Deploy-output timing jitter is below 1 ms relative to the trigger."
+    },
+    {
+     "requirement": "R-C6-SPRING-RATE",
+     "text": "The supplied spring's measured rate is 220 N*m/rad within its stated tolerance."
+    },
+    {
+     "requirement": "R-C7-PHYSICAL",
+     "text": "Repeated inert deployments of a physical mechanism lock at the deployed position."
+    },
+    {
+     "prediction": "PRED-C2-DELAY",
+     "quantity": "delay from deploy trigger call to GPIO 33 rising edge"
+    },
+    {
+     "prediction": "PRED-C5-DRY-CG",
+     "quantity": "dry centre of gravity from nose tip"
+    },
+    {
+     "prediction": "PRED-C6-SPRING-RATE",
+     "quantity": "torsion spring rate of the supplied spring"
+    },
+    {
+     "prediction": "PRED-C7-LOCK-FRACTION",
+     "quantity": "fraction of deployments that reach and hold the lock position"
+    },
+    {
+     "prediction": "PRED-TLM-T-INTERVAL",
+     "quantity": "interval between successive rocket DATA packets"
+    }
+   ]
+  },
+  {
+   "id": "human_review",
+   "question": "What needs human engineering judgement?",
+   "answer": [
+    {
+     "requirement": "R-C2-NONBLOCKING",
+     "text": "Scheduling the deployment does not block the control loop."
+    },
+    {
+     "requirement": "R-C4-SCOPE",
+     "text": "The mass rollup's parts, volumes, and baseline materials describe the assembly being claimed."
+    },
+    {
+     "requirement": "R-C5-FORMULATION",
+     "text": "The static-margin formulation and its inputs are appropriate for this geometry and motor."
+    },
+    {
+     "requirement": "R-C8-COMPONENT-STIFFNESS",
+     "text": "At equal or lower mass, the CFRP fin section is at least as stiff in bending as the aluminium section it replaces."
+    },
+    {
+     "discrepancy": "D-002",
+     "next_action": "A human confirms the intended topology and link dimensions; then the model is re-run and reviewed."
+    },
+    {
+     "discrepancy": "D-004",
+     "next_action": "Model the locking moment for an assemblable linkage, or state that locking is a physical-test question only."
+    },
+    {
+     "discrepancy": "D-005",
+     "next_action": "Regenerate CAD only after D-002 is resolved; never cite the STEP as evidence the mechanism assembles."
+    },
+    {
+     "discrepancy": "D-006",
+     "next_action": "A human reviews both formulations against Barrowman (1967) or OpenRocket's component CP output."
+    },
+    {
+     "discrepancy": "D-007",
+     "next_action": "Use the OpenRocket motor (or justify the substitute) and record the motor mass data source."
+    },
+    {
+     "discrepancy": "D-008",
+     "next_action": "Reviewer decides whether the omissions matter at the required precision."
+    },
+    {
+     "discrepancy": "D-009",
+     "next_action": "Record an independent source for each revised input (drawing, datasheet, measurement), or keep the claims open."
+    },
+    {
+     "discrepancy": "D-010",
+     "next_action": "Define one design point in a single reviewed input file that every model reads."
+    },
+    {
+     "discrepancy": "D-011",
+     "next_action": "A human changes the spring, the requirement, or the design point, and records why."
+    },
+    {
+     "discrepancy": "D-013",
+     "next_action": "Rebuild the simulation so each failure mode it counts can occur, at the shared design point (D-010)."
+    },
+    {
+     "discrepancy": "D-015",
+     "next_action": "Calculate equal-mass section bending stiffness (R-C8-COMPONENT-STIFFNESS) or restate the claim."
+    },
+    {
+     "discrepancy": "D-017",
+     "next_action": "A human decides the intended ordering. On the bench this ordering acts as an extra interlock; do not remove it without a safety review."
+    },
+    {
+     "discrepancy": "D-018",
+     "next_action": "Proposed protocol change: carry rocket millis, a sequence number, and a boot identifier in DATA. Needs a bench-tested firmware revision."
+    },
+    {
+     "discrepancy": "D-021",
+     "next_action": "Reconcile the BOM with an as-built inventory; record purchased prices where known."
+    },
+    {
+     "discrepancy": "D-022",
+     "next_action": "State which assembly the 30-40% claim compares, and make the baseline match it."
+    },
+    {
+     "discrepancy": "D-023",
+     "next_action": "Re-export from the current .ork with its hash and settings recorded, or label the images historical."
+    },
+    {
+     "discrepancy": "D-024",
+     "next_action": "Use an external instrument on GPIO 33 (P-001). Sketch output can only describe callback-to-poll latency."
+    },
+    {
+     "discrepancy": "D-025",
+     "next_action": "A human decides the intended behavior under a separate safety review, for example a disarm command sent on abort. No gate was changed. Until then the status board raises W-ARMED-AFTER-ABORT, and an aborted rocket should be treated as armed until it is restarted."
+    }
+   ]
+  },
+  {
+   "id": "next_experiments",
+   "question": "Which inert experiments are proposed next?",
+   "answer": [
+    {
+     "preregistration": "P-001",
+     "title": "Deploy-output timing on inert hardware",
+     "status": "proposed"
+    },
+    {
+     "preregistration": "P-002",
+     "title": "Torsion spring rate of the supplied spring",
+     "status": "proposed"
+    },
+    {
+     "preregistration": "P-003",
+     "title": "Stationary roll-estimate drift",
+     "status": "proposed"
+    }
+   ]
+  },
+  {
+   "id": "depends_on",
+   "question": "Which claims depend on each file?",
+   "answer": {
+    ".github/workflows/ci.yml": [
+     "C3"
+    ],
+    "CAD Files/Four Bar Linkage.step": [
+     "C1"
+    ],
+    "CAD Files/FusionScripts/Project33FourBar/Project33FourBar.py": [
+     "C1"
+    ],
+    "CAD Files/FusionScripts/Project33NacaFin/Project33NacaFin.py": [
+     "C3"
+    ],
+    "CAD Files/naca_fin_generator.py": [
+     "C3"
+    ],
+    "Firmware/Rocket/src/deploy_isr.cpp": [
+     "C2"
+    ],
+    "Firmware/Rocket/src/deploy_isr.h": [
+     "C2"
+    ],
+    "Firmware/Rocket/src/main.cpp": [
+     "C2"
+    ],
+    "Firmware/Rocket/tests/bench_deploy_isr.ino": [
+     "C2"
+    ],
+    "Simulation/Folding Stabilized Rocket.ork": [
+     "C5"
+    ],
+    "Simulation/Stability_Graph.png": [
+     "C5"
+    ],
+    "Simulation/barrowman_crosscheck.py": [
+     "C5"
+    ],
+    "Simulation/reliability_sweep.py": [
+     "C7"
+    ],
+    "Simulation/static_margin.py": [
+     "C5"
+    ],
+    "docs/CAD_ASSEMBLIES.md": [
+     "C4"
+    ],
+    "docs/EVIDENCE/C1_four_bar_plot.png": [
+     "C1"
+    ],
+    "docs/EVIDENCE/C1_four_bar_sweep.json": [
+     "C1"
+    ],
+    "docs/EVIDENCE/C2_latency.csv": [
+     "C2"
+    ],
+    "docs/EVIDENCE/C4_mass_baseline.csv": [
+     "C4"
+    ],
+    "docs/EVIDENCE/C4_mass_optimized.csv": [
+     "C4"
+    ],
+    "docs/EVIDENCE/C4_mass_summary.json": [
+     "C4"
+    ],
+    "docs/EVIDENCE/C5_barrowman_crosscheck.json": [
+     "C5"
+    ],
+    "docs/EVIDENCE/C5_static_margin.csv": [
+     "C5"
+    ],
+    "docs/EVIDENCE/C5_static_margin.png": [
+     "C5"
+    ],
+    "docs/EVIDENCE/C5_static_margin_inputs.json": [
+     "C5"
+    ],
+    "docs/EVIDENCE/C6_design_point.json": [
+     "C6"
+    ],
+    "docs/EVIDENCE/C6_spring_sweep.json": [
+     "C6"
+    ],
+    "docs/EVIDENCE/C6_spring_sweep_plot.png": [
+     "C6"
+    ],
+    "docs/EVIDENCE/C7_reliability.csv": [
+     "C7"
+    ],
+    "docs/EVIDENCE/C7_run_record.json": [
+     "C7"
+    ],
+    "docs/EVIDENCE/C8_clt.csv": [
+     "C8"
+    ],
+    "docs/EVIDENCE/C8_hinge_fos.json": [
+     "C8"
+    ],
+    "docs/EVIDENCE/CHANGELOG.md": [
+     "C5"
+    ],
+    "docs/assets/review/c1_loop_closure.svg": [
+     "C1"
+    ],
+    "docs/assets/review/c3_naca0012_profile.svg": [
+     "C3"
+    ],
+    "materials/mass_rollup.py": [
+     "C4"
+    ],
+    "materials/parts.yaml": [
+     "C4"
+    ],
+    "mechanism/four_bar.py": [
+     "C1"
+    ],
+    "mechanism/spring_sizing.py": [
+     "C6"
+    ],
+    "structures/fea_lite.py": [
+     "C8"
+    ],
+    "tests/test_deploy_latency.py": [
+     "C2"
+    ],
+    "tests/test_firmware_safety.py": [
+     "C2"
+    ],
+    "tests/test_four_bar.py": [
+     "C1"
+    ],
+    "tests/test_fusion_script_install.py": [
+     "C3"
+    ],
+    "tests/test_mass_rollup.py": [
+     "C4"
+    ],
+    "tests/test_naca_fin_generator.py": [
+     "C3"
+    ],
+    "tests/test_reliability.py": [
+     "C7"
+    ],
+    "tests/test_spring_sizing.py": [
+     "C6"
+    ],
+    "tests/test_static_margin.py": [
+     "C5"
+    ],
+    "tests/test_structural.py": [
+     "C8"
+    ],
+    "tools/review_figures.py": [
+     "C1",
+     "C3"
+    ]
+   }
+  },
+  {
+   "id": "refused",
+   "question": "What does the repository refuse to claim?",
+   "answer": [
+    "Flight readiness or any live-propulsion result.",
+    "Any physical performance without a human-accepted inert measurement.",
+    "That a passing test, clean dataset, valid hash, or matching model validates hardware."
+   ]
+  }
+ ],
+ "vocabulary": {
+  "evidence_classes": {
+   "specification": {
+    "rank": 0,
+    "label": "SPECIFICATION",
+    "physical": false,
+    "meaning": "Authored requirement, boundary, note, or historical claim. States intent; demonstrates nothing."
+   },
+   "implementation": {
+    "rank": 1,
+    "label": "IMPLEMENTATION",
+    "physical": false,
+    "meaning": "Source code, CAD source, model input, or configuration. Shows what was built, not how it behaves."
+   },
+   "test_procedure": {
+    "rank": 1,
+    "label": "TEST PROCEDURE",
+    "physical": false,
+    "meaning": "Automated test source. A procedure, not a record that it ran or passed."
+   },
+   "synthetic": {
+    "rank": 1,
+    "label": "SYNTHETIC",
+    "physical": false,
+    "meaning": "Fabricated data that exercises tooling. Can never support a physical or performance claim."
+   },
+   "analytical": {
+    "rank": 2,
+    "label": "ANALYTICAL",
+    "physical": false,
+    "meaning": "Output of a deterministic calculation. Only as good as its formulation and inputs."
+   },
+   "simulated": {
+    "rank": 2,
+    "label": "SIMULATED",
+    "physical": false,
+    "meaning": "Output of a numerical or stochastic simulation. Not an observation of hardware."
+   },
+   "execution_record": {
+    "rank": 3,
+    "label": "SOFTWARE VERIFIED",
+    "physical": false,
+    "meaning": "A recorded run of automated checks. Shows software checks ran and passed, not that hardware works."
+   },
+   "bench_observed": {
+    "rank": 4,
+    "label": "BENCH OBSERVED",
+    "physical": true,
+    "meaning": "Inert physical observation without a calibrated instrument (photo, video, operator log)."
+   },
+   "bench_measured": {
+    "rank": 5,
+    "label": "BENCH MEASURED",
+    "physical": true,
+    "meaning": "Inert physical measurement with a named instrument, method, and uncertainty."
+   }
+  },
+  "claim_statuses": {
+   "open": [
+    "UNRESOLVED",
+    "An open question, conflict, or missing measurement blocks a stronger statement."
+   ],
+   "contradicted": [
+    "CONTRADICTED",
+    "Current evidence contradicts the claim or one of its requirements."
+   ],
+   "supported_within_limits": [
+    "SUPPORTED WITHIN STATED LIMITS",
+    "Evidence supports the statement as worded, at its evidence class only."
+   ],
+   "superseded": [
+    "SUPERSEDED",
+    "Replaced by another claim; retained for history."
+   ]
+  },
+  "gates": [
+   [
+    "analytical_model",
+    "ANALYTICAL MODEL"
+   ],
+   [
+    "software_reproduction",
+    "SOFTWARE REPRODUCTION"
+   ],
+   [
+    "synthetic_test",
+    "SYNTHETIC TEST"
+   ],
+   [
+    "inert_bench_setup",
+    "INERT BENCH SETUP"
+   ],
+   [
+    "inert_physical_measurement",
+    "INERT PHYSICAL MEASUREMENT"
+   ],
+   [
+    "repeated_measurement",
+    "REPEATED MEASUREMENT"
+   ],
+   [
+    "independent_review",
+    "INDEPENDENT REVIEW"
+   ]
+  ],
+  "freshness": {
+   "current": "CURRENT",
+   "never_reviewed": "NEVER REVIEWED",
+   "source_changed": "SOURCE CHANGED",
+   "statement_changed": "STATEMENT CHANGED",
+   "assumption_changed": "ASSUMPTION CHANGED",
+   "missing_dependency": "MISSING DEPENDENCY"
+  },
+  "requirement_results": {
+   "satisfied": "SATISFIED",
+   "not_satisfied": "NOT SATISFIED",
+   "conflicting": "MODELS DISAGREE",
+   "not_evaluable": "NOT EVALUABLE",
+   "not_evaluated": "NOT EVALUATED IN THIS BUILD",
+   "not_measured": "NOT MEASURED",
+   "requires_human_review": "REQUIRES HUMAN REVIEW"
+  },
+  "comparison_results": {
+   "not_measured": "NOT MEASURED",
+   "pending_acceptance": "MEASUREMENT PENDING HUMAN ACCEPTANCE",
+   "within_criterion": "WITHIN CRITERION",
+   "outside_criterion": "OUTSIDE CRITERION",
+   "no_criterion": "NO PRE-REGISTERED CRITERION",
+   "not_comparable": "NOT COMPARABLE"
+  },
+  "support_levels": [
+   [
+    "none",
+    "NO SUPPORTING EVIDENCE"
+   ],
+   [
+    "implementation",
+    "IMPLEMENTATION ONLY"
+   ],
+   [
+    "model",
+    "MODEL ONLY"
+   ],
+   [
+    "software",
+    "SOFTWARE VERIFIED"
+   ],
+   [
+    "bench_observed",
+    "BENCH OBSERVED"
+   ],
+   [
+    "bench_measured",
+    "BENCH MEASURED"
+   ],
+   [
+    "independently_reviewed",
+    "INDEPENDENTLY REVIEWED"
+   ]
+  ]
+ },
+ "principles": [
+  "If the repository says it happened, point to the artifact.",
+  "A model is not a measurement.",
+  "A clean dataset is not proof of a physical event.",
+  "A passing test is not a qualification result.",
+  "Unknown is not zero. Missing is not false. Unmeasured is not passed.",
+  "Unresolved is a valid engineering state.",
+  "The claim works for the evidence, not the other way round."
+ ],
+ "ai_boundary": [
+  "Automated tools, including AI assistants, may summarize, compare, explain, and propose.",
+  "They may not create measurements, relabel synthetic data as physical, edit raw evidence, fill missing records, register a pre-registration, accept a session, or record a human review.",
+  "They have no authority over arming, ignition, launch, or any safety gate.",
+  "Confidence is not authority: only a recorded inert measurement accepted by a named human enters the record."
+ ],
+ "limitations": [
+  "Artifact presence and hash integrity are not scientific validation.",
+  "Evidence classes, claim statuses, assumptions, and discrepancies are authored declarations checked for internal consistency.",
+  "This build evaluates recorded values; it does not run models, tests, firmware, or hardware unless run records are attached.",
+  "A digest detects change against a trusted reference; it is not a signature.",
+  "No flight readiness, certification, or agency endorsement is asserted."
+ ],
+ "safety_gates": [
+  {
+   "id": "G-01",
+   "gate": "Physical arming switch",
+   "location": "Launcher",
+   "behavior": "Leaving SAFE requires the switch; releasing it from any other state aborts to SAFE.",
+   "source": [
+    {
+     "path": "Firmware/Launcher/src/main.cpp",
+     "contains": "if (!isSwitchArmed() && currentState != SAFE) {"
+    }
+   ]
+  },
+  {
+   "id": "G-02",
+   "gate": "Rocket readiness handshake",
+   "location": "Launcher + rocket",
+   "behavior": "Launcher enters READY only after the rocket reports READY within 8 s; otherwise it aborts.",
+   "source": [
+    {
+     "path": "Firmware/Launcher/src/main.cpp",
+     "contains": "if (!rocketReady) { abortSequence(\"Rocket Timeout.\"); return; }"
+    }
+   ]
+  },
+  {
+   "id": "G-03",
+   "gate": "Heartbeat timeout",
+   "location": "Launcher",
+   "behavior": "READY aborts if rocket telemetry stops for 2 s.",
+   "source": [
+    {
+     "path": "Firmware/Launcher/src/main.cpp",
+     "contains": "if (millis() - lastHeartbeatTime > HEARTBEAT_TIMEOUT) {"
+    }
+   ]
+  },
+  {
+   "id": "G-04",
+   "gate": "Dashboard launch disabled by default",
+   "location": "Launcher",
+   "behavior": "UDP launch is rejected with CMD_REJECT:dashboard_launch_disabled unless firmware is rebuilt with the opt-in.",
+   "source": [
+    {
+     "path": "Firmware/Launcher/src/main.cpp",
+     "contains": "const bool ENABLE_DASHBOARD_LAUNCH = false;"
+    },
+    {
+     "path": "Firmware/Launcher/src/main.cpp",
+     "contains": "sendToDashboard(Project33Protocol::CMD_REJECT_DASHBOARD_LAUNCH_DISABLED);"
+    }
+   ]
+  },
+  {
+   "id": "G-05",
+   "gate": "Dashboard launch requires READY",
+   "location": "Launcher",
+   "behavior": "Even with the opt-in, UDP launch is accepted only in READY.",
+   "source": [
+    {
+     "path": "Firmware/Launcher/src/main.cpp",
+     "contains": "sendToDashboard(Project33Protocol::CMD_REJECT_LAUNCH_NOT_READY);"
+    }
+   ]
+  },
+  {
+   "id": "G-06",
+   "gate": "Dashboard source check",
+   "location": "Launcher",
+   "behavior": "Commands are ignored unless they come from the address that sent the shared-token HELLO.",
+   "source": [
+    {
+     "path": "Firmware/Launcher/src/main.cpp",
+     "contains": "if (!isAuthenticatedDashboard(remote)) {"
+    }
+   ]
+  },
+  {
+   "id": "G-07",
+   "gate": "Physical launch hold",
+   "location": "Launcher",
+   "behavior": "The launch button must be held for 1 s with the switch still armed.",
+   "source": [
+    {
+     "path": "Firmware/Launcher/src/main.cpp",
+     "contains": "while (isButtonPressed() && millis() - triggerStart < 1000) {"
+    }
+   ]
+  },
+  {
+   "id": "G-08",
+   "gate": "Rocket ARM requires IDLE and a healthy IMU",
+   "location": "Rocket",
+   "behavior": "ARM is refused (and now reported) otherwise.",
+   "source": [
+    {
+     "path": "Firmware/Rocket/src/main.cpp",
+     "contains": "cmdBuffer == Project33Protocol::CMD_ARM && sysState == \"IDLE\" && mpuHealthy"
+    }
+   ]
+  },
+  {
+   "id": "G-09",
+   "gate": "Rocket IGNITE requires ARMED and a healthy IMU",
+   "location": "Rocket",
+   "behavior": "IGNITE is refused (and now reported) otherwise.",
+   "source": [
+    {
+     "path": "Firmware/Rocket/src/main.cpp",
+     "contains": "cmdBuffer == Project33Protocol::CMD_IGNITE && sysState == \"ARMED\" && mpuHealthy"
+    }
+   ]
+  },
+  {
+   "id": "G-10",
+   "gate": "Rocket IGNITE requires the deploy flag",
+   "location": "Rocket",
+   "behavior": "IGNITE is refused unless the deploy timer has fired; see discrepancy D-017 for the ordering question.",
+   "source": [
+    {
+     "path": "Firmware/Rocket/src/main.cpp",
+     "contains": "if (!is_fins_deployed()) {"
+    }
+   ]
+  },
+  {
+   "id": "G-11",
+   "gate": "Deploy trigger requires a non-IDLE state",
+   "location": "Rocket",
+   "behavior": "Handling an unarmed rocket cannot fire the deploy output.",
+   "source": [
+    {
+     "path": "Firmware/Rocket/src/main.cpp",
+     "contains": "sysState != \"IDLE\" && a.acceleration.x > DEPLOY_ACCEL_THRESHOLD_MS2"
+    }
+   ]
+  },
+  {
+   "id": "G-12",
+   "gate": "Forced ignition is bench-build only",
+   "location": "Rocket",
+   "behavior": "IGNITE_FORCE exists only when BENCH_MODE is defined; the committed build does not define it.",
+   "source": [
+    {
+     "path": "Firmware/Rocket/src/main.cpp",
+     "contains": "#ifdef BENCH_MODE"
+    },
+    {
+     "path": "Firmware/Rocket/platformio.ini",
+     "absent": "BENCH_MODE"
+    }
+   ]
+  },
+  {
+   "id": "G-13",
+   "gate": "Refusals and aborts are logged",
+   "location": "Rocket + launcher + dashboard",
+   "behavior": "Rocket refusals travel over UART as CMD_REJECT lines; the launcher forwards them and its own ABORT reasons to the dashboard CSV.",
+   "source": [
+    {
+     "path": "Firmware/Rocket/src/main.cpp",
+     "contains": "Serial2.println(Project33Protocol::CMD_REJECT_IGNITE_FINS_NOT_DEPLOYED);"
+    },
+    {
+     "path": "Firmware/Launcher/src/main.cpp",
+     "contains": "else if (msg.startsWith(\"CMD_REJECT:\") || msg.startsWith(Project33Protocol::ABORT_PREFIX)) {"
+    },
+    {
+     "path": "Firmware/Launcher/src/main.cpp",
+     "contains": "sendToDashboard(String(Project33Protocol::ABORT_PREFIX) + reason);"
+    }
+   ]
+  },
+  {
+   "id": "G-14",
+   "gate": "Bounded controller gains",
+   "location": "Launcher + rocket",
+   "behavior": "PID values outside 0-10 or malformed are rejected on both boards.",
+   "source": [
+    {
+     "path": "Firmware/Launcher/src/main.cpp",
+     "contains": "isfinite(value) && value >= 0.0 && value <= 10.0"
+    },
+    {
+     "path": "Firmware/Rocket/src/main.cpp",
+     "contains": "isfinite(value) && value >= 0.0 && value <= 10.0"
+    }
+   ]
+  }
+ ],
+ "reviews": {
+  "C1": {
+   "current": {
+    "assumptions_sha256": "86d9c2f5a1418b666f93ce488b59f989c934281234418e887b13359b968d8d7d",
+    "dependencies": {
+     "c1_closure_figure": "6eaf21321a2c3f8dc86af6c632a0336e9964676b62634251b3bcfda28f67d963",
+     "four_bar_cad_script": "135baaed83dbb1d6957c664ede7de9e3509efeed0c90e59153ceb169117d8885",
+     "four_bar_data": "b5db59c4d5fcbc09379e046279f2cf5e778cb0d93f71a0df3ac0baba2ff4b0eb",
+     "four_bar_plot": "5097fb03a463ccdeaaee248a93d88414d4ecce3cb76c2500aaec5a0c352790a7",
+     "four_bar_source": "c29b5f1905d006accd1d5d9636e531e603f266da1d35808c540c59f45a2dd1f0",
+     "four_bar_step": "7f4afad7b1d77b01b21a776c13eca2041daeae40b52a598f1537ec80b10a2c87",
+     "four_bar_tests": "63215cc6d69d68ae06f47498f28c28c0a724fcfb98bacb0e640eb15d31a8e4fb",
+     "review_figures_tool": "73d43e02f4f5b7820580b68f93f815fa975d58057cab476e2887b9d3c253e799"
+    },
+    "kind": "snapshot",
+    "note": "Added the loop-closure review figure; D-002 now states the 0-92 deg B-D maximum (29.6 mm) precisely. Claim statement unchanged.",
+    "recorded": "2026-09-28",
+    "recorded_by": "tooling snapshot (no human review)",
+    "statement_sha256": "dc91b96b0950b0f65c122fc58828b515e05d46c0031c7a6027a82218a3ab3e6a"
+   },
+   "history": [
+    {
+     "assumptions_sha256": "343167623831cf0dc42e682af483a582687bd4f3ed2ed6664d24be3b3d1657f5",
+     "dependencies": {
+      "four_bar_cad_script": "135baaed83dbb1d6957c664ede7de9e3509efeed0c90e59153ceb169117d8885",
+      "four_bar_data": "b5db59c4d5fcbc09379e046279f2cf5e778cb0d93f71a0df3ac0baba2ff4b0eb",
+      "four_bar_plot": "5097fb03a463ccdeaaee248a93d88414d4ecce3cb76c2500aaec5a0c352790a7",
+      "four_bar_source": "c29b5f1905d006accd1d5d9636e531e603f266da1d35808c540c59f45a2dd1f0",
+      "four_bar_step": "7f4afad7b1d77b01b21a776c13eca2041daeae40b52a598f1537ec80b10a2c87",
+      "four_bar_tests": "63215cc6d69d68ae06f47498f28c28c0a724fcfb98bacb0e640eb15d31a8e4fb"
+     },
+     "kind": "snapshot",
+     "note": "Baseline snapshot after the evidence-discipline rewrite; detects later change. Not an engineering review.",
+     "recorded": "2026-09-28",
+     "recorded_by": "tooling snapshot (no human review)",
+     "statement_sha256": "dc91b96b0950b0f65c122fc58828b515e05d46c0031c7a6027a82218a3ab3e6a"
+    }
+   ]
+  },
+  "C2": {
+   "current": {
+    "assumptions_sha256": "a7063228f14f6ce3505dd6177615c655259fd222fd1d15be53273678c57fc4bd",
+    "dependencies": {
+     "firmware_safety_tests": "ff5e17217ea229ee936dfa61180bb98c083475c4ce0ff1eb1f44aa348e466a77",
+     "rocket_firmware": "4a14aac55f7f658ad74cca2738ffa49652595d811e94da35915854bdd5aba926",
+     "timing_bench_sketch": "add4c75d552ef7640487daeb7eecf33def960ea100b510accad1590417658419",
+     "timing_fixture": "8cf6f0fe7a94d49f4c3a872fdd400437addce23f03057ae8abe22bb778e69467",
+     "timing_header": "cd28abe0e40b3a53f98a2f04c03ff740f24a1457bf2d0dd818267a5952c88c9f",
+     "timing_source": "013cb6614c2cdb6b2d7a45cce893f89134e6f03cc5acc161dd36b5b23bec4028",
+     "timing_tests": "2012e20b2348325ddf94478678f8f8e053a5ad09e5b501ed9391797250fd8540"
+    },
+    "kind": "snapshot",
+    "note": "Added D-025 from reading the abort path in both firmwares: a launcher abort leaves an armed rocket armed. It is informational for C2 because deployment timing is unchanged; it does affect when the deploy trigger is live. No firmware changed. Automated snapshot, not a human review.",
+    "recorded": "2026-11-01",
+    "recorded_by": "tooling snapshot (no human review)",
+    "statement_sha256": "89c813e601f029d8c123406f34f8f6518a66ba74bad03982576bcb2f394c7af8"
+   },
+   "history": [
+    {
+     "assumptions_sha256": "cde7a310452916d0a79b59bafb6bcb97712bfb804edf0a273966b660bdf40e16",
+     "dependencies": {
+      "firmware_safety_tests": "ff5e17217ea229ee936dfa61180bb98c083475c4ce0ff1eb1f44aa348e466a77",
+      "rocket_firmware": "4a14aac55f7f658ad74cca2738ffa49652595d811e94da35915854bdd5aba926",
+      "timing_bench_sketch": "add4c75d552ef7640487daeb7eecf33def960ea100b510accad1590417658419",
+      "timing_fixture": "8cf6f0fe7a94d49f4c3a872fdd400437addce23f03057ae8abe22bb778e69467",
+      "timing_header": "cd28abe0e40b3a53f98a2f04c03ff740f24a1457bf2d0dd818267a5952c88c9f",
+      "timing_source": "013cb6614c2cdb6b2d7a45cce893f89134e6f03cc5acc161dd36b5b23bec4028",
+      "timing_tests": "2012e20b2348325ddf94478678f8f8e053a5ad09e5b501ed9391797250fd8540"
+     },
+     "kind": "snapshot",
+     "note": "Rocket now reports IGNITE/ARM refusals over UART (logging only; gates unchanged, compile-verified). Firmware safety tests added as cited evidence.",
+     "recorded": "2026-09-28",
+     "recorded_by": "tooling snapshot (no human review)",
+     "statement_sha256": "89c813e601f029d8c123406f34f8f6518a66ba74bad03982576bcb2f394c7af8"
+    },
+    {
+     "assumptions_sha256": "cde7a310452916d0a79b59bafb6bcb97712bfb804edf0a273966b660bdf40e16",
+     "dependencies": {
+      "rocket_firmware": "c4cb6ad31f01b29b7751d46f647dcceb82680a87c37c8f9e13dfa94a53b6ae25",
+      "timing_bench_sketch": "add4c75d552ef7640487daeb7eecf33def960ea100b510accad1590417658419",
+      "timing_fixture": "8cf6f0fe7a94d49f4c3a872fdd400437addce23f03057ae8abe22bb778e69467",
+      "timing_header": "cd28abe0e40b3a53f98a2f04c03ff740f24a1457bf2d0dd818267a5952c88c9f",
+      "timing_source": "013cb6614c2cdb6b2d7a45cce893f89134e6f03cc5acc161dd36b5b23bec4028",
+      "timing_tests": "2012e20b2348325ddf94478678f8f8e053a5ad09e5b501ed9391797250fd8540"
+     },
+     "kind": "snapshot",
+     "note": "Baseline snapshot after the evidence-discipline rewrite; detects later change. Not an engineering review.",
+     "recorded": "2026-09-28",
+     "recorded_by": "tooling snapshot (no human review)",
+     "statement_sha256": "89c813e601f029d8c123406f34f8f6518a66ba74bad03982576bcb2f394c7af8"
+    }
+   ]
+  },
+  "C3": {
+   "current": {
+    "assumptions_sha256": "db27ac8458e0bde77deb061fdbceba37f336b927d176baae693c72e2153388c7",
+    "dependencies": {
+     "c3_profile_figure": "6afe5f42d7e64820fb3aa08ebf4340dd4605e66b3f3cab70b8c9411480903663",
+     "cad_fusion_script": "52754c73baf5a2d2f06dad2266c208f7dc6d3eb44e430f2b3ca8eb2c5d7ea7e7",
+     "cad_install_tests": "f02aa050624ebf98b8176f84e9d30f76b5434d987b4279c12ff24ddf9a1e0b17",
+     "cad_source": "9d19d2ce4f06daea7e8ca8f6a5f52c03f5540e9c0c3999204292449f05c8749f",
+     "cad_tests": "4dba7f7013f2a2c3b902038062b7894ae239aa99b7b469b98b52cafb50ac96b5",
+     "ci": "1aa2ade27c00d88217cce38b6b01b4dec8a845280bf52878c95a413a261fb04b",
+     "review_figures_tool": "73d43e02f4f5b7820580b68f93f815fa975d58057cab476e2887b9d3c253e799"
+    },
+    "kind": "snapshot",
+    "note": "CI job display name restored to 'Python docs and telemetry checks' so required-check settings keep matching; job steps unchanged.",
+    "recorded": "2026-09-29",
+    "recorded_by": "tooling snapshot (no human review)",
+    "statement_sha256": "dad6de0a19d3bfb8f0260fd9201fa4c27673423ab4c23e4ef54778f213761bbd"
+   },
+   "history": [
+    {
+     "assumptions_sha256": "db27ac8458e0bde77deb061fdbceba37f336b927d176baae693c72e2153388c7",
+     "dependencies": {
+      "c3_profile_figure": "6afe5f42d7e64820fb3aa08ebf4340dd4605e66b3f3cab70b8c9411480903663",
+      "cad_fusion_script": "52754c73baf5a2d2f06dad2266c208f7dc6d3eb44e430f2b3ca8eb2c5d7ea7e7",
+      "cad_install_tests": "f02aa050624ebf98b8176f84e9d30f76b5434d987b4279c12ff24ddf9a1e0b17",
+      "cad_source": "9d19d2ce4f06daea7e8ca8f6a5f52c03f5540e9c0c3999204292449f05c8749f",
+      "cad_tests": "4dba7f7013f2a2c3b902038062b7894ae239aa99b7b469b98b52cafb50ac96b5",
+      "ci": "021243c2881fc1bbc04c4334a1d3d08c08a2cb50eb1ffce71e13222251be3a3e",
+      "review_figures_tool": "73d43e02f4f5b7820580b68f93f815fa975d58057cab476e2887b9d3c253e799"
+     },
+     "kind": "snapshot",
+     "note": "Added the NACA profile review figure; CI now attaches a test run record and reproduces models.",
+     "recorded": "2026-09-28",
+     "recorded_by": "tooling snapshot (no human review)",
+     "statement_sha256": "dad6de0a19d3bfb8f0260fd9201fa4c27673423ab4c23e4ef54778f213761bbd"
+    },
+    {
+     "assumptions_sha256": "db27ac8458e0bde77deb061fdbceba37f336b927d176baae693c72e2153388c7",
+     "dependencies": {
+      "cad_fusion_script": "52754c73baf5a2d2f06dad2266c208f7dc6d3eb44e430f2b3ca8eb2c5d7ea7e7",
+      "cad_install_tests": "f02aa050624ebf98b8176f84e9d30f76b5434d987b4279c12ff24ddf9a1e0b17",
+      "cad_source": "9d19d2ce4f06daea7e8ca8f6a5f52c03f5540e9c0c3999204292449f05c8749f",
+      "cad_tests": "4dba7f7013f2a2c3b902038062b7894ae239aa99b7b469b98b52cafb50ac96b5",
+      "ci": "81e432f9f8b2d4afe57591020996298f5a1bc9b4be478df0c6e89489a48d0e84"
+     },
+     "kind": "snapshot",
+     "note": "Baseline snapshot after the evidence-discipline rewrite; detects later change. Not an engineering review.",
+     "recorded": "2026-09-28",
+     "recorded_by": "tooling snapshot (no human review)",
+     "statement_sha256": "dad6de0a19d3bfb8f0260fd9201fa4c27673423ab4c23e4ef54778f213761bbd"
+    }
+   ]
+  },
+  "C4": {
+   "current": {
+    "assumptions_sha256": "75387f1f396560b2d8a9048642a23c005894007e6421eb6c4a12f0b6932a0a93",
+    "dependencies": {
+     "cad_materials_doc": "4352bd376b309bc8e0ca856646b6d1c6e846fc40815f355387a47b139967c41d",
+     "mass_baseline": "aa54a78f60d0af0382307032aa31fef2f13fafa79c39cc50dabf13d4c0d91868",
+     "mass_candidate": "c6dff1a044a6a2fc22ee873671dacb616ffad05a8dc055edcb8c4b81656e8cd7",
+     "mass_inputs": "b2b65a256c6bfb9fa911b2b79a457d56e8fdf3bf29667c33a936bcd676d70542",
+     "mass_source": "7e8b8ca2b46b20102721c645284fc7b1a81e8c4848e30ee4295a8a10260025ec",
+     "mass_summary": "f2987d38960196ad414a181cbb34e72a85be9245eda11271ca7eb84c51e8a832",
+     "mass_tests": "a553cf030873f9b6ec7a16c35556306a04c8f614de506dae0ccf711425fb6bbb"
+    },
+    "kind": "snapshot",
+    "note": "CAD_ASSEMBLIES.md gained review figures and a CAD-versus-model discrepancy table; material plan unchanged.",
+    "recorded": "2026-09-28",
+    "recorded_by": "tooling snapshot (no human review)",
+    "statement_sha256": "305c4f521e41edf64a3bd057c6db2082cf1d4f4e0f44c51048df74e2b8f0ee4c"
+   },
+   "history": [
+    {
+     "assumptions_sha256": "75387f1f396560b2d8a9048642a23c005894007e6421eb6c4a12f0b6932a0a93",
+     "dependencies": {
+      "cad_materials_doc": "48c592d9fa283ffdcf91da759facdd2331e2a0bd3690ec973505a8a6dd623013",
+      "mass_baseline": "aa54a78f60d0af0382307032aa31fef2f13fafa79c39cc50dabf13d4c0d91868",
+      "mass_candidate": "c6dff1a044a6a2fc22ee873671dacb616ffad05a8dc055edcb8c4b81656e8cd7",
+      "mass_inputs": "b2b65a256c6bfb9fa911b2b79a457d56e8fdf3bf29667c33a936bcd676d70542",
+      "mass_source": "7e8b8ca2b46b20102721c645284fc7b1a81e8c4848e30ee4295a8a10260025ec",
+      "mass_summary": "f2987d38960196ad414a181cbb34e72a85be9245eda11271ca7eb84c51e8a832",
+      "mass_tests": "a553cf030873f9b6ec7a16c35556306a04c8f614de506dae0ccf711425fb6bbb"
+     },
+     "kind": "snapshot",
+     "note": "Baseline snapshot after the evidence-discipline rewrite; detects later change. Not an engineering review.",
+     "recorded": "2026-09-28",
+     "recorded_by": "tooling snapshot (no human review)",
+     "statement_sha256": "305c4f521e41edf64a3bd057c6db2082cf1d4f4e0f44c51048df74e2b8f0ee4c"
+    }
+   ]
+  },
+  "C5": {
+   "current": {
+    "assumptions_sha256": "ab9e645e7acc93deb6a943b9729c06692fe17604f820904a3d9c7229ece71ce0",
+    "dependencies": {
+     "crosscheck_data": "bbf54cd31799f8d20b17ffc82de1e1cba337991a8eafb1277e018c0df24be7b5",
+     "crosscheck_source": "844a03c57bed3292b205cf6225340c94f4e70162a0fb1d5793c619ddf18c0f1e",
+     "divergence_log": "ec9345c71ad5d118a307b40346e82ca9c45110643b673c681e21dd97ff2d8d69",
+     "openrocket_stability_graph": "899af6b7a02c5b229ffdb1cac48fa5eaa167b2c9f80bceddd756aefcf0327866",
+     "stability_data": "11dbead6cfeabb560443aff7536136816eb47eef446a0b9de4be19ffd702f0cc",
+     "stability_inputs": "26087d70e4929b10acc960569d8211b4f2985004c545698ccd52e07eed02ae6a",
+     "stability_plot": "f25b14f130e2ba14940f37abfbae4483f818ed10ab531bb901dfbe85b5866d17",
+     "stability_record": "642c367181cab4d0b1b66054ddc0ee6c1a31af8b9c62560b3454f56ab32da821",
+     "stability_source": "4e5749eb7ef8b3d0fa209980e1d999ce7535fc7d145496401876d656d4e4181b",
+     "stability_tests": "859d50abe84990d69446cff6b1e61afbdfc935efd1f3c5510aeabf322c782666"
+    },
+    "kind": "snapshot",
+    "note": "Divergence log prefaced as a superseded historical record; content unchanged.",
+    "recorded": "2026-09-28",
+    "recorded_by": "tooling snapshot (no human review)",
+    "statement_sha256": "bd9ae2d94fa5d925c89270be120e60da66f32914b873ce0d354b79a895d99346"
+   },
+   "history": [
+    {
+     "assumptions_sha256": "ab9e645e7acc93deb6a943b9729c06692fe17604f820904a3d9c7229ece71ce0",
+     "dependencies": {
+      "crosscheck_data": "bbf54cd31799f8d20b17ffc82de1e1cba337991a8eafb1277e018c0df24be7b5",
+      "crosscheck_source": "844a03c57bed3292b205cf6225340c94f4e70162a0fb1d5793c619ddf18c0f1e",
+      "divergence_log": "671ebe2b5e544206a111c12e5efd057bb277a293b9324edf6124077fb0f89219",
+      "openrocket_stability_graph": "899af6b7a02c5b229ffdb1cac48fa5eaa167b2c9f80bceddd756aefcf0327866",
+      "stability_data": "11dbead6cfeabb560443aff7536136816eb47eef446a0b9de4be19ffd702f0cc",
+      "stability_inputs": "26087d70e4929b10acc960569d8211b4f2985004c545698ccd52e07eed02ae6a",
+      "stability_plot": "f25b14f130e2ba14940f37abfbae4483f818ed10ab531bb901dfbe85b5866d17",
+      "stability_record": "642c367181cab4d0b1b66054ddc0ee6c1a31af8b9c62560b3454f56ab32da821",
+      "stability_source": "4e5749eb7ef8b3d0fa209980e1d999ce7535fc7d145496401876d656d4e4181b",
+      "stability_tests": "859d50abe84990d69446cff6b1e61afbdfc935efd1f3c5510aeabf322c782666"
+     },
+     "kind": "snapshot",
+     "note": "Baseline snapshot after the evidence-discipline rewrite; detects later change. Not an engineering review.",
+     "recorded": "2026-09-28",
+     "recorded_by": "tooling snapshot (no human review)",
+     "statement_sha256": "bd9ae2d94fa5d925c89270be120e60da66f32914b873ce0d354b79a895d99346"
+    }
+   ]
+  },
+  "C6": {
+   "current": {
+    "assumptions_sha256": "66184d49b979fb87d6c9376c0fcdba11ae2fe2c87ae2ed701dac64c0e76c69d7",
+    "dependencies": {
+     "spring_data": "9db0f75cf68ece3fed03cc87abbcda3f4c8af4edcb0c1a115679004f277208cc",
+     "spring_design_point": "85e82763995ff0f76e2c58b297a01fa844f00939d3c7f9ed6279aef7516823d0",
+     "spring_plot": "0708c30e661880a0bdf1c1f4c1b36644119670a76b1a63b9272786710a4c50ed",
+     "spring_source": "c19a9aadb9bc574cf732a49e7595d307a42de02956ea81db916430a52d1241d8",
+     "spring_tests": "24e6e66c244c84fd95d3e462c07a0411ae34fc49ab589dfd84411ec68e8d6f38"
+    },
+    "kind": "snapshot",
+    "note": "Baseline snapshot after the evidence-discipline rewrite; detects later change. Not an engineering review.",
+    "recorded": "2026-09-28",
+    "recorded_by": "tooling snapshot (no human review)",
+    "statement_sha256": "061b9e966a874dad98bc833dcf72110a6bccbbd36a0e874bb7b77505dad135f6"
+   },
+   "history": []
+  },
+  "C7": {
+   "current": {
+    "assumptions_sha256": "920da4b7779515478478f6211dc2fa80ae901b97267d0f27cb1478736b0792a9",
+    "dependencies": {
+     "reliability_failures": "3eb6d15631e45528056f71c8a650326cceff2291ca6132766a2964482e1cc2b6",
+     "reliability_run_record": "1fb2b424083fdd19c5bc2b5645b67b3bbbe210a8adf08fd9d5636703ea427016",
+     "reliability_source": "08c76f04ad0476372c26a25a0f51efe3e5002df92d1f92e9c8596b7c307bac99",
+     "reliability_tests": "59ebcda5985bd4a48ca0689df833591bef95690a7ef2b9fc8f1481ca51f9ef2f"
+    },
+    "kind": "snapshot",
+    "note": "Baseline snapshot after the evidence-discipline rewrite; detects later change. Not an engineering review.",
+    "recorded": "2026-09-28",
+    "recorded_by": "tooling snapshot (no human review)",
+    "statement_sha256": "b6f22ad1c70c2e31fedaf8272df82516d656be7984cd32e8e279615753cf2c0d"
+   },
+   "history": []
+  },
+  "C8": {
+   "current": {
+    "assumptions_sha256": "6f1e3ccd0a9e1101ce7c40ed90551f8052de0266638765b8e10d7edd6b92cc12",
+    "dependencies": {
+     "hinge_data": "f04f43f57ff9a69e9226cabe2e727db134cdf3abedf5e4ddf19e8f45560c9f6e",
+     "structural_data": "67193424e7210d4f392760ef104911b2d0bcab7ebefe05b030185d9ca3a3b922",
+     "structural_source": "f8a0d02ca9d9134604acf4141ce16c20aa27d2a9bc5e739f389824eeaf1fc6a6",
+     "structural_tests": "3a6078b66cfcaa8b98f3508a08326ce8f7483f149363eba2f28f811691a487a8"
+    },
+    "kind": "snapshot",
+    "note": "Baseline snapshot after the evidence-discipline rewrite; detects later change. Not an engineering review.",
+    "recorded": "2026-09-28",
+    "recorded_by": "tooling snapshot (no human review)",
+    "statement_sha256": "f21b90dde5d4a6d3f4b9ab1cd1a82d98d99865e29d07cb7172f4a24ddbe0e222"
+   },
+   "history": []
+  }
+ },
+ "discrepancy_vocabulary": {
+  "kinds": {
+   "claim_vs_artifact": "What a claim or note says differs from what its artifact contains.",
+   "requirement_vs_model": "A model result does not meet a stated requirement.",
+   "model_vs_model": "Two models of the same quantity disagree.",
+   "model_vs_input": "A model's inputs differ from the design source it claims to use.",
+   "model_tuned_to_target": "Model inputs were revised until a target was met.",
+   "implementation_defect": "Software produced values that do not follow from its inputs.",
+   "test_vs_requirement": "A test does not check what its name or claim says.",
+   "documentation_vs_implementation": "Documentation disagrees with firmware or software behavior.",
+   "design_logic": "Two implemented rules cannot both be satisfied in the intended sequence.",
+   "simulation_vs_cad": "Simulation or model geometry disagrees with CAD geometry.",
+   "cad_vs_as_built": "CAD disagrees with assembled hardware.",
+   "telemetry_vs_expected": "Recorded telemetry disagrees with its documented meaning or rate.",
+   "bom_vs_design": "The bill of materials disagrees with the design or firmware.",
+   "predicted_vs_measured": "A physical measurement disagrees with its registered prediction.",
+   "provenance_gap": "An artifact cannot be traced to the model revision that produced it.",
+   "measurement_method": "A measurement procedure cannot establish what it is meant to measure."
+  },
+  "statuses": {
+   "open": "OPEN",
+   "resolved": "RESOLVED",
+   "accepted_limitation": "ACCEPTED LIMITATION"
+  },
+  "effects": {
+   "contradicts_claim": "Contradicts a claim or requirement",
+   "weakens_claim": "Weakens a claim's support",
+   "informational": "Informational"
+  }
+ },
+ "lab_note": "Derived view of `python -m evidence` assessment for display. It carries no authority: statuses, support levels, and requirement results are computed by evidence/assess.py from the committed record. Provenance (commit, worktree state) is omitted so the view depends only on committed bytes."
+}

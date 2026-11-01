@@ -1,0 +1,98 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>3D Engineering Workbench · Project 33</title>
+  <meta name="description" content="Rotate, explode, section, and inspect Project 33 geometry generated from its own OpenRocket model and STEP export, with every dimension traced to its source.">
+  <link rel="icon" href="../assets/marketing/mark.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="css/lab.css">
+  <link rel="stylesheet" href="css/workbench.css">
+</head>
+<body class="wb" data-page="workbench" data-mode="workbench" data-categories="research,conceptual">
+  <div id="shell-header"></div>
+  <main id="main" class="wb-grid" aria-label="3D engineering workbench">
+    <aside class="wb-left panel" aria-label="Specimens and assembly hierarchy">
+      <div class="panel-head"><h4>Specimens</h4><button class="btn icon ghost wb-collapse" data-collapse="left" type="button" aria-label="Collapse left panel">⟨</button></div>
+      <div class="panel-body wb-specimens" id="specimens" role="radiogroup" aria-label="Choose a specimen"></div>
+      <div class="panel-head"><h4>Assembly hierarchy</h4><span class="label" id="tree-count"></span></div>
+      <div class="wb-tree" id="tree" role="tree" aria-label="Assembly hierarchy"></div>
+      <div class="panel-body wb-legend" id="legend"></div>
+    </aside>
+
+    <section class="wb-center" aria-label="Viewport and tools">
+      <div class="wb-toolbar" role="toolbar" aria-label="Workbench tools" id="toolbar">
+        <div class="tool-group" aria-label="Assembly">
+          <button class="btn" id="btn-explode" type="button" aria-pressed="false" title="Explode / assemble (E)">Explode</button>
+          <button class="btn" id="btn-sequence" type="button" title="Play sequential disassembly">▶ Disassemble</button>
+          <button class="btn" id="btn-reverse" type="button" title="Play reverse assembly">◀ Assemble</button>
+        </div>
+        <div class="tool-group seg" role="group" aria-label="Rendering" id="modes">
+          <button class="btn" data-mode="clay" type="button" aria-pressed="false" title="Clay model (1)">Clay</button>
+          <button class="btn" data-mode="solid" type="button" aria-pressed="true" title="Solid CAD (2)">Solid</button>
+          <button class="btn" data-mode="wireframe" type="button" aria-pressed="false" title="Wireframe: display tessellation (3)">Wire</button>
+          <button class="btn" data-mode="blueprint" type="button" aria-pressed="false" title="Blueprint: edges, hidden lines, grid (4)">Blueprint</button>
+          <button class="btn" data-mode="xray" type="button" aria-pressed="false" title="X-ray (5)">X-ray</button>
+        </div>
+        <div class="tool-group">
+          <button class="btn" id="btn-section" type="button" aria-pressed="false" title="Section plane (S)">Section</button>
+          <button class="btn" id="btn-ortho" type="button" aria-pressed="false" title="Orthographic projection (O)">Ortho</button>
+          <button class="btn" id="btn-dims" type="button" aria-pressed="true" title="Source-linked dimensions (D)">Dimensions</button>
+          <button class="btn" id="btn-labels" type="button" aria-pressed="false" title="Part labels (L)">Labels</button>
+          <button class="btn" id="btn-measure" type="button" aria-pressed="false" title="Measure between two surface points (M)">Measure</button>
+        </div>
+        <div class="tool-group seg" role="group" aria-label="Standard views" id="views"></div>
+        <div class="tool-group">
+          <button class="btn icon" id="btn-reset" type="button" title="Reset (R)" aria-label="Reset view and model">↺</button>
+          <button class="btn icon" id="btn-full" type="button" title="Fullscreen (F)" aria-label="Fullscreen">⤢</button>
+          <button class="btn icon" id="btn-shot" type="button" title="Screenshot with provenance stamp (P)" aria-label="Export screenshot">⎙</button>
+        </div>
+      </div>
+      <div class="viewport" id="viewport" tabindex="0" aria-label="3D viewport. Drag to orbit, right-drag to pan, scroll to zoom. Click a part to inspect it.">
+        <div class="hud vp-class" id="vp-class"></div>
+        <div class="hud vp-overlays pe" id="vp-overlays"></div>
+        <div class="hud vp-info" id="vp-info"></div>
+        <div class="hud vp-scale" id="vp-scale"></div>
+        <div class="wb-placard" id="placard" hidden></div>
+        <div class="wb-fallback" id="fallback" hidden></div>
+      </div>
+    </section>
+
+    <aside class="wb-right panel" aria-label="Component inspector">
+      <div class="panel-head"><h4>Inspector</h4><button class="btn icon ghost wb-collapse" data-collapse="right" type="button" aria-label="Collapse inspector">⟩</button></div>
+      <div class="panel-body wb-inspector" id="inspector" aria-live="polite"></div>
+    </aside>
+
+    <section class="wb-bottom panel" aria-label="Timeline and section controls">
+      <div class="wb-timeline">
+        <div class="field">
+          <div class="field-row"><label class="label" for="explode">Explosion</label><output id="explode-out" for="explode">0%</output></div>
+          <input id="explode" type="range" min="0" max="100" step="0.5" value="0">
+          <div class="wb-ticks" id="explode-ticks" aria-hidden="true"></div>
+        </div>
+        <label class="wb-check"><input type="checkbox" id="sequential"> Sequential (staged)</label>
+      </div>
+      <div class="wb-section" id="section-controls" aria-disabled="true">
+        <div class="field-row"><span class="label">Section plane</span><output id="section-out">off</output></div>
+        <div class="cluster">
+          <div class="seg" role="group" aria-label="Section axis" id="section-axis">
+            <button class="btn" data-axis="x" type="button" aria-pressed="true" title="Transverse cut (normal to the specimen axis)">X</button>
+            <button class="btn" data-axis="y" type="button" aria-pressed="false">Y</button>
+            <button class="btn" data-axis="z" type="button" aria-pressed="false" title="Longitudinal cut">Z</button>
+          </div>
+          <button class="btn" id="section-flip" type="button" title="Flip which side is removed">Flip</button>
+          <label class="wb-check"><input type="checkbox" id="section-plane-show" checked> Show plane</label>
+        </div>
+        <input id="section" type="range" min="0" max="1000" step="1" value="500" aria-label="Section plane position">
+      </div>
+      <div class="wb-readouts" id="readouts" aria-live="polite"></div>
+    </section>
+  </main>
+  <div id="shell-footer"></div>
+  <noscript>
+    <div class="wrap section"><h2>The workbench needs JavaScript and WebGL.</h2>
+      <p>The same source data is available as documents: <a href="../docs/CAD_ASSEMBLIES.html">CAD assemblies</a>, <a href="../docs/claims/C1.html">C1 passport</a>, <a href="../docs/claims/C5.html">C5 passport</a>.</p></div>
+  </noscript>
+  <script type="module" src="js/workbench/main.js"></script>
+</body>
+</html>

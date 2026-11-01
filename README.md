@@ -11,6 +11,16 @@ Project 33 investigates a low-cost folding-fin rocket concept through mechanical
 
 **[Explore the project](https://topherchris420.github.io/33/)** · **[Reproduce an offline review](#reproduce-the-review)** · **[Inspect the claim ledger](#claim-status)** · **[Read the roadmap](docs/ROADMAP.md)** · **[Contribute](CONTRIBUTING.md)**
 
+## The Living Engineering Laboratory
+
+**[Enter the laboratory](https://topherchris420.github.io/33/lab/)** · **[Watch the opening film](https://topherchris420.github.io/33/lab/cinematic.html)** · **[Open the 3D workbench](https://topherchris420.github.io/33/lab/workbench.html)**
+
+[![A clay engineer watches a scanning beam turn the clay Project 33 rocket into an engineering wireframe](lab/assets/poster.jpg)](https://topherchris420.github.io/33/lab/cinematic.html)
+
+The project site is now an interactive, read-only engineering laboratory. Rotate, explode, and section geometry generated from the OpenRocket design file and the STEP export; watch the four-bar linkage fail to close, from the committed model; walk the evidence constellation; read telemetry as evidence; and compare models that disagree without crowning either. Every value traces to a committed file with a pinned SHA-256, absent values read NOT SPECIFIED or NOT MEASURED, and no interaction can reach hardware. Details: [docs/LIVING_LAB.md](docs/LIVING_LAB.md).
+
+*The film frame is a rendering of the design-file geometry, not a photograph, flight test, or physical assembly record.*
+
 ## From frequency to form
 
 [![Animated Project 33 rocket blueprint: Fourier epicycles trace contours, parts assemble, and the conceptual form rotates](assets/marketing/project33-blueprint.gif)](assets/marketing/project33-blueprint.mp4)
@@ -195,7 +205,8 @@ This repository is for inert bench validation, simulation, and engineering revie
 | `Firmware/ground_status.py`, `Firmware/status_panel.py` | Read-only [status board](docs/GROUND_STATUS.md): fault isolation, attitude, gain confirmation, advisories, session replay |
 | `protocol/ground_status_model.json` | Source-pinned dependency model; generates [Degraded Modes](docs/DEGRADED_MODES.md) |
 | `protocol/` | Canonical protocol definition; generates the firmware header and [Protocol](docs/PROTOCOL.md) |
-| `tools/` | Protocol generator, documentation link checker, review figures, Fusion script installer |
+| `tools/` | Protocol generator, documentation link checker, review figures, Fusion script installer, laboratory data exporters |
+| `lab/` | The Living Engineering Laboratory: static, read-only site ([docs/LIVING_LAB.md](docs/LIVING_LAB.md)) |
 | `tests/`, `Firmware/tests/` | Regression and adversarial tests |
 
 ## Build and run

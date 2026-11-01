@@ -1,0 +1,156 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Telemetry Theater · Project 33</title>
+  <meta name="description" content="How engineering measurements become interpretable evidence: Project 33's flawed synthetic fixture audited row by row, a declared signal generator, filtering, spectra, clock domains, and a read-only 3D systems architecture.">
+  <meta name="theme-color" content="#09111a">
+  <link rel="icon" href="../assets/marketing/mark.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="css/lab.css">
+  <link rel="stylesheet" href="css/telemetry.css">
+</head>
+<body class="grid-bg" data-page="telemetry" data-mode="workbench" data-categories="research,synthetic">
+  <div id="shell-header"></div>
+  <main id="main">
+    <section class="wrap tt-hero">
+      <p class="eyebrow">Telemetry &amp; signal analysis theater</p>
+      <h1>How a number<br>becomes <em>evidence.</em></h1>
+      <p class="lede">A telemetry row is a claim about the world made by a chain of clocks, buses, and code. This theater lets you take that chain apart — on data that is openly fabricated, because Project 33 has not yet accepted a single physical measurement.</p>
+      <div class="cluster tt-hero-tags">
+        <span class="cat cat-synthetic">Every dataset here is synthetic</span>
+        <span class="cat cat-research">Audit logic and architecture from the repository</span>
+      </div>
+      <figure class="tt-chain" aria-label="The chain from a sensor sample to reviewable evidence">
+        <ol>
+          <li><b>Sample</b><span>MPU6050 rate, read on the rocket</span></li>
+          <li><b>Estimate</b><span>roll integrated in firmware</span></li>
+          <li><b>Packet</b><span>DATA over UART, no timestamp</span></li>
+          <li><b>Relay</b><span>T, stamped with the launcher clock</span></li>
+          <li><b>Capture</b><span>dashboard CSV row, reception time</span></li>
+          <li><b>Audit</b><span>duplicates, gaps, clocks, invalid values</span></li>
+          <li><b>Evidence?</b><span>only after a named human accepts a physical session — <em>0 so far</em></span></li>
+        </ol>
+      </figure>
+    </section>
+
+    <section class="wrap tt-section" aria-labelledby="kinds-title">
+      <div class="section-head">
+        <p class="eyebrow">01 / Three kinds of data</p>
+        <h2 id="kinds-title">Measured, modelled, or made up?</h2>
+        <p class="muted">The evidence vocabulary (evidence/vocabulary.py) keeps these apart. A model can never become a measurement, and synthetic data can never be relabelled as physical.</p>
+      </div>
+      <div class="grid-3" id="kinds"></div>
+    </section>
+
+    <section class="wrap tt-section" aria-labelledby="theater-title">
+      <div class="section-head">
+        <p class="eyebrow">02 / The theater</p>
+        <h2 id="theater-title">Read the signal, then read the record.</h2>
+      </div>
+
+      <div class="tt-bar panel" role="toolbar" aria-label="Dataset and display controls">
+        <div class="tt-group"><span class="label">Dataset</span>
+          <div class="seg"><button class="btn" type="button" data-dataset="A" aria-pressed="true">A · Repository fixture</button><button class="btn" type="button" data-dataset="B" aria-pressed="false">B · Declared generator</button></div></div>
+        <div class="tt-group"><span class="label">Stream</span>
+          <div class="seg"><button class="btn" type="button" data-stream="T" aria-pressed="true" title="Live relay packets, launcher clock">T</button><button class="btn" type="button" data-stream="LOG" aria-pressed="false" title="Recovered ring buffer, rocket clock">LOG</button><button class="btn" type="button" data-stream="both" aria-pressed="false">Both</button></div></div>
+        <div class="tt-group"><span class="label">X axis</span>
+          <div class="seg"><button class="btn" type="button" data-xaxis="received" aria-pressed="true">Reception time</button><button class="btn" type="button" data-xaxis="device" aria-pressed="false">Device time_ms</button></div></div>
+        <div class="tt-group"><span class="label">Lanes</span>
+          <div class="seg"><button class="btn" type="button" data-channel="roll" aria-pressed="true">Roll</button><button class="btn" type="button" data-channel="rate" aria-pressed="true">Rate</button><button class="btn" type="button" data-channel="servo" aria-pressed="true">Servo</button><button class="btn" type="button" data-channel="dt" aria-pressed="true">Δt</button></div></div>
+      </div>
+
+      <div class="tt-grid">
+        <div class="panel tt-main">
+          <div class="panel-head">
+            <h4><span class="tt-ds" id="dataset-tag">A</span> <span id="dataset-title">Repository fixture</span></h4>
+            <div class="cluster"><span class="cat cat-synthetic">Synthetic</span>
+              <button class="btn icon" id="zoom-in" type="button" aria-label="Zoom in">+</button><button class="btn icon" id="zoom-out" type="button" aria-label="Zoom out">−</button><button class="btn" id="zoom-reset" type="button">Reset view</button></div>
+          </div>
+          <div class="tt-plot-wrap"><canvas id="plot" class="tt-plot" aria-label="Telemetry lanes: roll, rate, servo output, and sample interval. Focus and use arrow keys to pan, plus and minus to zoom, zero to reset." role="img"></canvas></div>
+          <p class="tt-readout mono" id="tt-readout" aria-live="polite"></p>
+          <div class="tt-replay" role="group" aria-label="Read-only session replay">
+            <button class="btn" id="replay-play" type="button" aria-pressed="false">Play</button>
+            <input id="replay-scrub" type="range" min="0" max="1" step="0.001" value="1" aria-label="Replay position (reception time)">
+            <output id="replay-time" class="readout">—</output>
+            <label class="label" for="replay-speed">Speed</label>
+            <select id="replay-speed"><option value="0.1">0.1×</option><option value="0.25">0.25×</option><option value="1">1×</option><option value="4">4×</option></select>
+            <button class="btn ghost" id="replay-end" type="button">Show all</button>
+            <span class="muted small" id="replay-count"></span>
+          </div>
+          <div class="tt-process" role="group" aria-label="Processing">
+            <div class="tt-group"><span class="label">Processing</span>
+              <div class="seg"><button class="btn" type="button" data-filter="none" aria-pressed="false">Raw only</button><button class="btn" type="button" data-filter="ema" aria-pressed="true">EMA</button><button class="btn" type="button" data-filter="ma" aria-pressed="false">Moving avg</button></div></div>
+            <div class="field tt-alpha" id="alpha-field"><div class="field-row"><label class="label" for="alpha">EMA weight <span class="nocase">α</span></label><output id="tau-out" for="alpha"></output></div>
+              <input id="alpha" type="range" min="0.02" max="1" step="0.01" value="0.3"></div>
+            <div class="field tt-alpha" id="window-field" hidden><div class="field-row"><label class="label" for="window">Window</label><output id="window-out" for="window">5 samples</output></div>
+              <input id="window" type="range" min="1" max="15" step="2" value="5"></div>
+            <div class="seg"><button class="btn" id="opt-raw" type="button" aria-pressed="true">Raw samples</button><button class="btn" id="opt-band" type="button" aria-pressed="true">±σ band</button><button class="btn" id="opt-truth" type="button" aria-pressed="false">Generator truth</button></div>
+          </div>
+          <ul class="tt-key small">
+            <li><span class="swatch" style="background:#67d8cf"></span>T samples (launcher relay clock)</li>
+            <li><span class="swatch" style="background:#f1e9d6"></span>LOG samples (rocket clock)</li>
+            <li><span class="swatch" style="background:#e0a274"></span>Processed</li>
+            <li><span class="swatch tri" style="color:#e07650"></span>Invalid sample — gap, never zero</li>
+            <li><span class="swatch tri" style="color:#b49ad8"></span>Dropped by generator (knowable only for synthetic data)</li>
+            <li><span class="swatch band"></span>±σ declared noise around generator truth</li>
+          </ul>
+        </div>
+        <aside class="tt-side">
+          <div class="panel" id="tt-provenance"></div>
+          <div class="panel" id="tt-detail"></div>
+        </aside>
+      </div>
+
+      <div class="grid-2 tt-lower">
+        <div class="panel" id="tt-fft">
+          <div class="panel-head"><h4>Frequency domain</h4><span class="cat cat-synthetic">Dataset B only</span></div>
+          <div class="panel-body"><canvas id="fft-canvas" class="tt-fft" role="img" aria-label="Amplitude spectrum of the roll channel"></canvas><p class="small muted" id="fft-note"></p></div>
+        </div>
+        <div class="panel">
+          <div class="panel-head"><h4>Two clocks, never mixed</h4><span class="cat cat-research">Project 33 · D-018</span></div>
+          <div class="panel-body">
+            <div id="clock-diagram" class="tt-clock"></div>
+            <p class="small">Live <code>T</code> packets are stamped with the launcher's <code>millis()</code> when it relays a rocket <code>DATA</code> line; <code>DATA</code> carries no rocket timestamp. Recovered <code>LOG</code> rows carry the rocket's clock at sample time. Plotting both on one device-time axis would be a category error, so the theater only offers device time for a single stream (<a href="../docs/ARCHITECTURE.html">Architecture · Clock domains</a>).</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="panel tt-limits">
+        <div class="panel-head"><h4>What the audit does not establish — verbatim from its output</h4><span class="cat cat-research">evidence/telemetry.py</span></div>
+        <div class="panel-body"><ul id="tt-limitations" class="tt-limit-list"></ul></div>
+      </div>
+    </section>
+
+    <section class="wrap tt-section" aria-labelledby="arch-title">
+      <div class="section-head">
+        <p class="eyebrow">03 / Systems architecture</p>
+        <h2 id="arch-title">Where every packet comes from.</h2>
+        <p class="muted">Nodes and links from <a href="../docs/ARCHITECTURE.html">Architecture</a> and <a href="../docs/WIRING.html">Wiring</a>. Select a node for its documented responsibilities, source files, safety gates, and the observable channels that depend on it.</p>
+      </div>
+      <div class="arch-grid">
+        <div class="panel arch-stage">
+          <div class="viewport arch-viewport" id="arch-viewport">
+            <div class="hud vp-class"><span class="cat cat-research">Project 33 research</span><span class="asset asset-reconstructed">Reconstructed concept — layout is schematic</span></div>
+            <div class="hud arch-banner" role="note">Diagram only — this view has no transmit path.</div>
+          </div>
+          <div class="arch-tools" role="toolbar" aria-label="Diagram display">
+            <button class="btn" id="arch-pulses" type="button" aria-pressed="true">Telemetry pulses</button>
+            <button class="btn" id="arch-commands" type="button" aria-pressed="true">Show command links</button>
+            <button class="btn ghost" id="arch-reset" type="button">Reset view</button>
+            <ul class="arch-legend small" id="legend-packets"></ul>
+          </div>
+        </div>
+        <aside class="arch-side">
+          <div class="panel" id="arch-inspector"><div class="panel-body muted">Loading the source-pinned models…</div></div>
+          <div class="panel"><div class="panel-head"><h4>Nodes</h4></div><div class="panel-body arch-nodes" id="arch-nodes"></div></div>
+        </aside>
+      </div>
+      <p class="notice safety small">Dashed copper links are command paths that exist in firmware. They are drawn so the architecture is honest, and they are not exposed here: no control on this page can arm, launch, ignite, or move an actuator. Physical interlocks are described in <a href="../docs/SAFETY.html">Safety</a>.</p>
+    </section>
+  </main>
+  <div id="shell-footer"></div>
+  <noscript><p class="wrap notice">The theater needs JavaScript for its plots. The underlying files are <a href="data/telemetry_fixture.json">lab/data/telemetry_fixture.json</a>, <a href="../docs/ARCHITECTURE.html">Architecture</a>, and <a href="../protocol/ground_status_model.json">ground_status_model.json</a>.</p></noscript>
+  <script type="module" src="js/telemetry/main.js"></script>
+</body>
+</html>

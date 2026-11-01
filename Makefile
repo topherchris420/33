@@ -1,4 +1,4 @@
-.PHONY: evidence review review-full evidence-demo check reproduce docs
+.PHONY: evidence review review-full evidence-demo check reproduce docs lab lab-serve
 PYTHON ?= python
 
 # Offline review: standard library only; no model execution or hardware needed.
@@ -17,6 +17,7 @@ review:
 check:
 	$(PYTHON) -m evidence check
 	$(PYTHON) tools/review_figures.py --check
+	$(PYTHON) tools/export_lab_data.py --check
 
 evidence-demo:
 	$(PYTHON) -m evidence demo --output "$(DEMO_OUTPUT)"
@@ -39,6 +40,7 @@ review-full:
 docs:
 	$(PYTHON) -m evidence docs
 	$(PYTHON) tools/review_figures.py
+	$(PYTHON) tools/export_lab_data.py
 
 # Local only: regenerate committed model outputs in place. Afterwards run
 # `make check`; any changed output drifts from its registered predictions and
@@ -52,3 +54,12 @@ evidence:
 	$(PYTHON) Simulation/reliability_sweep.py --emit docs/EVIDENCE/C7_reliability.csv
 	$(PYTHON) structures/fea_lite.py --emit docs/EVIDENCE/C8_clt.csv docs/EVIDENCE/C8_hinge_fos.json
 	$(PYTHON) "CAD Files/FusionScripts/Project33FourBar/Project33FourBar.py" --export "CAD Files/Four Bar Linkage.step"
+
+# Living Engineering Laboratory: regenerate CAD views (needs cadquery + zstandard) and
+# derived data views, or serve the site locally at http://localhost:8000/lab/.
+lab:
+	$(PYTHON) tools/cad_to_web.py
+	$(PYTHON) tools/export_lab_data.py
+
+lab-serve:
+	$(PYTHON) tools/serve_lab.py

@@ -1,0 +1,145 @@
+{
+ "schema": "project33.lab.telemetry_fixture/1",
+ "generated_by": "tools/export_lab_data.py",
+ "inputs": {
+  "evidence/__main__.py": "da7afcbdceced4b4f9311d95d543e4503a2ad62a42d71fabf71c61384dbdc080",
+  "evidence/bundle.py": "8298cc432167f6b1128aeec7ff660f90edeb0101105f6f98cd14b055518329b6",
+  "evidence/telemetry.py": "3c8a7bc0d984fa476f78efd633f8dc136f4e2ae0406fdb01c1ee14c29cb8c737"
+ },
+ "origin": "SYNTHETIC SOFTWARE FIXTURE — NO HARDWARE DATA",
+ "generator": "evidence/__main__.py demo() via python -m evidence demo",
+ "purpose": "An intentionally flawed capture that exercises the telemetry audit.",
+ "csv": "received_at_iso,source,message_type,time_ms,roll_deg,rate_deg_s,servo_output,raw\n2026-01-01T00:00:00+00:00,synthetic-fixture,T,0,0,0,0,\"T,0,0,0,0\"\n2026-01-01T00:00:00.050000+00:00,synthetic-fixture,T,50,0.2,0,0,\"T,50,0.2,0,0\"\n2026-01-01T00:00:00.100000+00:00,synthetic-fixture,T,50,0.2,0,0,\"T,50,0.2,0,0\"\n2026-01-01T00:00:00.150000+00:00,synthetic-fixture,T,100,NaN,0,0,\"T,100,NaN,0,0\"\n2026-01-01T00:00:00.200000+00:00,synthetic-fixture,T,900,0.4,0,0,\"T,900,0.4,0,0\"\n2026-01-01T00:00:00.250000+00:00,synthetic-fixture,T,10,0.1,0,0,\"T,10,0.1,0,0\"\n2026-01-01T00:00:00.300000+00:00,synthetic-fixture,RAW,,,,,\"LOG_START,3\"\n2026-01-01T00:00:00.350000+00:00,synthetic-fixture,LOG,0,0,0,0,\"LOG,0,0,0,0\"\n2026-01-01T00:00:00.400000+00:00,synthetic-fixture,LOG,50,0.2,0,0,\"LOG,50,0.2,0,0\"\n",
+ "audit": {
+  "schema_version": 2,
+  "kind": "telemetry_quality",
+  "origin": "synthetic",
+  "origin_is_operator_declared": true,
+  "input_sha256": "75b29061833f08423895c6883c0ee5a6e7b4890d0581a033751ebb3c9bf839c9",
+  "quality": "error",
+  "row_count": 9,
+  "invalid_rows": 1,
+  "message_types": {
+   "LOG": 2,
+   "RAW": 1,
+   "T": 6
+  },
+  "gap_threshold_ms": 500,
+  "streams": [
+   {
+    "source": "synthetic-fixture",
+    "message_type": "LOG",
+    "clock_domain": "rocket_millis",
+    "valid_samples": 2,
+    "invalid_samples": 0,
+    "duplicate_samples": 0,
+    "timestamp_conflicts": 0,
+    "clock_regressions": 0,
+    "segments": 1,
+    "gaps_over_threshold": 0,
+    "median_positive_interval_ms": 50,
+    "max_positive_interval_ms": 50,
+    "expected_interval_ms": 50
+   },
+   {
+    "source": "synthetic-fixture",
+    "message_type": "T",
+    "clock_domain": "launcher_relay_millis",
+    "valid_samples": 5,
+    "invalid_samples": 1,
+    "duplicate_samples": 1,
+    "timestamp_conflicts": 0,
+    "clock_regressions": 1,
+    "segments": 2,
+    "gaps_over_threshold": 1,
+    "median_positive_interval_ms": 450.0,
+    "max_positive_interval_ms": 850,
+    "expected_interval_ms": 50
+   }
+  ],
+  "log_dumps": [
+   {
+    "index": 1,
+    "line": 8,
+    "announced": 3,
+    "received": 2,
+    "terminated": false,
+    "state": "unterminated"
+   }
+  ],
+  "gain_windows": null,
+  "command_responses": [],
+  "findings": [
+   {
+    "severity": "error",
+    "code": "invalid_numeric_sample",
+    "count": 1
+   },
+   {
+    "severity": "warning",
+    "code": "device_clock_regression",
+    "count": 1
+   },
+   {
+    "severity": "warning",
+    "code": "device_time_gap",
+    "count": 1
+   },
+   {
+    "severity": "warning",
+    "code": "duplicate_sample",
+    "count": 1
+   },
+   {
+    "severity": "warning",
+    "code": "interval_differs_from_expected",
+    "count": 1
+   },
+   {
+    "severity": "warning",
+    "code": "log_dump_unterminated",
+    "count": 1
+   }
+  ],
+  "details": [
+   {
+    "line": 4,
+    "code": "duplicate_sample",
+    "severity": "warning"
+   },
+   {
+    "line": 5,
+    "code": "invalid_numeric_sample",
+    "severity": "error"
+   },
+   {
+    "line": 6,
+    "code": "device_time_gap",
+    "severity": "warning"
+   },
+   {
+    "line": 7,
+    "code": "device_clock_regression",
+    "severity": "warning"
+   },
+   {
+    "line": 10,
+    "code": "log_dump_unterminated",
+    "severity": "warning"
+   }
+  ],
+  "details_truncated": true,
+  "limitations": [
+   "Origin is a declaration, not proof that hardware was present.",
+   "This checks recorded data quality, not physical performance or readiness.",
+   "T and LOG are separate streams; log recovery never increases live sample coverage.",
+   "T time_ms is the launcher's clock at relay, not the rocket's sample time; LOG time_ms is the rocket's clock.",
+   "The protocol has no sequence ID or boot identifier: gaps do not establish packet-loss counts.",
+   "Clock regressions may be reset, reordering, or rollover; no cause is inferred.",
+   "Invalid samples are counted and excluded, never replaced with zero.",
+   "Positive intervals use successive valid rows, so invalid rows can span an interval.",
+   "STATUS, ENV, and RAW payload values are preserved but not numerically audited.",
+   "Firmware revision, hardware revision, and calibration state are not carried by the protocol; they are known only if a session declaration records them."
+  ]
+ }
+}

@@ -1,0 +1,477 @@
+{
+ "schema": "project33.lab.cad_archive/1",
+ "generated_by": "tools/cad_to_web.py",
+ "archives": [
+  {
+   "path": "CAD Files/Folding Rocket.f3z",
+   "sha256": "2e2b670b6c4798feff7dfd0456a64f46ec19ced20b4c05db69bcfe8d07f24cd3",
+   "bytes": 18248481,
+   "root_member": "b9471f68-9ecb-4a85-8ab7-322ebacb802c.f3d",
+   "designs": [
+    {
+     "id": 527522,
+     "member": "b9471f68-9ecb-4a85-8ab7-322ebacb802c.f3d",
+     "name": "Folding Rocket REDO -_-",
+     "version": 66,
+     "created": "2026-03-09T22:18:06+0000",
+     "description": "User Saved",
+     "is_root": true,
+     "brep_blobs": {
+      "smb": 49,
+      "smbh": 47
+     },
+     "current_state_statistics": {
+      "bodies": 210,
+      "faces": 8178,
+      "edges": 21172,
+      "surface_types": {
+       "cone": 2439,
+       "plane": 3470,
+       "sphere": 34,
+       "spline/cyl_spl_sur": 1,
+       "spline/helix_spl_line": 8,
+       "spline/off_spl_sur": 1,
+       "spline/rb_blend_spl_sur": 158,
+       "spline/ref": 853,
+       "torus": 435
+      }
+     },
+     "preview": "lab/data/cad/folding-rocket-527522.png"
+    },
+    {
+     "id": 527526,
+     "member": "a4271a6e-8c62-455e-8ede-a90f18116192.f3d",
+     "name": "MPU6050 v2",
+     "version": 1,
+     "created": "2026-01-14T04:09:29+0000",
+     "description": "Imported from Folding Rocket MG996R 12.18.25.f3z",
+     "is_root": false,
+     "brep_blobs": {
+      "smb": 1,
+      "smbh": 1
+     },
+     "current_state_statistics": {
+      "bodies": 52,
+      "faces": 314,
+      "edges": 596,
+      "surface_types": {
+       "cone": 34,
+       "plane": 280
+      }
+     },
+     "preview": "lab/data/cad/folding-rocket-527526.png"
+    },
+    {
+     "id": 527525,
+     "member": "aa34434b-e3c0-4bfa-86f7-3331aeb83757.f3d",
+     "name": "SG90 - Micro Servo 9g - Tower Pro.1",
+     "version": 1,
+     "created": "2026-01-14T04:11:03+0000",
+     "description": "Imported from Folding Rocket MG996R 12.18.25.f3z",
+     "is_root": false,
+     "brep_blobs": {
+      "smb": 1,
+      "smbh": 1
+     },
+     "current_state_statistics": {
+      "bodies": 13,
+      "faces": 612,
+      "edges": 2113,
+      "surface_types": {
+       "cone": 129,
+       "plane": 433,
+       "sphere": 2,
+       "spline/cyl_spl_sur": 2,
+       "spline/exact_spl_sur": 4,
+       "spline/ref": 17,
+       "torus": 25
+      }
+     },
+     "preview": "lab/data/cad/folding-rocket-527525.png"
+    },
+    {
+     "id": 527529,
+     "member": "54ee4943-2867-4fcc-8e99-48586b42d270.f3d",
+     "name": "SG90 - Micro Servo 9g - Tower Pro.1",
+     "version": 1,
+     "created": "2026-01-14T04:09:35+0000",
+     "description": "Imported from Folding Rocket MG996R 12.18.25.f3z",
+     "is_root": false,
+     "brep_blobs": {
+      "smb": 1,
+      "smbh": 1
+     },
+     "current_state_statistics": {
+      "bodies": 13,
+      "faces": 612,
+      "edges": 2113,
+      "surface_types": {
+       "cone": 129,
+       "plane": 433,
+       "sphere": 2,
+       "spline/cyl_spl_sur": 2,
+       "spline/exact_spl_sur": 4,
+       "spline/ref": 17,
+       "torus": 25
+      }
+     },
+     "preview": "lab/data/cad/folding-rocket-527529.png"
+    },
+    {
+     "id": 527527,
+     "member": "895d6bf9-08d6-4129-b0df-213a0694dc89.f3d",
+     "name": "SG90 - Micro Servo 9g - Tower Pro.2",
+     "version": 1,
+     "created": "2026-01-14T04:09:37+0000",
+     "description": "Imported from Folding Rocket MG996R 12.18.25.f3z",
+     "is_root": false,
+     "brep_blobs": {
+      "smb": 1,
+      "smbh": 1
+     },
+     "current_state_statistics": {
+      "bodies": 1,
+      "faces": 197,
+      "edges": 569,
+      "surface_types": {
+       "cone": 70,
+       "plane": 127
+      }
+     },
+     "preview": "lab/data/cad/folding-rocket-527527.png"
+    },
+    {
+     "id": 527530,
+     "member": "5cca5add-1844-4a99-8b5e-e5a75bb25fcf.f3d",
+     "name": "SG90 - Micro Servo 9g - Tower Pro.2",
+     "version": 1,
+     "created": "2026-01-14T04:11:06+0000",
+     "description": "Imported from Folding Rocket MG996R 12.18.25.f3z",
+     "is_root": false,
+     "brep_blobs": {
+      "smb": 1,
+      "smbh": 1
+     },
+     "current_state_statistics": {
+      "bodies": 1,
+      "faces": 197,
+      "edges": 569,
+      "surface_types": {
+       "cone": 70,
+       "plane": 127
+      }
+     },
+     "preview": "lab/data/cad/folding-rocket-527530.png"
+    },
+    {
+     "id": 527524,
+     "member": "06d156bd-1eef-46ed-976c-153ed6b81c05.f3d",
+     "name": "Servo Horns",
+     "version": 1,
+     "created": "2026-01-14T04:09:39+0000",
+     "description": "Imported from Folding Rocket MG996R 12.18.25.f3z",
+     "is_root": false,
+     "brep_blobs": {
+      "smb": 1,
+      "smbh": 1
+     },
+     "current_state_statistics": {
+      "bodies": 1,
+      "faces": 94,
+      "edges": 255,
+      "surface_types": {
+       "cone": 40,
+       "plane": 54
+      }
+     },
+     "preview": "lab/data/cad/folding-rocket-527524.png"
+    },
+    {
+     "id": 527528,
+     "member": "9470fc3e-1598-4fd6-9290-c13fc357d2c2.f3d",
+     "name": "XL601 Power Switch v4",
+     "version": 1,
+     "created": "2025-11-18T05:01:28+0000",
+     "description": "Imported from XL601 Power Switch v4.f3d",
+     "is_root": false,
+     "brep_blobs": {
+      "smb": 1,
+      "smbh": 1
+     },
+     "current_state_statistics": {
+      "bodies": 1,
+      "faces": 91,
+      "edges": 257,
+      "surface_types": {
+       "cone": 4,
+       "plane": 83
+      }
+     },
+     "preview": "lab/data/cad/folding-rocket-527528.png"
+    },
+    {
+     "id": 527523,
+     "member": "496e7c50-ff72-45d9-9796-74f1cb6ecd82.f3d",
+     "name": "mg996R_v2",
+     "version": 1,
+     "created": "2026-01-14T04:09:32+0000",
+     "description": "Imported from Folding Rocket MG996R 12.18.25.f3z",
+     "is_root": false,
+     "brep_blobs": {
+      "smb": 1,
+      "smbh": 1
+     },
+     "current_state_statistics": {
+      "bodies": 11,
+      "faces": 773,
+      "edges": 2017,
+      "surface_types": {
+       "cone": 78,
+       "plane": 403,
+       "sphere": 4,
+       "spline/cyl_spl_sur": 6,
+       "spline/exact_spl_sur": 2,
+       "spline/ref": 276,
+       "torus": 4
+      }
+     },
+     "preview": "lab/data/cad/folding-rocket-527523.png"
+    }
+   ],
+   "translation": {
+    "status": "NOT TRANSLATED",
+    "reason": "Bodies are Autodesk ShapeManager B-rep (ASM 231) in zstd-compressed members. This repository has no reviewed translator for that format, and the archive's occurrence placements live in proprietary design streams. Displaying a partial or unplaced translation would imply an assembly the record cannot support.",
+    "unblock": "Export STEP from Fusion 360 into CAD Files/exports/ and rerun tools/cad_to_web.py."
+   }
+  },
+  {
+   "path": "CAD Files/Launcher Platform.f3z",
+   "sha256": "3471758a47aed768d9a3e4cfba656f3cbddd22045f50b1b21253b77b37dc0110",
+   "bytes": 5225523,
+   "root_member": "ae2748bb-78c6-4b07-8265-defb377e3db4.f3d",
+   "designs": [
+    {
+     "id": 648449,
+     "member": "ae2748bb-78c6-4b07-8265-defb377e3db4.f3d",
+     "name": "Stinger knockoff lol",
+     "version": 22,
+     "created": "2026-03-08T01:02:02+0000",
+     "description": "Save for export",
+     "is_root": true,
+     "brep_blobs": {
+      "smb": 18,
+      "smbh": 17
+     },
+     "current_state_statistics": {
+      "bodies": 18,
+      "faces": 1363,
+      "edges": 3302,
+      "surface_types": {
+       "cone": 474,
+       "plane": 511,
+       "sphere": 42,
+       "spline/cyl_spl_sur": 6,
+       "spline/helix_spl_circ": 2,
+       "spline/loft_spl_sur": 2,
+       "spline/off_spl_sur": 2,
+       "spline/rb_blend_spl_sur": 41,
+       "spline/ref": 40,
+       "spline/sum_spl_sur": 2,
+       "torus": 184
+      }
+     },
+     "preview": "lab/data/cad/launcher-platform-648449.png"
+    },
+    {
+     "id": 648452,
+     "member": "111a0fb7-cb46-4846-9d67-98a3c66d8b6d.zip.f3d",
+     "name": "ESP32 WROOM WIth Socket Headers",
+     "version": 1,
+     "created": "2026-02-23T03:32:31+0000",
+     "description": "Imported from ESP32 WROOM WIth Socket Headers.step",
+     "is_root": false,
+     "brep_blobs": {
+      "smb": 102,
+      "smbh": 102
+     },
+     "current_state_statistics": {
+      "bodies": 103,
+      "faces": 1844,
+      "edges": 4661,
+      "surface_types": {
+       "cone": 170,
+       "plane": 1670,
+       "sphere": 4
+      }
+     },
+     "preview": "lab/data/cad/launcher-platform-648452.png"
+    },
+    {
+     "id": 648453,
+     "member": "5e0d7d4d-7773-4628-b35c-eb5e1e25a182.zip.f3d",
+     "name": "Microswitch_P-B1729",
+     "version": 1,
+     "created": "2026-02-23T21:23:40+0000",
+     "description": "Imported from Microswitch_P-B1729.stp",
+     "is_root": false,
+     "brep_blobs": {
+      "smb": 1,
+      "smbh": 1
+     },
+     "current_state_statistics": {
+      "bodies": 6,
+      "faces": 309,
+      "edges": 742,
+      "surface_types": {
+       "cone": 85,
+       "plane": 203,
+       "sphere": 10,
+       "torus": 11
+      }
+     },
+     "preview": "lab/data/cad/launcher-platform-648453.png"
+    },
+    {
+     "id": 648451,
+     "member": "9012bd01-4fb4-44dc-b7d8-835a235e52d2.zip.f3d",
+     "name": "Tactal Switch -THru (6mmx 6mmx5mm)-Red",
+     "version": 1,
+     "created": "2026-02-24T00:49:03+0000",
+     "description": "Imported from Tactal Switch -THru (6mmx 6mmx5mm)-Red.stp",
+     "is_root": false,
+     "brep_blobs": {
+      "smb": 1,
+      "smbh": 1
+     },
+     "current_state_statistics": {
+      "bodies": 1,
+      "faces": 250,
+      "edges": 583,
+      "surface_types": {
+       "cone": 25,
+       "plane": 181,
+       "spline/cyl_spl_sur": 34,
+       "spline/ref": 5,
+       "torus": 5
+      }
+     },
+     "preview": "lab/data/cad/launcher-platform-648451.png"
+    },
+    {
+     "id": 648450,
+     "member": "9470fc3e-1598-4fd6-9290-c13fc357d2c2.f3d",
+     "name": "XL601 Power Switch v4",
+     "version": 1,
+     "created": "2025-11-18T05:01:28+0000",
+     "description": "Imported from XL601 Power Switch v4.f3d",
+     "is_root": false,
+     "brep_blobs": {
+      "smb": 1,
+      "smbh": 1
+     },
+     "current_state_statistics": {
+      "bodies": 1,
+      "faces": 91,
+      "edges": 257,
+      "surface_types": {
+       "cone": 4,
+       "plane": 83
+      }
+     },
+     "preview": "lab/data/cad/launcher-platform-648450.png"
+    }
+   ],
+   "translation": {
+    "status": "NOT TRANSLATED",
+    "reason": "Bodies are Autodesk ShapeManager B-rep (ASM 231) in zstd-compressed members. This repository has no reviewed translator for that format, and the archive's occurrence placements live in proprietary design streams. Displaying a partial or unplaced translation would imply an assembly the record cannot support.",
+    "unblock": "Export STEP from Fusion 360 into CAD Files/exports/ and rerun tools/cad_to_web.py."
+   }
+  },
+  {
+   "path": "CAD Files/Rocket Nozzle.f3z",
+   "sha256": "430f7c50d12fe278f1ef50a69f56d98b9fced53e695e924011d79928a14e62a2",
+   "bytes": 339591,
+   "root_member": "c8e56c77-e7a8-456c-b572-8617732c9366.f3d",
+   "designs": [
+    {
+     "id": 654518,
+     "member": "c8e56c77-e7a8-456c-b572-8617732c9366.f3d",
+     "name": "Rocket Nozzle",
+     "version": 6,
+     "created": "2026-03-07T05:14:37+0000",
+     "description": "User Saved",
+     "is_root": true,
+     "brep_blobs": {
+      "smb": 0,
+      "smbh": 0
+     },
+     "current_state_statistics": {
+      "bodies": 0,
+      "faces": 0,
+      "edges": 0,
+      "surface_types": {}
+     },
+     "preview": "lab/data/cad/rocket-nozzle-654518.png"
+    },
+    {
+     "id": 654519,
+     "member": "e73e8427-ded5-4e3b-986a-dfee9b969ac7.f3d",
+     "name": "Rocket Nozzle",
+     "version": 3,
+     "created": "2026-02-08T03:01:21+0000",
+     "description": "User Saved",
+     "is_root": false,
+     "brep_blobs": {
+      "smb": 1,
+      "smbh": 1
+     },
+     "current_state_statistics": {
+      "bodies": 1,
+      "faces": 11,
+      "edges": 23,
+      "surface_types": {
+       "cone": 1,
+       "plane": 4,
+       "spline/helix_spl_line": 2,
+       "spline/rb_blend_spl_sur": 3,
+       "torus": 1
+      }
+     },
+     "preview": "lab/data/cad/rocket-nozzle-654519.png"
+    },
+    {
+     "id": 654520,
+     "member": "23f79ff3-8d3d-48e6-9eb3-f218e6d72339.f3d",
+     "name": "nozzle",
+     "version": 5,
+     "created": "2026-02-18T04:33:59+0000",
+     "description": "User Saved",
+     "is_root": false,
+     "brep_blobs": {
+      "smb": 1,
+      "smbh": 1
+     },
+     "current_state_statistics": {
+      "bodies": 1,
+      "faces": 22,
+      "edges": 36,
+      "surface_types": {
+       "cone": 5,
+       "plane": 5,
+       "spline/helix_spl_line": 2,
+       "spline/rb_blend_spl_sur": 4,
+       "spline/ref": 2,
+       "torus": 4
+      }
+     },
+     "preview": "lab/data/cad/rocket-nozzle-654520.png"
+    }
+   ],
+   "translation": {
+    "status": "NOT TRANSLATED",
+    "reason": "Bodies are Autodesk ShapeManager B-rep (ASM 231) in zstd-compressed members. This repository has no reviewed translator for that format, and the archive's occurrence placements live in proprietary design streams. Displaying a partial or unplaced translation would imply an assembly the record cannot support.",
+    "unblock": "Export STEP from Fusion 360 into CAD Files/exports/ and rerun tools/cad_to_web.py."
+   }
+  }
+ ]
+}

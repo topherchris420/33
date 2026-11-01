@@ -1,0 +1,47 @@
+/* Laboratory hub and shared long-form page layouts (hub, guided lab, archive). */
+.hub-hero { position: relative; min-height: min(88vh, 860px); display: grid; align-items: end; overflow: hidden; border-bottom: var(--hair); }
+.hub-hero-media { position: absolute; inset: 0; }
+.hub-hero-media img { width: 100%; height: 100%; object-fit: cover; object-position: 60% 50%; filter: saturate(1.05); }
+.hub-hero-media::after { content: ""; position: absolute; inset: 0; background: linear-gradient(90deg, rgba(6, 10, 16, 0.94) 0%, rgba(6, 10, 16, 0.72) 42%, rgba(6, 10, 16, 0.12) 75%), linear-gradient(0deg, rgba(6, 10, 16, 0.95), transparent 45%); }
+.hub-hero-tag { position: absolute; right: 16px; top: 16px; z-index: 2; }
+.hub-hero-copy { position: relative; z-index: 2; display: grid; gap: 18px; padding: 96px 0 56px; }
+.hub-hero-copy h1 em { font-style: italic; color: var(--teal-300); }
+.hub-status { display: flex; flex-wrap: wrap; gap: 12px; align-items: center; font-size: 13px; margin: 6px 0 0; }
+.hub-modes { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 16px; }
+.hub-modes .card h3 { font-size: 22px; }
+.hub-cats .panel { padding: 18px; display: grid; gap: 10px; align-content: start; }
+.hub-rooms { display: grid; gap: 1px; background: var(--graphite-600); border: var(--hair); border-radius: var(--radius); overflow: hidden; }
+.room { display: grid; grid-template-columns: 90px 1fr; gap: 18px; padding: 24px; background: var(--navy-900); color: var(--ivory); transition: background 0.2s; }
+.room:hover { background: var(--navy-800); color: var(--ivory); }
+.room .num { font-family: var(--display); font-size: 48px; color: var(--teal-300); line-height: 1; font-variation-settings: "SOFT" 100, "opsz" 144; }
+.room p { color: var(--ivory-dim); max-width: 86ch; margin-top: 8px; }
+.hub-counts { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 1px; background: var(--graphite-600); border: var(--hair); border-radius: var(--radius); overflow: hidden; margin-bottom: 18px; }
+.hub-counts div { background: var(--navy-900); padding: 16px; display: grid; gap: 4px; }
+.hub-counts b { font-family: var(--display); font-weight: 400; font-size: 40px; line-height: 1; color: var(--ivory); }
+.hub-counts .zero b { color: var(--teal-300); }
+.hub-list { margin: 0; padding-left: 18px; display: grid; gap: 8px; color: var(--ivory-dim); }
+
+/* Long-form pages */
+.page-hero { padding: clamp(40px, 7vw, 96px) 0 24px; display: grid; gap: 14px; }
+.page-hero h1 { font-size: clamp(36px, 5vw, 64px); }
+.toc { display: flex; flex-wrap: wrap; gap: 8px; margin: 10px 0 0; }
+.toc a { font-family: var(--mono); font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; border: 1px solid var(--graphite-500); border-radius: 999px; padding: 5px 10px; color: var(--ivory-dim); }
+.toc a:hover { border-color: var(--teal-400); color: var(--teal-300); }
+.matrix td:nth-child(2) { white-space: nowrap; }
+.pill { display: inline-block; font-family: var(--mono); font-size: 10px; letter-spacing: 0.08em; text-transform: uppercase; padding: 2px 7px; border-radius: 2px; white-space: nowrap; }
+.pill.ok { background: rgba(76, 201, 187, 0.16); color: var(--st-supported); border: 1px solid rgba(76, 201, 187, 0.5); }
+.pill.partial { background: rgba(227, 194, 122, 0.1); color: var(--st-unresolved); border: 1px dashed rgba(227, 194, 122, 0.6); }
+.pill.missing { color: var(--st-unmeasured); border: 1px solid var(--graphite-400); }
+.pill.no { color: var(--st-contradicted); border: 1px solid rgba(224, 118, 80, 0.5); }
+.cmd { display: grid; grid-template-columns: 1fr auto; gap: 10px; align-items: center; padding: 8px 10px; border: var(--hair); border-radius: var(--radius); background: var(--navy-950); margin-bottom: 6px; }
+.cmd code { background: none; border: 0; padding: 0; color: var(--teal-300); overflow-wrap: anywhere; }
+.cmd span { grid-column: 1 / -1; font-size: 12px; color: var(--muted); }
+
+@media (max-width: 1080px) { .hub-modes { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media (max-width: 640px) {
+  .hub-modes { grid-template-columns: 1fr; }
+  .room { grid-template-columns: 1fr; gap: 6px; }
+  .hub-hero-copy { padding-top: 140px; }
+  .hub-hero-tag { left: 16px; right: auto; max-width: calc(100% - 32px); white-space: normal; }
+}
+.hub-cats .panel > .cat { justify-self: start; }

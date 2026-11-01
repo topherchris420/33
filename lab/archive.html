@@ -1,0 +1,85 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Research Archive · Project 33</title>
+  <meta name="description" content="Project 33's research archive: capability matrix, data provenance with SHA-256 digests, the source-rights audit, candidate observations for human review, documents, and reproducibility commands.">
+  <link rel="icon" href="../assets/marketing/mark.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="css/lab.css">
+  <link rel="stylesheet" href="css/hub.css">
+</head>
+<body class="grid-bg" data-page="archive" data-mode="archive" data-categories="research,historical">
+  <div id="shell-header"></div>
+  <main id="main" class="wrap">
+    <section class="page-hero">
+      <p class="eyebrow">RESEARCH ARCHIVE</p>
+      <h1>The record, unfiltered.</h1>
+      <p class="lede">Everything the laboratory shows traces back to a committed file. This page lists those files, what each lab feature is built from, what could not be built faithfully, and how to reproduce every view offline.</p>
+      <nav class="toc" aria-label="On this page">
+        <a href="#capabilities">Capability matrix</a><a href="#observations">Candidate observations</a><a href="#provenance">Data provenance</a>
+        <a href="#rights">Source rights audit</a><a href="#documents">Documents</a><a href="#reproduce">Reproduce</a><a href="#isolation">Command isolation</a>
+      </nav>
+    </section>
+
+    <section class="section" id="capabilities" aria-labelledby="cap-h">
+      <div class="section-head"><p class="eyebrow">01</p><h2 id="cap-h">Capability matrix</h2>
+        <p class="muted">What each part of the laboratory is built from, and where the sources ran out. <span class="pill ok">Built</span> works from committed sources. <span class="pill partial">Partial</span> works with a stated limit. <span class="pill missing">Missing</span> needs a source the repository does not have. <span class="pill no">Not done</span> by design.</p></div>
+      <div class="panel" style="overflow-x:auto"><table class="data matrix" id="matrix"></table></div>
+    </section>
+
+    <section class="section" id="observations" aria-labelledby="obs-h">
+      <div class="section-head"><p class="eyebrow">02</p><h2 id="obs-h">Candidate observations for human review</h2>
+        <p class="muted">Building the laboratory surfaced two things a reviewer should look at. They are <b>not</b> entered in the discrepancy register: only a human review can do that. Both are arithmetic on committed values and are recomputed live below.</p></div>
+      <div class="grid-2" id="obs"></div>
+    </section>
+
+    <section class="section" id="provenance" aria-labelledby="prov-h">
+      <div class="section-head"><p class="eyebrow">03</p><h2 id="prov-h">Data provenance</h2>
+        <p class="muted">Each derived view pins the SHA-256 of the exact input bytes it was generated from. <code>python tools/export_lab_data.py --check</code> fails if any input changes without the view being regenerated. Canonical records (evidence, protocol, model outputs) are read directly, not copied.</p></div>
+      <div class="panel" style="overflow-x:auto"><table class="data" id="prov"></table></div>
+    </section>
+
+    <section class="section" id="rights" aria-labelledby="rights-h">
+      <div class="section-head"><p class="eyebrow">04</p><h2 id="rights-h">Source rights audit: the F-117A OCIP supplement</h2></div>
+      <div class="grid-2">
+        <div class="panel ticked"><div class="panel-head"><span class="cat cat-historical">Historical aerospace engineering</span></div><div class="panel-body">
+          <dl class="kv">
+            <dt>Document</dt><dd>OCIP Supplement to the Utility Flight Manual, USAF Series F-117A (TO 1F-117A-1A), Issue B, 3 February 1992, 84 pages.</dd>
+            <dt>Distribution</dt><dd>Its distribution statement limits distribution to U.S. Government agencies and refers other requests to the issuing office.</dd>
+            <dt>Reproduction</dt><dd>Its list of effective pages states that reproduction of its information or illustrations for non-military use is not permitted.</dd>
+            <dt>Handling</dt><dd>It carries handling-and-destruction and disclosure notices, and describes operational procedures and weapon-system equipment.</dd>
+          </dl>
+        </div></div>
+        <div class="panel ticked"><div class="panel-head"><h4>Decision</h4></div><div class="panel-body">
+          <ul class="hub-list">
+            <li>The scanned document is <b>not</b> committed, published, linked, or redistributed.</li>
+            <li>No text, figure, symbol, display format, procedure, value, or diagram from it appears anywhere in the laboratory.</li>
+            <li>The Instrumentation Lab teaches general, widely published human-factors principles — information pipelines, stale and missing data, failure dependencies — with original synthetic examples, explicitly labelled as not an F-117A format.</li>
+            <li>The workshop's aircraft miniature is an original low-poly prop of a retired, publicly displayed shape, with a placard saying it is not a Project 33 component and carries no data from the manual.</li>
+            <li>No technical compatibility between the aircraft and Project 33 is implied anywhere.</li>
+          </ul>
+          <p class="muted">Recommendation: keep the PDF out of the repository and its history. If the document is needed for future work, obtain written redistribution permission first.</p>
+        </div></div>
+      </div>
+    </section>
+
+    <section class="section" id="documents" aria-labelledby="docs-h">
+      <div class="section-head"><p class="eyebrow">05</p><h2 id="docs-h">Documents</h2></div>
+      <div class="grid-3" id="docs"></div>
+    </section>
+
+    <section class="section" id="reproduce" aria-labelledby="rep-h">
+      <div class="section-head"><p class="eyebrow">06</p><h2 id="rep-h">Reproduce</h2><p class="muted">Offline, from a checkout. No hardware, account, or network is needed for any of these.</p></div>
+      <div id="cmds"></div>
+    </section>
+
+    <section class="section" id="isolation" aria-labelledby="iso-h">
+      <div class="section-head"><p class="eyebrow">07</p><h2 id="iso-h">Command isolation</h2></div>
+      <div class="notice safety"><span>The laboratory is a static, read-only site. It has no WebSocket, WebSerial, WebUSB, or WebBluetooth code and fetches only same-origin files. <code>tests/test_lab_isolation.py</code> scans every laboratory page and script and fails if any of those APIs, a fetch to another origin, or an externally hosted script appears. Firmware, interlocks, and the evidence record are untouched by this work.</span></div>
+    </section>
+  </main>
+  <div id="shell-footer"></div>
+  <script type="module" src="js/archive.js"></script>
+</body>
+</html>

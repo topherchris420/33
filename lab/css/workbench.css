@@ -1,0 +1,117 @@
+/* 3D Engineering Workbench layout: hierarchy | viewport | inspector, timeline below. */
+body.wb { height: 100vh; overflow: hidden; display: grid; grid-template-columns: minmax(0, 1fr); grid-template-rows: auto auto 1fr auto; }
+body.wb .lab-footer { display: none; }
+.wb-grid {
+  --left: 272px; --right: 344px; --bottom: 112px;
+  display: grid; min-height: 0;
+  grid-template-columns: var(--left) minmax(0, 1fr) var(--right);
+  grid-template-rows: minmax(0, 1fr) var(--bottom);
+  grid-template-areas: "left center right" "left bottom right";
+  gap: 1px; background: var(--graphite-600);
+}
+.wb-grid.collapse-left { --left: 0px; }
+.wb-grid.collapse-right { --right: 0px; }
+.wb-grid.collapse-left .wb-left, .wb-grid.collapse-right .wb-right { display: none; }
+.wb-left { grid-area: left; overflow-y: auto; border: 0; border-radius: 0; }
+.wb-right { grid-area: right; overflow-y: auto; border: 0; border-radius: 0; }
+.wb-center { grid-area: center; display: grid; grid-template-columns: minmax(0, 1fr); grid-template-rows: auto minmax(0, 1fr); min-height: 0; background: var(--navy-950); }
+.wb-bottom { grid-area: bottom; border: 0; border-radius: 0; display: grid; grid-template-columns: minmax(220px, 1.2fr) minmax(260px, 1fr) minmax(200px, 1fr); gap: 18px; padding: 10px 16px; align-items: start; overflow: hidden; }
+.wb-toolbar { display: flex; flex-wrap: wrap; gap: 8px 12px; align-items: center; padding: 8px 10px; border-bottom: var(--hair); background: var(--navy-900); }
+.tool-group { display: flex; gap: 4px; align-items: center; }
+.tool-group.seg { gap: 0; }
+.wb-toolbar .btn { min-height: 30px; padding: 4px 10px; font-size: 11px; }
+.wb-toolbar .btn.icon { min-width: 30px; padding: 4px; font-size: 15px; }
+.viewport { min-height: 0; overflow: clip; }
+.wb-left, .wb-right { overflow-x: hidden; }
+.viewport:focus-visible { outline-offset: -3px; }
+.vp-class { z-index: 3; }
+.vp-overlays { top: 46px; left: 12px; display: grid; gap: 6px; z-index: 3; }
+.vp-overlays .btn { min-height: 26px; font-size: 10.5px; padding: 3px 9px; background: rgba(9, 17, 26, 0.85); }
+.vp-info { max-width: 52%; line-height: 1.5; }
+.vp-info b { color: var(--teal-300); font-weight: 500; }
+.wb-placard {
+  position: absolute; inset: 0; display: grid; place-items: center; padding: 24px; z-index: 4; overflow-y: auto;
+  background: radial-gradient(ellipse at 50% 30%, rgba(16, 28, 40, 0.92), rgba(6, 10, 16, 0.97));
+}
+.wb-placard .inner { max-width: 880px; display: grid; gap: 14px; }
+.archive-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 12px; }
+.archive-grid figure { margin: 0; border: var(--hair); border-radius: var(--radius); background: #f3f1ec; overflow: hidden; }
+.archive-grid img { width: 100%; aspect-ratio: 1; object-fit: contain; }
+.archive-grid figcaption { padding: 6px 8px; background: var(--graphite-800); font-size: 11.5px; color: var(--ivory-dim); min-height: 52px; }
+.archive-grid figcaption .label { display: block; font-size: 9.5px; }
+.wb-fallback { position: absolute; inset: 0; overflow: auto; padding: 18px; background: var(--navy-900); z-index: 5; }
+
+.wb-specimens { display: grid; gap: 6px; }
+.specimen {
+  display: grid; gap: 4px; text-align: left; padding: 9px 10px; border: 1px solid var(--graphite-600); border-radius: var(--radius);
+  background: rgba(9, 17, 26, 0.6); cursor: pointer; color: var(--ivory);
+}
+.specimen:hover { border-color: var(--teal-500); }
+.specimen[aria-checked="true"] { border-color: var(--teal-400); background: rgba(11, 93, 99, 0.28); box-shadow: inset 3px 0 0 var(--teal-300); }
+.specimen b { font-weight: 500; font-size: 13.5px; }
+.specimen .src { font-size: 10px; }
+.wb-tree { padding: 4px 0 8px; font-size: 13px; }
+.tree-row { display: grid; grid-template-columns: 24px 1fr auto; align-items: center; gap: 4px; padding: 3px 10px 3px calc(8px + var(--depth, 0) * 14px); cursor: pointer; border-left: 2px solid transparent; }
+.tree-row:hover { background: rgba(103, 216, 207, 0.06); }
+.tree-row[aria-selected="true"] { background: rgba(196, 122, 69, 0.14); border-left-color: var(--copper); }
+.tree-row:focus-visible { outline: 1px solid var(--teal-300); outline-offset: -1px; }
+.tree-row .name { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.tree-row .name small { color: var(--faint); font-family: var(--mono); font-size: 10px; margin-left: 4px; }
+.tree-row.hidden-part .name { color: var(--faint); text-decoration: line-through; text-decoration-color: rgba(143, 162, 173, 0.4); }
+.tree-row .eye, .tree-row .iso { background: none; border: 0; padding: 2px 4px; color: var(--muted); font-size: 13px; cursor: pointer; border-radius: 2px; }
+.tree-row .eye:hover, .tree-row .iso:hover { color: var(--teal-300); }
+.tree-row .iso { font-family: var(--mono); font-size: 9.5px; letter-spacing: 0.06em; border: 1px solid transparent; }
+.tree-row .iso[aria-pressed="true"] { color: var(--copper-300); border-color: rgba(196, 122, 69, 0.5); }
+.tree-row.group-row .name { font-family: var(--mono); font-size: 11px; letter-spacing: 0.06em; text-transform: uppercase; color: var(--ivory-dim); }
+.wb-legend { border-top: var(--hair); display: grid; gap: 6px; font-size: 12px; color: var(--ivory-dim); }
+
+.wb-inspector h3 { font-size: 22px; margin-bottom: 6px; }
+.wb-inspector .cluster { margin-bottom: 10px; }
+.wb-inspector section { margin: 14px 0; }
+.wb-inspector .kv { font-size: 12.5px; }
+.dim-table td { font-size: 12px; }
+.dim-table td.src { font-size: 10px; }
+.chip-link { display: inline-flex; gap: 6px; align-items: center; border: 1px solid var(--graphite-500); border-radius: 2px; padding: 2px 7px; font-family: var(--mono); font-size: 11px; color: var(--ivory); margin: 0 4px 4px 0; }
+.chip-link:hover { border-color: var(--teal-400); color: var(--teal-300); }
+.obs { border: 1px dashed var(--st-unresolved); border-radius: var(--radius); padding: 10px; font-size: 12.5px; background: rgba(227, 194, 122, 0.05); }
+.obs .label { color: var(--st-unresolved); }
+
+.wb-timeline .field { margin-bottom: 4px; }
+.wb-ticks { position: relative; height: 26px; font-family: var(--mono); font-size: 9px; color: var(--faint); }
+.wb-ticks span { position: absolute; transform: translateX(-50%); white-space: nowrap; top: 0; }
+.wb-ticks span::before { content: ""; display: block; width: 1px; height: 5px; background: var(--graphite-400); margin: 0 auto 1px; }
+.wb-check { display: inline-flex; gap: 6px; align-items: center; font-size: 12px; color: var(--ivory-dim); cursor: pointer; }
+.wb-section[aria-disabled="true"] { opacity: 0.45; }
+.wb-section .cluster { margin: 4px 0; }
+.wb-section .seg .btn { min-height: 26px; padding: 2px 9px; }
+.wb-readouts { font-family: var(--mono); font-size: 11.5px; color: var(--ivory-dim); display: grid; gap: 3px; overflow: hidden; }
+.wb-readouts b { color: var(--teal-300); font-weight: 500; }
+
+body.wb:fullscreen .wb-grid, .wb-grid:fullscreen { --left: 0px; --right: 0px; --bottom: 0px; }
+
+@media (max-width: 1180px) { .wb-grid { --left: 232px; --right: 300px; } }
+@media (max-width: 900px) {
+  body.wb { height: auto; overflow: auto; display: block; }
+  body.wb .lab-footer { display: flex; }
+  .wb-grid {
+    --left: auto; --right: auto;
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-rows: auto 64vh auto auto auto;
+    grid-template-areas: "center" "center" "bottom" "right" "left";
+  }
+  .wb-center { grid-row: 1 / span 2; min-height: 72vh; }
+  .wb-bottom { grid-template-columns: 1fr; overflow: visible; }
+  .wb-toolbar { gap: 6px; padding: 6px; }
+  .wb-toolbar .btn { padding: 4px 7px; font-size: 10px; letter-spacing: 0.03em; }
+  .tool-group.seg { flex-wrap: wrap; }
+  .wb-collapse { display: none; }
+  .wb-grid.collapse-left .wb-left, .wb-grid.collapse-right .wb-right { display: block; }
+  .vp-info { max-width: 90%; font-size: 10px; }
+}
+
+/* Annotation density: source paths appear under values in BLUEPRINT mode (an annotated drawing),
+   on hover elsewhere, and always for evidence stations. */
+.viewport .css2d-label small { display: none; }
+.viewport.is-blueprint .css2d-label small, .viewport .css2d-label.always-sub small { display: block; }
+.viewport .css2d-label.unspecified { max-width: 320px; white-space: normal; }
+.viewport .css2d-label.part-label { color: var(--ivory); border-color: rgba(241, 233, 214, 0.35); background: rgba(6, 10, 16, 0.55); font-size: 10px; }

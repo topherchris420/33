@@ -6,7 +6,7 @@ permissions:
   contents: read
 jobs:
   marketing:
-    name: Fourier math and GitHub Pages build
+    name: Fourier math, laboratory checks, and GitHub Pages build
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -15,6 +15,16 @@ jobs:
           node-version: "22"
       - name: Verify contour reconstruction and sampling
         run: node --test tests/fourier.test.mjs
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Laboratory math agrees with the Python models and the committed sweep
+        run: node --test tests/lab_math.test.mjs
+      - name: Laboratory data views are current; no transmit paths in laboratory code
+        run: |
+          python tools/export_lab_data.py --check
+          python -m pip install pytest==9.0.3
+          python -m pytest tests/test_lab_data.py tests/test_lab_isolation.py -q
       - name: Build the GitHub Pages site
         uses: actions/jekyll-build-pages@v1
         with:
