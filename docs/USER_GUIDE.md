@@ -78,7 +78,7 @@ For the full software review, also install `Firmware/requirements-test.txt` and 
 
 1. A human confirms the inert setup against [Safety](SAFETY.md) and the applicable pre-registration. Preserve the local firmware binary digest, hardware identity, instrument settings and calibration records.
 2. Join the access point named in the local WiFi header. The launcher gateway is `192.168.4.1`; UDP uses port `4444`. Permit Python through the local firewall for this bench network if required.
-3. Start `python Firmware/dashboard.py`. Confirm the session ID, RAW SESSION label and data-quality counters appear. No telemetry yet means no data, not stable hardware.
+3. Start `python Firmware/dashboard.py`. Confirm the session ID, RAW SESSION label and data-quality counters appear. No telemetry yet means no data, not stable hardware. **STATUS BOARD** opens the read-only [fault isolation and advisory view](GROUND_STATUS.md).
 4. Observe `T`, `STATUS`, `ENV` and quality counters. Stale heartbeat, invalid rows, missing altitude/GPS, clock regressions or gaps must remain in the record. A sent calibration command has no firmware acknowledgement.
 5. Close the dashboard cleanly. Preserve the entire `Firmware/TestSessions/<session-id>/` folder, including `telemetry.csv`, `session.json`, and `commands.csv`. Raw sessions are git-ignored.
 6. Follow [Bench Sessions](BENCH_SESSIONS.md) to declare provenance and build a passport. An independent instrument is needed for deploy timing; the telemetry dashboard cannot measure spring torque or laser line-of-sight error. A named human reviews actual captures and accepts applicable measurements.

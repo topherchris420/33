@@ -6,7 +6,7 @@ Two parts of the project disagreeing is information. Each entry names both sides
 | Status | Effect | Count |
 |---|---|---|
 | OPEN | Contradicts a claim or requirement | 5 |
-| OPEN | Informational | 4 |
+| OPEN | Informational | 5 |
 | OPEN | Weakens a claim's support | 8 |
 | RESOLVED | Contradicts a claim or requirement | 2 |
 | RESOLVED | Informational | 3 |
@@ -461,6 +461,24 @@ Two parts of the project disagreeing is information. Each entry names both sides
 **Next action.** Use an external instrument on GPIO 33 (P-001). Sketch output can only describe callback-to-poll latency.
 
 *Found by:* Reading the sketch against requirement R-C2-JITTER.
+
+## D-025
+
+**A launcher abort leaves an armed rocket armed, and the launcher cannot re-arm it**
+
+| Field | Value |
+|---|---|
+| Status | OPEN |
+| Effect | Informational |
+| Kind | design logic — Two implemented rules cannot both be satisfied in the intended sequence. |
+| Claims | [C2](claims/C2.md) |
+
+- [Firmware/Launcher/src/main.cpp](../Firmware/Launcher/src/main.cpp): abortSequence returns the launcher to SAFE and sends the rocket nothing. Re-arming waits for a rocket READY line and aborts with Rocket Timeout after 8 s.
+- [Firmware/Rocket/src/main.cpp](../Firmware/Rocket/src/main.cpp): sysState moves IDLE, ARMED, IGNITING, FLIGHT with no path back, so only a restart returns it to IDLE. READY is sent only in IDLE, and the deploy trigger stays live in any non-IDLE state.
+
+**Next action.** A human decides the intended behavior under a separate safety review, for example a disarm command sent on abort. No gate was changed. Until then the status board raises W-ARMED-AFTER-ABORT, and an aborted rocket should be treated as armed until it is restarted.
+
+*Found by:* Tracing the abort path through both firmwares while building the ground status model. Source reading only; not observed on hardware.
 
 ## Failure archive
 

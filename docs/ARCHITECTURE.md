@@ -22,6 +22,7 @@ flowchart LR
 | Rocket flight computer | IMU roll integration, PID output, canard servo control, rocket-side arming, ignition acknowledgement, RAM ring-buffer log dump | `Firmware/Rocket/src/main.cpp` |
 | Launcher ground station | WiFi AP, dashboard UDP link, UART relay to rocket, GPS/barometer/compass telemetry, physical launch interlock | `Firmware/Launcher/src/main.cpp` |
 | Dashboard | Live plot, PID tuning commands, launch/calibration commands, automatic CSV logging, graph export, PID comparison, onboard log dump request | `Firmware/dashboard.py`, `Firmware/telemetry_log.py`, `Firmware/analyze_pid.py`, `Firmware/session_artifacts.py` |
+| Status board | Read-only interpretation of packets: fault isolation, attitude, gain confirmation, advisories, session replay. No command path | `Firmware/ground_status.py`, `Firmware/status_panel.py`, `protocol/ground_status_model.json`, [Ground Status](GROUND_STATUS.md) |
 | Protocol reference | Generates firmware protocol constants and Markdown docs from one JSON source | `protocol/project33_protocol.json`, `tools/generate_protocol.py` |
 | Simulation/CAD | OpenRocket stability model, CAD packages, airfoil generation script, CAD render/material notes | `Simulation/`, `CAD Files/`, `docs/CAD_ASSEMBLIES.md` |
 

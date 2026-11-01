@@ -41,7 +41,7 @@
     },
     "C2": {
       "current": {
-        "assumptions_sha256": "cde7a310452916d0a79b59bafb6bcb97712bfb804edf0a273966b660bdf40e16",
+        "assumptions_sha256": "a7063228f14f6ce3505dd6177615c655259fd222fd1d15be53273678c57fc4bd",
         "dependencies": {
           "firmware_safety_tests": "ff5e17217ea229ee936dfa61180bb98c083475c4ce0ff1eb1f44aa348e466a77",
           "rocket_firmware": "4a14aac55f7f658ad74cca2738ffa49652595d811e94da35915854bdd5aba926",
@@ -52,12 +52,29 @@
           "timing_tests": "2012e20b2348325ddf94478678f8f8e053a5ad09e5b501ed9391797250fd8540"
         },
         "kind": "snapshot",
-        "note": "Rocket now reports IGNITE/ARM refusals over UART (logging only; gates unchanged, compile-verified). Firmware safety tests added as cited evidence.",
-        "recorded": "2026-09-28",
+        "note": "Added D-025 from reading the abort path in both firmwares: a launcher abort leaves an armed rocket armed. It is informational for C2 because deployment timing is unchanged; it does affect when the deploy trigger is live. No firmware changed. Automated snapshot, not a human review.",
+        "recorded": "2026-11-01",
         "recorded_by": "tooling snapshot (no human review)",
         "statement_sha256": "89c813e601f029d8c123406f34f8f6518a66ba74bad03982576bcb2f394c7af8"
       },
       "history": [
+        {
+          "assumptions_sha256": "cde7a310452916d0a79b59bafb6bcb97712bfb804edf0a273966b660bdf40e16",
+          "dependencies": {
+            "firmware_safety_tests": "ff5e17217ea229ee936dfa61180bb98c083475c4ce0ff1eb1f44aa348e466a77",
+            "rocket_firmware": "4a14aac55f7f658ad74cca2738ffa49652595d811e94da35915854bdd5aba926",
+            "timing_bench_sketch": "add4c75d552ef7640487daeb7eecf33def960ea100b510accad1590417658419",
+            "timing_fixture": "8cf6f0fe7a94d49f4c3a872fdd400437addce23f03057ae8abe22bb778e69467",
+            "timing_header": "cd28abe0e40b3a53f98a2f04c03ff740f24a1457bf2d0dd818267a5952c88c9f",
+            "timing_source": "013cb6614c2cdb6b2d7a45cce893f89134e6f03cc5acc161dd36b5b23bec4028",
+            "timing_tests": "2012e20b2348325ddf94478678f8f8e053a5ad09e5b501ed9391797250fd8540"
+          },
+          "kind": "snapshot",
+          "note": "Rocket now reports IGNITE/ARM refusals over UART (logging only; gates unchanged, compile-verified). Firmware safety tests added as cited evidence.",
+          "recorded": "2026-09-28",
+          "recorded_by": "tooling snapshot (no human review)",
+          "statement_sha256": "89c813e601f029d8c123406f34f8f6518a66ba74bad03982576bcb2f394c7af8"
+        },
         {
           "assumptions_sha256": "cde7a310452916d0a79b59bafb6bcb97712bfb804edf0a273966b660bdf40e16",
           "dependencies": {

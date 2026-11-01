@@ -1,0 +1,248 @@
+{
+  "schema_version": 1,
+  "note": "What each observable packet stream and each system capability depends on, read from firmware source. tests/test_ground_status_model.py fails if a pinned source line stops matching, so a firmware change forces this model to be re-read. A source pin shows the dependency is implemented; it does not show hardware behaves that way. Every entry's bench evidence is NOT MEASURED until an accepted inert session shows it.",
+  "units": [
+    {"id": "LINK", "name": "Dashboard WiFi/UDP link"},
+    {"id": "LAUNCHER", "name": "Launcher ESP32"},
+    {"id": "UART", "name": "Launcher-rocket UART"},
+    {"id": "ROCKET", "name": "Rocket ESP32"},
+    {"id": "IMU", "name": "MPU6050 on the rocket"},
+    {"id": "GPS", "name": "GPS module on the launcher"},
+    {"id": "BARO", "name": "BMP180 on the launcher"},
+    {"id": "COMPASS", "name": "QMC5883L on the launcher"}
+  ],
+  "channels": [
+    {
+      "id": "rocket_telemetry",
+      "name": "Rocket telemetry (T + STATUS)",
+      "kind": "stream",
+      "timeout_s": 2.0,
+      "requires": ["LINK", "LAUNCHER", "UART", "ROCKET", "IMU"],
+      "why": "The launcher relays T and STATUS only from a rocket DATA line, and the rocket loop returns before DATA when the MPU6050 failed at boot.",
+      "source": [
+        {"path": "Firmware/Launcher/src/main.cpp", "contains": "sendToDashboard(\"T,\" + String(millis()) + \",\" + roll + \",\" + rate + \",\" + out);"},
+        {"path": "Firmware/Rocket/src/main.cpp", "contains": "    if (!mpuHealthy) {\n        centerControlSurfaces();\n        igniteServo.write(IGNITE_SERVO_OFF);\n        delay(20);\n        return;\n    }"},
+        {"path": "Firmware/Launcher/src/main.cpp", "contains": "const unsigned long HEARTBEAT_TIMEOUT = 2000;"}
+      ]
+    },
+    {
+      "id": "environment",
+      "name": "Launcher environment (ENV)",
+      "kind": "stream",
+      "timeout_s": 3.0,
+      "requires": ["LINK", "LAUNCHER"],
+      "why": "ENV is sent once a second from the tail of the launcher main loop, so it pauses while the launcher waits inside the arming window, the ignition wait, or the abort latch.",
+      "source": [
+        {"path": "Firmware/Launcher/src/main.cpp", "contains": "if (millis() - lastEnvSend > 1000) {"},
+        {"path": "Firmware/Launcher/src/main.cpp", "contains": "sendToDashboard(String(envMsg));"},
+        {"path": "Firmware/Launcher/src/main.cpp", "contains": "    while (isSwitchArmed()) {\n        processUDP(); \n        processSerial2(); \n        processGPS(); "}
+      ]
+    },
+    {
+      "id": "heading",
+      "name": "Launcher heading ([FUSION])",
+      "kind": "stream",
+      "timeout_s": 2.0,
+      "gated_by": "environment",
+      "requires": ["LINK", "LAUNCHER", "COMPASS"],
+      "why": "A compass reading of all zeros returns before the [FUSION] packet. It shares the loop tail with ENV, so it is only meaningful while ENV is flowing.",
+      "source": [
+        {"path": "Firmware/Launcher/src/main.cpp", "contains": "if (qmc_x_raw == 0 && qmc_y_raw == 0 && qmc_z_raw == 0) {"},
+        {"path": "Firmware/Launcher/src/main.cpp", "contains": "sendToDashboard(String(fusionMsg));"}
+      ]
+    },
+    {
+      "id": "gps_stream",
+      "name": "GPS NMEA stream (ENV gps_state above 0)",
+      "kind": "field",
+      "gated_by": "environment",
+      "requires": ["LINK", "LAUNCHER", "GPS"],
+      "why": "gps_state is 0 when no GPS characters arrived since the previous ENV.",
+      "source": [
+        {"path": "Firmware/Launcher/src/main.cpp", "contains": "gpsState = 0; // Module stopped sending or disconnected"}
+      ]
+    },
+    {
+      "id": "altitude",
+      "name": "Barometric altitude (ENV alt finite)",
+      "kind": "field",
+      "gated_by": "environment",
+      "requires": ["LINK", "LAUNCHER", "BARO"],
+      "why": "The launcher sends nan when the barometer failed at boot.",
+      "source": [
+        {"path": "Firmware/Launcher/src/main.cpp", "contains": "float altOut = bmpHealthy ? filteredAlt : NAN;"}
+      ]
+    },
+    {
+      "id": "log_reply",
+      "name": "Log-dump reply (LOG_START ... LOG_END)",
+      "kind": "probe",
+      "timeout_s": 2.0,
+      "hold_s": 30.0,
+      "command": "dumplog",
+      "requires": ["LINK", "LAUNCHER", "UART", "ROCKET"],
+      "why": "The rocket handles commands before its MPU6050 check, so a rocket with a failed IMU still answers DUMPLOG. That reply separates an IMU fault from a UART or rocket fault.",
+      "source": [
+        {"path": "Firmware/Rocket/src/main.cpp", "contains": "    processSerialCommands();\n\n    if (!mpuHealthy) {"},
+        {"path": "Firmware/Rocket/src/main.cpp", "contains": "cmdBuffer == Project33Protocol::CMD_DUMPLOG"},
+        {"path": "Firmware/Launcher/src/main.cpp", "contains": "else if (msg.startsWith(Project33Protocol::LOG_PREFIX)) {"}
+      ]
+    }
+  ],
+  "capabilities": [
+    {
+      "id": "switch_abort",
+      "name": "Arming switch returns the launcher to SAFE",
+      "safety": true,
+      "requires": ["LAUNCHER"],
+      "why": "Gate G-01 runs on the launcher alone; the dashboard and rocket are not involved.",
+      "source": [{"path": "Firmware/Launcher/src/main.cpp", "contains": "if (!isSwitchArmed() && currentState != SAFE) {"}]
+    },
+    {
+      "id": "heartbeat_abort",
+      "name": "Launcher aborts READY on lost rocket heartbeat",
+      "safety": true,
+      "requires": ["LAUNCHER"],
+      "why": "Gate G-03 is the launcher's response to losing the rocket, so it survives UART, rocket, and IMU faults.",
+      "source": [{"path": "Firmware/Launcher/src/main.cpp", "contains": "if (millis() - lastHeartbeatTime > HEARTBEAT_TIMEOUT) {"}]
+    },
+    {
+      "id": "rocket_centering",
+      "name": "Rocket centers canards and holds ignition off without an IMU",
+      "safety": true,
+      "requires": ["ROCKET"],
+      "why": "The rocket's failed-IMU branch needs only the rocket processor.",
+      "source": [{"path": "Firmware/Rocket/src/main.cpp", "contains": "    if (!mpuHealthy) {\n        centerControlSurfaces();\n        igniteServo.write(IGNITE_SERVO_OFF);"}]
+    },
+    {
+      "id": "arm_handshake",
+      "name": "Launcher can reach READY",
+      "safety": true,
+      "requires": ["LAUNCHER", "UART", "ROCKET", "IMU"],
+      "why": "Gate G-02 needs a rocket READY line, and the rocket suppresses READY without an IMU. The dashboard link is not required.",
+      "source": [
+        {"path": "Firmware/Launcher/src/main.cpp", "contains": "if (!rocketReady) { abortSequence(\"Rocket Timeout.\"); return; }"},
+        {"path": "Firmware/Rocket/src/main.cpp", "contains": "if (sysState == \"IDLE\" && mpuHealthy && (current_time - lastReadySent >= 1000)) {"}
+      ]
+    },
+    {
+      "id": "abort_reporting",
+      "name": "Abort reasons reach the session record",
+      "safety": true,
+      "requires": ["LINK", "LAUNCHER"],
+      "why": "The launcher still aborts without a link, but the reason then never reaches the dashboard CSV.",
+      "source": [
+        {"path": "Firmware/Launcher/src/main.cpp", "contains": "sendToDashboard(String(Project33Protocol::ABORT_PREFIX) + reason);"},
+        {"path": "Firmware/Launcher/src/main.cpp", "contains": "    if (dashboardConnected) {\n        udp.beginPacket(dashboardIP, udpPort);"}
+      ]
+    },
+    {
+      "id": "live_telemetry",
+      "name": "Live roll, rate, servo, and state on the dashboard",
+      "safety": false,
+      "requires": ["LINK", "LAUNCHER", "UART", "ROCKET", "IMU"],
+      "why": "Same path as the rocket telemetry channel.",
+      "source": [{"path": "Firmware/Launcher/src/main.cpp", "contains": "sendToDashboard(String(Project33Protocol::STATUS_PREFIX) + state + \",\" + kp + \",\" + kd + \",\" + skew);"}]
+    },
+    {
+      "id": "log_recovery",
+      "name": "Onboard log dump can be requested and received",
+      "safety": false,
+      "requires": ["LINK", "LAUNCHER", "UART", "ROCKET"],
+      "why": "Same path as the log-dump reply; a rocket whose IMU failed at boot answers with an empty log.",
+      "source": [{"path": "Firmware/Launcher/src/main.cpp", "contains": "Serial2.println(Project33Protocol::CMD_DUMPLOG);"}]
+    },
+    {
+      "id": "gain_update",
+      "name": "Controller gains can be changed",
+      "safety": false,
+      "requires": ["LINK", "LAUNCHER", "UART", "ROCKET"],
+      "why": "The launcher forwards valid PID lines and the rocket applies them before its IMU check.",
+      "source": [
+        {"path": "Firmware/Launcher/src/main.cpp", "contains": "if (isValidPidCommand(msg)) {\n                Serial2.println(msg);"},
+        {"path": "Firmware/Rocket/src/main.cpp", "contains": "if (isValidPidCommand(cmdBuffer, newKp, newKd)) {"}
+      ]
+    },
+    {
+      "id": "gain_confirmation",
+      "name": "A gain change can be confirmed by telemetry",
+      "safety": false,
+      "requires": ["LINK", "LAUNCHER", "UART", "ROCKET", "IMU"],
+      "why": "Firmware sends no acknowledgement; only STATUS shows the active gains, and STATUS needs the IMU path.",
+      "source": [{"path": "Firmware/Rocket/src/main.cpp", "contains": "String(Kp, 2) + \",\" + String(Kd, 2) + \",\" +\n                         String(physical_skew_angle, 2);"}]
+    },
+    {
+      "id": "launcher_position",
+      "name": "Launcher position on the dashboard",
+      "safety": false,
+      "requires": ["LINK", "LAUNCHER", "GPS"],
+      "why": "Latitude and longitude are placeholders unless gps_state is 2.",
+      "source": [{"path": "Firmware/Launcher/src/main.cpp", "contains": "gpsState = 2; // Full fix!"}]
+    },
+    {
+      "id": "launcher_altitude",
+      "name": "Barometric altitude on the dashboard",
+      "safety": false,
+      "requires": ["LINK", "LAUNCHER", "BARO"],
+      "why": "Same path as the altitude channel.",
+      "source": [{"path": "Firmware/Launcher/src/main.cpp", "contains": "float altOut = bmpHealthy ? filteredAlt : NAN;"}]
+    },
+    {
+      "id": "launcher_heading",
+      "name": "Launcher heading on the dashboard",
+      "safety": false,
+      "requires": ["LINK", "LAUNCHER", "COMPASS"],
+      "why": "Same path as the heading channel. Its tilt correction also reads relayed rocket IMU values, which stay zero without rocket telemetry.",
+      "source": [{"path": "Firmware/Launcher/src/main.cpp", "contains": "float g_fwd = mpu_ax; "}]
+    }
+  ],
+  "absent_capabilities": [
+    {
+      "id": "rocket_disarm",
+      "name": "Returning an armed rocket to IDLE without a restart",
+      "why": "The only IDLE assignment in the rocket firmware is its initial value, and the launcher's abort path sends the rocket nothing. See discrepancy D-025.",
+      "source": [
+        {"path": "Firmware/Rocket/src/main.cpp", "count": "sysState = \"IDLE\"", "equals": 1},
+        {"path": "protocol/project33_protocol.json", "absent": "DISARM"}
+      ]
+    },
+    {
+      "id": "launcher_state_report",
+      "name": "The launcher reporting SAFE, ARMING, READY, or IGNITING to the dashboard",
+      "why": "STATUS carries the rocket's state. The dashboard can only infer the launcher's state.",
+      "source": [
+        {"path": "protocol/project33_protocol.json", "absent": "LAUNCHER_STATE"}
+      ]
+    },
+    {
+      "id": "failed_imu_heartbeat",
+      "name": "A rocket heartbeat that does not depend on the IMU",
+      "why": "The launcher accepts an ALIVE line as a heartbeat, but the rocket never sends one, so a failed IMU looks the same as a dead rocket until a log dump is requested.",
+      "source": [
+        {"path": "Firmware/Launcher/src/main.cpp", "contains": "msg.startsWith(\"ALIVE\")"},
+        {"path": "Firmware/Rocket/src/main.cpp", "absent": "ALIVE"}
+      ]
+    }
+  ],
+  "firmware_limits": {
+    "gain_min": 0.0,
+    "gain_max": 10.0,
+    "max_deflection_deg": 12,
+    "rocket_states": ["IDLE", "ARMED", "IGNITING", "FLIGHT"],
+    "source": [
+      {"path": "Firmware/Launcher/src/main.cpp", "contains": "isfinite(value) && value >= 0.0 && value <= 10.0"},
+      {"path": "Firmware/Rocket/src/main.cpp", "contains": "isfinite(value) && value >= 0.0 && value <= 10.0"},
+      {"path": "Firmware/Rocket/src/main.cpp", "contains": "const int MAX_DEFLECTION = 12;"},
+      {"path": "Firmware/Rocket/src/main.cpp", "contains": "String sysState = \"IDLE\";"},
+      {"path": "Firmware/Rocket/src/main.cpp", "contains": "sysState = \"ARMED\";"},
+      {"path": "Firmware/Rocket/src/main.cpp", "contains": "sysState = \"IGNITING\";"},
+      {"path": "Firmware/Rocket/src/main.cpp", "contains": "sysState = \"FLIGHT\";"}
+    ]
+  },
+  "not_modeled": [
+    "Sensor failure after boot: mpuHealthy and bmpHealthy are set only in setup(), so firmware keeps reporting whatever the driver returns. The IMU-frozen advisory is a heuristic for the rocket side; nothing covers the barometer.",
+    "Partial faults: a slow, noisy, or intermittent unit is modeled as working while its packets arrive on time.",
+    "One-way link faults: LINK and UART are each treated as a single unit, not two directions.",
+    "Common causes: a shared supply or I2C bus is not a unit, so a brownout appears as several unit failures."
+  ]
+}

@@ -3,7 +3,7 @@
 Every engineering claim should have somewhere solid to stand. The Observatory (`evidence/`, Python 3.11+ standard library, fully offline) keeps Project 33's claims, the exact artifacts behind them, the class of evidence those artifacts are, the requirements they meet or miss, the predictions still waiting for a measurement, and every known disagreement in one checked record. It never opens a network connection, talks to hardware, or sends a command.
 
 <!-- evidence:counts -->
-**Record state:** 8 claims · 3 contradicted · 4 unresolved · 1 supported within stated limits · 0 accepted physical measurements · 17 open discrepancies of 24 · 5 of 5 predictions not measured.
+**Record state:** 8 claims · 3 contradicted · 4 unresolved · 1 supported within stated limits · 0 accepted physical measurements · 18 open discrepancies of 25 · 5 of 5 predictions not measured.
 <!-- /evidence:counts -->
 
 ## Principles the tooling enforces
