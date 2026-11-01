@@ -100,7 +100,7 @@ ffmpeg -i build/tutorial/project33-bench-manual.mp4 -vf scale=1280:-2:flags=lanc
 ffmpeg -i build/tutorial/project33-preflight60.mp4 -vf scale=720:-2:flags=lanczos -c:v libx264 -preset slow -crf 26 -tune film -pix_fmt yuv420p -r 24 -c:a aac -b:a 128k -movflags +faststart assets/tutorial/project33-preflight60.mp4
 ```
 
-The repository keeps these compressed copies (1280 × 720, about 15 MB; 720 × 1280, about 3.5 MB). The full-quality masters (1920 × 1080 at CRF 18, about 175 MB; 1080 × 1920, about 43 MB) stay out of git history; they are attached to a draft GitHub release for the maintainer to publish.
+The repository keeps these compressed copies (1280 × 720, about 15 MB; 720 × 1280, about 3.5 MB). The full-quality masters (1920 × 1080 at CRF 18, about 175 MB; 1080 × 1920, about 43 MB) stay out of git history; attach them to a GitHub release (`project33-bench-manual-1080p-master.mp4`, `project33-preflight60-1080x1920-master.mp4`) rather than committing them.
 
 ## Accessibility
 
