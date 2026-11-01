@@ -28,12 +28,22 @@ page.on("console", (m) => { if (/soundtrack/.test(m.text())) console.log(m.text(
 await page.goto(`${base}/lab/cinematic.html?t=${from}`, { waitUntil: "networkidle" });
 await page.waitForFunction(() => window.__film, null, { timeout: 600000 });
 // Film-only presentation: no site header, no controls or start card, the stage fills the frame.
+// The end card's buttons cannot be clicked in a video, so the address replaces them.
 await page.addStyleTag({ content: `
-  #shell-header, .lab-header, .skip, #start, .cine-controls { display: none !important; }
+  #shell-header, .lab-header, .skip, #start, .cine-controls, .cine-title .btn-row { display: none !important; }
   body.cine { --header-h: 0px; }
   .cine-stage { height: 100vh !important; }
+  .cine-title .film-url { font-family: var(--mono); font-size: 15px; letter-spacing: 0.08em; color: var(--ivory); margin: 6px 0 0; }
+  .cine-title .muted.small { font-size: 14px; color: var(--ivory); opacity: 0.8; text-shadow: 0 1px 10px rgba(0, 0, 0, 0.9); }
   *, *::before, *::after { animation: none !important; transition: none !important; caret-color: transparent !important; }
 ` });
+await page.evaluate(() => {
+  const row = document.querySelector(".cine-title .btn-row");
+  const url = document.createElement("p");
+  url.className = "film-url";
+  url.textContent = "topherchris420.github.io/33";
+  row?.after(url);
+});
 await page.evaluate(() => window.dispatchEvent(new Event("resize")));
 await page.waitForTimeout(500);
 const box = await page.locator("#main").boundingBox();
