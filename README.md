@@ -17,6 +17,24 @@ Project 33 investigates a low-cost folding-fin rocket concept through mechanical
 
 *Design visualization, not a flight test, physical assembly record, or evidence of deployment.*
 
+## V3D-TO-33-1 · Utility Bench Manual
+
+![Illustrated cover of Project 33's claymation utility bench manual](assets/marketing/bench-manual-poster.svg)
+
+**A 4:09, 1080p claymation engineering companion.** This miniature workshop turns Project 33's research record into a tactile technical manual: annotated pages, conceptual rocket assemblies, bench instruments, operator checklists, and a session-passport workflow. The visual language borrows from vintage utility manuals while keeping the actual engineering boundaries visible.
+
+| Film sequence | What it illustrates | Inspect the source |
+|---|---|---|
+| **Description and assembly** | The conceptual folding-fin rocket and its subsystems; exploded views are illustrative, not dimensioned CAD | [Architecture](docs/ARCHITECTURE.md) · [CAD assemblies](docs/CAD_ASSEMBLIES.md) |
+| **Offline evidence review** | Reproducible, hardware-free checks and a portable review packet | [Reproduce the review](#reproduce-the-review) · [Evidence Observatory](docs/EVIDENCE_OBSERVATORY.md) |
+| **Inert bench preflight** | A clearly bounded, non-energetic preparation workflow and source-based safety checks | [Bench configuration](docs/BENCH_CONFIGURATION.md) · [Safety](docs/SAFETY.md) |
+| **Session passport** | Provenance, raw records, review, and the requirement for named human acceptance | [Bench sessions](docs/BENCH_SESSIONS.md) · [Traceability](docs/TRACEABILITY.md) |
+| **What remains unresolved** | Contradicted model assumptions, unmet margins, and the gap between an animation and physical evidence | [Discrepancy register](docs/DISCREPANCIES.md) · [Claim passports](docs/claims/README.md) |
+
+**How to read the film:** It is a visual orientation and interpretive tutorial, **not** footage of an assembled flight article, a validated test, or a demonstration of flight readiness. A rendered deployment is not a measured deployment. The [claim ledger](#claim-status) remains the authority on the project's evidence state.
+
+**Video availability:** The full-length MP4 is not yet hosted in this repository. The illustration above is an original poster, not a playable video; no download or playback link is claimed until a public media asset is actually published.
+
 ## Current status
 
 Project 33 is a **bench-validation prototype**. It has models, CAD, firmware that compiles, a telemetry dashboard, and automated checks. **No physical measurement has been accepted into the evidence record.** Nothing here is flight-tested or flight-ready, and live propulsion is outside the repository's validation boundary.
