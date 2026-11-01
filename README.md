@@ -3,16 +3,19 @@
 [![Project checks](https://github.com/topherchris420/33/actions/workflows/ci.yml/badge.svg)](https://github.com/topherchris420/33/actions/workflows/ci.yml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 
-**Vers3Dynamics | Applied Aerospace Research**
+**Vers3Dynamics | Applied Aerospace Research · Open Source · Evidence First**
 
-**A small, inexpensive folding-fin rocket testbed in which every engineering claim is tied to the exact artifacts that support it, the class of evidence those artifacts are, and the measurements still missing.**
+> **The rocket is the specimen. The record of what we know, what we think we know, and what we have yet to measure is the experiment.**
 
-The rocket is the specimen. The record of how engineering knowledge moves from assumption to model to implementation to measurement is the product.
+Project 33 investigates a low-cost folding-fin rocket concept through mechanical analysis, CAD, embedded firmware, telemetry software, and reproducible research. But the more ambitious project is an **engineering evidence system**: a way to carry a claim from assumption to model, from model to implementation, and eventually from observation to independent review without confusing those stages.
+
+**[Explore the project](https://topherchris420.github.io/33/)** · **[Reproduce an offline review](#reproduce-the-review)** · **[Inspect the claim ledger](#claim-status)** · **[Read the roadmap](docs/ROADMAP.md)** · **[Contribute](CONTRIBUTING.md)**
 
 ## From frequency to form
 
-[![Animated Project 33 rocket blueprint: Fourier epicycles trace the contours, parts assemble, and the completed form rotates](assets/marketing/project33-blueprint.gif)](assets/marketing/project33-blueprint.mp4)
+[![Animated Project 33 rocket blueprint: Fourier epicycles trace contours, parts assemble, and the conceptual form rotates](assets/marketing/project33-blueprint.gif)](assets/marketing/project33-blueprint.mp4)
 
+*Design visualization, not a flight test, physical assembly record, or evidence of deployment.*
 
 ## Current status
 
@@ -23,6 +26,36 @@ Project 33 is a **bench-validation prototype**. It has models, CAD, firmware tha
 <!-- /evidence:counts -->
 
 Unresolved is a valid engineering state. Several research claims are currently contradicted by their own models, and saying so is the point.
+
+### At a glance
+
+| Exists in the repository | Not yet established |
+|---|---|
+| OpenRocket and analytical models | An independently validated flight or stability model |
+| Fusion 360 archives and a software-tested CAD generator | A measured, assembled folding-fin mechanism |
+| ESP32 firmware that compiles in CI | Hardware behavior demonstrated on physical boards |
+| A dashboard tested with synthetic telemetry | Any human-accepted inert physical measurement |
+| Traceable claims, discrepancies, and offline review packets | Live-propulsion safety or flight readiness |
+
+### Where to begin
+
+| Your interest | Start here |
+|---|---|
+| **The concept and visuals** | [Live project page](https://topherchris420.github.io/33/) and [architecture](docs/ARCHITECTURE.md) |
+| **The scientific record** | [Claim passports](docs/claims/README.md), [traceability](docs/TRACEABILITY.md), and [discrepancies](docs/DISCREPANCIES.md) |
+| **Reproducibility** | [Offline review commands](#reproduce-the-review) and [Evidence Observatory](docs/EVIDENCE_OBSERVATORY.md) |
+| **Working on the project** | [Roadmap](docs/ROADMAP.md), [tests](docs/TESTING.md), and [contribution guide](CONTRIBUTING.md) |
+
+## Why evidence is the real instrument
+
+A rendered rocket can look complete while its underlying questions remain unanswered. Project 33 refuses to treat a visualization as a measurement or a clean simulation as a qualification result. For every consequential engineering statement, the project asks:
+
+- **What is being claimed?** The scope must be narrow enough to test, not a declaration of success.
+- **Where is its provenance?** Exact sources, derived artifacts, and SHA-256 digests must remain inspectable.
+- **What could disprove it?** Requirements, competing formulations, discrepancies, and preregistered predictions stay visible.
+- **Who accepts the evidence?** Automation can organize records; only a named human can accept physical observations and advance their review.
+
+That philosophy is a practical research design. It lets a future reviewer distinguish what the team intended, what software actually demonstrated, and what the physical world has not yet answered.
 
 ## Evidence Observatory
 
@@ -93,6 +126,19 @@ Details: [Architecture](docs/ARCHITECTURE.md) · [Protocol](docs/PROTOCOL.md) ·
 
 Each claim links to a generated passport. The full requirement matrix and prediction ledger are in [Traceability](docs/TRACEABILITY.md).
 
+### Read the contradictions, not just the successes
+
+Four examples show why the ledger exists:
+
+- **C1 (mechanism):** The specified four-bar linkage fails its loop-closure test. The intended topology requires review ([D-002](docs/DISCREPANCIES.md)).
+- **C5 (stability):** Two formulations disagree, while the reference script and OpenRocket file specify different motors ([D-006 and D-007](docs/DISCREPANCIES.md)).
+- **C6 (spring):** A modeled margin of **19%** falls below its **20%** requirement. The record retains the failed requirement ([D-011](docs/DISCREPANCIES.md)).
+- **C7 (reliability):** The current simulation does not generate the failure cases it purports to count ([D-013](docs/DISCREPANCIES.md)).
+
+![C1 linkage loop-closure check](docs/assets/review/c1_loop_closure.svg)
+
+*Analytical geometry output, not a physical deployment photograph. The contradiction is part of the result.*
+
 ## What has actually been demonstrated
 
 Only software-level facts, each with a named scope:
@@ -109,7 +155,9 @@ Everything physical. Timing jitter, spring rate, part masses, dry CG, servo auth
 
 ## Reproduce the review
 
-Python 3.11+, no packages, no network, no hardware:
+**This is the safest first experiment.** With Python 3.11 or newer, you can inspect the complete evidence record and generate a portable report without connecting hardware, accessing a network, or installing third-party Python packages.
+
+From a local checkout of this repository:
 
 ```bash
 python -m evidence status                          # claim table, requirement results, scopes
@@ -120,7 +168,9 @@ python -m evidence query                           # grounded evidence questions
 python -m evidence impact mechanism/spring_sizing.py   # what a change would affect
 ```
 
-With the model dependencies installed (`pip install -r requirements-evidence.txt`), `python -m evidence reproduce` regenerates every model output in a temporary directory and compares values. `make review-full` builds a packet with the test and reproduction run records attached.
+With the model dependencies installed (`python -m pip install -r requirements-evidence.txt`), `python -m evidence reproduce` regenerates committed model outputs in a temporary directory and compares their values. `make review-full` builds a packet with test and reproduction run records attached.
+
+Open `build/review/index.html` locally to explore the result. If that output folder already exists, choose a fresh path: the packet builder intentionally does not overwrite previous reports. **Verification confirms packet integrity, not scientific validity or physical performance.**
 
 ## Validation roadmap
 
@@ -182,4 +232,12 @@ Estimated prototype subtotal: **$81** from 10 BOM lines (10 estimates, 0 purchas
 
 *OpenRocket export; the model revision that produced it is not recorded (D-023).*
 
-[Live project page](https://topherchris420.github.io/33/) · [Project Status](docs/PROJECT_STATUS.md) · [Paper Alignment](docs/PAPER_ALIGNMENT.md) · [Roadmap](docs/ROADMAP.md) · [Safety](docs/SAFETY.md) · [Testing](docs/TESTING.md) · [BOM](docs/BOM.md)
+## Contribute to the questions, not just the code
+
+A useful contribution might be a reproducible discrepancy, a better model assumption, an adversarial software test, a clearer limitation, or a carefully specified inert-test proposal. Read [CONTRIBUTING.md](CONTRIBUTING.md) before opening a pull request. Preserve generated evidence sections, document the checks you ran, and never promote synthetic or modeled observations into physical evidence.
+
+Project 33 is published under the [MIT License](LICENSE). The code and evidence record are open for inspection and improvement; the validation boundary remains explicit.
+
+**[Project site](https://topherchris420.github.io/33/)** · **[Project Status](docs/PROJECT_STATUS.md)** · **[Evidence Observatory](docs/EVIDENCE_OBSERVATORY.md)** · **[Paper Alignment](docs/PAPER_ALIGNMENT.md)** · **[Roadmap](docs/ROADMAP.md)** · **[Safety](docs/SAFETY.md)**
+
+*Build a model. Make a prediction. Measure the difference. Keep the record honest.*
