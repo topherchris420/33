@@ -9,7 +9,7 @@
 
 Project 33 investigates a low-cost folding-fin rocket concept through mechanical analysis, CAD, embedded firmware, telemetry software, and reproducible research. But the more ambitious project is an **engineering evidence system**: a way to carry a claim from assumption to model, from model to implementation, and eventually from observation to independent review without confusing those stages.
 
-**[Explore the project](https://topherchris420.github.io/33/)** · **[Reproduce an offline review](#reproduce-the-review)** · **[Inspect the claim ledger](#claim-status)** · **[Read the roadmap](docs/ROADMAP.md)** · **[Contribute](CONTRIBUTING.md)**
+**[Explore the project](https://topherchris420.github.io/33/)** · **[Watch the utility bench manual](#v3d-to-33-1--utility-bench-manual)** · **[Reproduce an offline review](#reproduce-the-review)** · **[Inspect the claim ledger](#claim-status)** · **[Read the roadmap](docs/ROADMAP.md)** · **[Contribute](CONTRIBUTING.md)**
 
 ## From frequency to form
 
@@ -19,9 +19,11 @@ Project 33 investigates a low-cost folding-fin rocket concept through mechanical
 
 ## V3D-TO-33-1 · Utility Bench Manual
 
-![Illustrated cover of Project 33's claymation utility bench manual](assets/marketing/bench-manual-poster.svg)
+[![Illustrated cover of Project 33's claymation utility bench manual; click to open the film](assets/marketing/bench-manual-poster.svg)](project33-bench-manual-github-720p.mp4)
 
-**A 4:09, 1080p claymation engineering companion.** This miniature workshop turns Project 33's research record into a tactile technical manual: annotated pages, conceptual rocket assemblies, bench instruments, operator checklists, and a session-passport workflow. The visual language borrows from vintage utility manuals while keeping the actual engineering boundaries visible.
+**[▶ Watch the complete film](project33-bench-manual-github-720p.mp4)** · **[Direct MP4](https://raw.githubusercontent.com/topherchris420/33/main/project33-bench-manual-github-720p.mp4)** · **4:09 · 720p · 19.1 MB**
+
+**A 4:09 claymation engineering companion.** The repository hosts the optimized **720p MP4**, preserved from the original 1080p master. This miniature workshop turns Project 33's research record into a tactile technical manual: annotated pages, conceptual rocket assemblies, bench instruments, operator checklists, and a session-passport workflow. The visual language borrows from vintage utility manuals while keeping the actual engineering boundaries visible.
 
 | Film sequence | What it illustrates | Inspect the source |
 |---|---|---|
@@ -33,7 +35,7 @@ Project 33 investigates a low-cost folding-fin rocket concept through mechanical
 
 **How to read the film:** It is a visual orientation and interpretive tutorial, **not** footage of an assembled flight article, a validated test, or a demonstration of flight readiness. A rendered deployment is not a measured deployment. The [claim ledger](#claim-status) remains the authority on the project's evidence state.
 
-**Video availability:** The full-length MP4 is not yet hosted in this repository. The illustration above is an original poster, not a playable video; no download or playback link is claimed until a public media asset is actually published.
+**Film access:** Select the illustrated cover or the watch link above to open the complete MP4. The direct file link is also available for downloading or viewing in a compatible browser.
 
 ## Current status
 
