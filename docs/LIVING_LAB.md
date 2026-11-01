@@ -120,7 +120,13 @@ python tools/cad_to_web.py                # CAD views; needs cadquery and zstand
 node --test tests/lab_math.test.mjs       # math ports against the Python models
 python -m pytest tests/test_lab_data.py tests/test_lab_isolation.py -q
 node tests/lab_browser/workbench.mjs      # browser interaction tests (Playwright; server on :8100)
+node tools/render_lab_film.mjs build/film.mp4 24 1280 0 80 http://localhost:8000   # opening film → MP4
 ```
+
+The film renderer seeks the deterministic timeline frame by frame and captures the whole stage
+(captions and overlays included), with the synthesized soundtrack rendered offline from the same cue
+sheet. Browser-voice narration is not recorded; the captions carry it. `FILM_AUDIO=none` renders video
+only and `FILM_AUDIO=only` writes the soundtrack as WAV, so long renders can be split into ranges.
 
 Browser tests exist for every page in `tests/lab_browser/`. Each exercises every control, fails on any
 console error, checks mobile overflow, and saves screenshots. Under software WebGL (SwiftShader) they

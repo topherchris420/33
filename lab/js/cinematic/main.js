@@ -42,6 +42,8 @@ const POSTER_CAM = (() => { const v = new URLSearchParams(location.search).get("
 const clamp01 = (x) => Math.min(Math.max(x, 0), 1);
 const ease = (x) => { const k = clamp01(x); return k < 0.5 ? 4 * k * k * k : 1 - Math.pow(-2 * k + 2, 3) / 2; };
 const seg = (t, a, b) => clamp01((t - a) / (b - a));
+const REDUCED_MOTION = window.matchMedia?.("(prefers-reduced-motion: reduce)").matches ?? false;
+const GRAIN_STEPS = ["translate(0, 0)", "translate(-3%, 2%)", "translate(2%, -3%)", "translate(-1%, 3%)"];
 
 let state = { t: 0, playing: false, cc: true, sound: false, voice: false, lastSpoken: -1, last: performance.now() };
 let renderer, labels, scene, camera, composer, world, film;
@@ -274,6 +276,8 @@ function apply(t, dt) {
     const n = Math.floor(seg(t, 37.2, 39.4) * txt.length);
     if (ann.dataset.n !== String(n)) { ann.innerHTML = `${txt.slice(0, n)}<span class="rule"></span>`; ann.dataset.n = String(n); }
     ann.classList.toggle("show", t > 39.4);
+    const rule = ann.querySelector(".rule");
+    if (rule) rule.style.width = `${(ease(seg(t, 39.4, 40.8)) * 100).toFixed(2)}%`;
     ann.style.opacity = String(1 - seg(t, 42.6, 43.5));
   } else if (ann.innerHTML) { ann.innerHTML = ""; ann.dataset.n = ""; }
   // schematic layer
@@ -316,11 +320,20 @@ function apply(t, dt) {
   const frame = Math.floor(t * 12);
   for (const m of w.clayMats) m.userData.uniforms.uStep.value = frozen ? 0 : frame % 997;
   // overlays
-  $("#evidence").hidden = !(t >= 52.2 && t < 57.2);
+  // Overlay fades are driven by film time, not CSS clocks, so a scrubbed or frame-rendered
+  // film looks identical to one played in real time.
+  const evidence = $("#evidence");
+  evidence.hidden = !(t >= 52.2 && t < 57.2);
+  evidence.style.opacity = String(ease(seg(t, 52.2, 53)) * (1 - seg(t, 56.7, 57.2)));
   const title = $("#title");
   const showTitle = t >= 70.5;
   if (title.hidden === showTitle) title.hidden = !showTitle;
+  title.style.opacity = String(ease(seg(t, 70.5, 72.1)));
   document.body.classList.toggle("no-bars", t >= 70);
+  const bars = 1 - ease(seg(t, 70, 71.2));
+  for (const bar of document.querySelectorAll(".cine-letterbox")) bar.style.height = `calc(6vh * ${bars.toFixed(4)})`;
+  const grain = $(".cine-grain");
+  if (grain && !REDUCED_MOTION) grain.style.transform = GRAIN_STEPS[Math.floor(t * 8) % GRAIN_STEPS.length];
   renderer.domElement.style.filter = frozen ? `saturate(${1 - 0.65 * seg(t, 50, 50.6)}) contrast(1.05)` : "";
   updateCaption(t);
   updateTag(t);
