@@ -28,7 +28,7 @@
 | 3:46 | Run the review | End card: `python -m evidence status`. |
 | 3:59 | Glossary, index and disclaimer | |
 
-The film runs 4:08 including credits.
+The film runs 4:08 including about ten seconds of credits; the story itself ends at 3:59. The 9:16 cut runs 0:58.
 
 ## What was re-verified, and against what
 
@@ -64,7 +64,11 @@ The film says what it does not show: no ignition, motor, propellant, flame, laun
 | `assets/tutorial/timeline.js` | Generated: scenes, cues, events, chapters |
 | `assets/tutorial/fonts.js`, `fonts/` | Courier Prime and Barlow Condensed subsets, SIL Open Font License |
 
-**Sound.** The narration is a local neural voice, Kokoro-82M (Apache-2.0) through `kokoro-onnx`; no API key, no network service, and no credentials are involved. The score and every sound effect are synthesized in `tools/tutorial/build_audio.py` from scratch (Karplus–Strong pizzicato and bass, modal marimba, vibraphone and music box, a felt piano for Section V, analog pads, brush and typewriter percussion; binder rings, page turns, stamps, clay squish, pencil ticks, toggles, a soft brief buzzer, servo whirs). Music ducks under the voice, and drops out for "It refuses. Good."
+**Sound.** The narration is a local neural voice, Kokoro-82M (Apache-2.0) through `kokoro-onnx`; no API key, no network service, and no credentials are involved. A local speech-recognition pass transcribed every line to check that the voice says what the caption says; two lines were re-recorded after that check (one swallowed the "t" in "can't", which reversed its meaning, so it now reads "cannot").
+
+The score and every sound effect are synthesized from scratch in `tools/tutorial/build_audio.py`, with no samples: Karplus–Strong pizzicato and upright bass, modal marimba, vibraphone and music box, an additive felt piano, band-limited analog pads, and brush and typewriter percussion, in D major and B minor. The cover sets the stamp on a downbeat; the contents page answers each NOT MEASURED with a two-note marimba shrug; the procedures carry a 92 BPM pizzicato theme; the abnormal-operations section turns to a muted B-minor pulse; Section V slows to a sparse felt piano at 64 BPM; Gmaj7–A7 resolves to D exactly as the lamp goes off. Foley covers binder rings, page turns, stamps, clay squish, pencil ticks, toggles, keyboard taps, a soft brief buzzer, servo whirs and the refusal slip. The music ducks under the voice and drops to digital silence for "It refuses. Good."
+
+Measured on the masters: −16.1 LUFS integrated, true peak −1.5 dBTP, durations exact to the picture. The voice sits on average about 14.6 dB (K-weighted) above the music, at least 12 dB on every Section V line; the lowest line elsewhere is about 11 dB. All 134 sound cues in the film and 26 in the social cut land on their drawings; measured audio-to-picture offsets in the delivered MP4s are under one frame. The synthesized timbres are a first pass, and nobody has listened to them on speakers, so a listening pass is the first refinement to make.
 
 **Timing.** `tools/tutorial/timeline.py` is the single source for picture, sound and captions. It places each narration line, lands beats on specific words using word timings from a local speech-recognition pass (`align_words.py`, which also prints what the voice actually said next to each caption), snaps every event to a drawing, and writes the timeline, captions and chapter files.
 
@@ -80,7 +84,7 @@ python -m pip install kokoro-onnx soundfile scipy faster-whisper fonttools brotl
 python tools/tutorial/build_narration.py      # narration, one WAV per line
 python tools/tutorial/align_words.py          # optional: listen check and word timings
 python tools/tutorial/timeline.py             # timeline.js, captions, chapters
-python tools/tutorial/build_audio.py          # score, sound design, mix → *.m4a
+python tools/tutorial/build_audio.py          # score, sound design, mix → *.m4a (--cut main for one cut)
 python tools/tutorial/build_fonts.py          # only if the on-screen character set changes
 python tools/tutorial/frames.py main 123.7    # optional: stills for review
 node tools/export_tutorial_film.mjs main       # → build/tutorial/project33-bench-manual.mp4
@@ -89,7 +93,14 @@ node tools/export_tutorial_film.mjs preflight60
 
 Set `CHROME_PATH` to use an installed Chrome, `FFMPEG_PATH` for FFmpeg, and `PLAYWRIGHT_MODULE` as for the [marketing film](MARKETING_FILM.md). The exporter opens `tutorial.html` from disk, renders each frame at exactly `frame / 24` seconds, encodes one file per scene (an interrupted export resumes), joins them without re-encoding, then adds the soundtrack without touching the picture. Frames that share a drawing are identical by construction, so each drawing is rendered once.
 
-The repository keeps a compressed 1280 × 720 copy of the main film. The full-quality 1920 × 1080 master is kept out of git history and attached to a GitHub release.
+Then mux the soundtrack (the exporter does this when the `.m4a` exists) and make the repository copies:
+
+```bash
+ffmpeg -i build/tutorial/project33-bench-manual.mp4 -vf scale=1280:-2:flags=lanczos -c:v libx264 -preset slow -crf 26 -tune film -pix_fmt yuv420p -r 24 -c:a aac -b:a 128k -movflags +faststart assets/tutorial/project33-bench-manual.mp4
+ffmpeg -i build/tutorial/project33-preflight60.mp4 -vf scale=720:-2:flags=lanczos -c:v libx264 -preset slow -crf 26 -tune film -pix_fmt yuv420p -r 24 -c:a aac -b:a 128k -movflags +faststart assets/tutorial/project33-preflight60.mp4
+```
+
+The repository keeps these compressed copies (1280 × 720, about 15 MB; 720 × 1280, about 3.5 MB). The full-quality masters (1920 × 1080 at CRF 18, about 175 MB; 1080 × 1920, about 43 MB) stay out of git history; they are attached to a draft GitHub release for the maintainer to publish.
 
 ## Accessibility
 
