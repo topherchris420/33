@@ -1,0 +1,374 @@
+{
+  "schema_version": 1,
+  "title": "V3D-TO-33-1 / Utility Bench Manual",
+  "scope": "Project-only reading guide; no operational authority.",
+  "chapters": [
+    {
+      "id": "scope",
+      "number": "00",
+      "title": "Scope and revision record",
+      "summary": "Identify the edition, configuration and evidence class before using a technical statement.",
+      "paragraphs": [
+        "The project is a bench-validation prototype. A model, compilation result and physical observation answer different questions.",
+        "A source digest identifies the exact bytes indexed here. It does not certify their scientific validity."
+      ],
+      "sources": [
+        "docs/PROJECT_STATUS.md",
+        "docs/TRACEABILITY.md",
+        "docs/DISCREPANCIES.md"
+      ],
+      "notice_level": "NOTE",
+      "notice": "Use the current claim passports to establish what is supported, contradicted or unresolved.",
+      "checklist": [
+        "Identify the source edition and configuration.",
+        "Read the claim status and evidence class.",
+        "Locate open discrepancies before interpreting a result."
+      ]
+    },
+    {
+      "id": "description",
+      "number": "01",
+      "title": "Description and system relationships",
+      "summary": "Follow the specimen from models and CAD to electronics, telemetry and the evidence record.",
+      "paragraphs": [
+        "The launcher, rocket processor, sensors and dashboard have different roles. Read the architecture alongside wiring and protocol definitions.",
+        "The workbench is a visualization. Missing dimensions, assembly observations and manufacturing tolerances remain unspecified.",
+        "Rocket processor: the ESP32 reads the MPU6050 and exposes state and telemetry. Its embedded behavior is described in the architecture; compilation alone does not verify behavior on a board.",
+        "Launcher: the ground ESP32 connects the rocket UART path to the dashboard and hosts launcher sensors and physical interlocks.",
+        "Dashboard: captures telemetry and command history into a raw session. The separate status board interprets those records without sending commands.",
+        "Evidence Observatory: binds claims to sources, requirements, discrepancies and accepted records. It provides review packets rather than hardware control."
+      ],
+      "sources": [
+        "docs/ARCHITECTURE.md",
+        "docs/CAD_ASSEMBLIES.md",
+        "docs/WIRING.md",
+        "docs/PROTOCOL.md"
+      ],
+      "notice_level": "CAUTION",
+      "notice": "Do not treat rendered geometry as a verified assembly or a wiring instruction.",
+      "checklist": [
+        "Locate each subsystem in the architecture.",
+        "Compare wiring and protocol documents for the same configuration.",
+        "Separate CAD/model intent from physical assembly observations."
+      ]
+    },
+    {
+      "id": "review",
+      "number": "02",
+      "title": "Normal workflow: offline review",
+      "summary": "Read the record and reproduce its software checks before planning a bench observation.",
+      "paragraphs": [
+        "Inspect claim status, run the record consistency check, then build a portable review packet in a fresh output directory.",
+        "Verify the packet and inspect its sources and limitations. Integrity verification establishes that bytes agree; it does not establish physical performance."
+      ],
+      "sources": [
+        "docs/EVIDENCE_OBSERVATORY.md",
+        "docs/TESTING.md",
+        "docs/USER_GUIDE.md"
+      ],
+      "notice_level": "NOTE",
+      "notice": "Commands below are documentation for an offline review, and are never executed by this page.",
+      "checklist": [
+        "Inspect the output of evidence status.",
+        "Read findings from evidence check; retain unresolved findings.",
+        "Build into a new directory and verify the resulting packet.",
+        "Read packet limitations before citing a result."
+      ]
+    },
+    {
+      "id": "abnormal",
+      "number": "03",
+      "title": "Abnormal records and degraded information",
+      "summary": "Distinguish missing information, an inferred state and a confirmed observation.",
+      "paragraphs": [
+        "Start with the observed symptom and its source. Multiple failed units can produce the same dashboard symptom; a dependency graph cannot identify a unique physical failure.",
+        "Read the degraded-mode matrix and preflight audit meanings together. SENT ONLY is not acknowledgement; INFERRED is not directly observed."
+      ],
+      "sources": [
+        "docs/BENCH_SESSIONS.md",
+        "docs/DEGRADED_MODES.md",
+        "docs/EVIDENCE_OBSERVATORY.md",
+        "docs/GROUND_STATUS.md",
+        "docs/SAFETY.md"
+      ],
+      "notice_level": "WARNING",
+      "notice": "Launcher SAFE does not establish rocket IDLE. Read the recorded restart limitation in the safety checklist and discrepancy D-025.",
+      "checklist": [
+        "Identify the missing or stale stream and its clock domain.",
+        "List all model-consistent failure explanations.",
+        "Compare the audit label with its glossary definition.",
+        "Retain ambiguous or unobserved conditions as unresolved."
+      ],
+      "troubleshooting": [
+        {
+          "symptom": "Launcher reports; rocket telemetry is absent",
+          "interpretation": "UART, rocket processor and an IMU failure at boot can look alike from passive packets.",
+          "review": "Inspect the status board explanations and any already-recorded log-dump response. A response narrows the model; silence does not identify one failed unit.",
+          "source": "docs/GROUND_STATUS.md"
+        },
+        {
+          "symptom": "Launcher state says NOT REPORTED",
+          "interpretation": "The current protocol has no launcher state message. A READY label may be an inference.",
+          "review": "Keep the inferred launcher state separate from the reported rocket state and its age.",
+          "source": "docs/GROUND_STATUS.md"
+        },
+        {
+          "symptom": "Gains are UNCONFIRMED or NO MATCH",
+          "interpretation": "Only later STATUS telemetry confirms a requested change. Missing telemetry is UNCONFIRMED; a differing report is NO MATCH.",
+          "review": "Compare command timestamps with subsequent STATUS records. Do not treat sending a command as confirmation.",
+          "source": "docs/GROUND_STATUS.md"
+        },
+        {
+          "symptom": "Calibration was sent but no change was seen",
+          "interpretation": "Firmware sends no acknowledgement and reported skew is rounded. No visible change proves neither completion nor failure.",
+          "review": "Read the calibration status and recorded skew changes; retain uncertainty in the session interpretation.",
+          "source": "docs/GROUND_STATUS.md"
+        },
+        {
+          "symptom": "Launcher SAFE after abort; rocket remains ARMED",
+          "interpretation": "The current implementation has no rocket disarm path through launcher abort. This is the documented D-025 limitation.",
+          "review": "Read the safety warning and the existing human-operated restart procedure. Do not interpret the launcher label as the rocket state.",
+          "source": "docs/SAFETY.md"
+        },
+        {
+          "symptom": "Passport does not reach REVIEW CANDIDATE",
+          "interpretation": "Required declarations or metadata may be missing, or the audit may contain errors.",
+          "review": "Inspect the passport findings, operator, purpose, inert configuration and audit. Preserve raw files and record corrections in the declaration.",
+          "source": "docs/BENCH_SESSIONS.md"
+        },
+        {
+          "symptom": "Evidence check reports a stale review",
+          "interpretation": "A dependency or claim statement changed. The earlier review no longer covers the current record.",
+          "review": "Inspect the changed sources and affected claim. A tooling snapshot is distinct from a human review and cannot accept physical evidence.",
+          "source": "docs/EVIDENCE_OBSERVATORY.md"
+        }
+      ]
+    },
+    {
+      "id": "instruments",
+      "number": "04",
+      "title": "Instruments, displays and data quality",
+      "summary": "Keep origin, units, time, validity and configuration visible beside a value.",
+      "paragraphs": [
+        "Live telemetry and recovered onboard logs use different clock domains and must remain distinguishable. Gaps and invalid samples are part of the record.",
+        "A requested gain and a gain observed in telemetry are different facts. Calibration being sent does not prove calibration completed."
+      ],
+      "sources": [
+        "docs/GROUND_STATUS.md",
+        "docs/PROTOCOL.md",
+        "docs/BENCH_SESSIONS.md",
+        "docs/USB_BENCH_MONITOR.md",
+        "docs/MODEL_ROCKET_REVIEW.md"
+      ],
+      "notice_level": "CAUTION",
+      "notice": "Missing or stale data must not be displayed as a fresh zero or an affirmative readiness state.",
+      "checklist": [
+        "Identify the origin, units and age of the value.",
+        "Separate T and LOG streams.",
+        "Compare commanded configuration with observed configuration.",
+        "Check gaps, invalid samples and restart advisories."
+      ]
+    },
+    {
+      "id": "limits",
+      "number": "05",
+      "title": "Limitations and unresolved claims",
+      "summary": "Locate the requirement, evidence class and open disagreement behind a result.",
+      "paragraphs": [
+        "The claim passports and discrepancy register are the authority for model disagreements and unmet requirements. Reading this guide changes no claim.",
+        "Aircraft operating limits do not define the limits of Project 33. Flight characteristics, weather qualification and flight performance are not established by this guide."
+      ],
+      "sources": [
+        "docs/TRACEABILITY.md",
+        "docs/DISCREPANCIES.md",
+        "docs/RELEASE_READINESS.md",
+        "docs/SAFETY.md"
+      ],
+      "notice_level": "WARNING",
+      "notice": "No checklist completion, simulation or clean software run authorizes flight or live propulsion.",
+      "checklist": [
+        "Locate the requirement and its evidence class.",
+        "Read disputed and unmet requirements.",
+        "Check release blockers and human-review requirements."
+      ]
+    },
+    {
+      "id": "configuration",
+      "number": "06",
+      "title": "Configuration and observation planning",
+      "summary": "Bind a proposed observation to a specimen, software identity and interpretation rule.",
+      "paragraphs": [
+        "Record specimen identity and installed binary digests; a source revision alone does not identify the binary installed on a board.",
+        "Read the quantity and instrument provenance requirements. Proposed experiments need human registration before measurement; blanks remain unknown."
+      ],
+      "sources": [
+        "docs/BENCH_CONFIGURATION.md",
+        "docs/ROADMAP.md",
+        "docs/BOM.md"
+      ],
+      "notice_level": "NOTE",
+      "notice": "This guide is a reading aid. Its personal reading marks are not test records or approvals.",
+      "checklist": [
+        "Identify the specimen and installed binary digests.",
+        "Locate the human-registered pre-registration.",
+        "Check quantity semantics, instrument identity and calibration provenance.",
+        "Preserve the frozen plan used for the observation."
+      ]
+    },
+    {
+      "id": "sessions",
+      "number": "07",
+      "title": "Session record and independent review",
+      "summary": "Keep raw capture, declaration, audit and human acceptance separate.",
+      "paragraphs": [
+        "Preserve raw telemetry, session metadata and command logs. Corrections belong in declarations or new sessions, not overwritten capture files.",
+        "A passport can become a REVIEW CANDIDATE. Only a named human can accept a session; only accepted evidence can support physical measurements."
+      ],
+      "sources": [
+        "docs/BENCH_SESSIONS.md",
+        "docs/BENCH_CONFIGURATION.md",
+        "docs/EVIDENCE_OBSERVATORY.md"
+      ],
+      "notice_level": "CAUTION",
+      "notice": "A declared bench origin is a statement, not proof that hardware was present.",
+      "checklist": [
+        "Check raw files and clean-close metadata.",
+        "Read the declaration without modifying raw capture.",
+        "Read audit findings and passport limitations.",
+        "Distinguish a review candidate from named human acceptance."
+      ]
+    },
+    {
+      "id": "foldouts",
+      "number": "08",
+      "title": "Foldouts and reference index",
+      "summary": "Open the architecture, dependency matrix and traceability record as companion views.",
+      "paragraphs": [
+        "Use the architecture for system relationships, degraded modes for dependency assumptions, and traceability for claims and requirements.",
+        "Consult the original project source when a summary is insufficient. This index contains no aircraft-specific procedures, diagrams or operating values."
+      ],
+      "sources": [
+        "docs/ARCHITECTURE.md",
+        "docs/DEGRADED_MODES.md",
+        "docs/TRACEABILITY.md",
+        "docs/LIVING_LAB.md",
+        "docs/TECHNOLOGY_INTEGRATION.md",
+        "docs/HARDWARE_INTEGRATION_PLAN.md"
+      ],
+      "notice_level": "NOTE",
+      "notice": "The source index below pins every referenced document to its SHA-256 digest.",
+      "checklist": [
+        "Open the system architecture.",
+        "Read the degraded-mode matrix assumptions.",
+        "Follow a claim through its source and requirement references."
+      ]
+    }
+  ],
+  "glossary": {
+    "RAW SESSION": "Capture plus metadata; not yet accepted evidence.",
+    "REVIEW CANDIDATE": "A passport meeting the documented prerequisites for human review; not acceptance.",
+    "OBSERVED": "The recording contains the expected trace; it does not prove correct, safe or ordered execution.",
+    "INFERRED": "A conclusion implied by firmware logic rather than a directly reported state.",
+    "DECLARED": "A statement supplied by a person, not independently checked by the audit.",
+    "SENT ONLY": "A command was sent without a visible result; delivery and completion remain unknown.",
+    "NOT OBSERVED": "The recording could contain this trace but does not.",
+    "CONTRADICTED": "The recording contains something inconsistent with the checklist condition.",
+    "OPERATOR ONLY": "Packets cannot establish this condition; it requires human confirmation.",
+    "NOT MEASURED": "No accepted physical measurement is supplied; this is not a value of zero."
+  },
+  "sources": [
+    {
+      "path": "docs/ARCHITECTURE.md",
+      "sha256": "4897cdff103e37c15f43821e43cf4c0f2db61a7208aca79ecb9ab82193d8d29a"
+    },
+    {
+      "path": "docs/BENCH_CONFIGURATION.md",
+      "sha256": "f241499c2bb21322999b39b3ea1d68d7fb118792b3b453b5da89c662281bca28"
+    },
+    {
+      "path": "docs/BENCH_SESSIONS.md",
+      "sha256": "e148a5bde324a6ca4f78adc4605d91e3c3e2873ea7e6c4335f22c8160c0a9d69"
+    },
+    {
+      "path": "docs/BOM.md",
+      "sha256": "a6ca86963ffe35d933470c1861484482d44bb63a56d02acb14c15c459da2ba4c"
+    },
+    {
+      "path": "docs/CAD_ASSEMBLIES.md",
+      "sha256": "4352bd376b309bc8e0ca856646b6d1c6e846fc40815f355387a47b139967c41d"
+    },
+    {
+      "path": "docs/DEGRADED_MODES.md",
+      "sha256": "5490f5eb77b0bb961e97fba386a8952e726449bb36d3d48690bc558d0aa4c04e"
+    },
+    {
+      "path": "docs/DISCREPANCIES.md",
+      "sha256": "d1d78acfd4d2699d2e3e0740686b260d8a3d15f8334b084987475296fe21475a"
+    },
+    {
+      "path": "docs/EVIDENCE_OBSERVATORY.md",
+      "sha256": "3c7aa5b723da3e77bfce3000224ba5470b2f54199ae383473fa16f8ef9e4dc8a"
+    },
+    {
+      "path": "docs/GROUND_STATUS.md",
+      "sha256": "c8040e1f924ba91ed7f176330b7e783c68640eeb6f7854d4c36cc312c54240eb"
+    },
+    {
+      "path": "docs/HARDWARE_INTEGRATION_PLAN.md",
+      "sha256": "ccc378f8b0d09c50c53d75d199d7fd908c481b523390176e7a4b7cee2ca6a305"
+    },
+    {
+      "path": "docs/LIVING_LAB.md",
+      "sha256": "e1ddc0f091a1d5c3b16fb4b959f989c35199dc2858ef0f11e11452e073b3de9d"
+    },
+    {
+      "path": "docs/MODEL_ROCKET_REVIEW.md",
+      "sha256": "5f7f6a9afde368c36b44445db9cf52f8fca74ad30c3649e00931533b977edba6"
+    },
+    {
+      "path": "docs/PROJECT_STATUS.md",
+      "sha256": "b8301da6c351df407015466627dd7d2cf6465aaf06181be88e8e4d0a69b542a4"
+    },
+    {
+      "path": "docs/PROTOCOL.md",
+      "sha256": "0a10d053d4714643bf828b7ee90eaa42ee82b25c283b72ff1a83931d903bb70e"
+    },
+    {
+      "path": "docs/RELEASE_READINESS.md",
+      "sha256": "ce2de4a370dbbb9e80af6574982b7bce7182f8075ab9b29bf5726decbc6ee6e0"
+    },
+    {
+      "path": "docs/ROADMAP.md",
+      "sha256": "9a2c25b7ec70eac90dd502b73f69773b503f420a15300eb781e65f27ed522f5d"
+    },
+    {
+      "path": "docs/SAFETY.md",
+      "sha256": "801752872586acbea6ffc754926ff53d8d5b66a44059a3a0aa1c89433e63c95b"
+    },
+    {
+      "path": "docs/TECHNOLOGY_INTEGRATION.md",
+      "sha256": "31c2f11a51d332a3a26e74ef2625a7e437a3582f082ec55dbf275d1f72907bac"
+    },
+    {
+      "path": "docs/TESTING.md",
+      "sha256": "00afd51ead9e771981c7353680e3e1e4a7e9ea0113d168a7d90a977fa5a0a4ba"
+    },
+    {
+      "path": "docs/TRACEABILITY.md",
+      "sha256": "84166f43f82d3f002b673d48a5d4f1b3a6da077dcb13444b5752039e70171fd7"
+    },
+    {
+      "path": "docs/USB_BENCH_MONITOR.md",
+      "sha256": "685506f7aef3e45eb6f7737db0d45aaeb53d9abdd10d019901c5b3f0c8bfe1a8"
+    },
+    {
+      "path": "docs/USER_GUIDE.md",
+      "sha256": "a792331be929911d91efe4a1f16c1dc66ec01fac17d3dcdb3107593d51eb85d3"
+    },
+    {
+      "path": "docs/WIRING.md",
+      "sha256": "a707d10558f18decdf53708184fb0ae7ccd74da85953f5bb8c2e6422e260afcb"
+    }
+  ],
+  "revision": "42cd656d53ffe7fba3b34700c25a57f1dc0c8bb6254fe153bf70716d14d75557"
+}

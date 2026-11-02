@@ -101,6 +101,30 @@
       </div>
       <div class="notice in-lesson"><span><b>The shared lesson.</b> A good architecture can tell you what it no longer knows. The generic graph does it through redundancy and reversion; Project 33's read-only status board does it by mapping each silent channel back to the units it depends on — and by listing, honestly, the capabilities the system does not have at all.</span></div>
     </section>
+    <section class="wrap in-section" aria-labelledby="config-title">
+      <div class="section-head"><p class="eyebrow">04 / Configuration identity</p>
+        <h2 id="config-title">Are these the same configuration?</h2>
+        <p class="muted">Compare two local bench-plan JSON files. Files stay in your browser. Source identity, declared installed firmware and specimen identity are separate checks.</p>
+      </div>
+      <div class="panel"><div class="panel-body" id="configuration-compare"></div></div>
+      <p class="small"><a href="../docs/TECHNOLOGY_INTEGRATION.html">Technology integration map</a> · <a href="../docs/HARDWARE_INTEGRATION_PLAN.html">Hardware and firmware plan</a> · <a href="bench-manual.html#reference">Utility reference</a></p>
+    </section>
+    <section class="wrap in-section" aria-labelledby="usb-monitor-title">
+      <div class="section-head"><p class="eyebrow">05 / Standalone hardware observation</p>
+        <h2 id="usb-monitor-title">Read the board's own report.</h2>
+        <p class="muted">Dedicated ESP32 monitor firmware reports sensor observations and system diagnostics over USB. Open a local report here to inspect invalid, missing and stale data.</p>
+      </div>
+      <div class="panel"><div class="panel-body" id="usb-monitor-report"></div></div>
+      <p class="small"><a href="../docs/USB_BENCH_MONITOR.html">Build, capture and replay instructions</a>. This page reads report files only.</p>
+    </section>
+    <section class="wrap in-section" aria-labelledby="altimeter-title">
+      <div class="section-head"><p class="eyebrow">06 / Model-rocket data review</p>
+        <h2 id="altimeter-title">Follow the rise, peak and descent.</h2>
+        <p class="muted">Review pressure-derived height and vertical rate, simulated recovery markers, and declared parachute observations. Scrub the timeline to inspect each sample and data gap.</p>
+      </div>
+      <div class="panel"><div class="panel-body" id="altimeter-review"></div></div>
+      <p class="small"><a href="../docs/MODEL_ROCKET_REVIEW.html">Pressure logger, model assumptions and recovery review</a>. Existing launcher pressure is ground data.</p>
+    </section>
   </main>
   <div id="shell-footer"></div>
   <noscript><p class="wrap notice">The exhibits need JavaScript. Project 33's dependency model is <a href="../protocol/ground_status_model.json">ground_status_model.json</a>; its generated table is <a href="../docs/DEGRADED_MODES.html">Degraded Modes</a>.</p></noscript>

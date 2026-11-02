@@ -86,6 +86,20 @@ register; the [archive](../lab/archive.html#observations) recomputes both live.
 
 ## Source rights audit
 
+The [Utility Bench Manual reference](UTILITY_BENCH_MANUAL.md) adds a searchable,
+source-pinned reading companion to the existing film: nine chapters, an evidence
+glossary, personal reading marks and a print view. Its technical content is
+derived from Project 33 records. The guide records the attempted REA analysis
+and the limitations of the separate scanned-document study.
+
+The instrumentation room now shares timestamped synthetic observations between
+its preview and cockpit. Missing samples age into stale data and retain their
+last valid values; alerts have real elapsed ages. It also compares local bench
+plan declarations without accessing hardware. See the
+[technology integration map](TECHNOLOGY_INTEGRATION.md) and
+[hardware integration plan](HARDWARE_INTEGRATION_PLAN.md) for implemented features
+and the specifications still needed for physical integration.
+
 The supplied *OCIP Supplement to the Utility Flight Manual, F-117A* (TO 1F-117A-1A, Issue B,
 3 February 1992) carries a distribution statement limiting it to U.S. Government agencies, states
 that reproduction of its information or illustrations for non-military use is not permitted, and

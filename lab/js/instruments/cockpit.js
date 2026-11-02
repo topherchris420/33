@@ -5,7 +5,7 @@ import { THREE, createRenderer, CameraRig, studioLights, label3D, autoResize, lo
 import { clayMaterial } from "../core/materials.js";
 import { makeTally, signTexture } from "../core/claymates.js";
 import { reducedMotion } from "../core/dom.js";
-import { flightState, drawHUD, drawMap, drawStatus } from "./symbology.js";
+import { drawHUD, drawMap, drawStatus } from "./symbology.js";
 
 function clay(color, opts = {}) { return clayMaterial({ color, bump: 0.8, scale: 0.08, ...opts }); }
 
@@ -181,15 +181,16 @@ export function mountCockpit({ viewport, store, onSelect }) {
   let t = 0, lastDraw = -1, lastFrame = 0;
   const motion = !reducedMotion();
   function drawDisplays() {
-    const s = flightState(t);
     const st = store.get();
+    const s = st.displayState;
     const flags = {
       attitudeLost: st.sources.inertial.state === "unavailable",
+      attitude: st.sources.inertial.state,
       speed: st.sources.airdata.state, altitude: st.sources.airdata.state,
     };
     drawHUD(displays.hud.ctx, 512, 512, s, st.declutter, { flags });
     drawMap(displays.map.ctx, 512, 512, s, st.declutter, { navFlag: st.sources.gnss.state });
-    drawStatus(displays.status.ctx, 512, 512, st.messages, st.declutter);
+    drawStatus(displays.status.ctx, 512, 512, st.messages, st.declutter, st.time);
     for (const d of Object.values(displays)) d.tex.needsUpdate = true;
   }
   // Render on demand: camera moves, display redraws, or a new stop-motion pose.

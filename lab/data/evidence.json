@@ -2,7 +2,7 @@
  "schema": "project33.lab.evidence/1",
  "generated_by": "tools/export_lab_data.py",
  "inputs": {
-  ".github/workflows/ci.yml": "1aa2ade27c00d88217cce38b6b01b4dec8a845280bf52878c95a413a261fb04b",
+  ".github/workflows/ci.yml": "3bbd72e46a7ac0a82c2a863d8be953f2e40f0f38fe2cef6d9a3da2733ff83b32",
   "CAD Files/Four Bar Linkage.step": "7f4afad7b1d77b01b21a776c13eca2041daeae40b52a598f1537ec80b10a2c87",
   "CAD Files/FusionScripts/Project33FourBar/Project33FourBar.py": "135baaed83dbb1d6957c664ede7de9e3509efeed0c90e59153ceb169117d8885",
   "CAD Files/FusionScripts/Project33NacaFin/Project33NacaFin.py": "52754c73baf5a2d2f06dad2266c208f7dc6d3eb44e430f2b3ca8eb2c5d7ea7e7",
@@ -59,7 +59,7 @@
   "evidence/predictions.json": "6aac364f253669cb33ed3aed7c0e53977376b60dad34511a0c819d868e57dd5c",
   "evidence/preregistrations.json": "37ed33bab3b45c7e32d0b48d49c948a2fb3f6bd0ff1312cce688a24576e8e29a",
   "evidence/requirements.json": "ef365bb51d1cd2dbe0ccbc63608957e4e64fc705295193e14231dfabee7d4b94",
-  "evidence/reviews.json": "890942eabf63c367041168feec4a4031a665646b9aa11721f6914114e1840494",
+  "evidence/reviews.json": "9fbfbf1559b519dcbba3645eceba1ae4277f9cc28a77a4546969753497401b7e",
   "evidence/safety_gates.json": "ab71eee7e344c78d16d5a39a864d56d636cc9446a88047ee57a2ba4f23790f13",
   "evidence/sessions.json": "a8486b0ce83596a773a27761db12830209c274dff74a35deba1dc5d51bc5433b",
   "materials/mass_rollup.py": "7e8b8ca2b46b20102721c645284fc7b1a81e8c4848e30ee4295a8a10260025ec",
@@ -328,8 +328,8 @@
    "format": "file",
    "description": "CI configuration. A configuration is not a record that any particular run passed.",
    "status": "current",
-   "sha256": "1aa2ade27c00d88217cce38b6b01b4dec8a845280bf52878c95a413a261fb04b",
-   "bytes": 3463,
+   "sha256": "3bbd72e46a7ac0a82c2a863d8be953f2e40f0f38fe2cef6d9a3da2733ff83b32",
+   "bytes": 5277,
    "class_label": "IMPLEMENTATION",
    "snapshot_path": "artifacts/.github/workflows/ci.yml"
   },
@@ -1324,9 +1324,9 @@
     "missing": [],
     "review": {
      "kind": "snapshot",
-     "recorded": "2026-09-29",
+     "recorded": "2026-11-02",
      "recorded_by": "tooling snapshot (no human review)",
-     "note": "CI job display name restored to 'Python docs and telemetry checks' so required-check settings keep matching; job steps unchanged.",
+     "note": "CI now also builds and retains the isolated altimeter bench image. NACA coordinate, validation and STEP-export tests and the pinned CAD environment are unchanged; this is an automated source snapshot, not a human review or physical measurement.",
      "independent": false
     }
    },
@@ -4696,16 +4696,67 @@
      "cad_install_tests": "f02aa050624ebf98b8176f84e9d30f76b5434d987b4279c12ff24ddf9a1e0b17",
      "cad_source": "9d19d2ce4f06daea7e8ca8f6a5f52c03f5540e9c0c3999204292449f05c8749f",
      "cad_tests": "4dba7f7013f2a2c3b902038062b7894ae239aa99b7b469b98b52cafb50ac96b5",
-     "ci": "1aa2ade27c00d88217cce38b6b01b4dec8a845280bf52878c95a413a261fb04b",
+     "ci": "3bbd72e46a7ac0a82c2a863d8be953f2e40f0f38fe2cef6d9a3da2733ff83b32",
      "review_figures_tool": "73d43e02f4f5b7820580b68f93f815fa975d58057cab476e2887b9d3c253e799"
     },
     "kind": "snapshot",
-    "note": "CI job display name restored to 'Python docs and telemetry checks' so required-check settings keep matching; job steps unchanged.",
-    "recorded": "2026-09-29",
+    "note": "CI now also builds and retains the isolated altimeter bench image. NACA coordinate, validation and STEP-export tests and the pinned CAD environment are unchanged; this is an automated source snapshot, not a human review or physical measurement.",
+    "recorded": "2026-11-02",
     "recorded_by": "tooling snapshot (no human review)",
     "statement_sha256": "dad6de0a19d3bfb8f0260fd9201fa4c27673423ab4c23e4ef54778f213761bbd"
    },
    "history": [
+    {
+     "assumptions_sha256": "db27ac8458e0bde77deb061fdbceba37f336b927d176baae693c72e2153388c7",
+     "dependencies": {
+      "c3_profile_figure": "6afe5f42d7e64820fb3aa08ebf4340dd4605e66b3f3cab70b8c9411480903663",
+      "cad_fusion_script": "52754c73baf5a2d2f06dad2266c208f7dc6d3eb44e430f2b3ca8eb2c5d7ea7e7",
+      "cad_install_tests": "f02aa050624ebf98b8176f84e9d30f76b5434d987b4279c12ff24ddf9a1e0b17",
+      "cad_source": "9d19d2ce4f06daea7e8ca8f6a5f52c03f5540e9c0c3999204292449f05c8749f",
+      "cad_tests": "4dba7f7013f2a2c3b902038062b7894ae239aa99b7b469b98b52cafb50ac96b5",
+      "ci": "a324db0ba2a9c8108e4ceff0d631ed81d989917669371fb0311df7dd4e639802",
+      "review_figures_tool": "73d43e02f4f5b7820580b68f93f815fa975d58057cab476e2887b9d3c253e799"
+     },
+     "kind": "snapshot",
+     "note": "Final CI change retains the two standalone observer images and their ELF/BIN identity manifests after compilation. Existing CAD tests and model reproduction remain. This is an automated source snapshot, with no human acceptance or physical claim promotion.",
+     "recorded": "2026-11-02",
+     "recorded_by": "tooling snapshot (no human review)",
+     "statement_sha256": "dad6de0a19d3bfb8f0260fd9201fa4c27673423ab4c23e4ef54778f213761bbd"
+    },
+    {
+     "assumptions_sha256": "db27ac8458e0bde77deb061fdbceba37f336b927d176baae693c72e2153388c7",
+     "dependencies": {
+      "c3_profile_figure": "6afe5f42d7e64820fb3aa08ebf4340dd4605e66b3f3cab70b8c9411480903663",
+      "cad_fusion_script": "52754c73baf5a2d2f06dad2266c208f7dc6d3eb44e430f2b3ca8eb2c5d7ea7e7",
+      "cad_install_tests": "f02aa050624ebf98b8176f84e9d30f76b5434d987b4279c12ff24ddf9a1e0b17",
+      "cad_source": "9d19d2ce4f06daea7e8ca8f6a5f52c03f5540e9c0c3999204292449f05c8749f",
+      "cad_tests": "4dba7f7013f2a2c3b902038062b7894ae239aa99b7b469b98b52cafb50ac96b5",
+      "ci": "da2d9f0a378beb62a1b0fe6dd21c50a091689c6df84205089d31deaac4844cad",
+      "review_figures_tool": "73d43e02f4f5b7820580b68f93f815fa975d58057cab476e2887b9d3c253e799"
+     },
+     "kind": "snapshot",
+     "note": "The CI workflow adds compile-only standalone sensor monitor images. Existing CAD tests, model reproduction and normal firmware build commands remain. This tooling snapshot detects source changes and does not record human acceptance or alter the C3 software-only claim.",
+     "recorded": "2026-11-02",
+     "recorded_by": "tooling snapshot (no human review)",
+     "statement_sha256": "dad6de0a19d3bfb8f0260fd9201fa4c27673423ab4c23e4ef54778f213761bbd"
+    },
+    {
+     "assumptions_sha256": "db27ac8458e0bde77deb061fdbceba37f336b927d176baae693c72e2153388c7",
+     "dependencies": {
+      "c3_profile_figure": "6afe5f42d7e64820fb3aa08ebf4340dd4605e66b3f3cab70b8c9411480903663",
+      "cad_fusion_script": "52754c73baf5a2d2f06dad2266c208f7dc6d3eb44e430f2b3ca8eb2c5d7ea7e7",
+      "cad_install_tests": "f02aa050624ebf98b8176f84e9d30f76b5434d987b4279c12ff24ddf9a1e0b17",
+      "cad_source": "9d19d2ce4f06daea7e8ca8f6a5f52c03f5540e9c0c3999204292449f05c8749f",
+      "cad_tests": "4dba7f7013f2a2c3b902038062b7894ae239aa99b7b469b98b52cafb50ac96b5",
+      "ci": "1aa2ade27c00d88217cce38b6b01b4dec8a845280bf52878c95a413a261fb04b",
+      "review_figures_tool": "73d43e02f4f5b7820580b68f93f815fa975d58057cab476e2887b9d3c253e799"
+     },
+     "kind": "snapshot",
+     "note": "CI job display name restored to 'Python docs and telemetry checks' so required-check settings keep matching; job steps unchanged.",
+     "recorded": "2026-09-29",
+     "recorded_by": "tooling snapshot (no human review)",
+     "statement_sha256": "dad6de0a19d3bfb8f0260fd9201fa4c27673423ab4c23e4ef54778f213761bbd"
+    },
     {
      "assumptions_sha256": "db27ac8458e0bde77deb061fdbceba37f336b927d176baae693c72e2153388c7",
      "dependencies": {

@@ -3,6 +3,7 @@
 // and altitude tapes, a heading scale, a north-up map, a prioritised alert list) are common
 // to aviation displays in general. Values come from a synthetic flight-state generator.
 
+import { selectAlerts } from './validity.js';
 export const HUD_GREEN = "#8cf5c8";
 
 /** Synthetic, smoothly varying flight state. Not a flight model; not any aircraft's data. */
@@ -78,7 +79,11 @@ export function drawHUD(ctx, w, h, s, level, { flags = {} } = {}) {
     tape(ctx, 34, cy, s.speed, 10, "left", flags.speed);
     tape(ctx, w - 34, cy, s.altitude, 100, "right", flags.altitude);
   }
-  if (level >= 3) headingScale(ctx, cx, 46, w * 0.5, s.heading);
+  if (level >= 3 && !flags.attitudeLost) headingScale(ctx, cx, 46, w * 0.5, s.heading);
+  if (flags.attitude && !['nominal', 'unavailable'].includes(flags.attitude)) {
+    ctx.save(); ctx.fillStyle = '#ffd27a'; ctx.textAlign = 'center';
+    ctx.fillText(`ATT ${flags.attitude.toUpperCase()}`, cx, h - 96); ctx.restore();
+  }
   if (level >= 4 && !flags.attitudeLost) {
     ctx.save(); ctx.translate(cx, cy);
     for (const a of [-45, -30, -20, -10, 0, 10, 20, 30, 45]) {
@@ -88,7 +93,7 @@ export function drawHUD(ctx, w, h, s, level, { flags = {} } = {}) {
     const ang = ((-s.roll - 90) * Math.PI) / 180, r = h * 0.4 - 4;
     ctx.beginPath(); ctx.moveTo(Math.cos(ang) * r, Math.sin(ang) * r); ctx.lineTo(Math.cos(ang - 0.04) * (r - 16), Math.sin(ang - 0.04) * (r - 16)); ctx.lineTo(Math.cos(ang + 0.04) * (r - 16), Math.sin(ang + 0.04) * (r - 16)); ctx.closePath(); ctx.fill();
     ctx.restore();
-    ctx.textAlign = "right"; ctx.textBaseline = "top"; ctx.fillText(`${s.vs >= 0 ? "+" : ""}${Math.round(s.vs / 10) * 10} VS`, w - 30, cy + 120);
+    if (flags.altitude !== 'unavailable') { ctx.textAlign = "right"; ctx.textBaseline = "top"; ctx.fillText(`${s.vs >= 0 ? "+" : ""}${Math.round(s.vs / 10) * 10} VS`, w - 30, cy + 120); }
   }
   if (level >= 5) {
     ctx.textAlign = "left"; ctx.textBaseline = "top"; ctx.fillText("NAV  ALT HOLD", 30, h - 70); ctx.fillText("1.0 G", 30, h - 44);
@@ -190,9 +195,9 @@ export function drawMap(ctx, w, h, s, level, { navFlag = null } = {}) {
   const heading = Math.atan2(b.x - a.x, b.y - a.y);
   ctx.save(); ctx.translate(ox, oy); ctx.rotate(heading);
   ctx.fillStyle = navFlag === "unavailable" ? "#ff7a5c" : navFlag === "stale" ? "#ffd27a" : "#f1e9d6";
-  ctx.beginPath(); ctx.moveTo(0, -16); ctx.lineTo(11, 12); ctx.lineTo(0, 6); ctx.lineTo(-11, 12); ctx.closePath(); ctx.fill();
+  if (navFlag !== 'unavailable') { ctx.beginPath(); ctx.moveTo(0, -16); ctx.lineTo(11, 12); ctx.lineTo(0, 6); ctx.lineTo(-11, 12); ctx.closePath(); ctx.fill(); }
   ctx.restore();
-  if (level >= 2) {
+  if (level >= 2 && navFlag !== 'unavailable') {
     ctx.fillStyle = "#f1e9d6"; ctx.font = "500 17px 'Plex Mono', monospace"; ctx.textAlign = "left"; ctx.textBaseline = "top";
     ctx.fillText(`NEXT WPT ${b.id}`, 16, 16);
     ctx.fillStyle = "rgba(241,233,214,0.7)"; ctx.fillText(`${(Math.hypot(b.x - own.x, b.y - own.y) * 20).toFixed(1)} NM`, 16, 40);
@@ -205,11 +210,9 @@ export function drawMap(ctx, w, h, s, level, { navFlag = null } = {}) {
 }
 
 /** Prioritised alert / status list. */
-export function drawStatus(ctx, w, h, messages, level) {
+export function drawStatus(ctx, w, h, messages, level, now = 0) {
   bg(ctx, w, h);
-  const order = { warning: 0, caution: 1, advisory: 2, status: 3 };
-  const shownKinds = ["warning", "caution", "advisory", "status"].slice(0, Math.min(4, Math.max(1, level)));
-  const shown = messages.filter((m) => shownKinds.includes(m.kind)).sort((a, b) => order[a.kind] - order[b.kind]);
+  const { visible: shown, hidden } = selectAlerts(messages, { level, capacity: 9, now });
   const colors = { warning: "#ff6a4d", caution: "#ffcc5c", advisory: "#67d8cf", status: "#c9d4da" };
   ctx.font = "600 17px 'Plex Mono', monospace"; ctx.textBaseline = "middle";
   ctx.fillStyle = "rgba(143,162,173,0.85)"; ctx.textAlign = "left"; ctx.fillText("ALERTS & STATUS", 16, 26);
@@ -224,11 +227,10 @@ export function drawStatus(ctx, w, h, messages, level) {
     ctx.fillStyle = colors[m.kind];
     if (m.kind === "warning") { ctx.fillRect(16, y - 15, w - 32, 30); ctx.fillStyle = "#03070b"; }
     ctx.textAlign = "left"; ctx.fillText(m.text, 28, y);
-    if (level >= 5) { ctx.textAlign = "right"; ctx.globalAlpha = 0.7; ctx.fillText(m.age || "00:12", w - 28, y); ctx.globalAlpha = 1; }
+    if (level >= 5) { ctx.textAlign = "right"; ctx.globalAlpha = 0.7; ctx.fillText(`${m.age.toFixed(1)} s`, w - 28, y); ctx.globalAlpha = 1; }
   });
   if (!shown.length) { ctx.fillStyle = "rgba(201,212,218,0.6)"; ctx.textAlign = "left"; ctx.fillText("NO ACTIVE ALERTS", 28, 70); }
-  const hidden = messages.length - shown.length;
-  if (hidden > 0) { ctx.fillStyle = "rgba(143,162,173,0.85)"; ctx.textAlign = "left"; ctx.font = "500 15px 'Plex Mono', monospace"; ctx.fillText(`+${hidden} lower-priority message${hidden > 1 ? "s" : ""} suppressed by declutter`, 16, h - 44); }
+  if (hidden > 0) { ctx.fillStyle = "rgba(143,162,173,0.85)"; ctx.textAlign = "left"; ctx.font = "500 15px 'Plex Mono', monospace"; ctx.fillText(`+${hidden} message${hidden > 1 ? "s" : ""} hidden by declutter or capacity`, 16, h - 44); }
   frameText(ctx, w, h, "SYNTHETIC MESSAGES · GENERIC PRIORITY ORDER");
 }
 
