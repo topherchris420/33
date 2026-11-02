@@ -140,6 +140,14 @@ test("instrumentation lab: cockpit, declutter, information chain, dependencies",
   await page.setInputFiles('#config-right', { name: 'invalid.json', mimeType: 'application/json', buffer: Buffer.from('{}') });
   await page.click('#config-compare');
   await page.waitForSelector('#config-result [role="alert"]');
+  const usb = { schema: 'project33.monitor_report/1', elapsed_s: 1, origins: ['synthetic'], boots: [{ role: 'rocket', boot: '0123456789abcdef', identity_comparison: 'UNKNOWN', system: null, sensors: { mpu6050: { status: 'INVALID', valid: false, age_s: 0.5, values: { ax: null }, units: { ax: 'm/s^2' } } } }] };
+  await page.setInputFiles('#usb-report-file', { name: 'report.json', mimeType: 'application/json', buffer: Buffer.from(JSON.stringify(usb)) });
+  await page.waitForSelector('[data-usb-status="INVALID"]');
+  assert.match(await page.textContent('#usb-report-result'), /synthetic/);
+  assert.match(await page.textContent('#usb-report-result'), /NOT REPORTED/);
+  if (SHOTS) { await page.locator('[data-usb-status="INVALID"]').scrollIntoViewIfNeeded(); await page.screenshot({ path: join(SHOTS, 'usb-monitor-desktop.png') }); }
+  await page.setInputFiles('#usb-report-file', { name: 'invalid.json', mimeType: 'application/json', buffer: Buffer.from('{}') });
+  await page.waitForSelector('#usb-report-result [role="alert"]');
   await page.click(".gs-unit[data-unit='LAUNCHER']");
   assert.equal(await page.locator(".gs-item[data-id='switch_abort']").getAttribute("data-available"), "false");
   await page.locator(".gs-item[data-id='switch_abort'] summary").click();

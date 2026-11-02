@@ -11,6 +11,12 @@ compass and barometer on the launcher. Their authoritative assignments remain in
 binary identities and calibration records have not been supplied in this task.
 No board has been connected, flashed or tested by this work.
 
+The [standalone USB monitor](USB_BENCH_MONITOR.md) now implements a concrete
+hardware-facing addition: dedicated ESP32 observer images, existing-sensor
+readings, boot/reset/memory diagnostics, ELF identity, raw capture/replay and
+local report inspection in the laboratory. These images exclude the normal
+actuator/control source files. Physical performance remains unmeasured.
+
 The laboratory implements synthetic display validity and alert handling, existing
 dependency/fault exhibits, the utility reference, and local comparison of bench
 plan identities. These software demonstrations do not implement aircraft flight
@@ -25,8 +31,8 @@ management, automatic recovery, propulsion or environmental-control equipment.
 | Configuration identity | Bench plans, source snapshots, installed binary digest fields | Compare planned and captured identities with the existing offline tools and new browser comparison | Record actual flashed binary digests and specimen ID; matching source alone is insufficient |
 | Alerts and event history | Existing status-board advisories and raw capture | Preserve warning reasons and ages; demonstrate recovery on synthetic and recorded input | Check alert ordering and replay determinism, then obtain human-reviewed inert observations |
 | Sensor provenance | MPU6050, barometer, compass and GPS records | Bind each reported quantity to units, source kind, calibration record and known limits | Independent instrument provenance; quantity-specific uncertainty and acceptance criteria |
-| Built-in-test reporting | Existing boot health flags and software tests | Specify an observational health report independently from control states | New protocol design and compatibility review before firmware implementation; existing boot flags do not detect every later failure |
-| Firmware identity reporting | Current capture leaves device firmware revision unreported | Design a versioned, read-only identification record for future firmware work | Review bandwidth/parser compatibility, boot timing and installed-binary identification; no implementation is claimed here |
+| Built-in-test reporting | Standalone monitor sensor initialization, MPU/BMP register checks, explicit validity frames | Implemented over USB in dedicated observer images, independent of control states | Compile/parser checks pass; physical fault-injection and calibration remain unmeasured |
+| Firmware identity reporting | Standalone monitor ELF identity; default dashboard protocol still lacks device revision | Implemented boot/sequence/ELF reporting, build manifests and comparison | Reported identity is not physical attestation or a read-back of the flashed binary |
 | Power and environmental monitoring | No accepted voltage/current/temperature instrumentation record | Identify actual supply and sensor requirements from the bench specimen | Component specifications, electrical review and measured supply behavior; aircraft ECS/APU designs are not substitutes |
 
 ## Firmware boundary
@@ -37,10 +43,10 @@ In particular, a health message must not silently become a readiness signal or
 alter heartbeat acceptance. The existing [Ground Status](GROUND_STATUS.md)
 discussion identifies the related unresolved changes.
 
-New identification or health messages need a concrete schema, producer timing,
-parser behavior, compatibility policy and regression tests before implementation.
-Those requirements cannot be recovered from the historical supplement or inferred
-from an apparently healthy display.
+The standalone implementation defines its schema and timing in
+`protocol/bench_monitor.json`, with parser, isolation and regression tests. It
+uses USB instead of changing the existing command/heartbeat protocol. Extending
+the default operational channel still needs a separate compatibility specification.
 
 ## Required inputs for physical integration
 

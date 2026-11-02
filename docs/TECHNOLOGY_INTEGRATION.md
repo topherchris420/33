@@ -15,7 +15,7 @@ manual. The study limitations are in [Utility Bench Manual](UTILITY_BENCH_MANUAL
 | Map and navigation presentation | Generic navigation display in the cockpit exhibit | Conceptual only; no route-management or navigation solution is established |
 | Data entry and command confirmation | Active/preselect/sent/confirmed gain states in the status board | Existing interpretation; no browser command path |
 | Configuration and stored-data identity | Bench plan, installed binary digests, source manifests | Existing offline configuration identity workflow |
-| Built-in test and equipment status | Source-pinned dependency model, preflight audit, synthetic tests | Software/model coverage only; no physical built-in-test qualification |
+| Built-in test and equipment status | Source-pinned dependency model, preflight audit, and dedicated USB monitor firmware | Sensor/register checks and raw diagnostic reporting implemented; physical qualification remains unmeasured |
 | Failure isolation and redundancy | Generic power/processor graph and project degraded-mode matrix | Existing interactive dependency analysis; several failures remain observationally ambiguous |
 | Alerts and priority | Ground-status warnings/cautions/advisories | Existing project-specific advisories, not aircraft fault messages |
 | Automatic flight/speed modes | No corresponding laboratory implementation | Aircraft behavior cannot be inferred from labels; no compatible bench specification supplied |
@@ -35,6 +35,13 @@ specimen and its specifications. Existing laboratory functions remain read-only
 and separate from physical evidence.
 
 ## Functional additions in this change
+
+The [standalone USB instrumentation](USB_BENCH_MONITOR.md) adds actual firmware
+and sensor-driver integration. Separate observer images report the existing
+MPU6050, BMP180, compass and GPS sources over USB, with boot/reset/memory and ELF
+identity records. The capture/replay tool validates frames and the laboratory
+loads its diagnostic reports. This implementation is distinct from the generic
+synthetic display exercises below.
 
 - The instrumentation preview, 3D cockpit and flat fallback consume the same
   timestamped synthetic observations. A missing source expires into stale data;

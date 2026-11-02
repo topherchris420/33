@@ -1,0 +1,25 @@
+{
+  "schema": "project33.usb_monitor_protocol/1",
+  "version": 1,
+  "transport": "USB serial, 115200 baud; standalone monitor firmware only",
+  "sample_period_ms": 500,
+  "validity_ms": 2000,
+  "maximum_line_bytes": 512,
+  "sensors": {
+    "mpu6050": {"role": "rocket", "fields": ["ax", "ay", "az", "gx", "gy", "gz", "temperature"], "units": ["m/s^2", "m/s^2", "m/s^2", "rad/s", "rad/s", "rad/s", "degC"]},
+    "bmp180": {"role": "launcher", "fields": ["temperature", "pressure"], "units": ["degC", "Pa"]},
+    "qmc5883l": {"role": "launcher", "fields": ["x", "y", "z"], "units": ["raw_count", "raw_count", "raw_count"]},
+    "gps": {"role": "launcher", "fields": ["latitude", "longitude"], "units": ["degree", "degree"]}
+  },
+  "messages": {
+    "P33ID": "P33ID,1,role,boot_hex16,sequence_u32,uptime_ms_u32,elf_sha256",
+    "P33SYS": "P33SYS,1,role,boot_hex16,sequence_u32,uptime_ms_u32,reset_code,free_heap_bytes,min_heap_bytes",
+    "P33S": "P33S,1,role,boot_hex16,sequence_u32,uptime_ms_u32,sensor,valid_0_or_1,values..."
+  },
+  "limitations": [
+    "valid is a transport/finite-value check, not calibrated measurement or sensor-health qualification",
+    "QMC5883L valid means its I2C address acknowledged; frozen data is not detected",
+    "ELF identity is not the flashed binary digest or a cryptographic device attestation",
+    "all captures remain raw records requiring the normal human evidence workflow"
+  ]
+}

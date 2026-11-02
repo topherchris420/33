@@ -36,7 +36,7 @@ CHAPTERS = [
      'Keep origin, units, time, validity and configuration visible beside a value.',
      ['Live telemetry and recovered onboard logs use different clock domains and must remain distinguishable. Gaps and invalid samples are part of the record.',
       'A requested gain and a gain observed in telemetry are different facts. Calibration being sent does not prove calibration completed.'],
-     ['docs/GROUND_STATUS.md', 'docs/PROTOCOL.md', 'docs/BENCH_SESSIONS.md'],
+     ['docs/GROUND_STATUS.md', 'docs/PROTOCOL.md', 'docs/BENCH_SESSIONS.md', 'docs/USB_BENCH_MONITOR.md'],
      'CAUTION', 'Missing or stale data must not be displayed as a fresh zero or an affirmative readiness state.'),
     ('limits', '05', 'Limitations and unresolved claims',
      'Locate the requirement, evidence class and open disagreement behind a result.',

@@ -98,3 +98,22 @@ jobs:
         run: cp Firmware/Launcher/src/wifi_config.h.example Firmware/Launcher/src/wifi_config.h
       - name: Build launcher firmware
         run: pio run -d Firmware/Launcher
+      - name: Build standalone USB monitor images
+        run: |
+          pio run -d Firmware/Rocket -e rocket_monitor
+          pio run -d Firmware/Launcher -e launcher_monitor
+          python Firmware/bench_monitor.py manifest --role rocket --elf Firmware/Rocket/.pio/build/rocket_monitor/firmware.elf --binary Firmware/Rocket/.pio/build/rocket_monitor/firmware.bin --output build/monitor-artifacts/rocket.json
+          python Firmware/bench_monitor.py manifest --role launcher --elf Firmware/Launcher/.pio/build/launcher_monitor/firmware.elf --binary Firmware/Launcher/.pio/build/launcher_monitor/firmware.bin --output build/monitor-artifacts/launcher.json
+      - name: Retain standalone monitor build artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: project33-usb-monitors-${{ github.sha }}
+          path: |
+            Firmware/Rocket/.pio/build/rocket_monitor/*.bin
+            Firmware/Rocket/.pio/build/rocket_monitor/firmware.elf
+            Firmware/Launcher/.pio/build/launcher_monitor/*.bin
+            Firmware/Launcher/.pio/build/launcher_monitor/firmware.elf
+            build/monitor-artifacts/
+            docs/USB_BENCH_MONITOR.md
+          if-no-files-found: error
+          retention-days: 30

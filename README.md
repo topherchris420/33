@@ -41,6 +41,8 @@ The project site is now an interactive, read-only engineering laboratory. Rotate
 
 The [instrumentation laboratory](https://topherchris420.github.io/33/lab/instruments.html) now holds aged synthetic readings at their last valid values, tracks alert ages, and compares local bench-plan identities. The [technology map](docs/TECHNOLOGY_INTEGRATION.md) and [hardware integration plan](docs/HARDWARE_INTEGRATION_PLAN.md) show implemented capabilities and the specifications still needed for physical integration.
 
+[Standalone USB instrumentation](docs/USB_BENCH_MONITOR.md) supplies dedicated ESP32 sensor-monitoring firmware, boot/reset/memory and firmware-identity diagnostics, raw capture/replay, and local report inspection in the laboratory. These observer images exclude the normal control and actuator source files; their physical behavior is not yet measured.
+
 [![Project 33 claymation Utility Bench Manual. Select the cover to play the full film in the browser.](assets/marketing/bench-manual-poster.svg)](https://topherchris420.github.io/33/lab/bench-manual.html)
 
 **[▶ PLAY FULL FILM WITH SOUND](https://topherchris420.github.io/33/lab/bench-manual.html)** · **[Watch on the Project 33 homepage](https://topherchris420.github.io/33/)** · **[Download MP4](project33-bench-manual-github-720p.mp4)** · **4:09 · 720p · 19.1 MB**
