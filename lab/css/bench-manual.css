@@ -1,0 +1,41 @@
+.manual-reference { margin-top: 64px; }
+.manual-reference h2 { font-size: clamp(30px, 4vw, 46px); }
+.manual-controls { margin: 24px 0; padding: 22px; border: 1px solid var(--graphite-500); background: var(--navy-850); }
+.manual-controls label { display: block; margin-bottom: 8px; }
+.manual-controls input[type=search] { width: 100%; padding: 14px; background: #09111a; color: var(--ivory); border: 1px solid var(--graphite-500); font: inherit; }
+.manual-controls .btn-row { margin-top: 14px; }
+.manual-layout { display: grid; grid-template-columns: 235px minmax(0,1fr); gap: 26px; align-items: start; }
+.manual-toc { position: sticky; top: 20px; display: grid; gap: 4px; }
+.manual-toc a { padding: 12px; border-left: 2px solid var(--teal-300); background: var(--navy-850); font-size: 13px; }
+.manual-chapter { padding: 26px; margin-bottom: 22px; border: 1px solid var(--graphite-500); background: var(--navy-850); scroll-margin-top: 24px; overflow-wrap: anywhere; }
+.manual-chapter h3 { font-size: 26px; line-height: 1.2; }
+.manual-chapter p { line-height: 1.7; }
+.manual-summary { color: var(--teal-300); }
+.manual-notice { border-left: 3px solid var(--teal-300); padding: 14px 18px; margin: 20px 0; background: #111e28; }
+.manual-notice.warning { border-color: #efaa76; }
+.manual-notice.caution { border-color: #dbc78d; }
+.manual-notice p { margin: 6px 0 0; }
+.manual-sources { padding-left: 20px; font-size: 13px; }
+.manual-sources li { margin: 9px 0; }
+.manual-checklist { padding-left: 22px; line-height: 1.7; }
+.manual-checklist li { padding: 5px 0; }
+.manual-trouble { border-top: 1px solid var(--graphite-500); padding: 15px 0; }
+.manual-trouble summary { cursor: pointer; color: var(--teal-300); font-weight: bold; }
+.manual-read { display: flex; align-items: center; gap: 12px; margin-top: 22px; padding-top: 16px; border-top: 1px solid var(--graphite-500); font-size: 14px; }
+.manual-read input { width: 20px; height: 20px; accent-color: #6ac8bf; }
+.manual-glossary dt { margin-top: 18px; font: bold 13px var(--mono); color: var(--teal-300); }
+.manual-glossary dd { margin: 6px 0 0; line-height: 1.6; }
+.manual-provenance { padding: 24px; border: 1px solid var(--graphite-500); }
+.manual-provenance summary { cursor: pointer; }
+.manual-provenance code { display: block; overflow-wrap: anywhere; font-size: 11px; }
+.manual-reference pre { white-space: pre-wrap; overflow-wrap: anywhere; }
+.manual-reference [hidden] { display: none !important; }
+.manual-reference :focus-visible { outline: 2px solid var(--teal-300); outline-offset: 4px; }
+@media (max-width: 740px) { .manual-layout { grid-template-columns: 1fr; } .manual-toc { position: static; grid-template-columns: repeat(2,minmax(0,1fr)); } .manual-chapter { padding: 19px; } }
+@media print {
+  body, .manual-chapter, .manual-notice { background: white !important; color: black !important; }
+  .bench-nav, .bench-video-frame, .bench-actions, .bench-details, .bench-foot, .manual-controls, .manual-toc, .manual-read { display: none !important; }
+  .manual-layout { display: block; } .bench-page { max-width: none; padding: 0; }
+  .manual-chapter { break-inside: avoid; border-color: #555; } .manual-reference { margin-top: 20px; }
+  .manual-reference a, .manual-reference p, .manual-reference dt { color: black !important; }
+}

@@ -6,29 +6,13 @@ import { categoryBadge } from "../core/taxonomy.js";
 import { canonical } from "../core/data.js";
 import { eq } from "../core/tex.js";
 import { DECLUTTER, elementsAt } from "./symbology.js";
-import { mountInfoArch, SOURCES, messagesFor } from "./infoarch.js";
+import { mountInfoArch } from "./infoarch.js";
 import { mountGeneric, mountGroundStatus } from "./dependency.js";
+import { createDisplayStore } from "./store.js";
+import { mountConfiguration } from "./configuration.js";
 
 // ---------- shared state: source health and declutter level ----------
-function createStore() {
-  const state = {
-    declutter: 3,
-    sources: Object.fromEntries(Object.keys(SOURCES).map((id) => [id, { state: "nominal", age: 0 }])),
-    messages: [],
-  };
-  const subs = new Set();
-  const emit = () => { state.messages = messagesFor(state.sources); subs.forEach((fn) => fn(state)); };
-  emit();
-  return {
-    get: () => state,
-    subscribe(fn) { subs.add(fn); return () => subs.delete(fn); },
-    setSource(id, st) { state.sources[id].state = st; state.sources[id].age = st === "stale" ? SOURCES[id].validity + 0.6 : 0; emit(); },
-    setDeclutter(n) { state.declutter = n; emit(); },
-    tick(dt) { let changed = false; for (const s of Object.values(state.sources)) if (s.state === "stale") { s.age += dt; changed = true; } if (changed) emit(); },
-    emit,
-  };
-}
-const store = createStore();
+const store = createDisplayStore({ motion: !reducedMotion() });
 window.__p33instruments = { store };
 
 // ---------- cockpit display explanations ----------
@@ -102,6 +86,7 @@ function readabilityNote(id) {
 
 // ---------- boot ----------
 async function boot() {
+  mountConfiguration($("#configuration-compare"));
   // Declutter
   const dec = $("#declutter");
   dec.addEventListener("input", () => { store.setDeclutter(Number(dec.value)); $("#declutter-out").textContent = `level ${dec.value}`; renderExplain(cockpit?.selected ?? null); });
@@ -119,11 +104,11 @@ async function boot() {
   }
   if (!cockpit) {
     vp.replaceChildren(h("div", { class: "fallback-2d" }, h("p", {}, "WebGL is unavailable, so the 3D diorama cannot run. The three displays are drawn flat instead."), h("div", { class: "ck-flat", id: "ck-flat" })));
-    const { drawHUD, drawMap, drawStatus, flightState } = await import("./symbology.js");
+    const { drawHUD, drawMap, drawStatus } = await import("./symbology.js");
     const flat = $("#ck-flat");
     const mk = (fn) => { const c = h("canvas", { width: 512, height: 512 }); flat.append(c); return c.getContext("2d"); };
     const [a, b, c] = [mk(), mk(), mk()];
-    const paint = () => { const s = flightState(0), st = store.get(); a.fillStyle = "#03070b"; a.fillRect(0, 0, 512, 512); drawHUD(a, 512, 512, s, st.declutter, { flags: { attitudeLost: st.sources.inertial.state === "unavailable", speed: st.sources.airdata.state, altitude: st.sources.airdata.state } }); drawMap(b, 512, 512, s, st.declutter, { navFlag: st.sources.gnss.state }); drawStatus(c, 512, 512, st.messages, st.declutter); };
+    const paint = () => { const st = store.get(), s = st.displayState; a.fillStyle = "#03070b"; a.fillRect(0, 0, 512, 512); drawHUD(a, 512, 512, s, st.declutter, { flags: { attitudeLost: st.sources.inertial.state === "unavailable", attitude: st.sources.inertial.state, speed: st.sources.airdata.state, altitude: st.sources.airdata.state } }); drawMap(b, 512, 512, s, st.declutter, { navFlag: st.sources.gnss.state }); drawStatus(c, 512, 512, st.messages, st.declutter, st.time); };
     store.subscribe(paint); paint();
   }
   for (const b of $$("[data-display]")) b.addEventListener("click", () => { if (cockpit) cockpit.select(b.dataset.display); else renderExplain(b.dataset.display); });
@@ -173,4 +158,3 @@ boot().catch((err) => {
   console.error(err);
   $("#main").prepend(h("div", { class: "notice warn wrap" }, `The instrumentation lab could not load: ${err.message}`));
 });
-

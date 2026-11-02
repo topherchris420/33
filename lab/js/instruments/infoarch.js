@@ -2,7 +2,7 @@
 // synthetic sources. Each source can be put into one of five states; every stage of the
 // pipeline, the generic display preview, and the cockpit exhibit react to it.
 import { h, clear, announce } from "../core/dom.js";
-import { flightState, drawPreview } from "./symbology.js";
+import { drawPreview } from "./symbology.js";
 
 export const STATES = ["nominal", "missing", "stale", "inconsistent", "unavailable"];
 export const STATE_LABEL = { nominal: "Nominal", missing: "Missing", stale: "Stale", inconsistent: "Inconsistent", unavailable: "Unavailable" };
@@ -73,7 +73,6 @@ export function mountInfoArch({ root, preview, store }) {
   root.append(controls, grid);
 
   const ctx = preview.getContext("2d");
-  let t = 0;
   function paint() {
     const st = store.get();
     for (const [id, { row, cells }] of Object.entries(rows)) {
@@ -87,9 +86,9 @@ export function mountInfoArch({ root, preview, store }) {
     const w = preview.clientWidth || 420, hh = preview.clientHeight || 260;
     if (preview.width !== Math.round(w * dpr)) { preview.width = Math.round(w * dpr); preview.height = Math.round(hh * dpr); }
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-    drawPreview(ctx, w, hh, flightState(t), st.sources);
+    drawPreview(ctx, w, hh, st.displayState, st.sources);
   }
   store.subscribe(paint);
   paint();
-  return { paint, tick(dt) { t += dt; paint(); } };
+  return { paint, tick() { paint(); } };
 }

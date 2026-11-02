@@ -15,6 +15,7 @@ review:
 # Strict record check: prediction drift, stale reviews, failed consistency,
 # stale generated documents, and stale review figures all fail.
 check:
+	$(PYTHON) tools/build_bench_manual.py --check
 	$(PYTHON) -m evidence check
 	$(PYTHON) tools/review_figures.py --check
 	$(PYTHON) tools/export_lab_data.py --check

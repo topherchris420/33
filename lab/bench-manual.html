@@ -5,13 +5,14 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="theme-color" content="#09111a">
   <title>V3D-TO-33-1 · Utility Bench Manual | Project 33</title>
-  <meta name="description" content="Watch the complete 4:09 claymation engineering companion for Project 33. A conceptual folding-fin rocket, inert bench review, source provenance and evidence boundaries.">
+  <meta name="description" content="Search Project 33's nine-chapter Utility Bench Manual, review source-linked checklists and troubleshooting, and watch the complete 4:09 engineering film.">
   <meta property="og:title" content="Project 33 · The Utility Bench Manual">
   <meta property="og:description" content="A four-minute claymation research companion. The machine is a design; the evidence remains the authority.">
   <meta property="og:image" content="../assets/marketing/bench-manual-poster.svg">
   <link rel="icon" href="../assets/marketing/mark.svg" type="image/svg+xml">
   <link rel="stylesheet" href="css/lab.css">
   <link rel="stylesheet" href="css/hub.css">
+  <link rel="stylesheet" href="css/bench-manual.css">
   <style>
     .bench-page { max-width: 1180px; margin: 0 auto; padding: 24px clamp(16px, 4vw, 44px) 80px; }
     .bench-nav { display:flex; flex-wrap:wrap; align-items:center; justify-content:space-between; gap:12px; margin-bottom: clamp(28px,5vw,56px); border-bottom:1px solid var(--graphite-600); padding-bottom:20px; font: 12px var(--mono); text-transform:uppercase; letter-spacing:.09em; }
@@ -50,6 +51,7 @@
     <h1 class="bench-title">The Utility<br><em>Bench Manual.</em></h1>
     <p class="bench-intro">Open the engineering binder. Unfold the conceptual rocket. Examine the instruments and the record. A complete claymation film that treats an unanswered engineering question as seriously as a finished assembly.</p>
 
+    <p><a class="btn primary" href="#reference">Open the searchable reference</a></p>
     <figure class="bench-video-frame">
       <video controls playsinline preload="metadata" poster="../assets/marketing/bench-manual-poster.svg" width="1280" height="720" aria-label="Project 33 Utility Bench Manual, complete 4-minute 9-second claymation film">
         <source src="../project33-bench-manual-github-720p.mp4" type="video/mp4">
@@ -66,6 +68,14 @@
       <a class="btn ghost" href="../docs/EVIDENCE_OBSERVATORY.html">Inspect evidence ↗</a>
     </div>
 
+    <section class="manual-reference" id="reference" aria-labelledby="reference-title">
+      <p class="eyebrow">V3D-TO-33-1 / PROJECT REFERENCE</p>
+      <h2 id="reference-title">The engineering binder.</h2>
+      <p>Nine chapters connect system descriptions, offline review, degraded information, configuration and session records. Search a topic, inspect its sources, and keep your place.</p>
+      <p class="small muted">This is a Project 33 reading guide. Reading marks are personal bookmarks, not test completion, evidence acceptance or readiness approval. Historical manual organization informs the structure; technical statements come from the linked project records.</p>
+      <div id="manual-reader" aria-label="Searchable bench manual"><p>Loading the source index...</p></div>
+      <noscript><p>Enable JavaScript for search and reading marks. The source document links below remain available.</p></noscript>
+    </section>
     <section class="bench-details" aria-label="Film guide and limitations">
       <div>
         <p class="eyebrow">ENGINEERING CHAPTERS / RESEARCH CONTEXT</p>
@@ -88,5 +98,6 @@
     </section>
     <footer class="bench-foot">VERS3DYNAMICS · PROJECT 33 · OPEN RESEARCH · THIS MEASUREMENT IS REAL. THIS TRANSFORMATION IS OURS. THIS INTERPRETATION IS YOURS.</footer>
   </main>
+  <script type="module" src="js/bench-manual.js"></script>
 </body>
 </html>

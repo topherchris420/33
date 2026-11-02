@@ -13,6 +13,7 @@ const MODES = [
 ];
 
 const SECTIONS = [
+  { id: "manual", label: "Manual", href: "bench-manual.html#reference", title: "Searchable Utility Bench Manual" },
   { id: "workbench", label: "Workbench", href: "workbench.html", title: "3D Engineering Workbench" },
   { id: "mechanism", label: "Mechanism", href: "mechanism.html", title: "Mechanism Lab: folding-fin investigation and model comparison" },
   { id: "observatory", label: "Observatory", href: "observatory.html", title: "Evidence Observatory" },
