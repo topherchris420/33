@@ -101,6 +101,6 @@ Open `build/review/index.html`. No network, account, or hardware is needed. CI r
 - [Safety and test boundaries](docs/SAFETY.md)
 - [Bill of materials](docs/BOM.md)
 
-![OpenRocket 3D model](/33/Simulation/OpenRocket_3D_View.png)
+![Roll angle, roll rate, and controller output from an early telemetry dashboard export](/33/Simulation/OpenRocket_3D_View.png)
 
-*OpenRocket export; the model revision that produced it is not recorded (D-023).*
+*Not an OpenRocket view, despite the filename: a graph saved by an early version of the telemetry dashboard (`Firmware/dashboard.py`), showing roll angle, roll rate (×0.25), and the controller output shaded green and red over 1,096 samples. That version titled every saved graph "Rocket Flight Data". The session behind this one is not recorded, Project 33 is not flight-tested, and the plot is not part of the evidence record.*
