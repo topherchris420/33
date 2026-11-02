@@ -8,6 +8,8 @@ against a recorded session. It reads packets and reports what they support:
 - which capabilities those units support;
 - the one attitude quantity the rocket reports, or an explicit invalid flag;
 - gain entries as preselected, sent, confirmed, rejected, or not matching;
+- whether a sent calibration left a visible change, since firmware sends no reply;
+- what the rocket's pose implies for the accelerometer's roll correction;
 - prioritized advisories, each with the reason it fired.
 
 Everything here is an interpretation of telemetry. It cannot show that hardware
@@ -38,6 +40,11 @@ CONFIRM_WINDOW_S = 1.0  # STATUS arrives about 20 times a second when the rocket
 EVENT_HOLD_S = 30.0  # How long a one-shot event stays on the board.
 FROZEN_SAMPLES = 40  # Heuristic, about 2 s at 20 Hz. Real sensor noise is NOT MEASURED.
 GAIN_MATCH_TOLERANCE = 0.00501  # Firmware reports gains to two decimals.
+CALIBRATION_WINDOW_S = 5.0  # Calibrating blocks the rocket about 1 s; this allows for relay and the next sample.
+LOG_CLOCK_MARGIN_S = 5.0  # A dump can take about 2 s to arrive, so both of its ends can lag. Not measured.
+WEAK_REFERENCE_PITCH_DEG = 85.0  # Heuristic. Error on the roll axes is magnified over 11 times here; noise is NOT MEASURED.
+
+GEOMETRY_OK, WEAK_GEOMETRY, GYRO_ONLY = "GEOMETRY OK", "WEAK GEOMETRY", "GYRO ONLY"
 
 # Every advisory the board can raise. docs/DEGRADED_MODES.md is generated from this.
 ADVISORIES = {
@@ -49,7 +56,7 @@ ADVISORIES = {
     "C-LAUNCHER-ABORT": (CAUTION, "The launcher reported an abort. Shown for 30 s."),
     "C-GAINS-NO-MATCH": (CAUTION, "Telemetry is flowing and still shows different gains from the ones sent."),
     "C-GAINS-REJECTED": (CAUTION, "A board rejected the gains that were sent."),
-    "C-ROCKET-RESTART": (CAUTION, "Rocket state moved backwards. Firmware has no such transition, so a restart or brownout is inferred. Shown for 30 s."),
+    "C-ROCKET-RESTART": (CAUTION, "Rocket state moved backwards, skew changed while IDLE with no calibration to explain it, or the rocket clock fell behind ground time between log dumps. Firmware has no other path to these, so a restart or brownout is inferred. A restart also returns gains to their defaults, zeroes roll, and loses the onboard log. Shown for 30 s."),
     "C-LAUNCHER-RESTART": (CAUTION, "The launcher clock went backwards, so a restart or brownout is inferred. Shown for 30 s."),
     "C-OUTPUT-OUTSIDE-FLIGHT": (CAUTION, "A non-zero servo output arrived outside FLIGHT, which firmware should not produce. Check the firmware and protocol revision."),
     "C-STATE-UNKNOWN": (CAUTION, "STATUS carried a state this model does not know. Check the firmware and protocol revision."),
@@ -63,6 +70,8 @@ ADVISORIES = {
     "A-CANARD-LIMIT": (ADVISORY, "The servo output is at the firmware deflection limit."),
     "A-COMMAND-REFUSED": (ADVISORY, "A board refused a command. The default refusal of dashboard launch is expected. Shown for 30 s."),
     "A-GAINS-UNCONFIRMED": (ADVISORY, "Gains were sent and no telemetry arrived to confirm them."),
+    "A-ROLL-REFERENCE-WEAK": (ADVISORY, "The rocket's body axis is within 5 degrees of vertical, so little gravity falls on the two axes firmware uses to correct roll, and error on them is magnified by 1/cos(pitch) (D-026). The threshold is a heuristic because sensor noise is not measured."),
+    "A-CALIBRATION-NO-CHANGE": (ADVISORY, "Calibration was sent and telemetry is flowing, but skew did not change. This is not a refusal: firmware sends no reply, and skew is reported to 0.01 deg, so a recalibration can land on the same value. Shown for 30 s."),
     "A-LOG-PARTIAL": (ADVISORY, "A log dump ended with a different row count from the one it announced. Shown for 30 s."),
     "A-PROBE-UNANSWERED": (ADVISORY, "A log dump got no reply while telemetry shows the path working, so the command or reply was probably lost; UDP does not guarantee delivery."),
 }
@@ -78,6 +87,12 @@ def _finite(text):
     except (TypeError, ValueError):
         return None
     return value if math.isfinite(value) else None
+
+
+def _fusion_pitch(message):
+    """Pitch from a launcher [FUSION] line, computed there from the rocket's relayed IMU values."""
+    _, found, text = message.partition("Pitch:")
+    return _finite(text) if found else None
 
 
 def parse_gain_entry(kp_text, kd_text, limits=None):
@@ -219,8 +234,13 @@ class GroundStatus:
         self._commanded = None
         self._preselect = None
         self._calibration_at = None
+        self._calibration_seen = False
+        self._skew = None
+        self._pitch = None
         self._log_announced = None
         self._log_rows = 0
+        self._log_last_ms = None
+        self._log_mark = None  # (rocket ms, ground time) at the end of the last complete dump.
         self._active_since = {}
         self.timeline = []
         self.packets = 0
@@ -242,6 +262,7 @@ class GroundStatus:
                 self._observe_env(message, now)
             elif message.startswith("[FUSION]"):
                 self._last_seen["heading"] = now
+                self._pitch = _fusion_pitch(message)
             elif message.startswith("ABORT:"):
                 self._abort_active = True
                 self._abort_latch = True
@@ -261,6 +282,7 @@ class GroundStatus:
                 self._probe_reply_at = None
             elif command == "calibrate":
                 self._calibration_at = now
+                self._calibration_seen = False
             elif command.startswith("PID,"):
                 parts = command.split(",")
                 if len(parts) == 3 and _finite(parts[1]) is not None and _finite(parts[2]) is not None:
@@ -305,6 +327,8 @@ class GroundStatus:
             self._events["C-ROCKET-RESTART"] = (f"ROCKET WENT {previous} TO {state}: RESTART INFERRED", now)
         if state == "IDLE":
             self._abort_active = False
+        if len(parts) >= 4:
+            self._observe_skew(parts[3], previous, state, now)
         self._rocket_state, self._rocket_state_at = state, now
         # T comes first from the same DATA line, so this pairing is sample-accurate.
         self._output_outside_flight = bool(self._output) and state != "FLIGHT"
@@ -313,6 +337,22 @@ class GroundStatus:
             if kp is not None and kd is not None:
                 self._observed_gains = (kp, kd)
                 self._observed_gains_at = now
+
+    def _observe_skew(self, text, previous, state, now):
+        """Firmware sets skew only while calibrating: at boot, on ARM, and on CALIBRATE."""
+        skew = _finite(text)
+        if skew is None:
+            return
+        last, self._skew = self._skew, skew
+        if last is None or skew == last:
+            return
+        sent = self._calibration_at
+        # One calibration moves skew once, so a second change inside the window has another cause.
+        if sent is not None and now - sent <= CALIBRATION_WINDOW_S and not self._calibration_seen:
+            self._calibration_seen = True
+        elif previous == state == "IDLE":
+            # Outside IDLE, ARM and the launcher's own pre-ignition CALIBRATE also move skew.
+            self._events["C-ROCKET-RESTART"] = (f"ROCKET SKEW WENT {last:g} TO {skew:g} WITH NO CALIBRATION TO EXPLAIN IT: RESTART INFERRED", now)
 
     def _observe_env(self, message, now):
         parts = message.split(",")
@@ -345,15 +385,31 @@ class GroundStatus:
             parts = message.split(",")
             self._log_announced = int(parts[1]) if len(parts) > 1 and parts[1].strip().isdecimal() else None
             self._log_rows = 0
+            self._log_last_ms = None
         elif message.startswith("LOG_END"):
             if self._log_announced is not None and self._log_rows != self._log_announced:
                 self._events["A-LOG-PARTIAL"] = (f"LOG DUMP PARTIAL: {self._log_rows} OF {self._log_announced} ROWS", now)
+            elif self._log_announced is not None:
+                self._check_rocket_clock(now)
             self._log_announced = None
         elif message.startswith("LOG,"):
             self._log_rows += 1
+            parts = message.split(",")
+            self._log_last_ms = _finite(parts[1]) if len(parts) > 1 else None
         else:
             return
         self._probe_reply_at = now
+
+    def _check_rocket_clock(self, now):
+        """LOG rows carry the rocket clock. Across a restart it restarts, and ground time does not."""
+        rocket_ms = self._log_last_ms
+        if rocket_ms is None:
+            return
+        if self._log_mark is not None:
+            behind = (now - self._log_mark[1]) - (rocket_ms - self._log_mark[0]) / 1000.0
+            if behind > LOG_CLOCK_MARGIN_S:
+                self._events["C-ROCKET-RESTART"] = (f"ROCKET CLOCK {behind:.0f} s BEHIND GROUND TIME SINCE THE LAST LOG DUMP: RESTART INFERRED", now)
+        self._log_mark = (rocket_ms, now)
 
     # ---- derived state ------------------------------------------------------------------
 
@@ -407,11 +463,37 @@ class GroundStatus:
             return PRESENT
         return PENDING if age <= channel["timeout_s"] else ABSENT
 
-    def _attitude(self, now):
+    def _roll_reference(self, states):
+        """What the pose implies for the accelerometer's roll correction. Geometry only, not a health check."""
+        view = {"state": NOT_OBSERVED, "pitch_deg": None, "magnification": None}
+        if self._rocket_state == "FLIGHT":
+            return dict(view, state=GYRO_ONLY)
+        # [FUSION] is computed from the last relayed rocket IMU values, so both streams must be live.
+        if states["rocket_telemetry"] != PRESENT or states.get("heading") != PRESENT or self._pitch is None:
+            return view
+        cosine = math.cos(math.radians(abs(self._pitch)))
+        return {"state": WEAK_GEOMETRY if abs(self._pitch) >= WEAK_REFERENCE_PITCH_DEG else GEOMETRY_OK,
+                "pitch_deg": self._pitch, "magnification": 1.0 / cosine if cosine > 1e-6 else None}
+
+    def _calibration(self, now, telemetry_present):
+        """Firmware sends no reply to CALIBRATE; a change in skew is the only sign it ran."""
+        view = {"state": "NOT SENT", "skew_deg": self._skew}
+        sent = self._calibration_at
+        if sent is None:
+            return view
+        if self._calibration_seen:
+            state = "CHANGE SEEN"
+        elif now - sent <= CALIBRATION_WINDOW_S:
+            state = "SENT"
+        else:
+            state = "NO CHANGE SEEN" if telemetry_present else "UNCONFIRMED"
+        return dict(view, state=state, age_s=now - sent)
+
+    def _attitude(self, now, reference):
         sample = self._sample
-        basis = "gyro only" if self._rocket_state == "FLIGHT" else "gyro with accelerometer near 1 g"
+        basis = "gyro only" if self._rocket_state == "FLIGHT" else "gyro, corrected from the accelerometer when it totals near 1 g"
         view = {"valid": False, "roll_deg": None, "rate_deg_s": None, "output_deg": None,
-                "reason": "no telemetry received", "age_s": None, "basis": basis,
+                "reason": "no telemetry received", "age_s": None, "basis": basis, "reference": reference,
                 "not_observed": "pitch and yaw are not in the protocol",
                 "limit_deg": self._limits["max_deflection_deg"],
                 "drift": "Gyro drift NOT MEASURED (P-003)",
@@ -484,7 +566,7 @@ class GroundStatus:
         return {"state": state, "age_s": age, "stale": stale,
                 "display": f"{state} (STALE {age:.1f} s)" if stale else state}
 
-    def _conditions(self, states, analysis, rocket, gains, now):
+    def _conditions(self, states, analysis, rocket, gains, reference, calibration, now):
         active = []
 
         def add(advisory_id, text):
@@ -529,6 +611,10 @@ class GroundStatus:
             add("A-IMU-FROZEN", f"IMU SUSPECT: ROLL AND RATE IDENTICAL FOR {self._repeat} SAMPLES")
         if telemetry == PRESENT and self._output is not None and abs(self._output) >= self._limits["max_deflection_deg"]:
             add("A-CANARD-LIMIT", f"SERVO AT LIMIT: {self._output:g} DEG")
+        if reference["state"] == WEAK_GEOMETRY:
+            add("A-ROLL-REFERENCE-WEAK", f"ROLL REFERENCE WEAK: PITCH {reference['pitch_deg']:+.1f} DEG")
+        if calibration["state"] == "NO CHANGE SEEN" and calibration["age_s"] <= EVENT_HOLD_S:
+            add("A-CALIBRATION-NO-CHANGE", "CALIBRATION SENT; SKEW UNCHANGED")
         for advisory_id, (text, at) in list(self._events.items()):
             if now - at <= EVENT_HOLD_S:
                 add(advisory_id, text)
@@ -564,8 +650,11 @@ class GroundStatus:
             capabilities = {capability["id"]: capability_status(capability, unit_status, analysis["diagnoses"])
                             for capability in self.model["capabilities"]}
             rocket = self._rocket_view(states, now)
-            gains = self._gains(now, states["rocket_telemetry"] == PRESENT)
-            advisories = self._advisories(self._conditions(states, analysis, rocket, gains, now), now)
+            telemetry_present = states["rocket_telemetry"] == PRESENT
+            gains = self._gains(now, telemetry_present)
+            reference = self._roll_reference(states)
+            calibration = self._calibration(now, telemetry_present)
+            advisories = self._advisories(self._conditions(states, analysis, rocket, gains, reference, calibration, now), now)
             return {
                 "packets": self.packets,
                 "channels": states,
@@ -576,8 +665,9 @@ class GroundStatus:
                 "capabilities": capabilities,
                 "rocket": rocket,
                 "launcher": self._launcher_inference(states),
-                "attitude": self._attitude(now),
+                "attitude": self._attitude(now, reference),
                 "gains": gains,
+                "calibration": calibration,
                 "advisories": advisories,
             }
 
@@ -597,6 +687,24 @@ def gains_line(gains):
     elif gains["preselect"] is not None:
         parts.append(f"PRESELECT {pair(gains['preselect'])} (not sent)")
     return " · ".join(parts)
+
+
+def calibration_line(calibration):
+    """One line for the panel. Skew is reported to 0.01 deg, so an unchanged value proves nothing."""
+    skew = calibration["skew_deg"]
+    reading = "not received" if skew is None else f"{skew:+.2f} deg"
+    return f"CALIBRATION {calibration['state']} · SKEW {reading}"
+
+
+def reference_text(reference):
+    """The pose-based limit on roll, in words. It describes geometry and says nothing about sensor health."""
+    state = reference["state"]
+    if state == GYRO_ONLY:
+        return "Roll reference: gyro only in FLIGHT."
+    if reference["pitch_deg"] is None:
+        return "Roll reference: not observed (needs live telemetry and [FUSION])."
+    size = "very large" if reference["magnification"] is None else f"{reference['magnification']:.1f} x"
+    return f"Roll reference: {state}, pitch {reference['pitch_deg']:+.1f} deg, axis error magnified {size}."
 
 
 def next_test_text(next_test):
@@ -739,7 +847,9 @@ def synthetic_demo_events():
         rate = 4.2 * math.cos(at * 0.7)
         kp, kd = ("0.50", "0.20") if at < 6.2 else ("1.00", "0.30")
         add(at, "packet", f"T,{1000 + step * 50},{roll:.2f},{rate:.2f},0")
-        add(at, "packet", f"STATUS:{'IDLE' if at < 10 else 'ARMED'},{kp},{kd},1.30")
+        skew = "1.30" if at < 3.4 else "1.42" if at < 10 else "1.37"  # Calibrating moves it; so does ARM.
+        add(at, "packet", f"STATUS:{'IDLE' if at < 10 else 'ARMED'},{kp},{kd},{skew}")
+    add(3.0, "command", "calibrate")
     add(6.0, "command", "PID,1.0,0.3")
     add(14.0, "packet", "ABORT:Arming switch flipped OFF.")
     add(28.0, "command", "dumplog")  # Stays unanswered: this script's UART has "failed".

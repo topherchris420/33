@@ -54,7 +54,7 @@ The project site is now an interactive, read-only engineering laboratory. Rotate
 Project 33 is a **bench-validation prototype**. It has models, CAD, firmware that compiles, a telemetry dashboard, and automated checks. **No physical measurement has been accepted into the evidence record.** Nothing here is flight-tested or flight-ready, and live propulsion is outside the repository's validation boundary.
 
 <!-- evidence:counts -->
-**Record state:** 8 claims · 3 contradicted · 4 unresolved · 1 supported within stated limits · 0 accepted physical measurements · 18 open discrepancies of 25 · 5 of 5 predictions not measured.
+**Record state:** 8 claims · 3 contradicted · 4 unresolved · 1 supported within stated limits · 0 accepted physical measurements · 20 open discrepancies of 27 · 5 of 5 predictions not measured.
 <!-- /evidence:counts -->
 
 Unresolved is a valid engineering state. Several research claims are currently contradicted by their own models, and saying so is the point.
@@ -126,6 +126,7 @@ Software may propose an inert experiment and check it against machine-readable r
 | Launcher ground station (ESP32) | `Firmware/Launcher/` | Compiles in CI; interlocks source-checked, not bench-verified |
 | Telemetry dashboard | `Firmware/dashboard.py` | Writes raw sessions with metadata, command log, and quality counters |
 | Status board | `Firmware/ground_status.py`, `Firmware/status_panel.py` | Read-only fault isolation pinned to firmware source; tested on synthetic packets, no fault injected on hardware |
+| Preflight audit | `Firmware/preflight_audit.py` | Read-only comparison of a recorded session with the inert checklist; tested on synthetic sessions, never run on a bench capture |
 | Evidence Observatory | `evidence/` | Portable review packets, session passports, record checks |
 
 ```mermaid
@@ -143,7 +144,7 @@ Details: [Architecture](docs/ARCHITECTURE.md) · [Protocol](docs/PROTOCOL.md) ·
 ## Claim status
 
 <!-- evidence:claims-table -->
-**Record state:** 8 claims · 3 contradicted · 4 unresolved · 1 supported within stated limits · 0 accepted physical measurements · 18 open discrepancies of 25 · 5 of 5 predictions not measured.
+**Record state:** 8 claims · 3 contradicted · 4 unresolved · 1 supported within stated limits · 0 accepted physical measurements · 20 open discrepancies of 27 · 5 of 5 predictions not measured.
 
 | Claim | Subject | Status | Strongest accepted evidence | Failing or disputed requirements | Open discrepancies |
 |---|---|---|---|---|---|

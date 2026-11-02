@@ -12,6 +12,7 @@ sys.path.insert(0, str(ROOT / "Firmware"))
 
 from generate_degraded_modes import OUTPUT, render
 from ground_status import load_model
+from preflight_audit import STEPS
 
 
 def _read(path):
@@ -98,7 +99,8 @@ def _imports(path):
 
 def test_status_modules_have_no_transport_or_process_access():
     forbidden = {"socket", "socketserver", "ssl", "http", "urllib", "requests", "serial", "subprocess", "multiprocessing", "asyncio"}
-    for path in ("Firmware/ground_status.py", "Firmware/status_panel.py", "tools/generate_degraded_modes.py"):
+    for path in ("Firmware/ground_status.py", "Firmware/status_panel.py", "Firmware/preflight_audit.py",
+                 "tools/generate_degraded_modes.py"):
         assert _imports(path) & forbidden == set(), path
 
 
@@ -113,11 +115,34 @@ def test_status_panel_has_no_controls_that_can_act():
     assert "sendto" not in source
 
 
+def test_preflight_audit_steps_match_the_checklist_word_for_word():
+    safety = _read("docs/SAFETY.md")
+    section = safety[safety.index("## Preflight Checklist for Inert Demonstrations"):]
+    numbered = re.findall(r"^(\d+)\. (.+)$", section, flags=re.MULTILINE)
+    assert [int(number) for number, _ in numbered] == list(range(1, len(STEPS) + 1))
+    assert tuple(text for _, text in numbered) == STEPS
+
+
+def test_checklist_warns_that_the_rocket_stays_armed_before_the_steps_that_do_it():
+    """D-025. If abort starts disarming the rocket, this warning and the audit must change."""
+    safety = _read("docs/SAFETY.md")
+    section = safety[safety.index("## Preflight Checklist for Inert Demonstrations"):]
+    assert "D-025" in section[:section.index("1. Verify wiring")]
+
+
+def test_discrepancies_for_the_roll_estimator_are_on_record():
+    items = {item["id"]: item for item in json.loads(_read("evidence/discrepancies.json"))["discrepancies"]}
+    for key in ("D-026", "D-027"):
+        assert items[key]["status"] == "open"
+        assert "rocket_firmware" in {side.get("artifact") for side in items[key]["sides"]}
+
+
 def test_ground_status_only_reads_command_strings():
     """The word dumplog appears as data for matching and advice; nothing here can send it."""
-    source = _read("Firmware/ground_status.py")
-    assert ".send" not in source
-    assert "sendto" not in source
+    for path in ("Firmware/ground_status.py", "Firmware/preflight_audit.py"):
+        source = _read(path)
+        assert ".send" not in source, path
+        assert "sendto" not in source, path
 
 
 def test_dashboard_feeds_the_board_without_a_new_command_path():

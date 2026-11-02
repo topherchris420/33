@@ -357,6 +357,219 @@ class AttitudeTests(unittest.TestCase):
         self.assertIn("NOT MEASURED", attitude["drift"])
 
 
+def status_line(status, state="IDLE", skew="1.30"):
+    status.observe(f"STATUS:{state},0.50,0.20,{skew}")
+
+
+def log_dump(status, last_ms, rows=2):
+    status.observe(f"LOG_START,{rows}")
+    for offset in range(rows - 1, -1, -1):
+        status.observe(f"LOG,{last_ms - offset * 50},0.0,0.0,0,IDLE,0.50,0.20,1.30")
+    status.observe("LOG_END")
+
+
+class RestartInferenceTests(unittest.TestCase):
+    def test_skew_change_while_idle_with_nothing_sent_infers_a_restart(self):
+        status, clock = board()
+        status_line(status)
+        clock.now = 5.0
+        status_line(status, skew="1.42")
+        self.assertIn("C-ROCKET-RESTART", ids(status.snapshot()))
+
+    def test_unchanged_skew_raises_nothing(self):
+        status, clock = board()
+        run(status, clock, 3.0)
+        self.assertNotIn("C-ROCKET-RESTART", ids(status.snapshot()))
+
+    def test_skew_change_after_a_sent_calibration_is_not_a_restart(self):
+        status, clock = board()
+        status_line(status)
+        status.command_sent("calibrate")
+        clock.now = 2.0
+        status_line(status, skew="1.42")
+        snapshot = status.snapshot()
+        self.assertNotIn("C-ROCKET-RESTART", ids(snapshot))
+        self.assertEqual(snapshot["calibration"]["state"], "CHANGE SEEN")
+
+    def test_second_skew_change_after_one_calibration_infers_a_restart(self):
+        status, clock = board()
+        status_line(status)
+        status.command_sent("calibrate")
+        clock.now = 1.0
+        status_line(status, skew="1.42")
+        clock.now = 2.0
+        status_line(status, skew="1.55")
+        self.assertIn("C-ROCKET-RESTART", ids(status.snapshot()))
+
+    def test_arm_moves_skew_without_inferring_a_restart(self):
+        status, clock = board()
+        status_line(status)
+        clock.now = 5.0
+        status_line(status, state="ARMED", skew="1.37")
+        self.assertNotIn("C-ROCKET-RESTART", ids(status.snapshot()))
+
+    def test_launcher_precalibration_while_armed_is_not_a_restart(self):
+        """The launcher sends CALIBRATE itself just before IGNITE, and the dashboard never sees it."""
+        status, clock = board()
+        status_line(status, state="ARMED")
+        clock.now = 5.0
+        status_line(status, state="ARMED", skew="1.37")
+        self.assertNotIn("C-ROCKET-RESTART", ids(status.snapshot()))
+
+    def test_rocket_clock_falling_behind_ground_time_infers_a_restart(self):
+        status, clock = board()
+        log_dump(status, last_ms=600000)
+        clock.now = 60.0
+        log_dump(status, last_ms=20000)
+        snapshot = status.snapshot()
+        self.assertIn("C-ROCKET-RESTART", ids(snapshot))
+        self.assertIn("BEHIND GROUND TIME", next(a["text"] for a in snapshot["advisories"] if a["id"] == "C-ROCKET-RESTART"))
+
+    def test_clock_check_catches_a_restart_long_after_it_happened(self):
+        """The new clock can have passed the old reading; it is still behind ground time."""
+        status, clock = board()
+        log_dump(status, last_ms=30000)
+        clock.now = 600.0
+        log_dump(status, last_ms=590000)
+        self.assertIn("C-ROCKET-RESTART", ids(status.snapshot()))
+
+    def test_rocket_clock_keeping_pace_raises_nothing(self):
+        status, clock = board()
+        log_dump(status, last_ms=30000)
+        clock.now = 60.0
+        log_dump(status, last_ms=90000)
+        self.assertNotIn("C-ROCKET-RESTART", ids(status.snapshot()))
+
+    def test_a_partial_dump_cannot_infer_a_restart(self):
+        """Lost trailing rows would make the rocket clock look behind when it is not."""
+        status, clock = board()
+        log_dump(status, last_ms=600000)
+        clock.now = 60.0
+        status.observe("LOG_START,240")
+        status.observe("LOG,20000,0.0,0.0,0,IDLE,0.50,0.20,1.30")
+        status.observe("LOG_END")
+        seen = ids(status.snapshot())
+        self.assertIn("A-LOG-PARTIAL", seen)
+        self.assertNotIn("C-ROCKET-RESTART", seen)
+
+    def test_an_empty_dump_is_not_a_clock_reading(self):
+        status, clock = board()
+        log_dump(status, last_ms=600000)
+        clock.now = 60.0
+        status.observe("LOG_START,0")
+        status.observe("LOG_END")
+        self.assertNotIn("C-ROCKET-RESTART", ids(status.snapshot()))
+
+
+class CalibrationTests(unittest.TestCase):
+    def test_not_sent_until_the_dashboard_sends_it(self):
+        status, clock = board()
+        status_line(status)
+        self.assertEqual(status.snapshot()["calibration"]["state"], "NOT SENT")
+
+    def test_no_change_is_an_advisory_that_says_it_is_not_a_refusal(self):
+        status, clock = board()
+        run(status, clock, 1.0)
+        status.command_sent("calibrate")
+        self.assertEqual(status.snapshot()["calibration"]["state"], "SENT")
+        run(status, clock, gs.CALIBRATION_WINDOW_S + 1)
+        snapshot = status.snapshot()
+        self.assertEqual(snapshot["calibration"]["state"], "NO CHANGE SEEN")
+        advisory = next(a for a in snapshot["advisories"] if a["id"] == "A-CALIBRATION-NO-CHANGE")
+        self.assertIn("not a refusal", advisory["detail"])
+
+    def test_no_change_advisory_expires_and_the_state_remains(self):
+        status, clock = board()
+        run(status, clock, 1.0)
+        status.command_sent("calibrate")
+        run(status, clock, gs.EVENT_HOLD_S + 1)
+        snapshot = status.snapshot()
+        self.assertNotIn("A-CALIBRATION-NO-CHANGE", ids(snapshot))
+        self.assertEqual(snapshot["calibration"]["state"], "NO CHANGE SEEN")
+
+    def test_without_telemetry_the_result_is_unconfirmed(self):
+        status, clock = board()
+        status_line(status)
+        status.command_sent("calibrate")
+        clock.now = gs.CALIBRATION_WINDOW_S + 1
+        snapshot = status.snapshot()
+        self.assertEqual(snapshot["calibration"]["state"], "UNCONFIRMED")
+        self.assertNotIn("A-CALIBRATION-NO-CHANGE", ids(snapshot))
+
+    def test_a_new_calibration_clears_the_earlier_result(self):
+        status, clock = board()
+        status_line(status)
+        status.command_sent("calibrate")
+        clock.now = 1.0
+        status_line(status, skew="1.42")
+        clock.now = 60.0
+        status.command_sent("calibrate")
+        self.assertEqual(status.snapshot()["calibration"]["state"], "SENT")
+
+    def test_panel_line_reports_skew_or_its_absence(self):
+        status, clock = board()
+        self.assertIn("not received", gs.calibration_line(status.snapshot()["calibration"]))
+        status_line(status, skew="1.42")
+        self.assertIn("+1.42 deg", gs.calibration_line(status.snapshot()["calibration"]))
+
+
+class RollReferenceTests(unittest.TestCase):
+    def live(self, pitch, state="IDLE"):
+        status, clock = board()
+        for _ in range(4):
+            clock.now += 0.5
+            sample(status, clock, state=state)
+            status.observe(NOMINAL_ENV)
+            status.observe(f"[FUSION] Hdg: 141.0 | Pitch: {pitch}")
+        return status, clock
+
+    def test_level_rocket_has_usable_geometry_and_no_advisory(self):
+        status, _ = self.live("+0.4")
+        snapshot = status.snapshot()
+        self.assertEqual(snapshot["attitude"]["reference"]["state"], gs.GEOMETRY_OK)
+        self.assertNotIn("A-ROLL-REFERENCE-WEAK", ids(snapshot))
+
+    def test_near_vertical_either_way_is_weak_with_the_magnification_stated(self):
+        for pitch in ("-88.0", "+88.0"):
+            status, _ = self.live(pitch)
+            snapshot = status.snapshot()
+            reference = snapshot["attitude"]["reference"]
+            self.assertEqual(reference["state"], gs.WEAK_GEOMETRY)
+            self.assertAlmostEqual(reference["magnification"], 28.65, places=1)
+            self.assertIn("A-ROLL-REFERENCE-WEAK", ids(snapshot))
+            self.assertIn("D-026", next(a["detail"] for a in snapshot["advisories"] if a["id"] == "A-ROLL-REFERENCE-WEAK"))
+
+    def test_exactly_vertical_does_not_divide_by_zero(self):
+        status, _ = self.live("-90.0")
+        reference = status.snapshot()["attitude"]["reference"]
+        self.assertEqual(reference["state"], gs.WEAK_GEOMETRY)
+        self.assertIsNone(reference["magnification"])
+        self.assertIn("very large", gs.reference_text(reference))
+
+    def test_flight_state_is_gyro_only_whatever_the_pitch(self):
+        status, _ = self.live("-88.0", state="FLIGHT")
+        snapshot = status.snapshot()
+        self.assertEqual(snapshot["attitude"]["reference"]["state"], gs.GYRO_ONLY)
+        self.assertNotIn("A-ROLL-REFERENCE-WEAK", ids(snapshot))
+
+    def test_pitch_is_not_used_once_rocket_telemetry_stops(self):
+        """The launcher keeps computing [FUSION] from its last relayed IMU values."""
+        status, clock = self.live("-88.0")
+        clock.now += 30.0
+        for _ in range(4):
+            status.observe(NOMINAL_ENV)
+            status.observe("[FUSION] Hdg: 141.0 | Pitch: -88.0")
+            clock.now += 0.5
+        snapshot = status.snapshot()
+        self.assertEqual(snapshot["attitude"]["reference"]["state"], gs.NOT_OBSERVED)
+        self.assertNotIn("A-ROLL-REFERENCE-WEAK", ids(snapshot))
+
+    def test_malformed_pitch_is_not_observed(self):
+        status, _ = self.live("nan")
+        self.assertEqual(status.snapshot()["attitude"]["reference"]["state"], gs.NOT_OBSERVED)
+        self.assertIn("not observed", gs.reference_text(status.snapshot()["attitude"]["reference"]))
+
+
 class GainEntryTests(unittest.TestCase):
     def test_limits_match_firmware_and_reject_non_finite(self):
         self.assertEqual(parse_gain_entry("0", "10"), (0.0, 10.0))

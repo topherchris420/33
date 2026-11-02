@@ -10,6 +10,7 @@ It reads packets and draws conclusions. It **cannot send anything**, has no comm
 python Firmware/status_panel.py --demo             # invented packets, no hardware
 python Firmware/dashboard.py                       # then press STATUS BOARD
 python Firmware/ground_status.py SESSION_FOLDER    # replay a recorded session as text
+python Firmware/preflight_audit.py SESSION_FOLDER  # compare a recorded session with the preflight checklist
 python tools/generate_degraded_modes.py --check    # is the failure analysis current?
 ```
 
@@ -24,6 +25,8 @@ Replay needs only the standard library and never changes the session folder. It 
 | Rocket state | Shows the last state with its age, and marks it `STALE` after 2 s. | A stale `ARMED` that looks current is the worst thing this screen could show. |
 | Launcher state | Says `NOT REPORTED`, with an inference labeled as one. | The protocol has no launcher state message. |
 | Attitude | Roll, rate, and servo output. It cannot be hidden, and goes invalid after 0.5 s instead of holding the last value. | Pitch and yaw are not in the protocol, and gyro drift is not measured. The panel says both. |
+| Roll reference | `GEOMETRY OK`, `WEAK GEOMETRY`, `GYRO ONLY`, or `NOT OBSERVED`, read from the `[FUSION]` pitch. | Firmware corrects roll from two accelerometer axes, and near vertical little gravity falls on them (D-026). This describes pose geometry and is not a health check. |
+| Calibration | `NOT SENT`, `SENT`, `CHANGE SEEN`, `NO CHANGE SEEN`, or `UNCONFIRMED`, with the current skew. | Firmware sends no reply, and skew changes only when it calibrates, so a change is the only sign available. No change proves nothing: skew is reported to 0.01 deg. |
 | Units | `SEEN`, `SUSPECT`, or `NOT SEEN`. | `SEEN` means packets needing that unit are arriving. It is deliberately not "healthy". |
 | Isolation | The failures consistent with what is missing, and the next test that would narrow them. | Model-based diagnosis: it reports every minimal explanation rather than guessing one. |
 | Capabilities | `SUPPORTED`, `AT RISK`, `LOST`, or `NOT OBSERVED`. | Separates what still works from what merely cannot be seen. |
@@ -41,6 +44,14 @@ The useful case is the launcher reporting while rocket telemetry has stopped. Th
 
 The board suggests this. The operator presses the existing button; the board never sends it. `dumplog` reads the onboard ring buffer and moves no actuator.
 
+## Detecting a restart
+
+A rocket restart returns gains to their defaults, zeroes roll, and loses the onboard log, so it matters even when nothing else looks wrong. The board raises `C-ROCKET-RESTART` on any of three signs:
+
+- **State moved backwards.** Firmware has no such transition.
+- **Skew changed while `IDLE` with no calibration to explain it.** Firmware sets skew only while calibrating: at boot, on `ARM`, and on `CALIBRATE`. This is what catches a restart in `IDLE`, the usual bench state. It misses a restart whose new skew rounds to the old value.
+- **The rocket clock fell behind ground time between two complete log dumps.** `LOG` rows carry the rocket clock, which starts over at a restart. The shortfall equals how long the rocket had been up when it restarted, so pressing **DUMP LOG** at the start and end of a session checks everything between them, unless the rocket restarted within 5 s of booting. Partial dumps are ignored because lost rows would look like a late clock.
+
 ## Limits
 
 - **Interpretation only.** A clean board does not show hardware works, and an advisory does not show it failed. Only an accepted inert session can establish behavior.
@@ -50,7 +61,7 @@ The board suggests this. The operator presses the existing button; the board nev
 
 ## What this does not do
 
-The board does not touch flight behavior. It adds no steering, guidance, navigation, or targeting; the rocket's only control loop remains roll stabilization. It changes no firmware, protocol message, or safety gate, and nothing here moves a claim across a validation gate. See [Safety](SAFETY.md).
+The board does not touch flight behavior. It adds no steering, guidance, navigation, or targeting; the rocket's only control loop remains roll stabilization. It changes no firmware, protocol message, or safety gate, and nothing here moves a claim across a validation gate. The same holds for the preflight audit. See [Safety](SAFETY.md).
 
 ## Proposed firmware changes, not implemented
 
@@ -59,6 +70,13 @@ The model exposes three gaps. Each changes command or heartbeat behavior, so eac
 1. **A disarm path (D-025).** A launcher abort leaves an armed rocket armed with its deploy trigger live, and the launcher then cannot re-arm it. Only a restart returns the rocket to `IDLE`.
 2. **A heartbeat that does not depend on the IMU.** The launcher already accepts `ALIVE`, and the rocket never sends it. Sending it would separate an IMU fault from a UART or rocket fault passively, but it would also change what counts as a heartbeat for gate G-03.
 3. **A launcher state message.** This would replace the board's inference with a report, and let the preflight check for `READY` be recorded rather than read off an LED.
+
+## Findings recorded, not fixed
+
+Building the roll reference exposed two limits in the roll estimator. Both come from reading the source and from a software port of its equations with invented noise; neither has been seen on hardware, and no firmware changed:
+
+- **D-026.** Nothing stops the correction from using near-zero axes when the rocket is near vertical. In the port the effect was small until within a few degrees of vertical.
+- **D-027.** While stationary, the correction holds roll near its reference, so roll cannot show gyro drift. The P-003 proposal now also integrates `rate_deg_s`, which reads the gyro directly.
 
 ## Keeping it honest
 
