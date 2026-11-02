@@ -319,7 +319,7 @@
     },
     {
       "path": "docs/LIVING_LAB.md",
-      "sha256": "e1ddc0f091a1d5c3b16fb4b959f989c35199dc2858ef0f11e11452e073b3de9d"
+      "sha256": "f468429aadf9935fc6c1bee65e003c67d9148375a161040950d4648cd10c1c88"
     },
     {
       "path": "docs/MODEL_ROCKET_REVIEW.md",
@@ -370,5 +370,5 @@
       "sha256": "a707d10558f18decdf53708184fb0ae7ccd74da85953f5bb8c2e6422e260afcb"
     }
   ],
-  "revision": "07b99fab872261387f2df687defe64d7d66c9d84668594573cee83265693e5ec"
+  "revision": "7fc40a64522bc85c39269bd223e66d893ebc66f4d5ed84416675e6b9d1a95dd7"
 }

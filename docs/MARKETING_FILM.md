@@ -1,6 +1,6 @@
 # From frequency to form
 
-Project 33's project page and design film use the existing GitHub Pages / Jekyll deployment. The root `index.md` keeps its generated evidence fragments and now selects the `landing` layout; its complete engineering brief remains available under **Open the engineering brief**. The film lives at `film.html`.
+Project 33's project page and design film use the existing GitHub Pages / Jekyll deployment. The root `index.md` keeps its generated evidence fragments and selects the `lab-home` layout (see [the project home page](LIVING_LAB.md#project-home-page)); its complete engineering brief remains available under **Open the engineering brief**. The film lives at `film.html`.
 
 ## The film
 
@@ -24,7 +24,7 @@ The player supports pause/play, timeline scrubbing, restart, blueprint/surface s
 
 ## Edit and verify
 
-- Page: `_layouts/landing.html` and `assets/marketing/site.css`.
+- Film page styles: `assets/marketing/site.css` (also used by the earlier `_layouts/landing.html` home layout, which no page selects now).
 - Geometry, camera, timing, and film titles: `assets/marketing/rocket.mjs`.
 - Playback: `assets/marketing/player.mjs`.
 - Film page: `film.html`.

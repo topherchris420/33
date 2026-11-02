@@ -117,6 +117,21 @@ weapon-system equipment. Therefore:
 Keep the PDF out of the repository and its history; obtain written redistribution permission before
 any future use.
 
+## Project home page
+
+The site root, [`index.md`](../index.md) with the [`lab-home`](../_layouts/lab-home.html) layout, is the
+front door: a black, spotlit landing page with floating navigation; a hero that renders the rocket live
+from the OpenRocket file (a source model, switchable between solid, clay, blueprint, and x-ray, and
+paused under reduced motion); what is built and what is not yet demonstrated; the five rooms; the films;
+the live record, with a card per claim and each claim placed on the seven validation gates; the four ways
+in; and the complete engineering brief from `index.md`. Styles are in `lab/css/home.css` and scripts in
+`lab/js/home.js` and `lab/js/home/`, so the isolation tests below cover them too. Every number is read
+from `lab/data/evidence.json`, and the claim cards and gate track are rebuilt from the record's own
+vocabulary. Without WebGL the hero shows the design-film poster; without JavaScript the page still reads
+top to bottom. [`tests/test_site_home.py`](../tests/test_site_home.py) keeps the layout self-contained and
+its links on pages GitHub Pages publishes. The root needs Jekyll, so preview it with a local GitHub Pages
+build or rely on the **Project page and film** workflow, which builds the site on every push.
+
 ## Safety and isolation
 
 The laboratory has no WebSocket, WebSerial, WebUSB, WebBluetooth, WebHID, WebRTC, beacon, or
