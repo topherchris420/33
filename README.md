@@ -18,7 +18,7 @@ Take apart a folding-fin rocket concept. Explore the models, inspect the firmwar
 
 ## Current status
 
-**Bench-validation prototype.** The repository contains analytical models, CAD, ESP32 firmware, telemetry tools, and a browser laboratory. No physical measurement has been accepted into its evidence record. Flight readiness has not been established; live propulsion is outside this repository's validation boundary.
+Project 33 is a **bench-validation prototype**. The repository contains analytical models, CAD, ESP32 firmware, telemetry tools, and a browser laboratory. No physical measurement has been accepted into its evidence record. Flight readiness has not been established; live propulsion is outside this repository's validation boundary.
 
 <!-- evidence:counts -->
 **Record state:** 8 claims · 3 contradicted · 4 unresolved · 1 supported within stated limits · 0 accepted physical measurements · 20 open discrepancies of 27 · 5 of 5 predictions not measured.
@@ -257,6 +257,6 @@ The project advances through **analytical model → software reproduction → sy
 
 Project 33 is published under the [MIT License](LICENSE).
 
-**[Project site](https://topherchris420.github.io/33/)** · **[Project status](docs/PROJECT_STATUS.md)** · **[Paper alignment](docs/PAPER_ALIGNMENT.md)** · **[Roadmap](docs/ROADMAP.md)** · **[Report a security issue](SECURITY.md)**
+**[Project site](https://topherchris420.github.io/33/)** · **[Project Status](docs/PROJECT_STATUS.md)** · **[Paper Alignment](docs/PAPER_ALIGNMENT.md)** · **[Roadmap](docs/ROADMAP.md)** · **[Report a security issue](SECURITY.md)**
 
 *Build a model. Make a prediction. Measure the difference. Keep the record honest.*
