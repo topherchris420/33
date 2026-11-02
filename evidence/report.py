@@ -345,7 +345,7 @@ def render_review(review):
 <h4>Principles</h4><ul class="principles">{"".join(f"<li>{esc(p)}</li>" for p in review["principles"])}</ul>
 <h4>Automated and AI review boundary</h4>{lst(review["ai_boundary"])}
 
-<h2>Reproduce this review</h2><p><code>python -m evidence verify .</code> from the <code>reviewer</code> folder checks integrity offline.
+<h2>Reproduce this review</h2><p><code>python -m evidence verify ..</code> from the <code>reviewer</code> folder checks integrity offline.
 From a checkout at commit <code>{esc(source.get("commit") or "unknown")}</code>: <code>python -m evidence check</code> re-evaluates the record,
 <code>python -m evidence reproduce</code> regenerates model outputs, and <code>python -m pytest tests Firmware/tests</code> runs the tests.</p>
 <h4>Interpretation boundary</h4>{lst(review["limitations"])}

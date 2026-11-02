@@ -88,6 +88,7 @@ python -m evidence check                         # strict: exit 1 on drift, stal
 python -m evidence build --output build/review   # portable review packet (never overwrites)
 python -m evidence verify build/review [--expected-sha256 DIGEST]
 python -m evidence compare build/review build/review-02
+python -m evidence compare build/review build/review-02 --format markdown > build/review-changes.md
 python -m evidence drift build/review            # files changed since a packet was built, and what they affect
 python -m evidence impact PATH [PATH ...]        # claims, requirements, predictions, discrepancies, checks to rerun
 python -m evidence query [QUESTION_ID]           # grounded evidence questions
@@ -157,6 +158,12 @@ Ingestion is deliberately conservative:
 
 `impact PATH` follows `derived_from` to every downstream artifact and lists the claims whose reviews are no longer sufficient, the requirements and predictions that read the file, the discrepancies that cite it, the generated documents that will be stale, and the checks to rerun (reproduction recipes, tests, firmware builds, protocol check). `drift PACKET` does the same against a packet built earlier. `compare A B` reports changed files, changed artifact records, requirement result changes, claim status changes, and discrepancy changes between two packets.
 
+Comparisons also report every changed record-file digest and field-level changes to evaluated requirements, including bounds, assumptions, units, and evidence classes even when the pass/fail result stays the same. The existing `requirement_changes` JSON field retains result/value changes; `requirement_details` supplies the before/after records and changed field names. `changed_record_files` exposes changes elsewhere in the record, including predictions and reviews. Inspect those files even when no affected claim is listed: the claim mapping is not an exhaustive semantic comparison of every record.
+
+Use `--format markdown` for a readable summary suitable for a review discussion; JSON remains the default. Both formats verify each packet before comparing it. Verification establishes file integrity, not authorship or scientific validity.
+
+`drift` exits with code 1 for changed or missing artifact bytes **and** newly cataloged or removed artifacts. Its `affected_claims` combines current dependencies with the old packet's dependencies so a removed input does not erase its historical connection to a claim. This command compares cataloged artifact files; use `compare` on two packets to review record changes as well.
+
 ## Discrepancies and the failure archive
 
 Two parts of the project disagreeing is information. Each discrepancy names both sides (artifact or path, and what each says), the claims it affects, whether it contradicts or weakens them, and the next action. Resolved entries stay, with what resolved them; a record correction is not an engineering review.
@@ -178,7 +185,7 @@ AI may interpret the record. It may not rewrite reality.
 | Exit code | Meaning |
 |---|---|
 | `0` | Completed; an audit may still contain warnings |
-| `1` | `check` found findings or stale documents; `audit` found data-quality errors (report still written); `reproduce` found a difference; `drift` found changed files |
+| `1` | `check` found findings or stale documents; `audit` found data-quality errors (report still written); `reproduce` found a difference; `drift` found changed, missing, added, or removed cataloged artifacts |
 | `2` | Invalid input, failed integrity verification, a record that promotes beyond its evidence, or an existing output directory |
 
 Record errors produce no output: duplicate IDs or JSON keys, unknown references, dependency cycles, path traversal, symlinks, non-finite JSON numbers, synthetic rows in a non-synthetic artifact, physical classes without an accepted session, and gates or statuses beyond the evidence. Inputs are limited to 64 MiB per file and 250,000 CSV rows; execution records may not contain a DTD or entities. The verifier rejects extra unlisted files; Python bytecode caches are ignored.

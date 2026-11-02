@@ -307,7 +307,7 @@
     },
     {
       "path": "docs/EVIDENCE_OBSERVATORY.md",
-      "sha256": "3c7aa5b723da3e77bfce3000224ba5470b2f54199ae383473fa16f8ef9e4dc8a"
+      "sha256": "972d757b52960a7d561e6f5c77b6d09109e9875759af3c5e2118e8d536fa09ec"
     },
     {
       "path": "docs/GROUND_STATUS.md",
@@ -370,5 +370,5 @@
       "sha256": "a707d10558f18decdf53708184fb0ae7ccd74da85953f5bb8c2e6422e260afcb"
     }
   ],
-  "revision": "42cd656d53ffe7fba3b34700c25a57f1dc0c8bb6254fe153bf70716d14d75557"
+  "revision": "c640e00069f9b05a25c21d833c7a2df8bda3cf27b60fffaca4008fe8a479e895"
 }

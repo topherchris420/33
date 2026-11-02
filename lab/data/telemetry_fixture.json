@@ -2,8 +2,8 @@
  "schema": "project33.lab.telemetry_fixture/1",
  "generated_by": "tools/export_lab_data.py",
  "inputs": {
-  "evidence/__main__.py": "da7afcbdceced4b4f9311d95d543e4503a2ad62a42d71fabf71c61384dbdc080",
-  "evidence/bundle.py": "8298cc432167f6b1128aeec7ff660f90edeb0101105f6f98cd14b055518329b6",
+  "evidence/__main__.py": "7422b7f1e576640a95d8a4557bc35cd9aa5ae0eb7dee84a1cfd924fe236da1ab",
+  "evidence/bundle.py": "90d815d5453b022162f379ae44d0f689bf39703bd08f264c593d33039ee2659e",
   "evidence/telemetry.py": "3c8a7bc0d984fa476f78efd633f8dc136f4e2ae0406fdb01c1ee14c29cb8c737"
  },
  "origin": "SYNTHETIC SOFTWARE FIXTURE — NO HARDWARE DATA",

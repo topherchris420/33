@@ -86,6 +86,8 @@ def main(argv=None):
     compare = commands.add_parser("compare", help="What changed between two review packets, and which claims it affects")
     compare.add_argument("before", type=Path)
     compare.add_argument("after", type=Path)
+    compare.add_argument("--format", choices=("json", "markdown"), default="json",
+                         help="Output format (default: json); markdown is a shareable review summary")
     drift_cmd = commands.add_parser("drift", help="Which files changed since a review packet was built")
     drift_cmd.add_argument("bundle", type=Path)
     commands.add_parser("check", help="Strict record check: drift, stale reviews, consistency, stale generated docs")
@@ -153,9 +155,14 @@ def main(argv=None):
             result = verify_bundle(args.directory, args.expected_sha256)
         elif args.command == "compare":
             result = compare_reviews(args.before, args.after)
+            if args.format == "markdown":
+                from .comparison import comparison_markdown
+                sys.stdout.write(comparison_markdown(result))
+                return 0
         elif args.command == "drift":
             result = drift(args.bundle, args.root, args.catalog)
-            code = 1 if result["changed_since_bundle"] or result["missing_now"] else 0
+            code = 1 if any(result[key] for key in ("changed_since_bundle", "missing_now",
+                                                   "no_longer_cataloged", "newly_cataloged")) else 0
         elif args.command in ("check", "status"):
             _, _, assessment, _ = load_assessment(args.root, args.catalog)
             if args.command == "status":

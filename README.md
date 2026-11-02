@@ -220,6 +220,15 @@ With the model dependencies installed (`python -m pip install -r requirements-ev
 
 Open `build/review/index.html` locally to explore the result. If that output folder already exists, choose a fresh path: the packet builder intentionally does not overwrite previous reports. **Verification confirms packet integrity, not scientific validity or physical performance.**
 
+After a revision, build a second packet and review what changed:
+
+```bash
+python -m evidence build --output build/review-02
+python -m evidence compare build/review build/review-02 --format markdown
+```
+
+The comparison identifies changed evidence files, record files, claim statuses, and requirement fields—even when an edited requirement still passes. See [change impact and staleness](docs/EVIDENCE_OBSERVATORY.md#change-impact-and-staleness) for the JSON output and review boundaries.
+
 ## Validation roadmap
 
 The project moves only through explicit gates: **analytical model → software reproduction → synthetic test → inert bench setup → inert physical measurement → repeated measurement → independent review.** Gates from inert bench setup onward need a human-registered pre-registration or a human-accepted measurement. No AI model, CI run, or repository setting can move a claim across them. Next steps are in the [Roadmap](docs/ROADMAP.md); the readiness matrix is in [Project Status](docs/PROJECT_STATUS.md).
