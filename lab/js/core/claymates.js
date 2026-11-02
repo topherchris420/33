@@ -185,6 +185,34 @@ export class Claymate extends THREE.Group {
 
   play(action) { this.action = action; this.actionStart = this.time; }
 
+  /**
+   * Two-bone arm IK: put each hand's centre on a world-space target, blended over the current
+   * pose by weight. Elbows bend down, back and outward. Call after update().
+   */
+  reach({ left = null, right = null, weight = 1 } = {}) {
+    if (weight <= 0) return;
+    this.updateMatrixWorld(true);
+    const L1 = 9, L2 = 8; // upper arm and forearm lengths in puppet units (see the constructor)
+    const clamp = THREE.MathUtils.clamp;
+    for (const [shoulder, arm, fore, target, side] of [[this.shoulderL, this.armL, this.foreL, left, -1], [this.shoulderR, this.armR, this.foreR, right, 1]]) {
+      if (!target) continue;
+      const T = shoulder.worldToLocal(target.clone());
+      const n = T.clone().normalize();
+      const D = clamp(T.length(), Math.abs(L1 - L2) + 1e-3, L1 + L2 - 1e-3);
+      const alpha = Math.acos(clamp((L1 * L1 + D * D - L2 * L2) / (2 * L1 * D), -1, 1));
+      const beta = Math.acos(clamp((L1 * L1 + L2 * L2 - D * D) / (2 * L1 * L2), -1, 1));
+      const pole = new THREE.Vector3(side * 0.6, -1, -0.5);
+      const m = pole.sub(n.clone().multiplyScalar(pole.dot(n))).normalize();
+      const u = n.clone().multiplyScalar(Math.cos(alpha)).add(m.clone().multiplyScalar(Math.sin(alpha)));
+      const w = n.clone().multiplyScalar(Math.sin(alpha)).sub(m.clone().multiplyScalar(Math.cos(alpha)));
+      const Y = u.clone().negate();
+      const X = new THREE.Vector3().crossVectors(Y, w);
+      const q = new THREE.Quaternion().setFromRotationMatrix(new THREE.Matrix4().makeBasis(X, Y, w));
+      arm.quaternion.slerp(q, weight);
+      fore.quaternion.slerp(new THREE.Quaternion().setFromEuler(new THREE.Euler(-(Math.PI - beta), 0, 0)), weight);
+    }
+  }
+
   lookAt3(target) { this.target.copy(target); }
 
   /** Advance the puppet. dt in seconds. Poses change only on stop-motion frames. */
@@ -219,9 +247,10 @@ export class Claymate extends THREE.Group {
         rA = [-0.35, 0, -2.45]; rF = [0, 0, 0.35]; lA = [-0.6, 0, 0.4]; lF = [-1.4, 0, 0]; mouthOpen = 0.6; browLift = 0.8; headTilt = 0.18; break;
       }
       case "lever": {
-        const k = Math.min(a / 0.9, 1);
-        rA = [-2.4 + 1.6 * k, 0, -0.15]; rF = [-0.3, 0, 0]; lA = [-2.4 + 1.6 * k, 0, 0.15]; lF = [-0.3, 0, 0];
-        this.torso.rotation.x = 0.25 * k; this.root.position.y = -1.5 * k; mouthOpen = 0.4 + k; break;
+        // Body follows through as the hands push down; the film places the hands with reach().
+        const k = Math.min(Math.max((a - 0.1) / 0.8, 0), 1);
+        rA = [-1.5 + 0.7 * k, 0, -0.15]; rF = [-0.3, 0, 0]; lA = [-1.5 + 0.7 * k, 0, 0.15]; lF = [-0.3, 0, 0];
+        this.torso.rotation.x = 0.2 * k; this.root.position.y = -0.6 * k; mouthOpen = 0.4 + k; browLift = -0.4 * k; break;
       }
       case "surprised": {
         lA = [0, 0, 1.1]; rA = [0, 0, -1.1]; lF = [-0.6, 0, 0]; rF = [-0.6, 0, 0]; mouthOpen = 2.2; browLift = 1.4;

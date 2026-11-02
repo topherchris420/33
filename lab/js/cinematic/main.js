@@ -11,7 +11,7 @@ import { applyMode } from "../core/materials.js";
 import { explodePlan } from "../core/math/explode.js";
 import { makeWren, makeTally, Claymate } from "../core/claymates.js";
 import { buildRocket } from "../workbench/specimens.js";
-import { buildHangar, buildTable, buildPaper, buildPencil, buildLever, buildTurntable, buildHistoricalMiniature, buildLamps } from "./workshop.js";
+import { buildHangar, buildTable, buildPaper, buildPencil, buildLever, LEVER, buildTurntable, buildHistoricalMiniature, buildLamps } from "./workshop.js";
 import { FilmAudio } from "./audio.js";
 
 mountShell();
@@ -170,8 +170,9 @@ const KEYS = [
   [0, [-40, 190, 52], [-40, 0, 40]],
   [6.5, [-20, 150, 70], [-30, 0, 40]],
   [11, [-30, 190, 470], [-30, 20, -10]],
-  [14, [180, 90, 260], [120, 20, 0]],
-  [17, [260, 70, 140], [120, 20, -60]],
+  [14, [176, 44, 140], [138, 15, 60]],
+  [16, [182, 41, 132], [138, 12, 60]],
+  [17.6, [260, 70, 140], [120, 20, -60]],
   [22, [210, 60, 40], [120, 22, -60]],
   [27, [120, 50, 120], [120, 22, -60]],
   [31, [120, 120, 220], [120, 30, -60]],
@@ -220,8 +221,8 @@ function apply(t, dt) {
   w.pencil.visible = t < 9;
   w.pencil.position.copy(tipWorld).add(new THREE.Vector3(0, t < 6.9 ? 0 : 18 * seg(t, 6.9, 8.5), 0));
   // lever
-  const pull = seg(t, 14.6, 15.4);
-  w.lever.arm.rotation.z = 0.7 - 1.4 * ease(pull);
+  const pull = ease(seg(t, 14.6, 15.4));
+  w.lever.arm.rotation.z = LEVER.up + (LEVER.down - LEVER.up) * pull - 0.05 * Math.sin(Math.PI * seg(t, 15.4, 15.7));
   // lights
   const dim = ease(seg(t, 15.6, 17.2)) * (1 - ease(seg(t, 66, 72)) * 0.6);
   w.key.intensity = 120000 * (1 - 0.85 * dim);
@@ -292,11 +293,14 @@ function apply(t, dt) {
   // characters
   const wren = w.wren, tally = w.tally, pip = w.pip;
   setAction(wren, t < 13 ? (t > 8 ? "notebook" : "idle") : t < 14.5 ? "point" : t < 16.5 ? "lever" : t < 27 ? "surprised" : t < 31 ? "think" : t < 50 ? "point" : t < 56 ? "surprised" : t < 68 ? "notebook" : "wave", t);
-  const leverPos = new THREE.Vector3(150, 0, 60).add(new THREE.Vector3(-18, 0, 4));
+  // Wren walks to the lever, turns to face along its handle (+X), pushes it down, then turns back.
+  const leverPos = new THREE.Vector3(129.2, 0, 60);
   if (t > 12.5 && t < 17) wren.position.lerpVectors(new THREE.Vector3(70, 0, 30), leverPos, ease(seg(t, 12.5, 14.2)));
   else if (t >= 17) wren.position.lerpVectors(leverPos, new THREE.Vector3(150, 0, 80), ease(seg(t, 26, 29)));
   else wren.position.set(70, 0, 30);
-  wren.lookAt3(t < 14 ? new THREE.Vector3(-40, 0, 40) : new THREE.Vector3(120, 30, -60));
+  wren.rotation.y = -0.4 + (Math.PI / 2 + 0.4) * (ease(seg(t, 12.5, 13.6)) - ease(seg(t, 16.6, 17.6)));
+  const knobAt = w.lever.knob.getWorldPosition(new THREE.Vector3());
+  wren.lookAt3(t < 12.5 ? new THREE.Vector3(-40, 0, 40) : t < 16.6 ? knobAt : new THREE.Vector3(120, 30, -60));
   // Tally: walks in at the freeze with the sign
   const tallyIn = ease(seg(t, 50.2, 52));
   tally.position.lerpVectors(new THREE.Vector3(300, 0, 90), new THREE.Vector3(146, 0, -4), tallyIn);
@@ -312,6 +316,14 @@ function apply(t, dt) {
   setAction(pip, "idle", t);
   for (const mate of [wren, tally, pip]) {
     if (!frozen || mate === tally) { mate.time = t - 1 / 24; mate._frame = -1; mate.update(1 / 24); }
+  }
+  // Wren's hands rest on top of the knob from the reach through the push to the release.
+  const grip = ease(seg(t, 13.9, 14.5)) * (1 - ease(seg(t, 16.3, 16.7)));
+  if (grip > 0) {
+    w.lever.group.updateMatrixWorld(true);
+    const top = w.lever.knob.getWorldPosition(new THREE.Vector3()).add(new THREE.Vector3(0, 3.9, 0));
+    // Facing +X, the puppet's left hand is on the +Z side of the knob.
+    wren.reach({ left: top.clone().add(new THREE.Vector3(0, 0, 1.7)), right: top.clone().add(new THREE.Vector3(0, 0, -1.7)), weight: grip });
   }
   // walking legs for Pip
   const step = Math.floor(t * 12) % 4;

@@ -134,21 +134,36 @@ export function buildPencil(scene) {
   return pivot;
 }
 
+/**
+ * A pump-handle lever sized for the clay characters: the handle points back toward the operator
+ * and swings about a horizontal pivot, so pushing the knob down moves it down, not sideways.
+ * The arm rotates about Z; negative angles raise the knob.
+ */
+export const LEVER = { pivotY: 11, reach: 15, up: -0.47, down: 0.33 };
 export function buildLever(scene) {
   const g = new THREE.Group();
-  const base = new THREE.Mesh(new THREE.RoundedBoxGeometry(22, 10, 16, 3, 2), clayMaterial({ color: 0x3b4650, scale: 0.3 }));
-  base.position.y = 5;
-  const arm = new THREE.Group(); arm.position.y = 9;
-  const stick = new THREE.Mesh(new THREE.CylinderGeometry(1.4, 1.4, 30, 10), clayMaterial({ color: 0x9aa4ab, scale: 0.4 }));
-  stick.position.y = 15;
-  const knob = new THREE.Mesh(new THREE.SphereGeometry(4, 16, 12), clayMaterial({ color: 0xc8463a, scale: 0.4 }));
-  knob.position.y = 31;
+  const metal = clayMaterial({ color: 0x3b4650, scale: 0.3 });
+  const base = new THREE.Mesh(new THREE.RoundedBoxGeometry(12, 5, 11, 3, 1.6), metal);
+  base.position.y = 2.5;
+  const cheeks = [-3, 3].map((z) => {
+    const c = new THREE.Mesh(new THREE.RoundedBoxGeometry(5, 10, 1.4, 2, 0.5), metal);
+    c.position.set(0, 7.5, z);
+    return c;
+  });
+  const hub = new THREE.Mesh(new THREE.CylinderGeometry(1.7, 1.7, 7.6, 14), clayMaterial({ color: 0x6f7b84, scale: 0.4 }));
+  hub.rotation.x = Math.PI / 2; hub.position.y = LEVER.pivotY;
+  const arm = new THREE.Group(); arm.position.y = LEVER.pivotY;
+  const stick = new THREE.Mesh(new THREE.CylinderGeometry(1.05, 1.15, LEVER.reach, 10), clayMaterial({ color: 0x9aa4ab, scale: 0.4 }));
+  stick.rotation.z = Math.PI / 2; stick.position.x = -LEVER.reach / 2;
+  const knob = new THREE.Mesh(new THREE.SphereGeometry(2.6, 16, 12), clayMaterial({ color: 0xc8463a, scale: 0.4 }));
+  knob.position.x = -LEVER.reach;
   arm.add(stick, knob);
-  g.add(base, arm);
+  arm.rotation.z = LEVER.up;
+  g.add(base, ...cheeks, hub, arm);
   g.traverse((o) => { o.castShadow = true; });
   g.position.set(150, 0, 60);
   scene.add(g);
-  return { group: g, arm };
+  return { group: g, arm, knob };
 }
 
 export function buildTurntable(scene) {
