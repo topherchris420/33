@@ -9,7 +9,7 @@
 
 Project 33 investigates a low-cost folding-fin rocket concept through mechanical analysis, CAD, embedded firmware, telemetry software, and reproducible research. But the more ambitious project is an **engineering evidence system**: a way to carry a claim from assumption to model, from model to implementation, and eventually from observation to independent review without confusing those stages.
 
-**[Explore the project](https://topherchris420.github.io/33/)** · **[▶ Play the full bench manual film](https://topherchris420.github.io/33/lab/bench-manual.html)** · **[Reproduce an offline review](#reproduce-the-review)** · **[Inspect the claim ledger](#claim-status)** · **[Read the roadmap](docs/ROADMAP.md)** · **[Contribute](CONTRIBUTING.md)**
+**[Explore the project](https://topherchris420.github.io/33/)** · **[Turn the 3D model](https://topherchris420.github.io/33/model.html)** · **[▶ Play the full bench manual film](https://topherchris420.github.io/33/lab/bench-manual.html)** · **[Reproduce an offline review](#reproduce-the-review)** · **[Inspect the claim ledger](#claim-status)** · **[Read the roadmap](docs/ROADMAP.md)** · **[Contribute](CONTRIBUTING.md)**
 
 ## The Living Engineering Laboratory
 
@@ -21,13 +21,19 @@ The project site is now an interactive, read-only engineering laboratory. Rotate
 
 *The film frame is a rendering of the design-file geometry, not a photograph, flight test, or physical assembly record.*
 
+## Faceted 3D model
+
+[![Faceted 3D model of the Project 33 rocket on its launcher, turning and separating into its parts. Select it to open the interactive model.](assets/model/project33-faceted.gif)](https://topherchris420.github.io/33/model.html)
+
+**[▶ Open the interactive 3D model](https://topherchris420.github.io/33/model.html)**: drag to turn it, fold and deploy the fins, explode the assembly, show or hide the launcher, and download OBJ or GLB.
+
+*Design visualization, not evidence. The faceted skin is a styling choice, and some dimensions follow the OpenRocket side view rather than the `.ork` file; see [sources and assumptions](docs/MODEL_3D.md).*
+
 ## From frequency to form
 
 [![Animated Project 33 rocket blueprint: Fourier epicycles trace contours, parts assemble, and the conceptual form rotates](assets/marketing/project33-blueprint.gif)](assets/marketing/project33-blueprint.mp4)
 
 *Design visualization, not a flight test, physical assembly record, or evidence of deployment.*
-
-**[Turn the faceted 3D model in your browser](https://topherchris420.github.io/33/model.html)**: deployed and folded fins, exploded and assembled views, the launcher platform, and OBJ/GLB download. Also a design visualization, not evidence; [sources and assumptions](docs/MODEL_3D.md).
 
 ## V3D-TO-33-1 · Utility Bench Manual
 
