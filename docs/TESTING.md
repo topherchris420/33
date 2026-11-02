@@ -15,12 +15,22 @@ Project 33 is judged on evidence: what builds, what reproduces, what was measure
 
 ## Automated checks
 
+Use Python **3.11** to match CI. In an activated virtual environment, install the
+complete test and model dependencies with
+`python -m pip install -r Firmware/requirements-test.txt -r requirements-evidence.txt`.
+See [Start here](START_HERE.md#work-on-the-project) for shell-specific activation.
+The standard-library reviewer supports Python 3.11+, but generated numeric fixtures
+can differ on later versions.
+
 Run from the repository root:
 
 ```bash
 python tools/generate_protocol.py --check      # protocol JSON, firmware header, and PROTOCOL.md agree
 python tools/check_markdown_links.py           # local Markdown targets exist
 python tools/review_figures.py --check         # review figures match the tested geometry code
+python tools/build_bench_manual.py --check     # source-linked manual index is current
+python tools/export_lab_data.py --check        # derived laboratory views match their inputs
+python tools/build_altimeter_example.py --check # synthetic pressure example matches its analyzer
 python -m evidence check                        # record consistency, review freshness, stale generated docs
 python -m pytest tests Firmware/tests -q        # regression and adversarial tests
 python -m evidence reproduce                    # regenerate model outputs and compare values (needs requirements-evidence.txt)
@@ -46,6 +56,10 @@ target prints `file:line: missing local target: path` and exits with status 1.
 Use `--root PATH` to check a different documentation tree.
 
 ## Firmware builds
+
+Install `Firmware/requirements-platformio.txt` and copy
+`Firmware/Launcher/src/wifi_config.h.example` to `Firmware/Launcher/src/wifi_config.h`
+before building. Configure that local, git-ignored header for your environment.
 
 ```bash
 pio run -d Firmware/Rocket

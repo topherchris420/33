@@ -10,6 +10,10 @@ Thank you for your interest in contributing. Project 33 is an evidence-first aer
 - **Python 3.11+** - for dashboard and tests
 - **Git** - for version control
 
+Use Python **3.11** to match CI. The standard-library evidence reviewer supports
+Python 3.11+, but generated numeric fixtures may vary across Python versions.
+For a guided first review or local laboratory preview, see [Start here](docs/START_HERE.md).
+
 ### Development Environment Setup
 
 1. **Clone the repository**
@@ -25,12 +29,12 @@ Thank you for your interest in contributing. Project 33 is an evidence-first aer
    # OR
    .venv\Scripts\activate     # Windows
 
-   pip install -r Firmware/requirements-test.txt
+   python -m pip install -r Firmware/requirements-test.txt -r requirements-evidence.txt
    ```
 
 3. **Set up PlatformIO** (if building firmware)
    ```bash
-   pip install -r Firmware/requirements-platformio.txt
+   python -m pip install -r Firmware/requirements-platformio.txt
    ```
 
 ## Running Tests
@@ -87,6 +91,10 @@ The record in `evidence/` is checked by `python -m evidence check` (CI fails on 
 Use `python -m evidence impact PATH` before a change to see which claims, requirements, predictions, and checks it touches.
 
 ### Firmware Build (without hardware)
+
+Copy `Firmware/Launcher/src/wifi_config.h.example` to
+`Firmware/Launcher/src/wifi_config.h` before building the launcher, then configure
+the local header. That destination is git-ignored.
 
 ```bash
 pio run -d Firmware/Rocket

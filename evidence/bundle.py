@@ -163,7 +163,7 @@ def verify_bundle(directory, expected_sha256=None):
     R.keys(manifest, {"schema_version", "kind", "producer", "provenance", "files"}, (), "manifest")
     if type(manifest["schema_version"]) is not int or manifest["schema_version"] != 1:
         raise EvidenceError("Unsupported manifest schema_version")
-    if manifest["kind"] not in KINDS:
+    if not isinstance(manifest["kind"], str) or manifest["kind"] not in KINDS:
         raise EvidenceError("Unknown manifest kind")
     if not isinstance(manifest["files"], list) or not manifest["files"] or len(manifest["files"]) > 5000:
         raise EvidenceError("Invalid manifest file list")
@@ -233,6 +233,7 @@ def compare_reviews(before, after):
             if touched & set(claim["affected_by_changes"]):
                 affected.add(claim["id"])
     requirement_changes = []
+    requirement_details = []
     old_req = {r["id"]: r for r in old["requirements"]}
     new_req = {r["id"]: r for r in new["requirements"]}
     for key in sorted(old_req.keys() | new_req.keys()):
@@ -240,7 +241,15 @@ def compare_reviews(before, after):
         after_result = (new_req.get(key) or {}).get("result")
         if before_result != after_result or (old_req.get(key) or {}).get("observed") != (new_req.get(key) or {}).get("observed"):
             requirement_changes.append({"requirement": key, "before": before_result, "after": after_result})
-            affected.update((new_req.get(key) or old_req.get(key))["claims"])
+        previous, current = old_req.get(key, {}), new_req.get(key, {})
+        changed_fields = sorted(field for field in previous.keys() | current.keys()
+                                if previous.get(field) != current.get(field)
+                                or (field in previous) != (field in current))
+        if changed_fields:
+            requirement_details.append({"requirement": key, "changed_fields": changed_fields,
+                                        "before": previous or None, "after": current or None})
+            affected.update(previous.get("claims", []))
+            affected.update(current.get("claims", []))
     old_disc = {d["id"]: d for d in old["discrepancies"]}
     new_disc = {d["id"]: d for d in new["discrepancies"]}
     discrepancy_changes = sorted(key for key in old_disc.keys() | new_disc.keys() if old_disc.get(key) != new_disc.get(key))
@@ -250,6 +259,10 @@ def compare_reviews(before, after):
     reviewer_files = [{item["path"]: item["sha256"] for item in manifest["files"] if item["path"].startswith("reviewer/")}
                       for manifest in (old_manifest, new_manifest)]
     reviewer_changed = reviewer_files[0] != reviewer_files[1]
+    record_files = [{item["path"]: item["sha256"] for item in manifest["files"]
+                     if item["path"].startswith("records/")} for manifest in (old_manifest, new_manifest)]
+    changed_record_files = sorted(path for path in record_files[0].keys() | record_files[1].keys()
+                                  if record_files[0].get(path) != record_files[1].get(path))
     if context_changed or reviewer_changed:
         affected.update(old_claims.keys() | new_claims.keys())
     return {
@@ -259,7 +272,8 @@ def compare_reviews(before, after):
                                   "after": (new_claims.get(key) or {}).get("status")}
                                  for key in sorted(old_claims.keys() | new_claims.keys())
                                  if (old_claims.get(key) or {}).get("status") != (new_claims.get(key) or {}).get("status")],
-        "requirement_changes": requirement_changes, "discrepancy_changes": discrepancy_changes,
+        "requirement_changes": requirement_changes, "requirement_details": requirement_details,
+        "changed_record_files": changed_record_files, "discrepancy_changes": discrepancy_changes,
         "provenance_changed": old["provenance"] != new["provenance"],
         "review_context_changed": context_changed, "reviewer_changed": reviewer_changed,
         "meaning": "Changed evidence needs review; this is not a performance comparison.",
@@ -282,8 +296,13 @@ def drift(bundle, root, catalog_path="evidence/catalog.json"):
         elif digest(current[key]) != item["sha256"]:
             changed.append(item["path"])
     added = sorted(set(by_path) - {item["path"] for item in review["artifacts"]})
+    impact = E.impact(records, sorted(changed + missing + added))
+    touched = set(changed + missing + removed + added)
+    affected = {claim["id"] for claim in review["claims"]
+                if touched & set(claim["affected_by_changes"])}
+    affected.update(claim for item in impact for claim in item["claims"])
     return {"bundle_commit": review["provenance"].get("commit"),
             "changed_since_bundle": sorted(changed), "missing_now": sorted(missing),
             "no_longer_cataloged": sorted(removed), "newly_cataloged": added,
-            "impact": E.impact(records, sorted(changed + missing)),
+            "impact": impact, "affected_claims": sorted(affected),
             "meaning": "The packet no longer describes these files. Its conclusions about affected claims are stale."}
