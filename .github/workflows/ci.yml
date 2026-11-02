@@ -117,3 +117,16 @@ jobs:
             docs/USB_BENCH_MONITOR.md
           if-no-files-found: error
           retention-days: 30
+      - name: Build standalone pressure demonstrator
+        run: pio run -d Firmware/Rocket -e altimeter_bench
+      - name: Retain altimeter bench image
+        uses: actions/upload-artifact@v4
+        with:
+          name: project33-altimeter-bench-${{ github.sha }}
+          path: |
+            Firmware/Rocket/.pio/build/altimeter_bench/*.bin
+            Firmware/Rocket/.pio/build/altimeter_bench/firmware.elf
+            protocol/altimeter_review.json
+            docs/MODEL_ROCKET_REVIEW.md
+          if-no-files-found: error
+          retention-days: 30

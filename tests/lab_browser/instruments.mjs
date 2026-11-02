@@ -148,6 +148,22 @@ test("instrumentation lab: cockpit, declutter, information chain, dependencies",
   if (SHOTS) { await page.locator('[data-usb-status="INVALID"]').scrollIntoViewIfNeeded(); await page.screenshot({ path: join(SHOTS, 'usb-monitor-desktop.png') }); }
   await page.setInputFiles('#usb-report-file', { name: 'invalid.json', mimeType: 'application/json', buffer: Buffer.from('{}') });
   await page.waitForSelector('#usb-report-result [role="alert"]');
+  await page.click('#altimeter-example');
+  await page.waitForSelector('#altimeter-time');
+  assert.match(await page.textContent('#altimeter-result'), /declared origin: synthetic/);
+  assert.match(await page.textContent('#altimeter-result'), /SIMULATED RELEASE MARKER/);
+  await page.locator('#altimeter-time').fill('100');
+  assert.match(await page.textContent('#altimeter-reading'), /20.00 s/);
+  assert.match(await page.textContent('#altimeter-reading'), /FALLING/);
+  assert.equal(await page.locator('#altimeter-time').getAttribute('aria-valuetext'), '20.00 seconds, ESTIMATED');
+  if (SHOTS) { await page.locator('#altimeter-title').scrollIntoViewIfNeeded(); await page.screenshot({ path: join(SHOTS, 'altimeter-desktop.png') }); }
+  const altimeter = JSON.parse(readFileSync(join(ROOT, 'lab/data/altimeter_example_review.json')));
+  altimeter.sensor.mount = 'launcher'; altimeter.events = []; altimeter.summary.rocket_altitude_available = false;
+  await page.setInputFiles('#altimeter-file', { name: 'ground.json', mimeType: 'application/json', buffer: Buffer.from(JSON.stringify(altimeter)) });
+  await page.waitForFunction(() => document.querySelector('#altimeter-result').textContent.includes('GROUND / BENCH SOURCE'));
+  assert.doesNotMatch(await page.textContent('#altimeter-result'), /SIMULATED RELEASE MARKER/);
+  await page.setInputFiles('#altimeter-file', { name: 'invalid.json', mimeType: 'application/json', buffer: Buffer.from('{}') });
+  await page.waitForSelector('#altimeter-result [role="alert"]');
   await page.click(".gs-unit[data-unit='LAUNCHER']");
   assert.equal(await page.locator(".gs-item[data-id='switch_abort']").getAttribute("data-available"), "false");
   await page.locator(".gs-item[data-id='switch_abort'] summary").click();
@@ -169,6 +185,9 @@ test("instrumentation lab: cockpit, declutter, information chain, dependencies",
 test("instrumentation lab: mobile layout has no horizontal page scroll", { timeout: TIMEOUT * 2 }, async () => {
   const { page, errors } = await open({ width: 390, height: 844 }, { isMobile: true, hasTouch: true, deviceScaleFactor: 2 });
   await page.click('#config-example');
+  await page.click('#altimeter-example');
+  await page.waitForSelector('#altimeter-time');
+  if (SHOTS) { mkdirSync(SHOTS, { recursive: true }); await page.locator('#altimeter-title').scrollIntoViewIfNeeded(); await page.screenshot({ path: join(SHOTS, 'altimeter-mobile.png') }); }
   if (SHOTS) { mkdirSync(SHOTS, { recursive: true }); await page.locator('#config-title').scrollIntoViewIfNeeded(); await page.screenshot({ path: join(SHOTS, 'configuration-mobile.png') }); }
   const overflow = await page.evaluate(() => [...document.querySelectorAll("main *")].filter((e) => e.getBoundingClientRect().right > document.documentElement.clientWidth + 1 && !e.closest(".ia-grid, .dep-host, .viewport")).map((e) => e.className || e.tagName).slice(0, 5));
   assert.deepEqual(overflow, []);

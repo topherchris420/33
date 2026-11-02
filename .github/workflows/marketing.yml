@@ -16,7 +16,7 @@ jobs:
       - name: Verify contour reconstruction and sampling
         run: node --test tests/fourier.test.mjs
       - name: Verify display validity, alert ordering and configuration identity
-        run: node --test tests/lab_browser/validity.mjs tests/lab_browser/display-store.mjs tests/lab_browser/configuration.mjs tests/lab_browser/usb-monitor.mjs
+        run: node --test tests/lab_browser/validity.mjs tests/lab_browser/display-store.mjs tests/lab_browser/configuration.mjs tests/lab_browser/usb-monitor.mjs tests/lab_browser/altimeter.mjs
       - uses: actions/setup-python@v5
         with:
           python-version: "3.11"
@@ -25,6 +25,7 @@ jobs:
       - name: Laboratory data views are current; no transmit paths in laboratory code
         run: |
           python tools/export_lab_data.py --check
+          python tools/build_altimeter_example.py --check
           python -m pip install pytest==9.0.3
           python -m pytest tests/test_lab_data.py tests/test_lab_isolation.py tests/test_bench_manual.py -q
       - name: Build the GitHub Pages site

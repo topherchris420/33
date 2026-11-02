@@ -11,6 +11,7 @@ import { mountGeneric, mountGroundStatus } from "./dependency.js";
 import { createDisplayStore } from "./store.js";
 import { mountConfiguration } from "./configuration.js";
 import { mountUSBMonitor } from "./usb-monitor.js";
+import { mountAltimeter } from "./altimeter.js";
 
 // ---------- shared state: source health and declutter level ----------
 const store = createDisplayStore({ motion: !reducedMotion() });
@@ -89,6 +90,7 @@ function readabilityNote(id) {
 async function boot() {
   mountConfiguration($("#configuration-compare"));
   mountUSBMonitor($("#usb-monitor-report"));
+  mountAltimeter($("#altimeter-review"));
   // Declutter
   const dec = $("#declutter");
   dec.addEventListener("input", () => { store.setDeclutter(Number(dec.value)); $("#declutter-out").textContent = `level ${dec.value}`; renderExplain(cockpit?.selected ?? null); });

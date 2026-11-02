@@ -138,3 +138,7 @@
 #configuration-compare table { width: 100%; table-layout: fixed; border-collapse: collapse; margin-top: 16px; }
 #configuration-compare td, #configuration-compare th { text-align: left; padding: 8px; border-bottom: 1px solid var(--graphite-500); overflow-wrap: anywhere; font-size: 12px; }
 #configuration-compare code { white-space: normal; }
+/* Local pressure-log review. */
+#altimeter-review input { display: block; width: 100%; max-width: 100%; margin: 12px 0; }
+#altimeter-result { overflow-wrap: anywhere; margin-top: 20px; }
+.altimeter-chart { display: block; width: 100%; height: auto; min-height: 140px; background: #060d14; margin: 20px 0; }

@@ -1,0 +1,9 @@
+{
+  "schema": "project33.altimeter_review_model/1",
+  "model": {"lapse_k_per_m": 0.00649, "pressure_exponent": 5.256, "minimum_height_m": -1000, "maximum_height_m": 11000},
+  "review": {"maximum_gap_s": 1, "slope_window_s": 0.8, "minimum_slope_samples": 3, "sustain_s": 0.6, "rise_rate_m_s": 2, "fall_rate_m_s": -2, "rise_height_m": 5, "peak_drop_m": 2},
+  "maximum_samples": 20000,
+  "meaning": "Offline review settings for synthetic and declared observations; not flight-control or deployment settings.",
+  "raw_frame": "P33BARO,1,boot_hex16,sequence_u32,uptime_ms_u32,valid_0_or_1,pressure_pa_or_nan,elf_sha256",
+  "source": "https://www1.grc.nasa.gov/beginners-guide-to-aeronautics/earth-atmosphere-equation-metric/"
+}

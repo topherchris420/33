@@ -1,0 +1,1534 @@
+{
+  "schema": "project33.altimeter_log/1",
+  "sensor": {
+    "id": "SYNTHETIC pressure source",
+    "mount": "rocket"
+  },
+  "reference": {
+    "pressure_pa": 101325,
+    "temperature_k": 288.08,
+    "description": "Synthetic stationary reference"
+  },
+  "samples": [
+    {
+      "time_s": 0.0,
+      "valid": true,
+      "pressure_pa": 101325.0,
+      "origin": "synthetic"
+    },
+    {
+      "time_s": 0.2,
+      "valid": true,
+      "pressure_pa": 101325.0,
+      "origin": "synthetic"
+    },
+    {
+      "time_s": 0.4,
+      "valid": true,
+      "pressure_pa": 101325.0,
+      "origin": "synthetic"
+    },
+    {
+      "time_s": 0.6,
+      "valid": true,
+      "pressure_pa": 101325.0,
+      "origin": "synthetic"
+    },
+    {
+      "time_s": 0.8,
+      "valid": true,
+      "pressure_pa": 101325.0,
+      "origin": "synthetic"
+    },
+    {
+      "time_s": 1.0,
+      "valid": true,
+      "pressure_pa": 101325.0,
+      "origin": "synthetic"
+    },
+    {
+      "time_s": 1.2,
+      "valid": true,
+      "pressure_pa": 101325.0,
+      "origin": "synthetic"
+    },
+    {
+      "time_s": 1.4,
+      "valid": true,
+      "pressure_pa": 101325.0,
+      "origin": "synthetic"
+    },
+    {
+      "time_s": 1.6,
+      "valid": true,
+      "pressure_pa": 101325.0,
+      "origin": "synthetic"
+    },
+    {
+      "time_s": 1.8,
+      "valid": true,
+      "pressure_pa": 101325.0,
+      "origin": "synthetic"
+    },
+    {
+      "time_s": 2.0,
+      "valid": true,
+      "pressure_pa": 101325.0,
+      "origin": "synthetic"
+    },
+    {
+      "time_s": 2.2,
+      "valid": true,
+      "pressure_pa": 101325.0,
+      "origin": "synthetic"
+    },
+    {
+      "time_s": 2.4,
+      "valid": true,
+      "pressure_pa": 101325.0,
+      "origin": "synthetic"
+    },
+    {
+      "time_s": 2.6,
+      "valid": true,
+      "pressure_pa": 101325.0,
+      "origin": "synthetic"
+    },
+    {
+      "time_s": 2.8,
+      "valid": true,
+      "pressure_pa": 101325.0,
+      "origin": "synthetic"
+    },
+    {
+      "time_s": 3.0,
+      "valid": true,
+      "pressure_pa": 101325.0,
+      "origin": "synthetic"
+    },
+    {
+      "time_s": 3.2,
+      "valid": true,
+      "pressure_pa": 101289.0116155498,
+      "origin": "synthetic"
+    },
+    {
+      "time_s": 3.4,
+      "valid": true,
+      "pressure_pa": 101253.0335821328,
+      "origin": "synthetic"
+    },
+    {
+      "time_s": 3.6,
+      "valid": true,
+      "pressure_pa": 101217.06589747118,
+      "origin": "synthetic"
+    },
+    {
+      "time_s": 3.8,
+      "valid": true,
+      "pressure_pa": 101181.10855928758,
+      "origin": "synthetic"
+    },
+    {
+      "time_s": 4.0,
+      "valid": true,
+      "pressure_pa": 101145.1615653048,
+      "origin": "synthetic"
+    },
+    {
+      "time_s": 4.2,
+      "valid": true,
+      "pressure_pa": 101109.22491324611,
+      "origin": "synthetic"
+    },
+    {
+      "time_s": 4.4,
+      "valid": true,
+      "pressure_pa": 101073.29860083501,
+      "origin": "synthetic"
+    },
+    {
+      "time_s": 4.6,
+      "valid": true,
+      "pressure_pa": 101037.38262579557,
+      "origin": "synthetic"
+    },
+    {
+      "time_s": 4.8,
+      "valid": true,
+      "pressure_pa": 101001.47698585196,
+      "origin": "synthetic"
+    },
+    {
+      "time_s": 5.0,
+      "valid": true,
+      "pressure_pa": 100965.58167872885,
+      "origin": "synthetic"
+    },
+    {
+      "time_s": 5.2,
+      "valid": true,
+      "pressure_pa": 100929.69670215118,
+      "origin": "synthetic"
+    },
+    {
+      "time_s": 5.4,
+      "valid": true,
+      "pressure_pa": 100893.82205384421,
+      "origin": "synthetic"
+    },
+    {
+      "time_s": 5.6,
+      "valid": true,
+      "pressure_pa": 100857.95773153374,
+      "origin": "synthetic"
+    },
+    {
+      "time_s": 5.8,
+      "valid": true,
+      "pressure_pa": 100822.1037329457,
+      "origin": "synthetic"
+    },
+    {
+      "time_s": 6.0,
+      "valid": true,
+      "pressure_pa": 100786.26005580647,
+      "origin": "synthetic"
+    },
+    {
+      "time_s": 6.2,
+      "valid": true,
+      "pressure_pa": 100750.42669784269,
+      "origin": "synthetic"
+    },
+    {
+      "time_s": 6.4,
+      "valid": true,
+      "pressure_pa": 100714.6036567815,
+      "origin": "synthetic"
+    },
+    {
+      "time_s": 6.6,
+      "valid": true,
+      "pressure_pa": 100678.7909303503,
+      "origin": "synthetic"
+    },
+    {
+      "time_s": 6.8,
+      "valid": true,
+      "pressure_pa": 100642.98851627676,
+      "origin": "synthetic"
+    },
+    {
+      "time_s": 7.0,
+      "valid": true,
+      "pressure_pa": 100607.19641228896,
+      "origin": "synthetic"
+    },
+    {
+      "time_s": 7.2,
+      "valid": true,
+      "pressure_pa": 100571.41461611546,
+      "origin": "synthetic"
+    },
+    {
+      "time_s": 7.4,
+      "valid": true,
+      "pressure_pa": 100535.64312548497,
+      "origin": "synthetic"
+    },
+    {
+      "time_s": 7.6,
+      "valid": true,
+      "pressure_pa": 100499.88193812662,
+      "origin": "synthetic"
+    },
+    {
+      "time_s": 7.8,
+      "valid": true,
+      "pressure_pa": 100464.13105176992,
+      "origin": "synthetic"
+    },
+    {
+      "time_s": 8.0,
+      "valid": true,
+      "pressure_pa": 100428.39046414458,
+      "origin": "synthetic"
+    },
+    {
+      "time_s": 8.2,
+      "valid": true,
+      "pressure_pa": 100392.66017298095,
+      "origin": "synthetic"
+    },
+    {
+      "time_s": 8.4,
+      "valid": true,
+      "pressure_pa": 100356.94017600946,
+      "origin": "synthetic"
+    },
+    {
+      "time_s": 8.6,
+      "valid": true,
+      "pressure_pa": 100321.23047096097,
+      "origin": "synthetic"
+    },
+    {
+      "time_s": 8.8,
+      "valid": true,
+      "pressure_pa": 100285.53105556665,
+      "origin": "synthetic"
+    },
+    {
+      "time_s": 9.0,
+      "valid": true,
+      "pressure_pa": 100249.84192755817,
+      "origin": "synthetic"
+    },
+    {
+      "time_s": 9.2,
+      "valid": true,
+      "pressure_pa": 100214.16308466738,
+      "origin": "synthetic"
+    },
+    {
+      "time_s": 9.4,
+      "valid": true,
+      "pressure_pa": 100178.49452462653,
+      "origin": "synthetic"
+    },
+    {
+      "time_s": 9.6,
+      "valid": true,
+      "pressure_pa": 100142.8362451682,
+      "origin": "synthetic"
+    },
+    {
+      "time_s": 9.8,
+      "valid": true,
+      "pressure_pa": 100107.18824402531,
+      "origin": "synthetic"
+    },
+    {
+      "time_s": 10.0,
+      "valid": true,
+      "pressure_pa": 100071.55051893127,
+      "origin": "synthetic"
+    },
+    {
+      "time_s": 10.2,
+      "valid": true,
+      "pressure_pa": 100035.92306761962,
+      "origin": "synthetic"
+    },
+    {
+      "time_s": 10.4,
+      "valid": true,
+      "pressure_pa": 100000.30588782436,
+      "origin": "synthetic"
+    },
+    {
+      "time_s": 10.6,
+      "valid": true,
+      "pressure_pa": 99964.69897727978,
+      "origin": "synthetic"
+    },
+    {
+      "time_s": 10.8,
+      "valid": true,
+      "pressure_pa": 99929.10233372067,
+      "origin": "synthetic"
+    },
+    {
+      "time_s": 11.0,
+      "valid": true,
+      "pressure_pa": 99893.51595488196,
+      "origin": "synthetic"
+    },
+    {
+      "time_s": 11.2,
+      "valid": true,
+      "pressure_pa": 99903.00465237201,
+      "origin": "synthetic"
+    },
+    {
+      "time_s": 11.4,
+      "valid": true,
+      "pressure_pa": 99912.49407967961,
+      "origin": "synthetic"
+    },
+    {
+      "time_s": 11.6,
+      "valid": true,
+      "pressure_pa": 99921.9842368478,
+      "origin": "synthetic"
+    },
+    {
+      "time_s": 11.8,
+      "valid": true,
+      "pressure_pa": 99931.47512391939,
+      "origin": "synthetic"
+    },
+    {
+      "time_s": 12.0,
+      "valid": true,
+      "pressure_pa": 99940.9667409374,
+      "origin": "synthetic"
+    },
+    {
+      "time_s": 12.2,
+      "valid": true,
+      "pressure_pa": 99950.45908794475,
+      "origin": "synthetic"
+    },
+    {
+      "time_s": 12.4,
+      "valid": true,
+      "pressure_pa": 99959.95216498441,
+      "origin": "synthetic"
+    },
+    {
+      "time_s": 12.6,
+      "valid": true,
+      "pressure_pa": 99969.4459720994,
+      "origin": "synthetic"
+    },
+    {
+      "time_s": 12.8,
+      "valid": true,
+      "pressure_pa": 99978.94050933255,
+      "origin": "synthetic"
+    },
+    {
+      "time_s": 13.0,
+      "valid": true,
+      "pressure_pa": 99988.43577672685,
+      "origin": "synthetic"
+    },
+    {
+      "time_s": 13.2,
+      "valid": true,
+      "pressure_pa": 99997.9317743253,
+      "origin": "synthetic"
+    },
+    {
+      "time_s": 13.4,
+      "valid": true,
+      "pressure_pa": 100007.42850217082,
+      "origin": "synthetic"
+    },
+    {
+      "time_s": 13.6,
+      "valid": true,
+      "pressure_pa": 100016.92596030646,
+      "origin": "synthetic"
+    },
+    {
+      "time_s": 13.8,
+      "valid": true,
+      "pressure_pa": 100026.42414877506,
+      "origin": "synthetic"
+    },
+    {
+      "time_s": 14.0,
+      "valid": true,
+      "pressure_pa": 100035.92306761962,
+      "origin": "synthetic"
+    },
+    {
+      "time_s": 14.2,
+      "valid": true,
+      "pressure_pa": 100045.42271688313,
+      "origin": "synthetic"
+    },
+    {
+      "time_s": 14.4,
+      "valid": true,
+      "pressure_pa": 100054.92309660855,
+      "origin": "synthetic"
+    },
+    {
+      "time_s": 14.6,
+      "valid": true,
+      "pressure_pa": 100064.42420683884,
+      "origin": "synthetic"
+    },
+    {
+      "time_s": 14.8,
+      "valid": true,
+      "pressure_pa": 100073.92604761703,
+      "origin": "synthetic"
+    },
+    {
+      "time_s": 15.0,
+      "valid": true,
+      "pressure_pa": 100083.42861898601,
+      "origin": "synthetic"
+    },
+    {
+      "time_s": 15.2,
+      "valid": true,
+      "pressure_pa": 100092.93192098878,
+      "origin": "synthetic"
+    },
+    {
+      "time_s": 15.4,
+      "valid": true,
+      "pressure_pa": 100102.43595366833,
+      "origin": "synthetic"
+    },
+    {
+      "time_s": 15.6,
+      "valid": true,
+      "pressure_pa": 100111.94071706763,
+      "origin": "synthetic"
+    },
+    {
+      "time_s": 15.8,
+      "valid": true,
+      "pressure_pa": 100121.44621122972,
+      "origin": "synthetic"
+    },
+    {
+      "time_s": 16.0,
+      "valid": true,
+      "pressure_pa": 100130.95243619746,
+      "origin": "synthetic"
+    },
+    {
+      "time_s": 16.2,
+      "valid": true,
+      "pressure_pa": 100140.45939201392,
+      "origin": "synthetic"
+    },
+    {
+      "time_s": 16.4,
+      "valid": true,
+      "pressure_pa": 100149.96707872205,
+      "origin": "synthetic"
+    },
+    {
+      "time_s": 16.6,
+      "valid": true,
+      "pressure_pa": 100159.47549636487,
+      "origin": "synthetic"
+    },
+    {
+      "time_s": 16.8,
+      "valid": true,
+      "pressure_pa": 100168.9846449854,
+      "origin": "synthetic"
+    },
+    {
+      "time_s": 17.0,
+      "valid": true,
+      "pressure_pa": 100178.49452462653,
+      "origin": "synthetic"
+    },
+    {
+      "time_s": 17.2,
+      "valid": true,
+      "pressure_pa": 100188.00513533129,
+      "origin": "synthetic"
+    },
+    {
+      "time_s": 17.4,
+      "valid": true,
+      "pressure_pa": 100197.51647714271,
+      "origin": "synthetic"
+    },
+    {
+      "time_s": 17.6,
+      "valid": true,
+      "pressure_pa": 100207.02855010376,
+      "origin": "synthetic"
+    },
+    {
+      "time_s": 17.8,
+      "valid": true,
+      "pressure_pa": 100216.54135425748,
+      "origin": "synthetic"
+    },
+    {
+      "time_s": 18.0,
+      "valid": true,
+      "pressure_pa": 100226.0548896468,
+      "origin": "synthetic"
+    },
+    {
+      "time_s": 18.2,
+      "valid": true,
+      "pressure_pa": 100235.56915631474,
+      "origin": "synthetic"
+    },
+    {
+      "time_s": 18.4,
+      "valid": true,
+      "pressure_pa": 100245.08415430434,
+      "origin": "synthetic"
+    },
+    {
+      "time_s": 18.6,
+      "valid": true,
+      "pressure_pa": 100254.59988365855,
+      "origin": "synthetic"
+    },
+    {
+      "time_s": 18.8,
+      "valid": true,
+      "pressure_pa": 100264.11634442047,
+      "origin": "synthetic"
+    },
+    {
+      "time_s": 19.0,
+      "valid": true,
+      "pressure_pa": 100273.63353663302,
+      "origin": "synthetic"
+    },
+    {
+      "time_s": 19.2,
+      "valid": true,
+      "pressure_pa": 100283.1514603392,
+      "origin": "synthetic"
+    },
+    {
+      "time_s": 19.4,
+      "valid": true,
+      "pressure_pa": 100292.67011558208,
+      "origin": "synthetic"
+    },
+    {
+      "time_s": 19.6,
+      "valid": true,
+      "pressure_pa": 100302.18950240464,
+      "origin": "synthetic"
+    },
+    {
+      "time_s": 19.8,
+      "valid": true,
+      "pressure_pa": 100311.70962084997,
+      "origin": "synthetic"
+    },
+    {
+      "time_s": 20.0,
+      "valid": true,
+      "pressure_pa": 100321.23047096097,
+      "origin": "synthetic"
+    },
+    {
+      "time_s": 20.2,
+      "valid": true,
+      "pressure_pa": 100330.7520527807,
+      "origin": "synthetic"
+    },
+    {
+      "time_s": 20.4,
+      "valid": true,
+      "pressure_pa": 100340.27436635221,
+      "origin": "synthetic"
+    },
+    {
+      "time_s": 20.6,
+      "valid": true,
+      "pressure_pa": 100349.7974117185,
+      "origin": "synthetic"
+    },
+    {
+      "time_s": 20.8,
+      "valid": true,
+      "pressure_pa": 100359.3211889226,
+      "origin": "synthetic"
+    },
+    {
+      "time_s": 21.0,
+      "valid": true,
+      "pressure_pa": 100368.84569800759,
+      "origin": "synthetic"
+    },
+    {
+      "time_s": 21.2,
+      "valid": true,
+      "pressure_pa": 100378.37093901639,
+      "origin": "synthetic"
+    },
+    {
+      "time_s": 21.4,
+      "valid": true,
+      "pressure_pa": 100387.89691199208,
+      "origin": "synthetic"
+    },
+    {
+      "time_s": 21.6,
+      "valid": true,
+      "pressure_pa": 100397.42361697769,
+      "origin": "synthetic"
+    },
+    {
+      "time_s": 21.8,
+      "valid": true,
+      "pressure_pa": 100406.95105401624,
+      "origin": "synthetic"
+    },
+    {
+      "time_s": 22.0,
+      "valid": true,
+      "pressure_pa": 100416.47922315088,
+      "origin": "synthetic"
+    },
+    {
+      "time_s": 22.2,
+      "valid": true,
+      "pressure_pa": 100426.00812442445,
+      "origin": "synthetic"
+    },
+    {
+      "time_s": 22.4,
+      "valid": true,
+      "pressure_pa": 100435.53775788011,
+      "origin": "synthetic"
+    },
+    {
+      "time_s": 22.6,
+      "valid": true,
+      "pressure_pa": 100445.06812356086,
+      "origin": "synthetic"
+    },
+    {
+      "time_s": 22.8,
+      "valid": true,
+      "pressure_pa": 100454.59922150976,
+      "origin": "synthetic"
+    },
+    {
+      "time_s": 23.0,
+      "valid": true,
+      "pressure_pa": 100464.13105176992,
+      "origin": "synthetic"
+    },
+    {
+      "time_s": 23.2,
+      "valid": true,
+      "pressure_pa": 100473.66361438423,
+      "origin": "synthetic"
+    },
+    {
+      "time_s": 23.4,
+      "valid": true,
+      "pressure_pa": 100483.19690939585,
+      "origin": "synthetic"
+    },
+    {
+      "time_s": 23.6,
+      "valid": true,
+      "pressure_pa": 100492.73093684779,
+      "origin": "synthetic"
+    },
+    {
+      "time_s": 23.8,
+      "valid": true,
+      "pressure_pa": 100502.2656967831,
+      "origin": "synthetic"
+    },
+    {
+      "time_s": 24.0,
+      "valid": true,
+      "pressure_pa": 100511.80118924491,
+      "origin": "synthetic"
+    },
+    {
+      "time_s": 24.2,
+      "valid": true,
+      "pressure_pa": 100521.33741427615,
+      "origin": "synthetic"
+    },
+    {
+      "time_s": 24.4,
+      "valid": true,
+      "pressure_pa": 100530.87437191993,
+      "origin": "synthetic"
+    },
+    {
+      "time_s": 24.6,
+      "valid": true,
+      "pressure_pa": 100540.4120622193,
+      "origin": "synthetic"
+    },
+    {
+      "time_s": 24.8,
+      "valid": true,
+      "pressure_pa": 100549.95048521734,
+      "origin": "synthetic"
+    },
+    {
+      "time_s": 25.0,
+      "valid": true,
+      "pressure_pa": 100559.48964095715,
+      "origin": "synthetic"
+    },
+    {
+      "time_s": 25.2,
+      "valid": true,
+      "pressure_pa": 100569.02952948169,
+      "origin": "synthetic"
+    },
+    {
+      "time_s": 25.4,
+      "valid": true,
+      "pressure_pa": 100578.57015083407,
+      "origin": "synthetic"
+    },
+    {
+      "time_s": 25.6,
+      "valid": true,
+      "pressure_pa": 100588.11150505737,
+      "origin": "synthetic"
+    },
+    {
+      "time_s": 25.8,
+      "valid": true,
+      "pressure_pa": 100597.65359219463,
+      "origin": "synthetic"
+    },
+    {
+      "time_s": 26.0,
+      "valid": true,
+      "pressure_pa": 100607.19641228896,
+      "origin": "synthetic"
+    },
+    {
+      "time_s": 26.2,
+      "valid": true,
+      "pressure_pa": 100616.73996538347,
+      "origin": "synthetic"
+    },
+    {
+      "time_s": 26.4,
+      "valid": true,
+      "pressure_pa": 100626.28425152111,
+      "origin": "synthetic"
+    },
+    {
+      "time_s": 26.6,
+      "valid": true,
+      "pressure_pa": 100635.82927074503,
+      "origin": "synthetic"
+    },
+    {
+      "time_s": 26.8,
+      "valid": true,
+      "pressure_pa": 100645.37502309827,
+      "origin": "synthetic"
+    },
+    {
+      "time_s": 27.0,
+      "valid": true,
+      "pressure_pa": 100654.92150862396,
+      "origin": "synthetic"
+    },
+    {
+      "time_s": 27.2,
+      "valid": true,
+      "pressure_pa": 100664.46872736521,
+      "origin": "synthetic"
+    },
+    {
+      "time_s": 27.4,
+      "valid": true,
+      "pressure_pa": 100674.01667936497,
+      "origin": "synthetic"
+    },
+    {
+      "time_s": 27.6,
+      "valid": true,
+      "pressure_pa": 100683.5653646664,
+      "origin": "synthetic"
+    },
+    {
+      "time_s": 27.8,
+      "valid": true,
+      "pressure_pa": 100693.1147833126,
+      "origin": "synthetic"
+    },
+    {
+      "time_s": 28.0,
+      "valid": true,
+      "pressure_pa": 100702.66493534665,
+      "origin": "synthetic"
+    },
+    {
+      "time_s": 28.2,
+      "valid": true,
+      "pressure_pa": 100712.21582081166,
+      "origin": "synthetic"
+    },
+    {
+      "time_s": 28.4,
+      "valid": true,
+      "pressure_pa": 100721.76743975065,
+      "origin": "synthetic"
+    },
+    {
+      "time_s": 28.6,
+      "valid": true,
+      "pressure_pa": 100731.31979220676,
+      "origin": "synthetic"
+    },
+    {
+      "time_s": 28.8,
+      "valid": true,
+      "pressure_pa": 100740.87287822306,
+      "origin": "synthetic"
+    },
+    {
+      "time_s": 29.0,
+      "valid": true,
+      "pressure_pa": 100750.42669784269,
+      "origin": "synthetic"
+    },
+    {
+      "time_s": 29.2,
+      "valid": true,
+      "pressure_pa": 100759.98125110877,
+      "origin": "synthetic"
+    },
+    {
+      "time_s": 29.4,
+      "valid": true,
+      "pressure_pa": 100769.53653806428,
+      "origin": "synthetic"
+    },
+    {
+      "time_s": 29.6,
+      "valid": true,
+      "pressure_pa": 100779.0925587524,
+      "origin": "synthetic"
+    },
+    {
+      "time_s": 29.8,
+      "valid": true,
+      "pressure_pa": 100788.64931321623,
+      "origin": "synthetic"
+    },
+    {
+      "time_s": 30.0,
+      "valid": true,
+      "pressure_pa": 100798.20680149888,
+      "origin": "synthetic"
+    },
+    {
+      "time_s": 30.2,
+      "valid": true,
+      "pressure_pa": 100807.76502364349,
+      "origin": "synthetic"
+    },
+    {
+      "time_s": 30.4,
+      "valid": true,
+      "pressure_pa": 100817.32397969306,
+      "origin": "synthetic"
+    },
+    {
+      "time_s": 30.6,
+      "valid": true,
+      "pressure_pa": 100826.88366969077,
+      "origin": "synthetic"
+    },
+    {
+      "time_s": 30.8,
+      "valid": true,
+      "pressure_pa": 100836.44409367973,
+      "origin": "synthetic"
+    },
+    {
+      "time_s": 31.0,
+      "valid": true,
+      "pressure_pa": 100846.00525170306,
+      "origin": "synthetic"
+    },
+    {
+      "time_s": 31.2,
+      "valid": true,
+      "pressure_pa": 100855.5671438039,
+      "origin": "synthetic"
+    },
+    {
+      "time_s": 31.4,
+      "valid": true,
+      "pressure_pa": 100865.1297700253,
+      "origin": "synthetic"
+    },
+    {
+      "time_s": 31.6,
+      "valid": true,
+      "pressure_pa": 100874.6931304104,
+      "origin": "synthetic"
+    },
+    {
+      "time_s": 31.8,
+      "valid": true,
+      "pressure_pa": 100884.25722500232,
+      "origin": "synthetic"
+    },
+    {
+      "time_s": 32.0,
+      "valid": true,
+      "pressure_pa": 100893.82205384421,
+      "origin": "synthetic"
+    },
+    {
+      "time_s": 32.2,
+      "valid": true,
+      "pressure_pa": 100903.38761697918,
+      "origin": "synthetic"
+    },
+    {
+      "time_s": 32.4,
+      "valid": true,
+      "pressure_pa": 100912.9539144504,
+      "origin": "synthetic"
+    },
+    {
+      "time_s": 32.6,
+      "valid": true,
+      "pressure_pa": 100922.5209463009,
+      "origin": "synthetic"
+    },
+    {
+      "time_s": 32.8,
+      "valid": true,
+      "pressure_pa": 100932.08871257384,
+      "origin": "synthetic"
+    },
+    {
+      "time_s": 33.0,
+      "valid": true,
+      "pressure_pa": 100941.65721331238,
+      "origin": "synthetic"
+    },
+    {
+      "time_s": 33.2,
+      "valid": true,
+      "pressure_pa": 100951.22644855967,
+      "origin": "synthetic"
+    },
+    {
+      "time_s": 33.4,
+      "valid": true,
+      "pressure_pa": 100960.79641835885,
+      "origin": "synthetic"
+    },
+    {
+      "time_s": 33.6,
+      "valid": true,
+      "pressure_pa": 100970.36712275297,
+      "origin": "synthetic"
+    },
+    {
+      "time_s": 33.8,
+      "valid": true,
+      "pressure_pa": 100979.93856178522,
+      "origin": "synthetic"
+    },
+    {
+      "time_s": 34.0,
+      "valid": true,
+      "pressure_pa": 100989.51073549876,
+      "origin": "synthetic"
+    },
+    {
+      "time_s": 34.2,
+      "valid": true,
+      "pressure_pa": 100999.0836439367,
+      "origin": "synthetic"
+    },
+    {
+      "time_s": 34.4,
+      "valid": true,
+      "pressure_pa": 101008.65728714225,
+      "origin": "synthetic"
+    },
+    {
+      "time_s": 34.6,
+      "valid": true,
+      "pressure_pa": 101018.23166515846,
+      "origin": "synthetic"
+    },
+    {
+      "time_s": 34.8,
+      "valid": true,
+      "pressure_pa": 101027.8067780285,
+      "origin": "synthetic"
+    },
+    {
+      "time_s": 35.0,
+      "valid": true,
+      "pressure_pa": 101037.38262579557,
+      "origin": "synthetic"
+    },
+    {
+      "time_s": 35.2,
+      "valid": true,
+      "pressure_pa": 101046.95920850275,
+      "origin": "synthetic"
+    },
+    {
+      "time_s": 35.4,
+      "valid": true,
+      "pressure_pa": 101056.5365261933,
+      "origin": "synthetic"
+    },
+    {
+      "time_s": 35.6,
+      "valid": true,
+      "pressure_pa": 101066.11457891026,
+      "origin": "synthetic"
+    },
+    {
+      "time_s": 35.8,
+      "valid": true,
+      "pressure_pa": 101075.69336669683,
+      "origin": "synthetic"
+    },
+    {
+      "time_s": 36.0,
+      "valid": true,
+      "pressure_pa": 101085.27288959615,
+      "origin": "synthetic"
+    },
+    {
+      "time_s": 36.2,
+      "valid": true,
+      "pressure_pa": 101094.85314765139,
+      "origin": "synthetic"
+    },
+    {
+      "time_s": 36.4,
+      "valid": true,
+      "pressure_pa": 101104.4341409058,
+      "origin": "synthetic"
+    },
+    {
+      "time_s": 36.6,
+      "valid": true,
+      "pressure_pa": 101114.01586940238,
+      "origin": "synthetic"
+    },
+    {
+      "time_s": 36.8,
+      "valid": true,
+      "pressure_pa": 101123.59833318439,
+      "origin": "synthetic"
+    },
+    {
+      "time_s": 37.0,
+      "valid": true,
+      "pressure_pa": 101133.18153229497,
+      "origin": "synthetic"
+    },
+    {
+      "time_s": 37.2,
+      "valid": true,
+      "pressure_pa": 101142.7654667773,
+      "origin": "synthetic"
+    },
+    {
+      "time_s": 37.4,
+      "valid": true,
+      "pressure_pa": 101152.3501366746,
+      "origin": "synthetic"
+    },
+    {
+      "time_s": 37.6,
+      "valid": true,
+      "pressure_pa": 101161.93554202994,
+      "origin": "synthetic"
+    },
+    {
+      "time_s": 37.8,
+      "valid": true,
+      "pressure_pa": 101171.52168288655,
+      "origin": "synthetic"
+    },
+    {
+      "time_s": 38.0,
+      "valid": true,
+      "pressure_pa": 101181.10855928758,
+      "origin": "synthetic"
+    },
+    {
+      "time_s": 38.2,
+      "valid": true,
+      "pressure_pa": 101190.69617127623,
+      "origin": "synthetic"
+    },
+    {
+      "time_s": 38.4,
+      "valid": true,
+      "pressure_pa": 101200.28451889566,
+      "origin": "synthetic"
+    },
+    {
+      "time_s": 38.6,
+      "valid": true,
+      "pressure_pa": 101209.87360218914,
+      "origin": "synthetic"
+    },
+    {
+      "time_s": 38.8,
+      "valid": true,
+      "pressure_pa": 101219.4634211997,
+      "origin": "synthetic"
+    },
+    {
+      "time_s": 39.0,
+      "valid": true,
+      "pressure_pa": 101229.05397597062,
+      "origin": "synthetic"
+    },
+    {
+      "time_s": 39.2,
+      "valid": true,
+      "pressure_pa": 101238.64526654503,
+      "origin": "synthetic"
+    },
+    {
+      "time_s": 39.4,
+      "valid": true,
+      "pressure_pa": 101248.23729296618,
+      "origin": "synthetic"
+    },
+    {
+      "time_s": 39.6,
+      "valid": true,
+      "pressure_pa": 101257.83005527727,
+      "origin": "synthetic"
+    },
+    {
+      "time_s": 39.8,
+      "valid": true,
+      "pressure_pa": 101267.4235535214,
+      "origin": "synthetic"
+    },
+    {
+      "time_s": 40.0,
+      "valid": true,
+      "pressure_pa": 101277.0177877418,
+      "origin": "synthetic"
+    },
+    {
+      "time_s": 40.2,
+      "valid": true,
+      "pressure_pa": 101286.6127579817,
+      "origin": "synthetic"
+    },
+    {
+      "time_s": 40.4,
+      "valid": true,
+      "pressure_pa": 101296.20846428424,
+      "origin": "synthetic"
+    },
+    {
+      "time_s": 40.6,
+      "valid": true,
+      "pressure_pa": 101305.80490669273,
+      "origin": "synthetic"
+    },
+    {
+      "time_s": 40.8,
+      "valid": true,
+      "pressure_pa": 101315.40208525023,
+      "origin": "synthetic"
+    },
+    {
+      "time_s": 41.0,
+      "valid": true,
+      "pressure_pa": 101325.0,
+      "origin": "synthetic"
+    },
+    {
+      "time_s": 41.2,
+      "valid": true,
+      "pressure_pa": 101325.0,
+      "origin": "synthetic"
+    },
+    {
+      "time_s": 41.4,
+      "valid": true,
+      "pressure_pa": 101325.0,
+      "origin": "synthetic"
+    },
+    {
+      "time_s": 41.6,
+      "valid": true,
+      "pressure_pa": 101325.0,
+      "origin": "synthetic"
+    },
+    {
+      "time_s": 41.8,
+      "valid": true,
+      "pressure_pa": 101325.0,
+      "origin": "synthetic"
+    },
+    {
+      "time_s": 42.0,
+      "valid": true,
+      "pressure_pa": 101325.0,
+      "origin": "synthetic"
+    },
+    {
+      "time_s": 42.2,
+      "valid": true,
+      "pressure_pa": 101325.0,
+      "origin": "synthetic"
+    },
+    {
+      "time_s": 42.4,
+      "valid": true,
+      "pressure_pa": 101325.0,
+      "origin": "synthetic"
+    },
+    {
+      "time_s": 42.6,
+      "valid": true,
+      "pressure_pa": 101325.0,
+      "origin": "synthetic"
+    },
+    {
+      "time_s": 42.8,
+      "valid": true,
+      "pressure_pa": 101325.0,
+      "origin": "synthetic"
+    },
+    {
+      "time_s": 43.0,
+      "valid": true,
+      "pressure_pa": 101325.0,
+      "origin": "synthetic"
+    },
+    {
+      "time_s": 43.2,
+      "valid": true,
+      "pressure_pa": 101325.0,
+      "origin": "synthetic"
+    },
+    {
+      "time_s": 43.4,
+      "valid": true,
+      "pressure_pa": 101325.0,
+      "origin": "synthetic"
+    },
+    {
+      "time_s": 43.6,
+      "valid": true,
+      "pressure_pa": 101325.0,
+      "origin": "synthetic"
+    },
+    {
+      "time_s": 43.8,
+      "valid": true,
+      "pressure_pa": 101325.0,
+      "origin": "synthetic"
+    },
+    {
+      "time_s": 44.0,
+      "valid": true,
+      "pressure_pa": 101325.0,
+      "origin": "synthetic"
+    },
+    {
+      "time_s": 44.2,
+      "valid": true,
+      "pressure_pa": 101325.0,
+      "origin": "synthetic"
+    },
+    {
+      "time_s": 44.4,
+      "valid": true,
+      "pressure_pa": 101325.0,
+      "origin": "synthetic"
+    },
+    {
+      "time_s": 44.6,
+      "valid": true,
+      "pressure_pa": 101325.0,
+      "origin": "synthetic"
+    },
+    {
+      "time_s": 44.8,
+      "valid": true,
+      "pressure_pa": 101325.0,
+      "origin": "synthetic"
+    },
+    {
+      "time_s": 45.0,
+      "valid": true,
+      "pressure_pa": 101325.0,
+      "origin": "synthetic"
+    },
+    {
+      "time_s": 45.2,
+      "valid": true,
+      "pressure_pa": 101325.0,
+      "origin": "synthetic"
+    },
+    {
+      "time_s": 45.4,
+      "valid": true,
+      "pressure_pa": 101325.0,
+      "origin": "synthetic"
+    },
+    {
+      "time_s": 45.6,
+      "valid": true,
+      "pressure_pa": 101325.0,
+      "origin": "synthetic"
+    },
+    {
+      "time_s": 45.8,
+      "valid": true,
+      "pressure_pa": 101325.0,
+      "origin": "synthetic"
+    },
+    {
+      "time_s": 46.0,
+      "valid": true,
+      "pressure_pa": 101325.0,
+      "origin": "synthetic"
+    },
+    {
+      "time_s": 46.2,
+      "valid": true,
+      "pressure_pa": 101325.0,
+      "origin": "synthetic"
+    },
+    {
+      "time_s": 46.4,
+      "valid": true,
+      "pressure_pa": 101325.0,
+      "origin": "synthetic"
+    },
+    {
+      "time_s": 46.6,
+      "valid": true,
+      "pressure_pa": 101325.0,
+      "origin": "synthetic"
+    },
+    {
+      "time_s": 46.8,
+      "valid": true,
+      "pressure_pa": 101325.0,
+      "origin": "synthetic"
+    },
+    {
+      "time_s": 47.0,
+      "valid": true,
+      "pressure_pa": 101325.0,
+      "origin": "synthetic"
+    },
+    {
+      "time_s": 47.2,
+      "valid": true,
+      "pressure_pa": 101325.0,
+      "origin": "synthetic"
+    },
+    {
+      "time_s": 47.4,
+      "valid": true,
+      "pressure_pa": 101325.0,
+      "origin": "synthetic"
+    },
+    {
+      "time_s": 47.6,
+      "valid": true,
+      "pressure_pa": 101325.0,
+      "origin": "synthetic"
+    },
+    {
+      "time_s": 47.8,
+      "valid": true,
+      "pressure_pa": 101325.0,
+      "origin": "synthetic"
+    },
+    {
+      "time_s": 48.0,
+      "valid": true,
+      "pressure_pa": 101325.0,
+      "origin": "synthetic"
+    },
+    {
+      "time_s": 48.2,
+      "valid": true,
+      "pressure_pa": 101325.0,
+      "origin": "synthetic"
+    },
+    {
+      "time_s": 48.4,
+      "valid": true,
+      "pressure_pa": 101325.0,
+      "origin": "synthetic"
+    },
+    {
+      "time_s": 48.6,
+      "valid": true,
+      "pressure_pa": 101325.0,
+      "origin": "synthetic"
+    },
+    {
+      "time_s": 48.8,
+      "valid": true,
+      "pressure_pa": 101325.0,
+      "origin": "synthetic"
+    },
+    {
+      "time_s": 49.0,
+      "valid": true,
+      "pressure_pa": 101325.0,
+      "origin": "synthetic"
+    },
+    {
+      "time_s": 49.2,
+      "valid": true,
+      "pressure_pa": 101325.0,
+      "origin": "synthetic"
+    },
+    {
+      "time_s": 49.4,
+      "valid": true,
+      "pressure_pa": 101325.0,
+      "origin": "synthetic"
+    },
+    {
+      "time_s": 49.6,
+      "valid": true,
+      "pressure_pa": 101325.0,
+      "origin": "synthetic"
+    },
+    {
+      "time_s": 49.8,
+      "valid": true,
+      "pressure_pa": 101325.0,
+      "origin": "synthetic"
+    },
+    {
+      "time_s": 50.0,
+      "valid": true,
+      "pressure_pa": 101325.0,
+      "origin": "synthetic"
+    }
+  ],
+  "observations": [
+    {
+      "time_s": 12,
+      "kind": "parachute_observed",
+      "operator": "SYNTHETIC observer",
+      "note": "Invented illustration, not detected from pressure."
+    },
+    {
+      "time_s": 41,
+      "kind": "ground_contact_observed",
+      "operator": "SYNTHETIC observer",
+      "note": "Invented illustration, not detected from pressure."
+    }
+  ]
+}

@@ -19,7 +19,7 @@ manual. The study limitations are in [Utility Bench Manual](UTILITY_BENCH_MANUAL
 | Failure isolation and redundancy | Generic power/processor graph and project degraded-mode matrix | Existing interactive dependency analysis; several failures remain observationally ambiguous |
 | Alerts and priority | Ground-status warnings/cautions/advisories | Existing project-specific advisories, not aircraft fault messages |
 | Automatic flight/speed modes | No corresponding laboratory implementation | Aircraft behavior cannot be inferred from labels; no compatible bench specification supplied |
-| Automatic recovery | No corresponding project implementation | Requires a separately specified purpose and model; no recovery performance established |
+| Automatic recovery | [Model-rocket pressure and recovery review](MODEL_ROCKET_REVIEW.md) | Offline rise/peak/descent estimation and simulated release markers implemented; physical recovery actuation and performance remain unimplemented |
 | Environmental control and auxiliary power | No corresponding rocket subsystem | Aircraft-specific hardware; possible educational explanation, not a compatible component specification |
 | Fire, engine and fuel systems | No corresponding validated bench-laboratory subsystem | Aircraft procedures cannot serve as Project 33 procedures |
 | Sensor updates and calibration | Calibration interpretation and independent-instrument provenance | Existing project workflow; a sent request is not a completed calibration |
@@ -42,6 +42,13 @@ MPU6050, BMP180, compass and GPS sources over USB, with boot/reset/memory and EL
 identity records. The capture/replay tool validates frames and the laboratory
 loads its diagnostic reports. This implementation is distinct from the generic
 synthetic display exercises below.
+
+The [model-rocket addition](MODEL_ROCKET_REVIEW.md) supplies a separate ESP32/BMP180
+pressure-logger image, validated capture import, local relative-height/rate
+estimation and a scrubbable recovery-review timeline. It distinguishes ground
+sensors from declared rocket sources and breaks model history across invalid
+samples or capture gaps. Release markers are simulated report events, not
+actuator outputs or demonstrations of physical recovery.
 
 - The instrumentation preview, 3D cockpit and flat fallback consume the same
   timestamped synthetic observations. A missing source expires into stale data;

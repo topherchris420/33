@@ -157,7 +157,8 @@
         "docs/GROUND_STATUS.md",
         "docs/PROTOCOL.md",
         "docs/BENCH_SESSIONS.md",
-        "docs/USB_BENCH_MONITOR.md"
+        "docs/USB_BENCH_MONITOR.md",
+        "docs/MODEL_ROCKET_REVIEW.md"
       ],
       "notice_level": "CAUTION",
       "notice": "Missing or stale data must not be displayed as a fresh zero or an affirmative readiness state.",
@@ -314,11 +315,15 @@
     },
     {
       "path": "docs/HARDWARE_INTEGRATION_PLAN.md",
-      "sha256": "e547cd3e86a3e687f0a1d29632691bdd631a56903fbdb49424e64693d45eb959"
+      "sha256": "ccc378f8b0d09c50c53d75d199d7fd908c481b523390176e7a4b7cee2ca6a305"
     },
     {
       "path": "docs/LIVING_LAB.md",
       "sha256": "e1ddc0f091a1d5c3b16fb4b959f989c35199dc2858ef0f11e11452e073b3de9d"
+    },
+    {
+      "path": "docs/MODEL_ROCKET_REVIEW.md",
+      "sha256": "5f7f6a9afde368c36b44445db9cf52f8fca74ad30c3649e00931533b977edba6"
     },
     {
       "path": "docs/PROJECT_STATUS.md",
@@ -342,7 +347,7 @@
     },
     {
       "path": "docs/TECHNOLOGY_INTEGRATION.md",
-      "sha256": "a45ed323774b9a74ac097850fd2593ba2ee97a517b800fc3e0b1f73d689746d6"
+      "sha256": "31c2f11a51d332a3a26e74ef2625a7e437a3582f082ec55dbf275d1f72907bac"
     },
     {
       "path": "docs/TESTING.md",
@@ -365,5 +370,5 @@
       "sha256": "a707d10558f18decdf53708184fb0ae7ccd74da85953f5bb8c2e6422e260afcb"
     }
   ],
-  "revision": "7c62a97ecc78ce180a7391eb0d43bd278143efaf065a615295649f20d590e710"
+  "revision": "42cd656d53ffe7fba3b34700c25a57f1dc0c8bb6254fe153bf70716d14d75557"
 }

@@ -11,6 +11,12 @@ compass and barometer on the launcher. Their authoritative assignments remain in
 binary identities and calibration records have not been supplied in this task.
 No board has been connected, flashed or tested by this work.
 
+A separate [ESP32/BMP180 altimeter bench specification](MODEL_ROCKET_REVIEW.md)
+now has a buildable pressure-logger image and an offline model-rocket recovery
+review. Its selected wiring has no actuator. This is an original bench choice;
+the aircraft supplement does not specify model-rocket hardware or a recovery
+controller. Existing launcher pressure remains ground information.
+
 The [standalone USB monitor](USB_BENCH_MONITOR.md) now implements a concrete
 hardware-facing addition: dedicated ESP32 observer images, existing-sensor
 readings, boot/reset/memory diagnostics, ELF identity, raw capture/replay and
@@ -65,7 +71,9 @@ evidence. The browser identity comparison compares supplied declarations only.
 
 Autopilot/autothrottle, flight-management modes, recovery systems, aircraft engine
 and fuel equipment, environmental control, mission equipment and operating limits
-are not specified for this bench specimen. They remain reference topics in the
-technology map, not promised firmware features. The provided supplement refers
+are not specified as physical subsystems for this bench specimen. The new
+model-rocket recovery model emits simulated markers only. Aircraft-specific
+topics remain references in the technology map, not promised firmware features.
+The provided supplement refers
 to a base manual and omits engineering implementation details, so it cannot serve
 as a complete hardware design specification.
