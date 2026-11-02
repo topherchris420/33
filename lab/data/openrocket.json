@@ -1,0 +1,972 @@
+{
+ "schema": "project33.lab.openrocket/1",
+ "generated_by": "tools/export_lab_data.py",
+ "inputs": {
+  "Simulation/Folding Stabilized Rocket.ork": "26087d70e4929b10acc960569d8211b4f2985004c545698ccd52e07eed02ae6a",
+  "docs/EVIDENCE/C5_static_margin_inputs.json": "642c367181cab4d0b1b66054ddc0ee6c1a31af8b9c62560b3454f56ab32da821",
+  "evidence/archive/C5_openrocket_pre_retune.ork.xml": "082d383fb9626db223317b7fd008d4e12b4a5c443b448fb0e217a68d48090182"
+ },
+ "current": {
+  "label": "current",
+  "creator": "OpenRocket 24.12",
+  "format_version": "1.10",
+  "rocket_name": "Folding Stabilized Rocket",
+  "units": {
+   "length": "m",
+   "mass": "kg",
+   "angle": "deg"
+  },
+  "overall_length_m": 0.601,
+  "reference_diameter_m": 0.0762,
+  "components": [
+   {
+    "kind": "stage",
+    "path": "openrocket/rocket/subcomponents/stage[1]",
+    "fields": {
+     "name": {
+      "value": "Sustainer",
+      "path": "openrocket/rocket/subcomponents/stage[1]/name"
+     },
+     "id": {
+      "value": "0e2929f4-b566-46e1-9f28-42edc192fe9b",
+      "path": "openrocket/rocket/subcomponents/stage[1]/id"
+     }
+    },
+    "parent": "707e7d59-d776-4cb9-ad54-609a99e67101",
+    "id": "0e2929f4-b566-46e1-9f28-42edc192fe9b",
+    "x_start_m": 0.0,
+    "x_end_m": 0.601
+   },
+   {
+    "kind": "nosecone",
+    "path": "openrocket/rocket/subcomponents/stage[1]/subcomponents/nosecone[1]",
+    "fields": {
+     "name": {
+      "value": "Nose Cone",
+      "path": "openrocket/rocket/subcomponents/stage[1]/subcomponents/nosecone[1]/name"
+     },
+     "id": {
+      "value": "1299562c-efb0-4403-a6f4-5be3870f42d1",
+      "path": "openrocket/rocket/subcomponents/stage[1]/subcomponents/nosecone[1]/id"
+     },
+     "overridemass": {
+      "value": 0.067,
+      "path": "openrocket/rocket/subcomponents/stage[1]/subcomponents/nosecone[1]/overridemass",
+      "text": "0.067"
+     },
+     "overridesubcomponentsmass": {
+      "value": "false",
+      "path": "openrocket/rocket/subcomponents/stage[1]/subcomponents/nosecone[1]/overridesubcomponentsmass"
+     },
+     "finish": {
+      "value": "normal",
+      "path": "openrocket/rocket/subcomponents/stage[1]/subcomponents/nosecone[1]/finish"
+     },
+     "material": {
+      "value": "PLA - 100% infill",
+      "path": "openrocket/rocket/subcomponents/stage[1]/subcomponents/nosecone[1]/material"
+     },
+     "length": {
+      "value": 0.038099999999999995,
+      "path": "openrocket/rocket/subcomponents/stage[1]/subcomponents/nosecone[1]/length",
+      "text": "0.038099999999999995"
+     },
+     "thickness": {
+      "value": 0.002,
+      "path": "openrocket/rocket/subcomponents/stage[1]/subcomponents/nosecone[1]/thickness",
+      "text": "0.002"
+     },
+     "shape": {
+      "value": "ellipsoid",
+      "path": "openrocket/rocket/subcomponents/stage[1]/subcomponents/nosecone[1]/shape"
+     },
+     "aftradius": {
+      "value": 0.038099999999999995,
+      "path": "openrocket/rocket/subcomponents/stage[1]/subcomponents/nosecone[1]/aftradius",
+      "text": "0.038099999999999995"
+     },
+     "aftshoulderradius": {
+      "value": 0.0,
+      "path": "openrocket/rocket/subcomponents/stage[1]/subcomponents/nosecone[1]/aftshoulderradius",
+      "text": "0.0"
+     },
+     "aftshoulderlength": {
+      "value": 0.0,
+      "path": "openrocket/rocket/subcomponents/stage[1]/subcomponents/nosecone[1]/aftshoulderlength",
+      "text": "0.0"
+     }
+    },
+    "parent": "0e2929f4-b566-46e1-9f28-42edc192fe9b",
+    "id": "1299562c-efb0-4403-a6f4-5be3870f42d1",
+    "axial_method": "after",
+    "axial_offset_m": 0.0,
+    "x_start_m": 0.0,
+    "x_end_m": 0.0381
+   },
+   {
+    "kind": "bodytube",
+    "path": "openrocket/rocket/subcomponents/stage[1]/subcomponents/bodytube[1]",
+    "fields": {
+     "name": {
+      "value": "Body Tube",
+      "path": "openrocket/rocket/subcomponents/stage[1]/subcomponents/bodytube[1]/name"
+     },
+     "id": {
+      "value": "b5d0b11f-0d8a-4d4f-9590-38929dd1353b",
+      "path": "openrocket/rocket/subcomponents/stage[1]/subcomponents/bodytube[1]/id"
+     },
+     "overridemass": {
+      "value": 0.635,
+      "path": "openrocket/rocket/subcomponents/stage[1]/subcomponents/bodytube[1]/overridemass",
+      "text": "0.635"
+     },
+     "overridesubcomponentsmass": {
+      "value": "true",
+      "path": "openrocket/rocket/subcomponents/stage[1]/subcomponents/bodytube[1]/overridesubcomponentsmass"
+     },
+     "overridecg": {
+      "value": 0.12,
+      "path": "openrocket/rocket/subcomponents/stage[1]/subcomponents/bodytube[1]/overridecg",
+      "text": "0.12"
+     },
+     "overridesubcomponentscg": {
+      "value": "true",
+      "path": "openrocket/rocket/subcomponents/stage[1]/subcomponents/bodytube[1]/overridesubcomponentscg"
+     },
+     "finish": {
+      "value": "normal",
+      "path": "openrocket/rocket/subcomponents/stage[1]/subcomponents/bodytube[1]/finish"
+     },
+     "material": {
+      "value": "PLA - 100% infill",
+      "path": "openrocket/rocket/subcomponents/stage[1]/subcomponents/bodytube[1]/material"
+     },
+     "length": {
+      "value": 0.3429,
+      "path": "openrocket/rocket/subcomponents/stage[1]/subcomponents/bodytube[1]/length",
+      "text": "0.3429"
+     },
+     "thickness": {
+      "value": 0.0025400000000000006,
+      "path": "openrocket/rocket/subcomponents/stage[1]/subcomponents/bodytube[1]/thickness",
+      "text": "0.0025400000000000006"
+     },
+     "radius": {
+      "value": 0.0381,
+      "path": "openrocket/rocket/subcomponents/stage[1]/subcomponents/bodytube[1]/radius",
+      "text": "0.0381"
+     }
+    },
+    "parent": "0e2929f4-b566-46e1-9f28-42edc192fe9b",
+    "id": "b5d0b11f-0d8a-4d4f-9590-38929dd1353b",
+    "axial_method": "after",
+    "axial_offset_m": 0.0,
+    "x_start_m": 0.0381,
+    "x_end_m": 0.381
+   },
+   {
+    "kind": "trapezoidfinset",
+    "path": "openrocket/rocket/subcomponents/stage[1]/subcomponents/bodytube[1]/subcomponents/trapezoidfinset[1]",
+    "fields": {
+     "name": {
+      "value": "Trapezoidal Fin Set",
+      "path": "openrocket/rocket/subcomponents/stage[1]/subcomponents/bodytube[1]/subcomponents/trapezoidfinset[1]/name"
+     },
+     "id": {
+      "value": "270e6429-c97e-4295-b728-35f2ed3a38e2",
+      "path": "openrocket/rocket/subcomponents/stage[1]/subcomponents/bodytube[1]/subcomponents/trapezoidfinset[1]/id"
+     },
+     "instancecount": {
+      "value": 4.0,
+      "path": "openrocket/rocket/subcomponents/stage[1]/subcomponents/bodytube[1]/subcomponents/trapezoidfinset[1]/instancecount",
+      "text": "4"
+     },
+     "fincount": {
+      "value": 4.0,
+      "path": "openrocket/rocket/subcomponents/stage[1]/subcomponents/bodytube[1]/subcomponents/trapezoidfinset[1]/fincount",
+      "text": "4"
+     },
+     "radiusoffset": {
+      "value": 0.0,
+      "path": "openrocket/rocket/subcomponents/stage[1]/subcomponents/bodytube[1]/subcomponents/trapezoidfinset[1]/radiusoffset",
+      "text": "0.0"
+     },
+     "angleoffset": {
+      "value": -90.0,
+      "path": "openrocket/rocket/subcomponents/stage[1]/subcomponents/bodytube[1]/subcomponents/trapezoidfinset[1]/angleoffset",
+      "text": "-90.0"
+     },
+     "rotation": {
+      "value": -90.0,
+      "path": "openrocket/rocket/subcomponents/stage[1]/subcomponents/bodytube[1]/subcomponents/trapezoidfinset[1]/rotation",
+      "text": "-90.0"
+     },
+     "axialoffset": {
+      "value": 0.18,
+      "path": "openrocket/rocket/subcomponents/stage[1]/subcomponents/bodytube[1]/subcomponents/trapezoidfinset[1]/axialoffset",
+      "method": "absolute",
+      "text": "0.18"
+     },
+     "position": {
+      "value": 0.18,
+      "path": "openrocket/rocket/subcomponents/stage[1]/subcomponents/bodytube[1]/subcomponents/trapezoidfinset[1]/position",
+      "method": "absolute",
+      "text": "0.18"
+     },
+     "finish": {
+      "value": "normal",
+      "path": "openrocket/rocket/subcomponents/stage[1]/subcomponents/bodytube[1]/subcomponents/trapezoidfinset[1]/finish"
+     },
+     "material": {
+      "value": "PLA - 100% infill",
+      "path": "openrocket/rocket/subcomponents/stage[1]/subcomponents/bodytube[1]/subcomponents/trapezoidfinset[1]/material"
+     },
+     "thickness": {
+      "value": 0.003,
+      "path": "openrocket/rocket/subcomponents/stage[1]/subcomponents/bodytube[1]/subcomponents/trapezoidfinset[1]/thickness",
+      "text": "0.003"
+     },
+     "crosssection": {
+      "value": "rounded",
+      "path": "openrocket/rocket/subcomponents/stage[1]/subcomponents/bodytube[1]/subcomponents/trapezoidfinset[1]/crosssection"
+     },
+     "cant": {
+      "value": 0.0,
+      "path": "openrocket/rocket/subcomponents/stage[1]/subcomponents/bodytube[1]/subcomponents/trapezoidfinset[1]/cant",
+      "text": "0.0"
+     },
+     "filletradius": {
+      "value": 0.0,
+      "path": "openrocket/rocket/subcomponents/stage[1]/subcomponents/bodytube[1]/subcomponents/trapezoidfinset[1]/filletradius",
+      "text": "0.0"
+     },
+     "rootchord": {
+      "value": 0.0254,
+      "path": "openrocket/rocket/subcomponents/stage[1]/subcomponents/bodytube[1]/subcomponents/trapezoidfinset[1]/rootchord",
+      "text": "0.0254"
+     },
+     "tipchord": {
+      "value": 0.0254,
+      "path": "openrocket/rocket/subcomponents/stage[1]/subcomponents/bodytube[1]/subcomponents/trapezoidfinset[1]/tipchord",
+      "text": "0.0254"
+     },
+     "sweeplength": {
+      "value": 0.005,
+      "path": "openrocket/rocket/subcomponents/stage[1]/subcomponents/bodytube[1]/subcomponents/trapezoidfinset[1]/sweeplength",
+      "text": "0.005"
+     },
+     "height": {
+      "value": 0.0508,
+      "path": "openrocket/rocket/subcomponents/stage[1]/subcomponents/bodytube[1]/subcomponents/trapezoidfinset[1]/height",
+      "text": "0.0508"
+     }
+    },
+    "parent": "b5d0b11f-0d8a-4d4f-9590-38929dd1353b",
+    "id": "270e6429-c97e-4295-b728-35f2ed3a38e2",
+    "axial_method": "absolute",
+    "axial_offset_m": 0.18,
+    "x_start_m": 0.18,
+    "x_end_m": 0.2054
+   },
+   {
+    "kind": "bodytube",
+    "path": "openrocket/rocket/subcomponents/stage[1]/subcomponents/bodytube[2]",
+    "fields": {
+     "name": {
+      "value": "Body Tube",
+      "path": "openrocket/rocket/subcomponents/stage[1]/subcomponents/bodytube[2]/name"
+     },
+     "id": {
+      "value": "d945c493-4ded-4d2c-a8e4-7e9f6d6d96f7",
+      "path": "openrocket/rocket/subcomponents/stage[1]/subcomponents/bodytube[2]/id"
+     },
+     "overridemass": {
+      "value": 0.55,
+      "path": "openrocket/rocket/subcomponents/stage[1]/subcomponents/bodytube[2]/overridemass",
+      "text": "0.55"
+     },
+     "overridesubcomponentsmass": {
+      "value": "true",
+      "path": "openrocket/rocket/subcomponents/stage[1]/subcomponents/bodytube[2]/overridesubcomponentsmass"
+     },
+     "overridecg": {
+      "value": 0.16,
+      "path": "openrocket/rocket/subcomponents/stage[1]/subcomponents/bodytube[2]/overridecg",
+      "text": "0.16"
+     },
+     "overridesubcomponentscg": {
+      "value": "true",
+      "path": "openrocket/rocket/subcomponents/stage[1]/subcomponents/bodytube[2]/overridesubcomponentscg"
+     },
+     "finish": {
+      "value": "normal",
+      "path": "openrocket/rocket/subcomponents/stage[1]/subcomponents/bodytube[2]/finish"
+     },
+     "material": {
+      "value": "PLA - 100% infill",
+      "path": "openrocket/rocket/subcomponents/stage[1]/subcomponents/bodytube[2]/material"
+     },
+     "length": {
+      "value": 0.22,
+      "path": "openrocket/rocket/subcomponents/stage[1]/subcomponents/bodytube[2]/length",
+      "text": "0.22"
+     },
+     "thickness": {
+      "value": 0.0025400000000000006,
+      "path": "openrocket/rocket/subcomponents/stage[1]/subcomponents/bodytube[2]/thickness",
+      "text": "0.0025400000000000006"
+     },
+     "radius": {
+      "value": 0.0381,
+      "path": "openrocket/rocket/subcomponents/stage[1]/subcomponents/bodytube[2]/radius",
+      "text": "0.0381"
+     }
+    },
+    "parent": "0e2929f4-b566-46e1-9f28-42edc192fe9b",
+    "id": "d945c493-4ded-4d2c-a8e4-7e9f6d6d96f7",
+    "axial_method": "after",
+    "axial_offset_m": 0.0,
+    "x_start_m": 0.381,
+    "x_end_m": 0.601,
+    "motor": {
+     "fields": {
+      "type": {
+       "value": "reload",
+       "path": "openrocket/rocket/subcomponents/stage[1]/subcomponents/bodytube[2]/motormount/motor/type"
+      },
+      "manufacturer": {
+       "value": "AeroTech",
+       "path": "openrocket/rocket/subcomponents/stage[1]/subcomponents/bodytube[2]/motormount/motor/manufacturer"
+      },
+      "designation": {
+       "value": "G64W",
+       "path": "openrocket/rocket/subcomponents/stage[1]/subcomponents/bodytube[2]/motormount/motor/designation"
+      },
+      "diameter": {
+       "value": 0.029,
+       "path": "openrocket/rocket/subcomponents/stage[1]/subcomponents/bodytube[2]/motormount/motor/diameter",
+       "text": "0.029"
+      },
+      "length": {
+       "value": 0.124,
+       "path": "openrocket/rocket/subcomponents/stage[1]/subcomponents/bodytube[2]/motormount/motor/length",
+       "text": "0.124"
+      },
+      "delay": {
+       "value": 4.0,
+       "path": "openrocket/rocket/subcomponents/stage[1]/subcomponents/bodytube[2]/motormount/motor/delay",
+       "text": "4.0"
+      }
+     },
+     "path": "openrocket/rocket/subcomponents/stage[1]/subcomponents/bodytube[2]/motormount/motor",
+     "overhang_m": 0.0,
+     "x_start_m": 0.477,
+     "x_end_m": 0.601
+    }
+   },
+   {
+    "kind": "trapezoidfinset",
+    "path": "openrocket/rocket/subcomponents/stage[1]/subcomponents/bodytube[2]/subcomponents/trapezoidfinset[1]",
+    "fields": {
+     "name": {
+      "value": "Trapezoidal Fin Set",
+      "path": "openrocket/rocket/subcomponents/stage[1]/subcomponents/bodytube[2]/subcomponents/trapezoidfinset[1]/name"
+     },
+     "id": {
+      "value": "dc6aa6ee-e343-4eba-b7ba-8d424327ddf7",
+      "path": "openrocket/rocket/subcomponents/stage[1]/subcomponents/bodytube[2]/subcomponents/trapezoidfinset[1]/id"
+     },
+     "instancecount": {
+      "value": 4.0,
+      "path": "openrocket/rocket/subcomponents/stage[1]/subcomponents/bodytube[2]/subcomponents/trapezoidfinset[1]/instancecount",
+      "text": "4"
+     },
+     "fincount": {
+      "value": 4.0,
+      "path": "openrocket/rocket/subcomponents/stage[1]/subcomponents/bodytube[2]/subcomponents/trapezoidfinset[1]/fincount",
+      "text": "4"
+     },
+     "radiusoffset": {
+      "value": 0.0,
+      "path": "openrocket/rocket/subcomponents/stage[1]/subcomponents/bodytube[2]/subcomponents/trapezoidfinset[1]/radiusoffset",
+      "text": "0.0"
+     },
+     "angleoffset": {
+      "value": 0.0,
+      "path": "openrocket/rocket/subcomponents/stage[1]/subcomponents/bodytube[2]/subcomponents/trapezoidfinset[1]/angleoffset",
+      "text": "0.0"
+     },
+     "rotation": {
+      "value": 0.0,
+      "path": "openrocket/rocket/subcomponents/stage[1]/subcomponents/bodytube[2]/subcomponents/trapezoidfinset[1]/rotation",
+      "text": "0.0"
+     },
+     "axialoffset": {
+      "value": 0.0,
+      "path": "openrocket/rocket/subcomponents/stage[1]/subcomponents/bodytube[2]/subcomponents/trapezoidfinset[1]/axialoffset",
+      "method": "bottom",
+      "text": "0.0"
+     },
+     "position": {
+      "value": 0.0,
+      "path": "openrocket/rocket/subcomponents/stage[1]/subcomponents/bodytube[2]/subcomponents/trapezoidfinset[1]/position",
+      "method": "bottom",
+      "text": "0.0"
+     },
+     "finish": {
+      "value": "normal",
+      "path": "openrocket/rocket/subcomponents/stage[1]/subcomponents/bodytube[2]/subcomponents/trapezoidfinset[1]/finish"
+     },
+     "material": {
+      "value": "CFRP - quasi-isotropic",
+      "path": "openrocket/rocket/subcomponents/stage[1]/subcomponents/bodytube[2]/subcomponents/trapezoidfinset[1]/material"
+     },
+     "thickness": {
+      "value": 0.004,
+      "path": "openrocket/rocket/subcomponents/stage[1]/subcomponents/bodytube[2]/subcomponents/trapezoidfinset[1]/thickness",
+      "text": "0.004"
+     },
+     "crosssection": {
+      "value": "rounded",
+      "path": "openrocket/rocket/subcomponents/stage[1]/subcomponents/bodytube[2]/subcomponents/trapezoidfinset[1]/crosssection"
+     },
+     "cant": {
+      "value": 0.0,
+      "path": "openrocket/rocket/subcomponents/stage[1]/subcomponents/bodytube[2]/subcomponents/trapezoidfinset[1]/cant",
+      "text": "0.0"
+     },
+     "filletradius": {
+      "value": 0.0,
+      "path": "openrocket/rocket/subcomponents/stage[1]/subcomponents/bodytube[2]/subcomponents/trapezoidfinset[1]/filletradius",
+      "text": "0.0"
+     },
+     "rootchord": {
+      "value": 0.13,
+      "path": "openrocket/rocket/subcomponents/stage[1]/subcomponents/bodytube[2]/subcomponents/trapezoidfinset[1]/rootchord",
+      "text": "0.130"
+     },
+     "tipchord": {
+      "value": 0.11,
+      "path": "openrocket/rocket/subcomponents/stage[1]/subcomponents/bodytube[2]/subcomponents/trapezoidfinset[1]/tipchord",
+      "text": "0.110"
+     },
+     "sweeplength": {
+      "value": 0.01,
+      "path": "openrocket/rocket/subcomponents/stage[1]/subcomponents/bodytube[2]/subcomponents/trapezoidfinset[1]/sweeplength",
+      "text": "0.010"
+     },
+     "height": {
+      "value": 0.18,
+      "path": "openrocket/rocket/subcomponents/stage[1]/subcomponents/bodytube[2]/subcomponents/trapezoidfinset[1]/height",
+      "text": "0.180"
+     }
+    },
+    "parent": "d945c493-4ded-4d2c-a8e4-7e9f6d6d96f7",
+    "id": "dc6aa6ee-e343-4eba-b7ba-8d424327ddf7",
+    "axial_method": "bottom",
+    "axial_offset_m": 0.0,
+    "x_start_m": 0.471,
+    "x_end_m": 0.601
+   }
+  ],
+  "source": {
+   "path": "Simulation/Folding Stabilized Rocket.ork",
+   "sha256": "26087d70e4929b10acc960569d8211b4f2985004c545698ccd52e07eed02ae6a",
+   "inner_file": "rocket.ork",
+   "inner_sha256": "e750009cd4a03a53d95757a258cc645654e0310e1f4697cb288a2954e5538daf"
+  }
+ },
+ "pre_retune": {
+  "label": "pre_retune",
+  "creator": "OpenRocket 24.12",
+  "format_version": "1.10",
+  "rocket_name": "Folding Stabilized Rocket",
+  "units": {
+   "length": "m",
+   "mass": "kg",
+   "angle": "deg"
+  },
+  "overall_length_m": 0.601,
+  "reference_diameter_m": 0.0762,
+  "components": [
+   {
+    "kind": "stage",
+    "path": "openrocket/rocket/subcomponents/stage[1]",
+    "fields": {
+     "name": {
+      "value": "Sustainer",
+      "path": "openrocket/rocket/subcomponents/stage[1]/name"
+     },
+     "id": {
+      "value": "0e2929f4-b566-46e1-9f28-42edc192fe9b",
+      "path": "openrocket/rocket/subcomponents/stage[1]/id"
+     }
+    },
+    "parent": "707e7d59-d776-4cb9-ad54-609a99e67101",
+    "id": "0e2929f4-b566-46e1-9f28-42edc192fe9b",
+    "x_start_m": 0.0,
+    "x_end_m": 0.601
+   },
+   {
+    "kind": "nosecone",
+    "path": "openrocket/rocket/subcomponents/stage[1]/subcomponents/nosecone[1]",
+    "fields": {
+     "name": {
+      "value": "Nose Cone",
+      "path": "openrocket/rocket/subcomponents/stage[1]/subcomponents/nosecone[1]/name"
+     },
+     "id": {
+      "value": "1299562c-efb0-4403-a6f4-5be3870f42d1",
+      "path": "openrocket/rocket/subcomponents/stage[1]/subcomponents/nosecone[1]/id"
+     },
+     "overridemass": {
+      "value": 0.067,
+      "path": "openrocket/rocket/subcomponents/stage[1]/subcomponents/nosecone[1]/overridemass",
+      "text": "0.067"
+     },
+     "overridesubcomponentsmass": {
+      "value": "false",
+      "path": "openrocket/rocket/subcomponents/stage[1]/subcomponents/nosecone[1]/overridesubcomponentsmass"
+     },
+     "finish": {
+      "value": "normal",
+      "path": "openrocket/rocket/subcomponents/stage[1]/subcomponents/nosecone[1]/finish"
+     },
+     "material": {
+      "value": "PLA - 100% infill",
+      "path": "openrocket/rocket/subcomponents/stage[1]/subcomponents/nosecone[1]/material"
+     },
+     "length": {
+      "value": 0.038099999999999995,
+      "path": "openrocket/rocket/subcomponents/stage[1]/subcomponents/nosecone[1]/length",
+      "text": "0.038099999999999995"
+     },
+     "thickness": {
+      "value": 0.002,
+      "path": "openrocket/rocket/subcomponents/stage[1]/subcomponents/nosecone[1]/thickness",
+      "text": "0.002"
+     },
+     "shape": {
+      "value": "ellipsoid",
+      "path": "openrocket/rocket/subcomponents/stage[1]/subcomponents/nosecone[1]/shape"
+     },
+     "aftradius": {
+      "value": 0.038099999999999995,
+      "path": "openrocket/rocket/subcomponents/stage[1]/subcomponents/nosecone[1]/aftradius",
+      "text": "0.038099999999999995"
+     },
+     "aftshoulderradius": {
+      "value": 0.0,
+      "path": "openrocket/rocket/subcomponents/stage[1]/subcomponents/nosecone[1]/aftshoulderradius",
+      "text": "0.0"
+     },
+     "aftshoulderlength": {
+      "value": 0.0,
+      "path": "openrocket/rocket/subcomponents/stage[1]/subcomponents/nosecone[1]/aftshoulderlength",
+      "text": "0.0"
+     }
+    },
+    "parent": "0e2929f4-b566-46e1-9f28-42edc192fe9b",
+    "id": "1299562c-efb0-4403-a6f4-5be3870f42d1",
+    "axial_method": "after",
+    "axial_offset_m": 0.0,
+    "x_start_m": 0.0,
+    "x_end_m": 0.0381
+   },
+   {
+    "kind": "bodytube",
+    "path": "openrocket/rocket/subcomponents/stage[1]/subcomponents/bodytube[1]",
+    "fields": {
+     "name": {
+      "value": "Body Tube",
+      "path": "openrocket/rocket/subcomponents/stage[1]/subcomponents/bodytube[1]/name"
+     },
+     "id": {
+      "value": "b5d0b11f-0d8a-4d4f-9590-38929dd1353b",
+      "path": "openrocket/rocket/subcomponents/stage[1]/subcomponents/bodytube[1]/id"
+     },
+     "overridemass": {
+      "value": 0.635,
+      "path": "openrocket/rocket/subcomponents/stage[1]/subcomponents/bodytube[1]/overridemass",
+      "text": "0.635"
+     },
+     "overridesubcomponentsmass": {
+      "value": "true",
+      "path": "openrocket/rocket/subcomponents/stage[1]/subcomponents/bodytube[1]/overridesubcomponentsmass"
+     },
+     "overridecg": {
+      "value": 0.12,
+      "path": "openrocket/rocket/subcomponents/stage[1]/subcomponents/bodytube[1]/overridecg",
+      "text": "0.12"
+     },
+     "overridesubcomponentscg": {
+      "value": "true",
+      "path": "openrocket/rocket/subcomponents/stage[1]/subcomponents/bodytube[1]/overridesubcomponentscg"
+     },
+     "finish": {
+      "value": "normal",
+      "path": "openrocket/rocket/subcomponents/stage[1]/subcomponents/bodytube[1]/finish"
+     },
+     "material": {
+      "value": "PLA - 100% infill",
+      "path": "openrocket/rocket/subcomponents/stage[1]/subcomponents/bodytube[1]/material"
+     },
+     "length": {
+      "value": 0.3429,
+      "path": "openrocket/rocket/subcomponents/stage[1]/subcomponents/bodytube[1]/length",
+      "text": "0.3429"
+     },
+     "thickness": {
+      "value": 0.0025400000000000006,
+      "path": "openrocket/rocket/subcomponents/stage[1]/subcomponents/bodytube[1]/thickness",
+      "text": "0.0025400000000000006"
+     },
+     "radius": {
+      "value": 0.0381,
+      "path": "openrocket/rocket/subcomponents/stage[1]/subcomponents/bodytube[1]/radius",
+      "text": "0.0381"
+     }
+    },
+    "parent": "0e2929f4-b566-46e1-9f28-42edc192fe9b",
+    "id": "b5d0b11f-0d8a-4d4f-9590-38929dd1353b",
+    "axial_method": "after",
+    "axial_offset_m": 0.0,
+    "x_start_m": 0.0381,
+    "x_end_m": 0.381
+   },
+   {
+    "kind": "trapezoidfinset",
+    "path": "openrocket/rocket/subcomponents/stage[1]/subcomponents/bodytube[1]/subcomponents/trapezoidfinset[1]",
+    "fields": {
+     "name": {
+      "value": "Trapezoidal Fin Set",
+      "path": "openrocket/rocket/subcomponents/stage[1]/subcomponents/bodytube[1]/subcomponents/trapezoidfinset[1]/name"
+     },
+     "id": {
+      "value": "270e6429-c97e-4295-b728-35f2ed3a38e2",
+      "path": "openrocket/rocket/subcomponents/stage[1]/subcomponents/bodytube[1]/subcomponents/trapezoidfinset[1]/id"
+     },
+     "instancecount": {
+      "value": 4.0,
+      "path": "openrocket/rocket/subcomponents/stage[1]/subcomponents/bodytube[1]/subcomponents/trapezoidfinset[1]/instancecount",
+      "text": "4"
+     },
+     "fincount": {
+      "value": 4.0,
+      "path": "openrocket/rocket/subcomponents/stage[1]/subcomponents/bodytube[1]/subcomponents/trapezoidfinset[1]/fincount",
+      "text": "4"
+     },
+     "radiusoffset": {
+      "value": 0.0,
+      "path": "openrocket/rocket/subcomponents/stage[1]/subcomponents/bodytube[1]/subcomponents/trapezoidfinset[1]/radiusoffset",
+      "text": "0.0"
+     },
+     "angleoffset": {
+      "value": -90.0,
+      "path": "openrocket/rocket/subcomponents/stage[1]/subcomponents/bodytube[1]/subcomponents/trapezoidfinset[1]/angleoffset",
+      "text": "-90.0"
+     },
+     "rotation": {
+      "value": -90.0,
+      "path": "openrocket/rocket/subcomponents/stage[1]/subcomponents/bodytube[1]/subcomponents/trapezoidfinset[1]/rotation",
+      "text": "-90.0"
+     },
+     "axialoffset": {
+      "value": 0.18,
+      "path": "openrocket/rocket/subcomponents/stage[1]/subcomponents/bodytube[1]/subcomponents/trapezoidfinset[1]/axialoffset",
+      "method": "absolute",
+      "text": "0.18"
+     },
+     "position": {
+      "value": 0.18,
+      "path": "openrocket/rocket/subcomponents/stage[1]/subcomponents/bodytube[1]/subcomponents/trapezoidfinset[1]/position",
+      "method": "absolute",
+      "text": "0.18"
+     },
+     "finish": {
+      "value": "normal",
+      "path": "openrocket/rocket/subcomponents/stage[1]/subcomponents/bodytube[1]/subcomponents/trapezoidfinset[1]/finish"
+     },
+     "material": {
+      "value": "PLA - 100% infill",
+      "path": "openrocket/rocket/subcomponents/stage[1]/subcomponents/bodytube[1]/subcomponents/trapezoidfinset[1]/material"
+     },
+     "thickness": {
+      "value": 0.003,
+      "path": "openrocket/rocket/subcomponents/stage[1]/subcomponents/bodytube[1]/subcomponents/trapezoidfinset[1]/thickness",
+      "text": "0.003"
+     },
+     "crosssection": {
+      "value": "rounded",
+      "path": "openrocket/rocket/subcomponents/stage[1]/subcomponents/bodytube[1]/subcomponents/trapezoidfinset[1]/crosssection"
+     },
+     "cant": {
+      "value": 0.0,
+      "path": "openrocket/rocket/subcomponents/stage[1]/subcomponents/bodytube[1]/subcomponents/trapezoidfinset[1]/cant",
+      "text": "0.0"
+     },
+     "filletradius": {
+      "value": 0.0,
+      "path": "openrocket/rocket/subcomponents/stage[1]/subcomponents/bodytube[1]/subcomponents/trapezoidfinset[1]/filletradius",
+      "text": "0.0"
+     },
+     "rootchord": {
+      "value": 0.0254,
+      "path": "openrocket/rocket/subcomponents/stage[1]/subcomponents/bodytube[1]/subcomponents/trapezoidfinset[1]/rootchord",
+      "text": "0.0254"
+     },
+     "tipchord": {
+      "value": 0.0254,
+      "path": "openrocket/rocket/subcomponents/stage[1]/subcomponents/bodytube[1]/subcomponents/trapezoidfinset[1]/tipchord",
+      "text": "0.0254"
+     },
+     "sweeplength": {
+      "value": 0.005,
+      "path": "openrocket/rocket/subcomponents/stage[1]/subcomponents/bodytube[1]/subcomponents/trapezoidfinset[1]/sweeplength",
+      "text": "0.005"
+     },
+     "height": {
+      "value": 0.0508,
+      "path": "openrocket/rocket/subcomponents/stage[1]/subcomponents/bodytube[1]/subcomponents/trapezoidfinset[1]/height",
+      "text": "0.0508"
+     }
+    },
+    "parent": "b5d0b11f-0d8a-4d4f-9590-38929dd1353b",
+    "id": "270e6429-c97e-4295-b728-35f2ed3a38e2",
+    "axial_method": "absolute",
+    "axial_offset_m": 0.18,
+    "x_start_m": 0.18,
+    "x_end_m": 0.2054
+   },
+   {
+    "kind": "bodytube",
+    "path": "openrocket/rocket/subcomponents/stage[1]/subcomponents/bodytube[2]",
+    "fields": {
+     "name": {
+      "value": "Body Tube",
+      "path": "openrocket/rocket/subcomponents/stage[1]/subcomponents/bodytube[2]/name"
+     },
+     "id": {
+      "value": "d945c493-4ded-4d2c-a8e4-7e9f6d6d96f7",
+      "path": "openrocket/rocket/subcomponents/stage[1]/subcomponents/bodytube[2]/id"
+     },
+     "overridemass": {
+      "value": 0.55,
+      "path": "openrocket/rocket/subcomponents/stage[1]/subcomponents/bodytube[2]/overridemass",
+      "text": "0.55"
+     },
+     "overridesubcomponentsmass": {
+      "value": "true",
+      "path": "openrocket/rocket/subcomponents/stage[1]/subcomponents/bodytube[2]/overridesubcomponentsmass"
+     },
+     "overridecg": {
+      "value": 0.16,
+      "path": "openrocket/rocket/subcomponents/stage[1]/subcomponents/bodytube[2]/overridecg",
+      "text": "0.16"
+     },
+     "overridesubcomponentscg": {
+      "value": "true",
+      "path": "openrocket/rocket/subcomponents/stage[1]/subcomponents/bodytube[2]/overridesubcomponentscg"
+     },
+     "finish": {
+      "value": "normal",
+      "path": "openrocket/rocket/subcomponents/stage[1]/subcomponents/bodytube[2]/finish"
+     },
+     "material": {
+      "value": "PLA - 100% infill",
+      "path": "openrocket/rocket/subcomponents/stage[1]/subcomponents/bodytube[2]/material"
+     },
+     "length": {
+      "value": 0.22,
+      "path": "openrocket/rocket/subcomponents/stage[1]/subcomponents/bodytube[2]/length",
+      "text": "0.22"
+     },
+     "thickness": {
+      "value": 0.0025400000000000006,
+      "path": "openrocket/rocket/subcomponents/stage[1]/subcomponents/bodytube[2]/thickness",
+      "text": "0.0025400000000000006"
+     },
+     "radius": {
+      "value": 0.0381,
+      "path": "openrocket/rocket/subcomponents/stage[1]/subcomponents/bodytube[2]/radius",
+      "text": "0.0381"
+     }
+    },
+    "parent": "0e2929f4-b566-46e1-9f28-42edc192fe9b",
+    "id": "d945c493-4ded-4d2c-a8e4-7e9f6d6d96f7",
+    "axial_method": "after",
+    "axial_offset_m": 0.0,
+    "x_start_m": 0.381,
+    "x_end_m": 0.601,
+    "motor": {
+     "fields": {
+      "type": {
+       "value": "reload",
+       "path": "openrocket/rocket/subcomponents/stage[1]/subcomponents/bodytube[2]/motormount/motor/type"
+      },
+      "manufacturer": {
+       "value": "AeroTech",
+       "path": "openrocket/rocket/subcomponents/stage[1]/subcomponents/bodytube[2]/motormount/motor/manufacturer"
+      },
+      "designation": {
+       "value": "G64W",
+       "path": "openrocket/rocket/subcomponents/stage[1]/subcomponents/bodytube[2]/motormount/motor/designation"
+      },
+      "diameter": {
+       "value": 0.029,
+       "path": "openrocket/rocket/subcomponents/stage[1]/subcomponents/bodytube[2]/motormount/motor/diameter",
+       "text": "0.029"
+      },
+      "length": {
+       "value": 0.124,
+       "path": "openrocket/rocket/subcomponents/stage[1]/subcomponents/bodytube[2]/motormount/motor/length",
+       "text": "0.124"
+      },
+      "delay": {
+       "value": 4.0,
+       "path": "openrocket/rocket/subcomponents/stage[1]/subcomponents/bodytube[2]/motormount/motor/delay",
+       "text": "4.0"
+      }
+     },
+     "path": "openrocket/rocket/subcomponents/stage[1]/subcomponents/bodytube[2]/motormount/motor",
+     "overhang_m": 0.0,
+     "x_start_m": 0.477,
+     "x_end_m": 0.601
+    }
+   },
+   {
+    "kind": "trapezoidfinset",
+    "path": "openrocket/rocket/subcomponents/stage[1]/subcomponents/bodytube[2]/subcomponents/trapezoidfinset[1]",
+    "fields": {
+     "name": {
+      "value": "Trapezoidal Fin Set",
+      "path": "openrocket/rocket/subcomponents/stage[1]/subcomponents/bodytube[2]/subcomponents/trapezoidfinset[1]/name"
+     },
+     "id": {
+      "value": "dc6aa6ee-e343-4eba-b7ba-8d424327ddf7",
+      "path": "openrocket/rocket/subcomponents/stage[1]/subcomponents/bodytube[2]/subcomponents/trapezoidfinset[1]/id"
+     },
+     "instancecount": {
+      "value": 4.0,
+      "path": "openrocket/rocket/subcomponents/stage[1]/subcomponents/bodytube[2]/subcomponents/trapezoidfinset[1]/instancecount",
+      "text": "4"
+     },
+     "fincount": {
+      "value": 4.0,
+      "path": "openrocket/rocket/subcomponents/stage[1]/subcomponents/bodytube[2]/subcomponents/trapezoidfinset[1]/fincount",
+      "text": "4"
+     },
+     "radiusoffset": {
+      "value": 0.0,
+      "path": "openrocket/rocket/subcomponents/stage[1]/subcomponents/bodytube[2]/subcomponents/trapezoidfinset[1]/radiusoffset",
+      "text": "0.0"
+     },
+     "angleoffset": {
+      "value": 0.0,
+      "path": "openrocket/rocket/subcomponents/stage[1]/subcomponents/bodytube[2]/subcomponents/trapezoidfinset[1]/angleoffset",
+      "text": "0.0"
+     },
+     "rotation": {
+      "value": 0.0,
+      "path": "openrocket/rocket/subcomponents/stage[1]/subcomponents/bodytube[2]/subcomponents/trapezoidfinset[1]/rotation",
+      "text": "0.0"
+     },
+     "axialoffset": {
+      "value": 0.0,
+      "path": "openrocket/rocket/subcomponents/stage[1]/subcomponents/bodytube[2]/subcomponents/trapezoidfinset[1]/axialoffset",
+      "method": "bottom",
+      "text": "0.0"
+     },
+     "position": {
+      "value": 0.0,
+      "path": "openrocket/rocket/subcomponents/stage[1]/subcomponents/bodytube[2]/subcomponents/trapezoidfinset[1]/position",
+      "method": "bottom",
+      "text": "0.0"
+     },
+     "finish": {
+      "value": "normal",
+      "path": "openrocket/rocket/subcomponents/stage[1]/subcomponents/bodytube[2]/subcomponents/trapezoidfinset[1]/finish"
+     },
+     "material": {
+      "value": "PLA - 100% infill",
+      "path": "openrocket/rocket/subcomponents/stage[1]/subcomponents/bodytube[2]/subcomponents/trapezoidfinset[1]/material"
+     },
+     "thickness": {
+      "value": 0.004,
+      "path": "openrocket/rocket/subcomponents/stage[1]/subcomponents/bodytube[2]/subcomponents/trapezoidfinset[1]/thickness",
+      "text": "0.004"
+     },
+     "crosssection": {
+      "value": "rounded",
+      "path": "openrocket/rocket/subcomponents/stage[1]/subcomponents/bodytube[2]/subcomponents/trapezoidfinset[1]/crosssection"
+     },
+     "cant": {
+      "value": 0.0,
+      "path": "openrocket/rocket/subcomponents/stage[1]/subcomponents/bodytube[2]/subcomponents/trapezoidfinset[1]/cant",
+      "text": "0.0"
+     },
+     "filletradius": {
+      "value": 0.0,
+      "path": "openrocket/rocket/subcomponents/stage[1]/subcomponents/bodytube[2]/subcomponents/trapezoidfinset[1]/filletradius",
+      "text": "0.0"
+     },
+     "rootchord": {
+      "value": 0.02,
+      "path": "openrocket/rocket/subcomponents/stage[1]/subcomponents/bodytube[2]/subcomponents/trapezoidfinset[1]/rootchord",
+      "text": "0.02"
+     },
+     "tipchord": {
+      "value": 0.02,
+      "path": "openrocket/rocket/subcomponents/stage[1]/subcomponents/bodytube[2]/subcomponents/trapezoidfinset[1]/tipchord",
+      "text": "0.02"
+     },
+     "sweeplength": {
+      "value": 0.08212230228953235,
+      "path": "openrocket/rocket/subcomponents/stage[1]/subcomponents/bodytube[2]/subcomponents/trapezoidfinset[1]/sweeplength",
+      "text": "0.08212230228953235"
+     },
+     "height": {
+      "value": 0.14223999999999998,
+      "path": "openrocket/rocket/subcomponents/stage[1]/subcomponents/bodytube[2]/subcomponents/trapezoidfinset[1]/height",
+      "text": "0.14223999999999998"
+     }
+    },
+    "parent": "d945c493-4ded-4d2c-a8e4-7e9f6d6d96f7",
+    "id": "dc6aa6ee-e343-4eba-b7ba-8d424327ddf7",
+    "axial_method": "bottom",
+    "axial_offset_m": 0.0,
+    "x_start_m": 0.581,
+    "x_end_m": 0.601
+   }
+  ],
+  "source": {
+   "path": "evidence/archive/C5_openrocket_pre_retune.ork.xml",
+   "sha256": "082d383fb9626db223317b7fd008d4e12b4a5c443b448fb0e217a68d48090182"
+  }
+ },
+ "lab_observations": [
+  {
+   "id": "LAB-OBS-1",
+   "status": "candidate for human review; not entered in the discrepancy register",
+   "title": "Fin root leading-edge station: static-margin parser versus OpenRocket axial semantics",
+   "detail": "The largest-span fin set is positioned with method 'bottom' and offset 0.0 m in its parent tube. OpenRocket places a 'bottom'-referenced component so that its aft end aligns with the parent's aft end, which puts the root leading edge at 0.471 m from the nose tip. Simulation/static_margin.py reads the <position> value without its type attribute and records X_f = 0.381 m in docs/EVIDENCE/C5_static_margin_inputs.json.",
+   "values_m": {
+    "ork_semantics": 0.471,
+    "static_margin_inputs_X_f": 0.381,
+    "difference": 0.09
+   },
+   "not_computed": "The effect on either centre-of-pressure formulation is not computed here; doing so would be a third model. It needs a reviewed model change.",
+   "sources": [
+    "Simulation/Folding Stabilized Rocket.ork",
+    "Simulation/static_margin.py",
+    "docs/EVIDENCE/C5_static_margin_inputs.json"
+   ],
+   "related": [
+    "C5",
+    "D-006",
+    "D-008"
+   ]
+  }
+ ],
+ "semantics_note": "Stations are distances from the nose tip. Body components stack in document order; attached components use their axial method (top, middle, bottom, absolute) relative to the parent, as OpenRocket defines them. Override masses and materials are simulation inputs, not measurements."
+}

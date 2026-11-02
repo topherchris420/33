@@ -1,0 +1,109 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Instrumentation Lab · Project 33</title>
+  <meta name="description" content="Historical aerospace engineering, taught with original generic exhibits: a clay cockpit diorama, the chain from raw observation to operator interpretation, and failure-dependency graphs compared with Project 33's own source-pinned ground-status model.">
+  <meta name="theme-color" content="#09111a">
+  <link rel="icon" href="../assets/marketing/mark.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="css/lab.css">
+  <link rel="stylesheet" href="css/instruments.css">
+</head>
+<body class="grid-bg" data-page="instruments" data-mode="guided" data-categories="historical,research,conceptual">
+  <div id="shell-header"></div>
+  <main id="main">
+    <section class="wrap in-hero">
+      <p class="eyebrow">Historical aerospace instrumentation</p>
+      <h1>What can I <em>still trust?</em></h1>
+      <p class="lede">Cockpit engineers have spent decades on one question: how do you turn sensors, computers, and failures into information a person can rely on? These exhibits teach that discipline with original, generic examples — then hold Project 33's own ground-status model up to the same question.</p>
+    </section>
+
+    <section class="wrap" aria-labelledby="rights-title">
+      <div class="panel ticked in-rights">
+        <div class="panel-head"><h4 id="rights-title">About the historical source</h4><span class="cat cat-historical">Historical aerospace engineering</span></div>
+        <div class="panel-body in-rights-body">
+          <p>The supplied document is the OCIP supplement to the F-117A utility flight manual (TO&nbsp;1F-117A-1A, 1992). Its distribution statement limits it to U.S. Government agencies, and it states that reproduction for non-military use is not permitted.</p>
+          <p><b>So nothing from it is reproduced here</b> — no text, figure, symbol, display format, procedure, or value. It informed only the choice of topics: display architecture, navigation visualisation, fault presentation, and human–machine interfaces. Every exhibit below is an original, generic illustration of practice common to aviation displays, and none is an operational or training aid.</p>
+          <p class="small"><a href="archive.html#rights">Read the source rights audit →</a></p>
+        </div>
+      </div>
+    </section>
+
+    <section class="wrap in-section" aria-labelledby="ck-title">
+      <div class="section-head">
+        <p class="eyebrow">01 / A miniature cockpit exhibit</p>
+        <h2 id="ck-title">Information, organised for a human.</h2>
+        <p class="muted">A clay diorama of a generic single-seat cockpit. Orbit with drag, zoom with the wheel, and select a display.</p>
+      </div>
+      <div class="ck-grid">
+        <div class="panel ck-stage">
+          <div class="viewport ck-viewport" id="ck-viewport">
+            <div class="hud vp-class"><span class="cat cat-historical">Historical · generic</span><span class="cat cat-conceptual">Conceptual</span><span class="asset asset-illustration">Educational illustration</span></div>
+            <div class="hud ck-placard" role="note">Conceptual educational environment — not an F-117A display format, not a simulator.</div>
+          </div>
+          <div class="ck-tools" role="toolbar" aria-label="Exhibit controls">
+            <div class="seg" role="group" aria-label="Fly to a display">
+              <button class="btn" type="button" data-display="hud" aria-pressed="false">Head-up</button><button class="btn" type="button" data-display="map" aria-pressed="false">Navigation</button><button class="btn" type="button" data-display="status" aria-pressed="false">Status</button>
+            </div>
+            <button class="btn ghost" id="ck-back" type="button" disabled>Back to exhibit</button>
+            <div class="field ck-declutter"><div class="field-row"><label class="label" for="declutter">Declutter</label><output id="declutter-out" for="declutter">level 3</output></div>
+              <input id="declutter" type="range" min="1" max="5" step="1" value="3" aria-describedby="declutter-help"></div>
+            <span class="small muted" id="declutter-help">1 = minimal · 5 = everything</span>
+          </div>
+        </div>
+        <aside class="panel ck-explain" id="ck-explain" aria-live="polite"></aside>
+      </div>
+    </section>
+
+    <section class="wrap in-section" aria-labelledby="ia-title">
+      <div class="section-head">
+        <p class="eyebrow">02 / Information architecture</p>
+        <h2 id="ia-title">From observation to interpretation.</h2>
+        <p class="muted">Three synthetic sources, five ways each can go wrong, six stages each state passes through. The preview and the cockpit above react to every toggle.</p>
+      </div>
+      <div class="panel ia-panel">
+        <div class="panel-head"><h4>The chain, stage by stage</h4><div class="cluster"><span class="cat cat-historical">Historical · generic</span><span class="cat cat-conceptual">Original synthetic example</span></div></div>
+        <div class="panel-body">
+          <div id="ia-root"></div>
+          <div class="ia-lower">
+            <figure class="ia-fig"><canvas id="ia-preview" class="ia-preview" role="img" aria-label="Generic flight display preview reflecting the selected source states"></canvas>
+              <figcaption class="small muted">Generic display preview. What a validity rule does to a pixel.</figcaption></figure>
+            <div class="ia-depth" id="ia-depth"></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="wrap in-section" aria-labelledby="dep-title">
+      <div class="section-head">
+        <p class="eyebrow">03 / Failure dependencies</p>
+        <h2 id="dep-title">If this fails, what can I still trust?</h2>
+        <p class="muted">The same question asked of two very different systems. The left graph is invented to teach redundancy and reversion. The right one is Project 33's real dependency model, read from firmware source. They share a question — not hardware, and not specifications.</p>
+      </div>
+      <div class="dep-grid">
+        <div class="panel">
+          <div class="panel-head"><h4>A generic information system</h4><div class="cluster"><span class="cat cat-conceptual">Conceptual · invented</span><button class="btn ghost" id="dep-generic-reset" type="button">Restore all</button></div></div>
+          <div class="panel-body">
+            <div id="dep-generic" class="dep-host"></div>
+            <div id="dep-generic-readout" class="dep-readout" aria-live="polite"></div>
+            <ul class="dep-legend small"><li><span class="dep-dot ok"></span>available</li><li><span class="dep-dot degraded"></span>available, redundancy lost</li><li><span class="dep-dot lost"></span>lost</li><li><span class="dep-line"></span>dashed link = one of several alternatives</li></ul>
+          </div>
+        </div>
+        <div class="panel">
+          <div class="panel-head"><h4>Project 33 ground status</h4><div class="cluster"><span class="cat cat-research">Project 33 research</span><button class="btn ghost" id="gs-reset" type="button">Restore all</button></div></div>
+          <div class="panel-body">
+            <p class="small muted">Units from <a href="../protocol/ground_status_model.json"><code>protocol/ground_status_model.json</code></a>. Every dependency is pinned to firmware source lines, and <code>tests/test_ground_status_model.py</code> fails if a pin stops matching. A pin shows a dependency is implemented — not that it was exercised on hardware.</p>
+            <div class="gs-units" id="gs-units" role="group" aria-label="Fail Project 33 units"></div>
+            <div id="gs-result" class="gs-result" aria-live="polite"></div>
+          </div>
+        </div>
+      </div>
+      <div class="notice in-lesson"><span><b>The shared lesson.</b> A good architecture can tell you what it no longer knows. The generic graph does it through redundancy and reversion; Project 33's read-only status board does it by mapping each silent channel back to the units it depends on — and by listing, honestly, the capabilities the system does not have at all.</span></div>
+    </section>
+  </main>
+  <div id="shell-footer"></div>
+  <noscript><p class="wrap notice">The exhibits need JavaScript. Project 33's dependency model is <a href="../protocol/ground_status_model.json">ground_status_model.json</a>; its generated table is <a href="../docs/DEGRADED_MODES.html">Degraded Modes</a>.</p></noscript>
+  <script type="module" src="js/instruments/main.js"></script>
+</body>
+</html>

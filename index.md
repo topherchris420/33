@@ -1,6 +1,6 @@
 ---
 title: Project 33
-layout: landing
+layout: lab-home
 ---
 
 # Project 33

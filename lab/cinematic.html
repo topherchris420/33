@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Every Machine Begins With a Question · Project 33</title>
+  <meta name="description" content="The opening film of the Project 33 laboratory: a clay workshop, a rocket drawn from its own design file, and the question every engineer has to answer — does it work?">
+  <link rel="icon" href="../assets/marketing/mark.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="css/lab.css">
+  <link rel="stylesheet" href="css/cinematic.css">
+</head>
+<body class="cine" data-page="cinematic" data-mode="cinematic">
+  <div id="shell-header"></div>
+  <main id="main" class="cine-stage" aria-label="Opening cinematic">
+    <div class="cine-viewport" id="stage" aria-hidden="true"></div>
+    <div class="cine-grain" aria-hidden="true"></div>
+    <div class="cine-letterbox top" aria-hidden="true"></div>
+    <div class="cine-letterbox bottom" aria-hidden="true"></div>
+
+    <div class="cine-start" id="start">
+      <p class="eyebrow">PROJECT 33 · OPENING FILM · 80 s</p>
+      <h1>Every machine<br>begins with a <em>question.</em></h1>
+      <p class="lede">A handmade workshop, a rocket generated from its own OpenRocket file, and a frank answer about what has — and has not — been measured.</p>
+      <div class="btn-row">
+        <button class="btn primary" id="play-sound" type="button">▶ Play with sound</button>
+        <button class="btn" id="play-silent" type="button">Play silently</button>
+        <a class="btn ghost" href="workbench.html">Skip to the workbench</a>
+      </div>
+      <p class="muted small" id="rm-note" hidden>Your system asks for reduced motion, so the film will not start by itself. You can step through it chapter by chapter below.</p>
+    </div>
+
+    <div class="cine-annotation" id="annotation" aria-live="polite"></div>
+    <aside class="cine-evidence" id="evidence" aria-label="Evidence record" hidden></aside>
+    <div class="cine-caption" id="caption" aria-live="polite"></div>
+    <div class="cine-tag" id="tag"></div>
+
+    <section class="cine-title" id="title" hidden aria-labelledby="title-h">
+      <p class="eyebrow">VERS3DYNAMICS</p>
+      <h1 id="title-h">PROJECT 33</h1>
+      <p class="cine-subtitle">The Living Aerospace Engineering Laboratory</p>
+      <div class="btn-row">
+        <a class="btn primary" href="workbench.html">Explore the machine</a>
+        <a class="btn" href="guided.html">Enter the engineering lab</a>
+        <button class="btn ghost" id="watch-again" type="button">Watch the film</button>
+      </div>
+      <p class="muted small">We can imagine anything. What we know is something we must discover.</p>
+    </section>
+
+    <div class="cine-controls" role="toolbar" aria-label="Film controls">
+      <button class="btn icon" id="toggle" type="button" aria-label="Play">▶</button>
+      <input id="scrub" type="range" min="0" max="80" step="0.05" value="0" aria-label="Film position in seconds">
+      <output id="time" class="num">00:00 / 01:20</output>
+      <div class="cine-chapters" id="chapters" role="group" aria-label="Chapters"></div>
+      <button class="btn" id="cc" type="button" aria-pressed="true" title="Captions">CC</button>
+      <button class="btn" id="sound" type="button" aria-pressed="false" title="Sound">Sound</button>
+      <button class="btn" id="narration" type="button" aria-pressed="false" title="Narration with your browser's voice">Voice</button>
+      <button class="btn" id="replay" type="button" title="Replay">↺ Replay</button>
+      <button class="btn" id="skip" type="button" title="Skip to the title">Skip ⏭</button>
+    </div>
+  </main>
+  <noscript><div class="wrap section"><h2>The film needs JavaScript and WebGL.</h2><p>The narration: “Every machine begins as an idea. Every design begins with assumptions. But between imagining something and knowing something lies the most interesting part of engineering.” <a href="workbench.html">Open the workbench</a>.</p></div></noscript>
+  <script type="module" src="js/cinematic/main.js"></script>
+</body>
+</html>

@@ -1,0 +1,129 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Evidence Observatory · Project 33</title>
+  <meta name="description" content="The Project 33 evidence record made visible: claims, requirements, contradictions, missing measurements, and the exact files behind each — read from the committed record, never authored.">
+  <meta name="theme-color" content="#09111a">
+  <link rel="icon" href="../assets/marketing/mark.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="css/lab.css">
+  <link rel="stylesheet" href="css/observatory.css">
+</head>
+<body class="grid-bg obs" data-page="observatory" data-mode="archive" data-categories="research">
+  <div id="shell-header"></div>
+  <main id="main">
+    <section class="obs-hero wrap" aria-labelledby="obs-title">
+      <div class="obs-hero-copy">
+        <p class="eyebrow">Evidence Observatory · the record, made visible</p>
+        <h1 id="obs-title">What do we <em>actually</em> know?</h1>
+        <p class="lede">Every consequential statement Project 33 makes is a claim with a passport. This page draws the record as it is: what supports each claim, what contradicts it, and what has yet to be measured. Statuses are computed by the repository's own evidence tooling from committed files; nothing here is authored by the page.</p>
+        <p class="obs-scope muted small" id="hero-scope"></p>
+        <div class="cluster obs-jump">
+          <a class="btn primary" href="#constellation">Enter the constellation ↘</a>
+          <a class="btn ghost" href="#ladder">The evidence ladder</a>
+          <a class="btn ghost" href="#register">Discrepancy register</a>
+        </div>
+      </div>
+      <div class="obs-hero-inst" id="hero-instrument" aria-live="off"></div>
+      <div class="obs-stats" id="hero-stats" role="list" aria-label="Record state"></div>
+    </section>
+
+    <section id="constellation" class="obs-constellation" aria-labelledby="const-title">
+      <div class="wrap">
+        <div class="section-head">
+          <p class="eyebrow">01 · Claim constellation</p>
+          <h2 id="const-title">Eight claims, their arguments, and the empty centre.</h2>
+          <p class="muted">Claims sit on the inner orbit; their requirements, predictions, discrepancies, and cited files circle outward. At the centre is the one instrument that would change the most — accepted inert measurements — and it reads zero. Dashed threads are requirements and predictions that can only be answered there.</p>
+        </div>
+        <div class="obs-toolbar panel">
+          <div class="field obs-search">
+            <label class="label" for="graph-search">Search by ID, title, or path</label>
+            <div class="cluster"><input id="graph-search" type="text" placeholder="C1, D-006, R-C5-WINDOW, four_bar…" autocomplete="off" spellcheck="false"><span class="readout" id="search-results" aria-live="polite"></span></div>
+          </div>
+          <fieldset class="obs-filter"><legend class="label">Node types</legend><div class="cluster" id="type-filters"></div></fieldset>
+          <fieldset class="obs-filter"><legend class="label">Claim status</legend><div class="cluster" id="status-filters"></div></fieldset>
+          <div class="btn-row obs-zoom" role="group" aria-label="Zoom">
+            <button class="btn icon" id="zoom-in" type="button" aria-label="Zoom in">+</button>
+            <button class="btn icon" id="zoom-out" type="button" aria-label="Zoom out">−</button>
+            <button class="btn" id="zoom-reset" type="button">Reset view</button>
+          </div>
+        </div>
+        <div class="obs-stage">
+          <div class="obs-graph panel ticked">
+            <div class="graph-host" id="graph"></div>
+            <p class="graph-hint mono"><kbd>Tab</kbd> through claims · <kbd>Enter</kbd> focus · <kbd>Esc</kbd> reset · scroll to zoom · drag to pan</p>
+            <ul class="legend" id="legend" aria-label="Legend"></ul>
+          </div>
+          <aside class="obs-side panel" aria-labelledby="passport-title">
+            <div class="panel-head"><h4 id="passport-title">Passport</h4><span class="cat cat-research">Project 33 research</span></div>
+            <div class="obs-passport" id="passport" tabindex="-1"></div>
+          </aside>
+        </div>
+      </div>
+    </section>
+
+    <section id="ladder" class="section" aria-labelledby="ladder-title">
+      <div class="wrap">
+        <div class="section-head">
+          <p class="eyebrow">02 · The evidence ladder</p>
+          <h2 id="ladder-title">Where each claim stands — and the rungs nobody has reached.</h2>
+          <p class="muted">Two scales, deliberately kept apart. The validation gate is how far a claim has travelled through the project's process; the support level is the strongest evidence that has actually been accepted. Physical rungs are drawn so that their emptiness is visible.</p>
+        </div>
+        <div class="grid-2" id="ladders"></div>
+      </div>
+    </section>
+
+    <section id="claims" class="section obs-tight" aria-labelledby="claims-title">
+      <div class="wrap">
+        <div class="section-head">
+          <p class="eyebrow">03 · All claims</p>
+          <h2 id="claims-title">The ledger, as a table.</h2>
+          <p class="muted">The same record as the constellation, in a form a screen reader, a printer, or a reviewer in a hurry can use.</p>
+        </div>
+        <div class="panel table-scroll" id="claim-table"></div>
+      </div>
+    </section>
+
+    <section id="register" class="section obs-tight" aria-labelledby="register-title">
+      <div class="wrap">
+        <div class="section-head">
+          <p class="eyebrow">04 · Discrepancy register</p>
+          <h2 id="register-title">What disagrees.</h2>
+          <p class="muted">Two parts of the project disagreeing is information, not an inconvenience. Entries are never deleted; resolved ones keep their reason.</p>
+        </div>
+        <div id="register-body"></div>
+      </div>
+    </section>
+
+    <section id="questions" class="section obs-tight" aria-labelledby="questions-title">
+      <div class="wrap">
+        <div class="section-head">
+          <p class="eyebrow">05 · Grounded questions</p>
+          <h2 id="questions-title">Questions the record can answer by itself.</h2>
+          <p class="muted">Each answer is derived only from the committed record by <code>evidence/assess.py</code>. No generated prose.</p>
+        </div>
+        <div class="qa-grid" id="questions-body"></div>
+      </div>
+    </section>
+
+    <section id="principles" class="section obs-tight" aria-labelledby="principles-title">
+      <div class="wrap grid-3">
+        <div class="panel ticked"><div class="panel-head"><h4 id="principles-title">Principles of the record</h4></div><div class="panel-body"><ol class="plist" id="principles-list"></ol></div></div>
+        <div class="panel"><div class="panel-head"><h4>Boundary for automated tools</h4></div><div class="panel-body"><ul class="plist" id="ai-boundary"></ul></div></div>
+        <div class="panel"><div class="panel-head"><h4>Limitations of this view</h4></div><div class="panel-body"><ul class="plist" id="limitations"></ul></div></div>
+      </div>
+    </section>
+  </main>
+  <div id="shell-footer"></div>
+  <noscript>
+    <div class="wrap section">
+      <p>The interactive observatory needs JavaScript. The same record is published as generated documents:
+        <a href="../docs/claims/README.html">claim passports</a>,
+        <a href="../docs/TRACEABILITY.html">traceability matrix</a>, and
+        <a href="../docs/DISCREPANCIES.html">discrepancy register</a>.</p>
+    </div>
+  </noscript>
+  <script type="module" src="js/observatory/main.js"></script>
+</body>
+</html>

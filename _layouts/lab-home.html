@@ -1,0 +1,118 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#09111a" />
+    <title>Project 33 — The Living Aerospace Engineering Laboratory</title>
+    <meta name="description" content="An open aerospace research specimen you can disassemble, question, and measure against its own evidence record. Rotate, explode, section, and inspect — and see exactly what has and has not been demonstrated." />
+    <meta property="og:title" content="Project 33 — The Living Aerospace Engineering Laboratory" />
+    <meta property="og:description" content="Make the rigor entertaining. An open research project by Vers3Dynamics." />
+    <meta property="og:type" content="website" />
+    <meta property="og:image" content="{{ '/lab/assets/poster.jpg' | absolute_url }}" />
+    <link rel="icon" href="{{ '/assets/marketing/mark.svg' | relative_url }}" type="image/svg+xml" />
+    <link rel="stylesheet" href="{{ '/lab/css/lab.css' | relative_url }}" />
+    <link rel="stylesheet" href="{{ '/lab/css/hub.css' | relative_url }}" />
+    <style>
+      .brief { padding-bottom: 64px; }
+      .brief details { border: 1px solid var(--graphite-600); border-radius: var(--radius); background: rgba(9, 17, 26, 0.7); }
+      .brief summary { cursor: pointer; padding: 18px 20px; display: flex; justify-content: space-between; align-items: center; gap: 12px; }
+      .brief summary strong { font-family: var(--display); font-weight: 400; font-size: 24px; }
+      .brief .record-content { padding: 0 20px 24px; max-width: 980px; }
+      .brief .record-content h1 { font-size: 34px; margin: 18px 0 8px; }
+      .brief .record-content h2 { font-size: 24px; margin: 28px 0 10px; }
+      .brief .record-content table { width: 100%; border-collapse: collapse; font-size: 13px; display: block; overflow-x: auto; }
+      .brief .record-content th, .brief .record-content td { border-bottom: 1px solid var(--graphite-600); padding: 6px 8px; text-align: left; }
+      .brief .record-content pre { background: var(--navy-950); border: 1px solid var(--graphite-600); padding: 12px; overflow-x: auto; }
+      .brief .record-content img { background: #fff; border-radius: var(--radius); margin: 12px 0; }
+      .film-row { display: grid; grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr); gap: 18px; align-items: center; }
+      .film-row video, .film-row img { width: 100%; border: 1px solid var(--graphite-600); border-radius: var(--radius); }
+      @media (max-width: 820px) { .film-row { grid-template-columns: 1fr; } }
+      .film-row .note { font-size: 13px; }
+    </style>
+  </head>
+  <body class="grid-bg hub" data-page="home" data-mode="home" data-lab-base="lab/" data-categories="research,historical,conceptual">
+    <div id="shell-header"></div>
+    <main id="main">
+      <section class="hub-hero">
+        <div class="hub-hero-media">
+          <img src="{{ '/lab/assets/poster.jpg' | relative_url }}" alt="A clay engineer beside a lever watches a teal scanning beam turn the clay Project 33 rocket into an engineering wireframe." width="1600" height="900" />
+          <span class="hub-hero-tag cat cat-research">Frame from the opening film · rocket generated from the OpenRocket file</span>
+        </div>
+        <div class="hub-hero-copy wrap">
+          <p class="eyebrow">PROJECT 33 · VERS3DYNAMICS · OPEN RESEARCH</p>
+          <h1>The Living Aerospace<br />Engineering <em>Laboratory</em></h1>
+          <p class="lede">A small folding-fin rocket and a bigger question: what does it take to make every engineering claim inspectable? Take the machine apart, explore its mathematics, and see what the evidence actually demonstrates.</p>
+          <div class="btn-row">
+            <a class="btn primary" href="{{ '/lab/cinematic.html' | relative_url }}">▶ Watch the film</a>
+            <a class="btn" href="{{ '/lab/workbench.html' | relative_url }}">Explore the machine</a>
+            <a class="btn" href="{{ '/lab/guided.html' | relative_url }}">Enter the engineering lab</a>
+          </div>
+          <p class="hub-status"><span class="status status-open">Bench-validation prototype — not flight-tested</span> <span id="hub-record" class="muted">reading the evidence record…</span></p>
+        </div>
+      </section>
+
+      <section class="section wrap" aria-labelledby="modes-h">
+        <div class="section-head">
+          <p class="eyebrow">FOUR WAYS IN</p>
+          <h2 id="modes-h">Choose how deep to go.</h2>
+          <p class="lede">An engineer never has to sit through a lesson to reach the technical material, and a student never needs a degree to enjoy the world.</p>
+        </div>
+        <div class="hub-modes">
+          <a class="card ticked" href="{{ '/lab/cinematic.html' | relative_url }}"><span class="label">01 · Cinematic</span><h3>Every machine begins with a question.</h3><p class="muted">An 80-second handmade film: pencil, clay workshop, scan, exploded assembly — and an honest answer.</p><span class="go">Watch →</span></a>
+          <a class="card ticked" href="{{ '/lab/guided.html' | relative_url }}"><span class="label">02 · Guided Lab</span><h3>Six lessons, real challenges.</h3><p class="muted">Clay guides introduce a question, then hand you the actual tools and data to answer it.</p><span class="go">Begin →</span></a>
+          <a class="card ticked" href="{{ '/lab/workbench.html' | relative_url }}"><span class="label">03 · Engineering Workbench</span><h3>Rotate. Explode. Section.</h3><p class="muted">CAD-style inspection of geometry built from the OpenRocket model and the STEP export, every dimension traced to its field.</p><span class="go">Open →</span></a>
+          <a class="card ticked" href="{{ '/lab/archive.html' | relative_url }}"><span class="label">04 · Research Archive</span><h3>The record, unfiltered.</h3><p class="muted">Provenance digests, the capability matrix, the source-rights audit, and every reproducibility command.</p><span class="go">Browse →</span></a>
+        </div>
+      </section>
+
+      <section class="section wrap" aria-labelledby="cats-h">
+        <div class="section-head"><p class="eyebrow">THREE KINDS OF INFORMATION</p><h2 id="cats-h">You always know what you are looking at.</h2></div>
+        <div class="grid-3 hub-cats" id="cats"></div>
+      </section>
+
+      <section class="section wrap" aria-labelledby="rooms-h">
+        <div class="section-head"><p class="eyebrow">THE LABORATORY</p><h2 id="rooms-h">Five rooms, one standard of evidence.</h2></div>
+        <div class="hub-rooms">
+          <a class="room" href="{{ '/lab/workbench.html' | relative_url }}"><span class="num">I</span><div><h3>3D Engineering Workbench</h3><p>Exploded assemblies, clay / solid / wireframe / blueprint / x-ray renderings, section planes with hatching, orthographic views, measurement, and an inspector that says NOT SPECIFIED when the source is silent.</p></div></a>
+          <a class="room" href="{{ '/lab/mechanism.html' | relative_url }}"><span class="num">II</span><div><h3>Mechanism Lab</h3><p>The four-bar linkage that cannot close, visualized from the committed model, and a comparison studio where two stability models disagree and neither is crowned.</p></div></a>
+          <a class="room" href="{{ '/lab/observatory.html' | relative_url }}"><span class="num">III</span><div><h3>Evidence Observatory</h3><p>A constellation of claims, requirements, discrepancies, predictions, and artifacts, with professional passports for every claim.</p></div></a>
+          <a class="room" href="{{ '/lab/telemetry.html' | relative_url }}"><span class="num">IV</span><div><h3>Telemetry &amp; Signal Theater</h3><p>How measurements become evidence — on clearly labelled synthetic data — and a 3D systems architecture with no transmit path.</p></div></a>
+          <a class="room" href="{{ '/lab/instruments.html' | relative_url }}"><span class="num">V</span><div><h3>Historical Instrumentation</h3><p>What aircraft displays teach about trusting information, compared with Project 33's own source-pinned status model.</p></div></a>
+        </div>
+      </section>
+
+      <section class="section wrap hub-record" aria-labelledby="rec-h">
+        <div class="section-head"><p class="eyebrow">THE RECORD TODAY</p><h2 id="rec-h">Unresolved is a valid engineering state.</h2></div>
+        <div class="hub-counts" id="counts"></div>
+        <div class="notice safety"><span>This site is read-only. No interaction, visualization, or simulation here can send a hardware command or touch arming and ignition logic. <a href="{{ '/docs/SAFETY.html' | relative_url }}">Safety boundary</a>.</span></div>
+      </section>
+
+      <section class="section wrap" aria-labelledby="film-h">
+        <div class="film-row">
+          <div class="section-head">
+            <p class="eyebrow">FROM FREQUENCY TO FORM</p>
+            <h2 id="film-h">The original design film.</h2>
+            <p class="lede">Rotating Fourier vectors trace a blueprint, the blueprint becomes an assembly. A visual design study — illustrative geometry, not a CAD export, measurement, or assembly procedure.</p>
+            <p><a class="btn" href="{{ '/film.html' | relative_url }}">Play the 32-second film</a></p>
+            <p class="btn-row">
+              <a class="btn ghost" href="{{ '/tutorial.html' | relative_url }}">Watch the tutorial ↗</a>
+              <a class="btn ghost" href="{{ '/model.html' | relative_url }}">Turn the faceted 3D model ↗</a>
+            </p>
+            <p class="muted note">The four-minute claymation bench manual and the faceted 3D model are also design visualizations, not evidence.</p>
+          </div>
+          <a href="{{ '/film.html' | relative_url }}"><img src="{{ '/assets/marketing/poster.jpg' | relative_url }}" alt="Project 33 illustrative rocket blueprint from the Fourier design film" loading="lazy" /></a>
+        </div>
+      </section>
+
+      <section id="research-record" class="wrap brief">
+        <details>
+          <summary><span><span class="eyebrow">THE COMPLETE RECORD</span><br /><strong>Open the engineering brief</strong></span><span aria-hidden="true">+</span></summary>
+          <div class="record-content">{{ content }}</div>
+        </details>
+      </section>
+    </main>
+    <div id="shell-footer"></div>
+    <script type="module" src="{{ '/lab/js/hub.js' | relative_url }}"></script>
+  </body>
+</html>

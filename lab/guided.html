@@ -1,0 +1,38 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Guided Lab · Project 33</title>
+  <meta name="description" content="Six short lessons with clay guides. Each starts with a question, hands you the real tool and data, and ends with a challenge you can check.">
+  <link rel="icon" href="../assets/marketing/mark.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="css/lab.css">
+  <link rel="stylesheet" href="css/hub.css">
+  <link rel="stylesheet" href="css/guided.css">
+</head>
+<body class="grid-bg" data-page="guided" data-mode="guided" data-categories="research,conceptual,historical">
+  <div id="shell-header"></div>
+  <main id="main" class="wrap">
+    <section class="page-hero">
+      <p class="eyebrow">GUIDED LAB · SIX LESSONS</p>
+      <h1>Engineering is a wonderful way of asking questions.</h1>
+      <p class="lede">Wren the engineer and Tally the research assistant introduce each lesson. Then the real tool opens and the real data answers. Every challenge is checked against the committed record.</p>
+      <p class="muted" id="progress" aria-live="polite"></p>
+    </section>
+    <div class="guided">
+      <nav class="lesson-list" aria-label="Lessons" id="lessons"></nav>
+      <section class="lesson panel ticked" aria-live="polite">
+        <div class="vignette" id="vignette" aria-hidden="true"></div>
+        <div class="vignette-controls cluster">
+          <button class="btn" id="vg-replay" type="button">↺ Replay scene</button>
+          <span class="asset asset-illustration">clay scene · illustration</span>
+          <span class="muted" id="vg-caption"></span>
+        </div>
+        <div class="panel-body" id="lesson"></div>
+      </section>
+    </div>
+  </main>
+  <div id="shell-footer"></div>
+  <script type="module" src="js/guided.js"></script>
+</body>
+</html>

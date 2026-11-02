@@ -1,0 +1,158 @@
+{
+ "schema": "project33.lab.cad_manifest/1",
+ "generated_by": "tools/cad_to_web.py",
+ "outputs": [
+  {
+   "path": "lab/data/cad/archives.json",
+   "sha256": "dc6d316ab8f67cb353af7c037b34ce0c4d1a27caa672ad70450f8823abf228ca",
+   "inputs": {
+    "CAD Files/Folding Rocket.f3z": "2e2b670b6c4798feff7dfd0456a64f46ec19ced20b4c05db69bcfe8d07f24cd3",
+    "CAD Files/Launcher Platform.f3z": "3471758a47aed768d9a3e4cfba656f3cbddd22045f50b1b21253b77b37dc0110",
+    "CAD Files/Rocket Nozzle.f3z": "430f7c50d12fe278f1ef50a69f56d98b9fced53e695e924011d79928a14e62a2"
+   }
+  },
+  {
+   "path": "lab/data/cad/folding-rocket-527522.png",
+   "sha256": "ad1ff9cab52fa10f9b3de9030ccad2004f8b358cf829b89a593bd46ff9fd3ef1",
+   "inputs": {
+    "CAD Files/Folding Rocket.f3z": "2e2b670b6c4798feff7dfd0456a64f46ec19ced20b4c05db69bcfe8d07f24cd3"
+   },
+   "note": "Fusion-embedded preview image of b9471f68-9ecb-4a85-8ab7-322ebacb802c.f3d; Autodesk-rendered thumbnail, not a measurement"
+  },
+  {
+   "path": "lab/data/cad/folding-rocket-527523.png",
+   "sha256": "b33b54b99a56205954b7955a9b118e8433b202f9eaa3ff2acc9483c194f4d2c2",
+   "inputs": {
+    "CAD Files/Folding Rocket.f3z": "2e2b670b6c4798feff7dfd0456a64f46ec19ced20b4c05db69bcfe8d07f24cd3"
+   },
+   "note": "Fusion-embedded preview image of 496e7c50-ff72-45d9-9796-74f1cb6ecd82.f3d; Autodesk-rendered thumbnail, not a measurement"
+  },
+  {
+   "path": "lab/data/cad/folding-rocket-527524.png",
+   "sha256": "eb4c4d08bb1daf3efb467c0f603a225860ca71d47e687a66562fd8807960cad2",
+   "inputs": {
+    "CAD Files/Folding Rocket.f3z": "2e2b670b6c4798feff7dfd0456a64f46ec19ced20b4c05db69bcfe8d07f24cd3"
+   },
+   "note": "Fusion-embedded preview image of 06d156bd-1eef-46ed-976c-153ed6b81c05.f3d; Autodesk-rendered thumbnail, not a measurement"
+  },
+  {
+   "path": "lab/data/cad/folding-rocket-527525.png",
+   "sha256": "65f458827fb77e185e4519eff3531abaeca729c993b737d5a4726af9f83aedc4",
+   "inputs": {
+    "CAD Files/Folding Rocket.f3z": "2e2b670b6c4798feff7dfd0456a64f46ec19ced20b4c05db69bcfe8d07f24cd3"
+   },
+   "note": "Fusion-embedded preview image of aa34434b-e3c0-4bfa-86f7-3331aeb83757.f3d; Autodesk-rendered thumbnail, not a measurement"
+  },
+  {
+   "path": "lab/data/cad/folding-rocket-527526.png",
+   "sha256": "14704b737c7e535837edd7d8a18547ef50a1c60ad728d100aae64b604a293a2f",
+   "inputs": {
+    "CAD Files/Folding Rocket.f3z": "2e2b670b6c4798feff7dfd0456a64f46ec19ced20b4c05db69bcfe8d07f24cd3"
+   },
+   "note": "Fusion-embedded preview image of a4271a6e-8c62-455e-8ede-a90f18116192.f3d; Autodesk-rendered thumbnail, not a measurement"
+  },
+  {
+   "path": "lab/data/cad/folding-rocket-527527.png",
+   "sha256": "4fe2476fea4147e0da7994d89c5572b728a056af4c4cec36c35f1ae62c2d7e74",
+   "inputs": {
+    "CAD Files/Folding Rocket.f3z": "2e2b670b6c4798feff7dfd0456a64f46ec19ced20b4c05db69bcfe8d07f24cd3"
+   },
+   "note": "Fusion-embedded preview image of 895d6bf9-08d6-4129-b0df-213a0694dc89.f3d; Autodesk-rendered thumbnail, not a measurement"
+  },
+  {
+   "path": "lab/data/cad/folding-rocket-527528.png",
+   "sha256": "3c81258c6b19f07b1a831d3be33d7fc59c5a9a5f48d6b8b4c0e85636616570a5",
+   "inputs": {
+    "CAD Files/Folding Rocket.f3z": "2e2b670b6c4798feff7dfd0456a64f46ec19ced20b4c05db69bcfe8d07f24cd3"
+   },
+   "note": "Fusion-embedded preview image of 9470fc3e-1598-4fd6-9290-c13fc357d2c2.f3d; Autodesk-rendered thumbnail, not a measurement"
+  },
+  {
+   "path": "lab/data/cad/folding-rocket-527529.png",
+   "sha256": "65f458827fb77e185e4519eff3531abaeca729c993b737d5a4726af9f83aedc4",
+   "inputs": {
+    "CAD Files/Folding Rocket.f3z": "2e2b670b6c4798feff7dfd0456a64f46ec19ced20b4c05db69bcfe8d07f24cd3"
+   },
+   "note": "Fusion-embedded preview image of 54ee4943-2867-4fcc-8e99-48586b42d270.f3d; Autodesk-rendered thumbnail, not a measurement"
+  },
+  {
+   "path": "lab/data/cad/folding-rocket-527530.png",
+   "sha256": "4fe2476fea4147e0da7994d89c5572b728a056af4c4cec36c35f1ae62c2d7e74",
+   "inputs": {
+    "CAD Files/Folding Rocket.f3z": "2e2b670b6c4798feff7dfd0456a64f46ec19ced20b4c05db69bcfe8d07f24cd3"
+   },
+   "note": "Fusion-embedded preview image of 5cca5add-1844-4a99-8b5e-e5a75bb25fcf.f3d; Autodesk-rendered thumbnail, not a measurement"
+  },
+  {
+   "path": "lab/data/cad/four_bar.json",
+   "sha256": "a96c3f10ccab80d6016c2f4a371d561fec067c7aacf868aa6622c8c0afcb6ff3",
+   "inputs": {
+    "CAD Files/Four Bar Linkage.step": "7f4afad7b1d77b01b21a776c13eca2041daeae40b52a598f1537ec80b10a2c87"
+   }
+  },
+  {
+   "path": "lab/data/cad/launcher-platform-648449.png",
+   "sha256": "751d55fca50fb19ed2bc0c2b05007d64c1d7ed05577bc53c555de9cc88579047",
+   "inputs": {
+    "CAD Files/Launcher Platform.f3z": "3471758a47aed768d9a3e4cfba656f3cbddd22045f50b1b21253b77b37dc0110"
+   },
+   "note": "Fusion-embedded preview image of ae2748bb-78c6-4b07-8265-defb377e3db4.f3d; Autodesk-rendered thumbnail, not a measurement"
+  },
+  {
+   "path": "lab/data/cad/launcher-platform-648450.png",
+   "sha256": "3c81258c6b19f07b1a831d3be33d7fc59c5a9a5f48d6b8b4c0e85636616570a5",
+   "inputs": {
+    "CAD Files/Launcher Platform.f3z": "3471758a47aed768d9a3e4cfba656f3cbddd22045f50b1b21253b77b37dc0110"
+   },
+   "note": "Fusion-embedded preview image of 9470fc3e-1598-4fd6-9290-c13fc357d2c2.f3d; Autodesk-rendered thumbnail, not a measurement"
+  },
+  {
+   "path": "lab/data/cad/launcher-platform-648451.png",
+   "sha256": "816611e3dcc6274601addaf6b6f5e7f9f9f14242902d2988b08419000360062c",
+   "inputs": {
+    "CAD Files/Launcher Platform.f3z": "3471758a47aed768d9a3e4cfba656f3cbddd22045f50b1b21253b77b37dc0110"
+   },
+   "note": "Fusion-embedded preview image of 9012bd01-4fb4-44dc-b7d8-835a235e52d2.zip.f3d; Autodesk-rendered thumbnail, not a measurement"
+  },
+  {
+   "path": "lab/data/cad/launcher-platform-648452.png",
+   "sha256": "47cd61db3bdf6d3f4cf805c8fcd84e1099e88553ac432b967df04b2178ee4bbc",
+   "inputs": {
+    "CAD Files/Launcher Platform.f3z": "3471758a47aed768d9a3e4cfba656f3cbddd22045f50b1b21253b77b37dc0110"
+   },
+   "note": "Fusion-embedded preview image of 111a0fb7-cb46-4846-9d67-98a3c66d8b6d.zip.f3d; Autodesk-rendered thumbnail, not a measurement"
+  },
+  {
+   "path": "lab/data/cad/launcher-platform-648453.png",
+   "sha256": "884ecf26d2fc99dcc4c047de365466a6865ab37810ccedb0f62c8cc38ea03137",
+   "inputs": {
+    "CAD Files/Launcher Platform.f3z": "3471758a47aed768d9a3e4cfba656f3cbddd22045f50b1b21253b77b37dc0110"
+   },
+   "note": "Fusion-embedded preview image of 5e0d7d4d-7773-4628-b35c-eb5e1e25a182.zip.f3d; Autodesk-rendered thumbnail, not a measurement"
+  },
+  {
+   "path": "lab/data/cad/rocket-nozzle-654518.png",
+   "sha256": "31c7eacdb2b75105abac839ef048202130a60f1b526487b0f81777fd5c655c32",
+   "inputs": {
+    "CAD Files/Rocket Nozzle.f3z": "430f7c50d12fe278f1ef50a69f56d98b9fced53e695e924011d79928a14e62a2"
+   },
+   "note": "Fusion-embedded preview image of c8e56c77-e7a8-456c-b572-8617732c9366.f3d; Autodesk-rendered thumbnail, not a measurement"
+  },
+  {
+   "path": "lab/data/cad/rocket-nozzle-654519.png",
+   "sha256": "aa28d8749d37975e738ffcd141de44045a7b679e17451803be689a344ba97f16",
+   "inputs": {
+    "CAD Files/Rocket Nozzle.f3z": "430f7c50d12fe278f1ef50a69f56d98b9fced53e695e924011d79928a14e62a2"
+   },
+   "note": "Fusion-embedded preview image of e73e8427-ded5-4e3b-986a-dfee9b969ac7.f3d; Autodesk-rendered thumbnail, not a measurement"
+  },
+  {
+   "path": "lab/data/cad/rocket-nozzle-654520.png",
+   "sha256": "2e762bd3e0dc56e6e231fac7ea436801076b67c41797f62dce043eff1a166368",
+   "inputs": {
+    "CAD Files/Rocket Nozzle.f3z": "430f7c50d12fe278f1ef50a69f56d98b9fced53e695e924011d79928a14e62a2"
+   },
+   "note": "Fusion-embedded preview image of 23f79ff3-8d3d-48e6-9eb3-f218e6d72339.f3d; Autodesk-rendered thumbnail, not a measurement"
+  }
+ ]
+}

@@ -1,0 +1,135 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Mechanism Lab · Project 33</title>
+  <meta name="description" content="The folding-fin four-bar linkage that cannot close, visualized from the committed C1 model, plus a side-by-side studio of Project 33's disagreeing models (C5 static margin, C6 spring margin, D-009, D-010).">
+  <link rel="icon" href="../assets/marketing/mark.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="css/lab.css">
+  <link rel="stylesheet" href="css/mechanism.css">
+</head>
+<body class="grid-bg" data-page="mechanism" data-mode="guided" data-categories="research,conceptual">
+  <div id="shell-header"></div>
+  <main id="main">
+    <section class="mx-hero wrap" aria-labelledby="mx-title">
+      <div>
+        <p class="eyebrow">Mechanism Lab · Claim C1 · Folding-fin linkage</p>
+        <h1 id="mx-title">The linkage that <em>cannot close.</em></h1>
+        <p class="lede">Project 33's folding fin depends on a four-bar linkage. Its recorded dimensions — ground 25, coupler 60, input 15, output 15&nbsp;mm — cannot form a closed loop at any drive angle. Here is that failure, measured from the committed model, explorable, and left unrepaired.</p>
+        <nav class="mx-jump" aria-label="On this page">
+          <a class="btn" href="#investigation">01 Investigation</a>
+          <a class="btn" href="#mathematics">02 Mathematics</a>
+          <a class="btn" href="#sandbox">03 Conceptual sandbox</a>
+          <a class="btn" href="#comparison">04 Model comparison studio</a>
+        </nav>
+      </div>
+      <div class="mx-verdict panel ticked" id="mx-verdict" aria-live="polite">
+        <p class="label mb0">Loading the record…</p>
+      </div>
+    </section>
+
+    <section id="investigation" class="wrap mx-section" aria-labelledby="inv-title">
+      <header class="section-head">
+        <div class="cluster"><span class="eyebrow">01 / The folding-fin investigation</span><span id="inv-badge"></span></div>
+        <h2 id="inv-title">Push the pieces together. They refuse.</h2>
+        <p class="lede">Drive the input link through the full 0–92° deployment range. The output link's pin and the coupler's pin never meet: the coupler is so long that the output circle sits entirely inside it. The orange number is the distance the geometry is short of closing.</p>
+      </header>
+
+      <div class="mx-stage-grid">
+        <div class="mx-stage panel ticked">
+          <div class="viewport mx-viewport" id="linkage-vp" aria-describedby="vp-desc">
+            <p id="vp-desc" class="sr-only">Interactive 3D view of the four-bar linkage in its closest-approach configuration. The coupler pin and the output pin remain separated by the closure residual shown below; orbit with a pointer, or use the view buttons.</p>
+            <div class="hud vp-class" id="vp-class"></div>
+            <div class="mx-gap" id="gap-hud" aria-hidden="true">
+              <span class="k">Closure residual</span>
+              <span class="v" id="gap-value">—</span>
+              <span class="s" id="gap-sub">loop open</span>
+            </div>
+            <div class="mx-vp-tools hud"><span class="pe btn-row" id="vp-tools"></span></div>
+            <div class="mx-paused" id="paused" hidden>PAUSED · THE GEOMETRY CANNOT CLOSE</div>
+          </div>
+          <div class="mx-controls">
+            <div class="field">
+              <div class="field-row"><label for="theta" class="label">Drive angle θ (input link, from folded)</label><output id="theta-out" for="theta" class="readout">0.0°</output></div>
+              <input id="theta" type="range" min="0" max="92" step="0.5" value="0" aria-describedby="theta-help">
+              <span id="theta-help" class="sr-only">Drive angle in degrees from 0 to 92, the recorded deployment range.</span>
+            </div>
+            <div class="btn-row">
+              <button class="btn" id="play" type="button" aria-pressed="false">▶ Sweep 0–92°</button>
+              <button class="btn copper" id="attempt" type="button">Attempt assembly</button>
+              <button class="btn ghost" id="labels" type="button" aria-pressed="true">Labels</button>
+            </div>
+          </div>
+        </div>
+
+        <aside class="mx-readout panel" aria-labelledby="readout-title">
+          <div class="panel-head"><h4 id="readout-title">Live geometry</h4><span id="readout-badge"></span></div>
+          <div class="panel-body">
+            <dl class="mx-live" id="live"></dl>
+            <p class="mx-note" id="closest-note">Shown in its <b>closest-approach</b> configuration: coupler and output both point along the line B→D, which minimises the length of the summed link vectors |Σ r<sub>i</sub>|. Any other orientation leaves the pins farther apart.</p>
+            <div>
+              <h4>Requirements on record</h4>
+              <div class="mx-reqs" id="reqs"></div>
+            </div>
+          </div>
+        </aside>
+      </div>
+
+      <div class="mx-tech panel" id="tech" hidden tabindex="-1" aria-labelledby="tech-title"></div>
+
+      <div class="mx-chart panel" aria-labelledby="chart-title">
+        <div class="panel-head"><h4 id="chart-title">Loop diagonal |BD| against the distance the loop needs</h4><span id="chart-badge"></span></div>
+        <div class="panel-body">
+          <div id="residual-chart" class="mx-scroll"></div>
+          <div class="mx-legend" id="chart-legend"></div>
+        </div>
+      </div>
+
+      <div class="mx-variants panel" aria-labelledby="var-title">
+        <div class="panel-head"><h4 id="var-title">Variant explorer — all 81 committed configurations</h4><span id="var-badge"></span></div>
+        <div class="panel-body">
+          <div class="mx-vsummary" id="var-summary"></div>
+          <div id="variant-grid"></div>
+          <p class="mx-note" id="var-note"></p>
+        </div>
+      </div>
+    </section>
+
+    <section id="mathematics" class="wrap mx-section" aria-labelledby="math-title">
+      <header class="section-head">
+        <div class="cluster"><span class="eyebrow">02 / Mathematics</span><span id="math-badge"></span></div>
+        <h2 id="math-title">Why closure is a geometry question, not an animation.</h2>
+      </header>
+      <div class="panel mx-math ticked"><div class="panel-body" id="math-panel"></div></div>
+    </section>
+
+    <section id="sandbox" class="wrap mx-section" aria-labelledby="sb-title">
+      <header class="section-head">
+        <div class="cluster"><span class="eyebrow">03 / Conceptual sandbox</span><span id="sb-badge"></span></div>
+        <h2 id="sb-title">What would close? Explore the design space.</h2>
+        <p class="lede">A free educational model of the same planar loop. Change any link and watch closure and transmission angle respond. This is <b>not a Project&nbsp;33 design</b> and proposes no dimensions: the intended topology is an open question for human review (D-002).</p>
+      </header>
+      <div class="panel mx-sandbox"><div class="panel-body" id="sandbox-body"></div></div>
+    </section>
+
+    <section id="comparison" class="wrap mx-section" aria-labelledby="cmp-title">
+      <header class="section-head">
+        <div class="cluster"><span class="eyebrow">04 / Model comparison studio</span><span id="cmp-badge"></span></div>
+        <h2 id="cmp-title">When two models disagree, show both.</h2>
+        <p class="lede">The repository keeps conflicting calculations on record instead of choosing the convenient one. This studio sets them side by side with their assumptions. It never declares a winner: that needs a reviewed model or a measurement.</p>
+      </header>
+      <div class="mx-compare" id="compare"></div>
+    </section>
+  </main>
+  <div id="shell-footer"></div>
+  <noscript>
+    <div class="wrap section">
+      <h2>The interactive laboratory needs JavaScript.</h2>
+      <p>The recorded result: the baseline four-bar linkage (ground 25, coupler 60, input 15, output 15 mm) cannot close at any drive angle from 0 to 92°, and none of 81 swept variants can. Read the <a href="../docs/claims/C1.html">C1 claim passport</a>, the <a href="../docs/DISCREPANCIES.html">discrepancy register</a> (D-002, D-004, D-005, D-006–D-010), and the <a href="../docs/TRACEABILITY.html">requirement matrix</a>.</p>
+      <img src="../docs/assets/review/c1_loop_closure.svg" alt="C1 loop-closure check: the output circle never meets the coupler circles over the drive range">
+    </div>
+  </noscript>
+  <script type="module" src="js/mechanism/main.js"></script>
+</body>
+</html>
