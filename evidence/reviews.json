@@ -218,7 +218,7 @@
       "current": {
         "assumptions_sha256": "75387f1f396560b2d8a9048642a23c005894007e6421eb6c4a12f0b6932a0a93",
         "dependencies": {
-          "cad_materials_doc": "4352bd376b309bc8e0ca856646b6d1c6e846fc40815f355387a47b139967c41d",
+          "cad_materials_doc": "62bbb45cca789d9419fb7058982c340263a0dcf26141d8bab4162a8bc2864517",
           "mass_baseline": "aa54a78f60d0af0382307032aa31fef2f13fafa79c39cc50dabf13d4c0d91868",
           "mass_candidate": "c6dff1a044a6a2fc22ee873671dacb616ffad05a8dc055edcb8c4b81656e8cd7",
           "mass_inputs": "b2b65a256c6bfb9fa911b2b79a457d56e8fdf3bf29667c33a936bcd676d70542",
@@ -227,12 +227,29 @@
           "mass_tests": "a553cf030873f9b6ec7a16c35556306a04c8f614de506dae0ccf711425fb6bbb"
         },
         "kind": "snapshot",
-        "note": "CAD_ASSEMBLIES.md gained review figures and a CAD-versus-model discrepancy table; material plan unchanged.",
-        "recorded": "2026-09-28",
+        "note": "CAD_ASSEMBLIES.md no longer lists Simulation/OpenRocket_3D_View.png as a view of the folding rocket: the file is a telemetry dashboard graph, not an OpenRocket view. Editorial; material plan unchanged.",
+        "recorded": "2026-11-02",
         "recorded_by": "tooling snapshot (no human review)",
         "statement_sha256": "305c4f521e41edf64a3bd057c6db2082cf1d4f4e0f44c51048df74e2b8f0ee4c"
       },
       "history": [
+        {
+          "assumptions_sha256": "75387f1f396560b2d8a9048642a23c005894007e6421eb6c4a12f0b6932a0a93",
+          "dependencies": {
+            "cad_materials_doc": "4352bd376b309bc8e0ca856646b6d1c6e846fc40815f355387a47b139967c41d",
+            "mass_baseline": "aa54a78f60d0af0382307032aa31fef2f13fafa79c39cc50dabf13d4c0d91868",
+            "mass_candidate": "c6dff1a044a6a2fc22ee873671dacb616ffad05a8dc055edcb8c4b81656e8cd7",
+            "mass_inputs": "b2b65a256c6bfb9fa911b2b79a457d56e8fdf3bf29667c33a936bcd676d70542",
+            "mass_source": "7e8b8ca2b46b20102721c645284fc7b1a81e8c4848e30ee4295a8a10260025ec",
+            "mass_summary": "f2987d38960196ad414a181cbb34e72a85be9245eda11271ca7eb84c51e8a832",
+            "mass_tests": "a553cf030873f9b6ec7a16c35556306a04c8f614de506dae0ccf711425fb6bbb"
+          },
+          "kind": "snapshot",
+          "note": "CAD_ASSEMBLIES.md gained review figures and a CAD-versus-model discrepancy table; material plan unchanged.",
+          "recorded": "2026-09-28",
+          "recorded_by": "tooling snapshot (no human review)",
+          "statement_sha256": "305c4f521e41edf64a3bd057c6db2082cf1d4f4e0f44c51048df74e2b8f0ee4c"
+        },
         {
           "assumptions_sha256": "75387f1f396560b2d8a9048642a23c005894007e6421eb6c4a12f0b6932a0a93",
           "dependencies": {

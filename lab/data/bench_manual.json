@@ -295,7 +295,7 @@
     },
     {
       "path": "docs/CAD_ASSEMBLIES.md",
-      "sha256": "4352bd376b309bc8e0ca856646b6d1c6e846fc40815f355387a47b139967c41d"
+      "sha256": "62bbb45cca789d9419fb7058982c340263a0dcf26141d8bab4162a8bc2864517"
     },
     {
       "path": "docs/DEGRADED_MODES.md",
@@ -370,5 +370,5 @@
       "sha256": "a707d10558f18decdf53708184fb0ae7ccd74da85953f5bb8c2e6422e260afcb"
     }
   ],
-  "revision": "7fc40a64522bc85c39269bd223e66d893ebc66f4d5ed84416675e6b9d1a95dd7"
+  "revision": "3b86d7bde5db354a2e32b18fb666c2c7e3c3857d473d6528586c921b19eb5b54"
 }

@@ -30,11 +30,9 @@ The NACA 0012, 60 mm chord profile produced by `naca_fin_generator.py`, with cho
 
 | Assembly | CAD Source | Current Visual Evidence | Render Export Target |
 |----------|------------|-------------------------|----------------------|
-| Folding rocket | `CAD Files/Folding Rocket.f3z` | `Simulation/OpenRocket_3D_View.png`, `Simulation/Side_View.png` | Add Fusion render of full folded/deployed assembly |
+| Folding rocket | `CAD Files/Folding Rocket.f3z` | `Simulation/Side_View.png` (OpenRocket side view) | Add Fusion render of full folded/deployed assembly |
 | Launcher platform | `CAD Files/Launcher Platform.f3z` | CAD archive metadata confirms platform components | Add top/isometric Fusion render of switch, ESP32, and platform layout |
 | Rocket nozzle | `CAD Files/Rocket Nozzle.f3z` | CAD archive metadata confirms nozzle body files | Add sectioned Fusion render with throat/exit dimensions |
-
-![OpenRocket 3D view](../Simulation/OpenRocket_3D_View.png)
 
 ![OpenRocket side view](../Simulation/Side_View.png)
 
