@@ -154,6 +154,7 @@ The cover opens an HTML5 player on the project site; GitHub does not play reposi
 | [C6](docs/claims/C6.md) | Spring margin consistency | **CONTRADICTED** | MODEL ONLY | R-C6-MARGIN NOT SATISFIED | D-009, D-010, D-011 |
 | [C7](docs/claims/C7.md) | Deployment reliability evidence | **UNRESOLVED** | MODEL ONLY | none failing | D-010, D-013 |
 | [C8](docs/claims/C8.md) | Structural claim boundaries | **CONTRADICTED** | MODEL ONLY | R-C8-MODULUS NOT SATISFIED | D-009, D-010, D-015 |
+
 <!-- /evidence:claims-table -->
 
 Each passport states the claim, its assumptions, its evidence classes, and the next measurement or review it needs. The [traceability matrix](docs/TRACEABILITY.md) connects requirements to implementations, tests, and predictions.

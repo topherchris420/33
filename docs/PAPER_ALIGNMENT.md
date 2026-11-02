@@ -41,6 +41,7 @@ No integration work in this repository should:
 | [C6](claims/C6.md) | Spring margin consistency | **CONTRADICTED** | MODEL ONLY | R-C6-MARGIN NOT SATISFIED | D-009, D-010, D-011 |
 | [C7](claims/C7.md) | Deployment reliability evidence | **UNRESOLVED** | MODEL ONLY | none failing | D-010, D-013 |
 | [C8](claims/C8.md) | Structural claim boundaries | **CONTRADICTED** | MODEL ONLY | R-C8-MODULUS NOT SATISFIED | D-009, D-010, D-015 |
+
 <!-- /evidence:claims-table -->
 
 A paper statement becomes a requirement in `evidence/requirements.json`, evaluated from committed values and labeled with the evidence class of the value. Where the repository's own models contradict the paper (C1 closure, C6 margin, C8 modulus) or disagree with each other (C5), that is recorded, not rounded. Passports: [docs/claims](claims/README.md).

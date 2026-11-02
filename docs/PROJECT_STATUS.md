@@ -17,6 +17,7 @@ Project 33 is a bench-validation prototype. Every status below names the class o
 | [C6](claims/C6.md) | Spring margin consistency | **CONTRADICTED** | MODEL ONLY | R-C6-MARGIN NOT SATISFIED | D-009, D-010, D-011 |
 | [C7](claims/C7.md) | Deployment reliability evidence | **UNRESOLVED** | MODEL ONLY | none failing | D-010, D-013 |
 | [C8](claims/C8.md) | Structural claim boundaries | **CONTRADICTED** | MODEL ONLY | R-C8-MODULUS NOT SATISFIED | D-009, D-010, D-015 |
+
 <!-- /evidence:claims-table -->
 
 Passports: [docs/claims](claims/README.md). Requirements and predictions: [Traceability](TRACEABILITY.md). Mismatches: [Discrepancies](DISCREPANCIES.md).

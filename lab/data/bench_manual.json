@@ -327,7 +327,7 @@
     },
     {
       "path": "docs/PROJECT_STATUS.md",
-      "sha256": "b8301da6c351df407015466627dd7d2cf6465aaf06181be88e8e4d0a69b542a4"
+      "sha256": "581f3f064aeaedbfe4496cd718b01ec0802cb784b78f15cb44b68647c5fe0e28"
     },
     {
       "path": "docs/PROTOCOL.md",
@@ -370,5 +370,5 @@
       "sha256": "a707d10558f18decdf53708184fb0ae7ccd74da85953f5bb8c2e6422e260afcb"
     }
   ],
-  "revision": "f78729c7226e2e15edb374d19dce144d6d73e5372809bea7de2d439a56f8810f"
+  "revision": "07b99fab872261387f2df687defe64d7d66c9d84668594573cee83265693e5ec"
 }
