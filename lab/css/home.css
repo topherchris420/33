@@ -238,11 +238,11 @@ html:not(.js) .nav-panel { max-height: none; opacity: 1; visibility: visible; pa
 .hero-stage[data-state="ready"] .stage-canvas canvas { opacity: 1; }
 .stage-fallback {
   position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: 68% 50%;
-  opacity: 0; transition: opacity 0.6s ease;
+  opacity: 0; transition: opacity 0.6s ease; pointer-events: none;
   -webkit-mask-image: linear-gradient(90deg, transparent, #000 22%); mask-image: linear-gradient(90deg, transparent, #000 22%);
 }
 .hero-stage[data-state="fallback"] .stage-fallback, html:not(.js) .stage-fallback { opacity: 0.9; }
-.stage-loader { position: absolute; left: 50%; top: 50%; width: 32px; height: 32px; margin: -16px 0 0 -16px; border-radius: 50%; border: 2px solid transparent; border-bottom-color: var(--teal-300); opacity: 0; transition: opacity 0.3s; animation: spin 0.9s linear infinite; }
+.stage-loader { position: absolute; left: 50%; top: 50%; width: 32px; height: 32px; margin: -16px 0 0 -16px; border-radius: 50%; border: 2px solid transparent; border-bottom-color: var(--teal-300); opacity: 0; transition: opacity 0.3s; animation: spin 0.9s linear infinite; pointer-events: none; }
 .hero-stage[data-state="loading"] .stage-loader { opacity: 1; }
 .stage-hud { position: absolute; top: 16px; left: 16px; right: 16px; z-index: 2; display: flex; flex-direction: column; align-items: flex-start; gap: 6px; pointer-events: none; font: 11px/1.4 var(--mono); color: var(--text-4); }
 .stage-hud-row { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 8px; }
@@ -250,7 +250,9 @@ html:not(.js) .nav-panel { max-height: none; opacity: 1; visibility: visible; pa
 .asset-tag { padding: 2px 8px; border: 1px solid var(--teal-400); border-radius: 3px; color: var(--teal-300); letter-spacing: 0.1em; text-transform: uppercase; background: rgba(0, 0, 0, 0.6); }
 .stage-source { overflow-wrap: anywhere; }
 .hero-stage[data-state="fallback"] .stage-hud, html:not(.js) .stage-hud { display: none; }
-.stage-controls { position: absolute; left: 16px; right: 16px; bottom: 16px; z-index: 2; display: flex; align-items: center; justify-content: space-between; gap: 10px; }
+/* The poster, loader, caption, and the gap between the controls let drags through to the canvas. */
+.stage-controls { position: absolute; left: 16px; right: 16px; bottom: 16px; z-index: 2; display: flex; align-items: center; justify-content: space-between; gap: 10px; pointer-events: none; }
+.stage-controls > * { pointer-events: auto; }
 @media (min-width: 1024px) { .stage-controls { left: 8px; right: 22px; bottom: 22px; } }
 .seg { display: inline-flex; padding: 3px; border: 1px solid #333; border-radius: 999px; background: rgba(20, 20, 20, 0.7); backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px); }
 .seg button { padding: 6px 9px; border: 0; border-radius: 999px; background: none; color: var(--text-3); font: 500 11.5px/1.2 var(--mono); letter-spacing: 0.02em; cursor: pointer; transition: color 0.2s, background 0.2s; }
