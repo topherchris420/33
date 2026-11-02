@@ -28,6 +28,7 @@
       .film-row { display: grid; grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr); gap: 18px; align-items: center; }
       .film-row video, .film-row img { width: 100%; border: 1px solid var(--graphite-600); border-radius: var(--radius); }
       @media (max-width: 820px) { .film-row { grid-template-columns: 1fr; } }
+      .film-row .note { font-size: 13px; }
     </style>
   </head>
   <body class="grid-bg hub" data-page="home" data-mode="home" data-lab-base="lab/" data-categories="research,historical,conceptual">
@@ -94,6 +95,11 @@
             <h2 id="film-h">The original design film.</h2>
             <p class="lede">Rotating Fourier vectors trace a blueprint, the blueprint becomes an assembly. A visual design study — illustrative geometry, not a CAD export, measurement, or assembly procedure.</p>
             <p><a class="btn" href="{{ '/film.html' | relative_url }}">Play the 32-second film</a></p>
+            <p class="btn-row">
+              <a class="btn ghost" href="{{ '/tutorial.html' | relative_url }}">Watch the tutorial ↗</a>
+              <a class="btn ghost" href="{{ '/model.html' | relative_url }}">Turn the faceted 3D model ↗</a>
+            </p>
+            <p class="muted note">The four-minute claymation bench manual and the faceted 3D model are also design visualizations, not evidence.</p>
           </div>
           <a href="{{ '/film.html' | relative_url }}"><img src="{{ '/assets/marketing/poster.jpg' | relative_url }}" alt="Project 33 illustrative rocket blueprint from the Fourier design film" loading="lazy" /></a>
         </div>
