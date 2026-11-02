@@ -10,7 +10,7 @@ Take apart a folding-fin rocket concept. Explore the models, inspect the firmwar
 
 > **The rocket is the specimen. The record is the experiment.**
 
-**[Enter the laboratory](https://topherchris420.github.io/33/lab/)** · **[Explore the 3D workbench](https://topherchris420.github.io/33/lab/workbench.html)** · **[Watch the bench manual](https://topherchris420.github.io/33/lab/bench-manual.html)** · **[Start here](docs/START_HERE.md)**
+**[Enter the laboratory](https://topherchris420.github.io/33/lab/)** · **[Explore the 3D workbench](https://topherchris420.github.io/33/lab/workbench.html)** · **[Watch the bench manual](https://topherchris420.github.io/33/lab/bench-manual.html)** · **[Read the flier](docs/media/project33-issue-b-flier.pdf)** · **[Start here](docs/START_HERE.md)**
 
 [![A clay engineer watches a scanning beam turn the Project 33 rocket into an engineering wireframe. Open the laboratory.](lab/assets/poster.jpg)](https://topherchris420.github.io/33/lab/)
 
@@ -38,6 +38,21 @@ The failed and disputed requirements remain visible. They define the work ahead.
 | **Contribute** | [First contribution routes](docs/START_HERE.md#make-a-useful-contribution) | Specific review questions and the checks for each kind of change |
 
 The browser laboratory is read-only. Its values come from committed sources; synthetic data and conceptual illustrations are labeled, and unknown measurements stay **NOT MEASURED**. [How the laboratory is built](docs/LIVING_LAB.md).
+
+## Project 33 · Issue B flier
+
+<a href="docs/media/project33-issue-b-flier.pdf"><img src="assets/marketing/project33-flier-page-1.png" alt="Project 33 Issue B flier, page 1: numbered exploded assembly of the folding-fin concept. Open the complete two-page PDF." width="460"></a>
+
+**[Open the complete flier · PDF · 2 pages](docs/media/project33-issue-b-flier.pdf)** · **[Download original PDF](docs/media/project33-issue-b-flier.pdf?raw=1)**
+
+An illustrated overview of the concept and its proposed technology integrations. Issue B items are proposals; dimensions, stability, and cost shown in the artwork are design or estimated values. The [claim ledger](#claim-status) records the current evidence state. [File provenance](docs/media/README.md).
+
+<details>
+<summary>Preview sheet 2: technology integration and configurations</summary>
+
+<a href="docs/media/project33-issue-b-flier.pdf"><img src="assets/marketing/project33-flier-page-2.png" alt="Project 33 Issue B flier, page 2: proposed technology integration, evidence-assistant authority order, and stowed, deployed, and launcher illustrations." width="640"></a>
+
+</details>
 
 ## Reproduce the review
 
