@@ -117,7 +117,7 @@ Pinned so that adding one fails a test and forces this model and the board to be
 | `C-LAUNCHER-ABORT` | CAUTION | The launcher reported an abort. Shown for 30 s. |
 | `C-GAINS-NO-MATCH` | CAUTION | Telemetry is flowing and still shows different gains from the ones sent. |
 | `C-GAINS-REJECTED` | CAUTION | A board rejected the gains that were sent. |
-| `C-ROCKET-RESTART` | CAUTION | Rocket state moved backwards. Firmware has no such transition, so a restart or brownout is inferred. Shown for 30 s. |
+| `C-ROCKET-RESTART` | CAUTION | Rocket state moved backwards, skew changed while IDLE with no calibration to explain it, or the rocket clock fell behind ground time between log dumps. Firmware has no other path to these, so a restart or brownout is inferred. A restart also returns gains to their defaults, zeroes roll, and loses the onboard log. Shown for 30 s. |
 | `C-LAUNCHER-RESTART` | CAUTION | The launcher clock went backwards, so a restart or brownout is inferred. Shown for 30 s. |
 | `C-OUTPUT-OUTSIDE-FLIGHT` | CAUTION | A non-zero servo output arrived outside FLIGHT, which firmware should not produce. Check the firmware and protocol revision. |
 | `C-STATE-UNKNOWN` | CAUTION | STATUS carried a state this model does not know. Check the firmware and protocol revision. |
@@ -131,6 +131,8 @@ Pinned so that adding one fails a test and forces this model and the board to be
 | `A-CANARD-LIMIT` | ADVISORY | The servo output is at the firmware deflection limit. |
 | `A-COMMAND-REFUSED` | ADVISORY | A board refused a command. The default refusal of dashboard launch is expected. Shown for 30 s. |
 | `A-GAINS-UNCONFIRMED` | ADVISORY | Gains were sent and no telemetry arrived to confirm them. |
+| `A-ROLL-REFERENCE-WEAK` | ADVISORY | The rocket's body axis is within 5 degrees of vertical, so little gravity falls on the two axes firmware uses to correct roll, and error on them is magnified by 1/cos(pitch) (D-026). The threshold is a heuristic because sensor noise is not measured. |
+| `A-CALIBRATION-NO-CHANGE` | ADVISORY | Calibration was sent and telemetry is flowing, but skew did not change. This is not a refusal: firmware sends no reply, and skew is reported to 0.01 deg, so a recalibration can land on the same value. Shown for 30 s. |
 | `A-LOG-PARTIAL` | ADVISORY | A log dump ended with a different row count from the one it announced. Shown for 30 s. |
 | `A-PROBE-UNANSWERED` | ADVISORY | A log dump got no reply while telemetry shows the path working, so the command or reply was probably lost; UDP does not guarantee delivery. |
 
@@ -140,3 +142,5 @@ Pinned so that adding one fails a test and forces this model and the board to be
 - Partial faults: a slow, noisy, or intermittent unit is modeled as working while its packets arrive on time.
 - One-way link faults: LINK and UART are each treated as a single unit, not two directions.
 - Common causes: a shared supply or I2C bus is not a unit, so a brownout appears as several unit failures.
+- A rocket restart while IDLE whose new skew rounds to the old value: nothing changes in the packets until a later log dump shows the rocket clock behind ground time, and that needs a dump from before the restart.
+- Whether firmware is applying its accelerometer correction at any moment: that depends on total acceleration, which is not in the dashboard protocol. The roll reference describes pose geometry only.

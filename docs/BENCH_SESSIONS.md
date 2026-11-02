@@ -66,6 +66,26 @@ Firmware/TestSessions/bench_YYYYMMDD_HHMMSS/
 - Clean data quality is necessary, never sufficient.
 - Automated tools, including AI assistants, never run `session accept`.
 
+## Compare a session with the preflight checklist
+
+```bash
+python Firmware/preflight_audit.py Firmware/TestSessions/bench_EXAMPLE
+```
+
+This reports what the recording holds for each step of the [preflight checklist](SAFETY.md#preflight-checklist-for-inert-demonstrations), and lists the warnings and cautions the [status board](GROUND_STATUS.md) would have raised. It opens no connection and refuses to write inside the session folder. It is a derived view: it is not evidence, and a passport does not include it.
+
+| Result | Meaning |
+|---|---|
+| `OBSERVED` | The record holds what this step leaves behind. It does not show the step was done correctly, safely, or in order. |
+| `INFERRED` | The record implies it through firmware logic. The launcher reports no state, so `READY` is inferred from the rocket going `IDLE` to `ARMED`. |
+| `DECLARED` | A person stated it in the declaration. Nothing checks it. |
+| `SENT ONLY` | The command was sent and left no visible result, which does not show it was lost. |
+| `NOT OBSERVED` | The record could show this and does not. |
+| `CONTRADICTED` | The record shows something the step rules out, such as a launcher built with dashboard launch enabled. |
+| `OPERATOR ONLY` | Packets cannot show this. Only a person can confirm it. |
+
+It has only been run on synthetic sessions.
+
 ## Audit a capture on its own
 
 ```bash

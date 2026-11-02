@@ -236,13 +236,25 @@
       {"path": "Firmware/Rocket/src/main.cpp", "contains": "String sysState = \"IDLE\";"},
       {"path": "Firmware/Rocket/src/main.cpp", "contains": "sysState = \"ARMED\";"},
       {"path": "Firmware/Rocket/src/main.cpp", "contains": "sysState = \"IGNITING\";"},
-      {"path": "Firmware/Rocket/src/main.cpp", "contains": "sysState = \"FLIGHT\";"}
+      {"path": "Firmware/Rocket/src/main.cpp", "contains": "sysState = \"FLIGHT\";"},
+      {"path": "Firmware/Rocket/src/main.cpp", "count": "physical_skew_angle = atan2(", "equals": 1},
+      {"path": "Firmware/Rocket/src/main.cpp", "count": "calibrateGyro();", "equals": 3},
+      {"path": "Firmware/Launcher/src/main.cpp", "count": "Serial2.println(Project33Protocol::CMD_CALIBRATE);", "equals": 2},
+      {"path": "Firmware/Launcher/src/main.cpp", "count": "Serial2.println(Project33Protocol::CMD_ARM);", "equals": 1},
+      {"path": "Firmware/Launcher/src/main.cpp", "contains": "[FUSION] Hdg: %03.1f | Pitch: %+02.1f"},
+      {"path": "Firmware/Launcher/src/main.cpp", "contains": "float pitch = atan2(-g_fwd, sqrt(g_right * g_right + g_down * g_down));"},
+      {"path": "Firmware/Rocket/src/main.cpp", "contains": "float accel_roll_deg = atan2(a.acceleration.y, a.acceleration.z) * 180.0 / PI - physical_skew_angle;"},
+      {"path": "Firmware/Rocket/src/main.cpp", "contains": "const float ROLL_COMPLEMENTARY_ACCEL_WEIGHT = 0.02;"},
+      {"path": "Firmware/Rocket/src/main.cpp", "contains": "String(sample.timeMs)"},
+      {"path": "Firmware/Rocket/src/main.cpp", "contains": "float Kp = 0.5;"}
     ]
   },
   "not_modeled": [
     "Sensor failure after boot: mpuHealthy and bmpHealthy are set only in setup(), so firmware keeps reporting whatever the driver returns. The IMU-frozen advisory is a heuristic for the rocket side; nothing covers the barometer.",
     "Partial faults: a slow, noisy, or intermittent unit is modeled as working while its packets arrive on time.",
     "One-way link faults: LINK and UART are each treated as a single unit, not two directions.",
-    "Common causes: a shared supply or I2C bus is not a unit, so a brownout appears as several unit failures."
+    "Common causes: a shared supply or I2C bus is not a unit, so a brownout appears as several unit failures.",
+    "A rocket restart while IDLE whose new skew rounds to the old value: nothing changes in the packets until a later log dump shows the rocket clock behind ground time, and that needs a dump from before the restart.",
+    "Whether firmware is applying its accelerometer correction at any moment: that depends on total acceleration, which is not in the dashboard protocol. The roll reference describes pose geometry only."
   ]
 }

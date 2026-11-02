@@ -16,7 +16,7 @@ A low-cost folding-fin/canard rocket testbed, built as an engineering system in 
 **Bench-validation prototype.** Models, CAD, firmware, a telemetry dashboard, and automated checks exist. No physical measurement has been accepted into the evidence record. It is not a flight-tested system and makes no live-propulsion claim.
 
 <!-- evidence:counts -->
-**Record state:** 8 claims · 3 contradicted · 4 unresolved · 1 supported within stated limits · 0 accepted physical measurements · 18 open discrepancies of 25 · 5 of 5 predictions not measured.
+**Record state:** 8 claims · 3 contradicted · 4 unresolved · 1 supported within stated limits · 0 accepted physical measurements · 20 open discrepancies of 27 · 5 of 5 predictions not measured.
 <!-- /evidence:counts -->
 
 ## 3. Evidence Observatory
@@ -34,7 +34,7 @@ The dashboard talks to the launcher over UDP; the launcher owns the WiFi access 
 ## 5. C1–C8 claim status
 
 <!-- evidence:claims-table -->
-**Record state:** 8 claims · 3 contradicted · 4 unresolved · 1 supported within stated limits · 0 accepted physical measurements · 18 open discrepancies of 25 · 5 of 5 predictions not measured.
+**Record state:** 8 claims · 3 contradicted · 4 unresolved · 1 supported within stated limits · 0 accepted physical measurements · 20 open discrepancies of 27 · 5 of 5 predictions not measured.
 
 | Claim | Subject | Status | Strongest accepted evidence | Failing or disputed requirements | Open discrepancies |
 |---|---|---|---|---|---|

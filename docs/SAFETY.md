@@ -45,13 +45,17 @@ Deterministic interlocks live in firmware and stay there. The rocket's IGNITE pa
 
 ## Preflight Checklist for Inert Demonstrations
 
+> **WARNING:** Step 6 arms the rocket. Step 7 returns only the launcher to `SAFE`: the rocket stays `ARMED` with its deploy trigger live, and the launcher cannot re-arm it, until the rocket is restarted (D-025). Treat it as armed through the remaining steps, restart it when they are done, and confirm `IDLE` on the dashboard before arming again.
+
 1. Verify wiring against [WIRING.md](WIRING.md).
 2. Build both PlatformIO projects from a recorded commit.
 3. Connect to the launcher access point.
 4. Start the dashboard and confirm the session ID, "RAW SESSION", and the data-quality line appear.
 5. Confirm GPS status, altitude (or "not reported"), and heartbeat telemetry update.
 6. Flip the arming switch and verify the launcher reaches `READY`.
-7. Confirm switch reset returns the system to `SAFE` and an `ABORT:` row is logged.
+7. Confirm switch reset returns the launcher to `SAFE` and an `ABORT:` row is logged.
 8. Run calibration with the rocket held still; the dashboard records that it was sent (the firmware does not acknowledge it).
 9. Confirm digital launch is rejected by default and `CMD_REJECT:dashboard_launch_disabled` is logged; enable it only for a separately reviewed inert test.
 10. Close the dashboard so `session.json` records a clean close, then run `python -m evidence session declare` and `session passport`.
+
+Afterwards, `python Firmware/preflight_audit.py SESSION_FOLDER` compares the recording with these steps. See [Bench Sessions](BENCH_SESSIONS.md#compare-a-session-with-the-preflight-checklist).

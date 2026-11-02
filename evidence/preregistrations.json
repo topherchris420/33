@@ -49,12 +49,12 @@
       "prediction": "None. This is an exploratory characterization; no model predicts the drift.",
       "variables": {
         "controlled": ["orientation (fixture level)", "firmware revision and gains", "time since power-on"],
-        "measured": ["roll_deg from LOG rows (rocket clock) over 600 s"],
+        "measured": ["roll_deg from LOG rows (rocket clock) over 600 s", "rate_deg_s from the same LOG rows, integrated over time offline"],
         "recorded": ["ambient temperature", "whether CALIBRATE was sent and when", "session ID and audit digest"]
       },
-      "interpretation_rule": "Report the roll change over 600 s and the maximum excursion. Because no prediction exists, the result describes this unit only and sets a baseline; it cannot pass or fail.",
+      "interpretation_rule": "Report the roll change over 600 s, the maximum excursion, and the integrated rate over the same window. Because no prediction exists, the result describes this unit only and sets a baseline; it cannot pass or fail.",
       "measurement_method": "Dashboard session with DUMPLOG every 10 s to capture rocket-clock LOG rows; audit with python -m evidence audit.",
-      "known_limitations": ["The ring buffer holds about 12 s; missed dumps leave gaps that must be reported, not interpolated."],
+      "known_limitations": ["The ring buffer holds about 12 s; missed dumps leave gaps that must be reported, not interpolated.", "In this pose the accelerometer holds roll_deg near its reference, so roll_deg alone cannot show gyro drift. Integrated rate_deg_s reads the gyro without that correction, and only it applies to gyro-only operation (D-027)."],
       "safety": "Inert only: ignition servo disconnected; launcher left in SAFE."
     }
   ]

@@ -36,7 +36,7 @@
   "docs/EVIDENCE/C8_clt.csv": "67193424e7210d4f392760ef104911b2d0bcab7ebefe05b030185d9ca3a3b922",
   "docs/EVIDENCE/C8_hinge_fos.json": "f04f43f57ff9a69e9226cabe2e727db134cdf3abedf5e4ddf19e8f45560c9f6e",
   "docs/EVIDENCE/CHANGELOG.md": "ec9345c71ad5d118a307b40346e82ca9c45110643b673c681e21dd97ff2d8d69",
-  "docs/SAFETY.md": "bb3ac86410075443d0a32f146f80f8995262ef7612f16b4cdc610dc5377e20b7",
+  "docs/SAFETY.md": "801752872586acbea6ffc754926ff53d8d5b66a44059a3a0aa1c89433e63c95b",
   "docs/assets/review/c1_loop_closure.svg": "6eaf21321a2c3f8dc86af6c632a0336e9964676b62634251b3bcfda28f67d963",
   "docs/assets/review/c3_naca0012_profile.svg": "6afe5f42d7e64820fb3aa08ebf4340dd4605e66b3f3cab70b8c9411480903663",
   "evidence/archive/C1_four_bar_sweep.v1.json": "eef37dad4417978d43e63d245931e1cb5f3f1501cdbae260be1d8d58cdf0e8ac",
@@ -54,12 +54,12 @@
   "evidence/archive/test_four_bar.v1.py.txt": "4593d139cd18d013ae37af18e8fbcffc06b83f0e9e7eb754cf6cfefbadbcaae3",
   "evidence/archive/test_spring_sizing.v1.py.txt": "4bb9eb28aff14d2f452356646e927ea405c116edc18299cf46f48e26f9ba7726",
   "evidence/catalog.json": "b20586161c48e1fb39094a49361ee364dd74e170f908590ab240fc2a5de2456c",
-  "evidence/discrepancies.json": "458edd4696a1d59f2b6a35eace7d127d7f2d932be098165bccfec59d067d99b8",
+  "evidence/discrepancies.json": "6da9f152c2908cd6000f708b901b47fb6e8bf43574a29522099ff582c60b6b43",
   "evidence/measurements.json": "7ad754f8947ac4fa9183b2da1b3d9735cdf8833af1965f91c116a072107b0e9d",
   "evidence/predictions.json": "6aac364f253669cb33ed3aed7c0e53977376b60dad34511a0c819d868e57dd5c",
-  "evidence/preregistrations.json": "c069c66e1a7d46c1ff348a7a6db5e3257758350750620b8988b8d1691e674830",
+  "evidence/preregistrations.json": "37ed33bab3b45c7e32d0b48d49c948a2fb3f6bd0ff1312cce688a24576e8e29a",
   "evidence/requirements.json": "ef365bb51d1cd2dbe0ccbc63608957e4e64fc705295193e14231dfabee7d4b94",
-  "evidence/reviews.json": "ef75f5a17d5ef6a294061e9c14950b00a0051709cc4750c73887bd53d29ff60a",
+  "evidence/reviews.json": "890942eabf63c367041168feec4a4031a665646b9aa11721f6914114e1840494",
   "evidence/safety_gates.json": "ab71eee7e344c78d16d5a39a864d56d636cc9446a88047ee57a2ba4f23790f13",
   "evidence/sessions.json": "a8486b0ce83596a773a27761db12830209c274dff74a35deba1dc5d51bc5433b",
   "materials/mass_rollup.py": "7e8b8ca2b46b20102721c645284fc7b1a81e8c4848e30ee4295a8a10260025ec",
@@ -725,8 +725,8 @@
    "format": "file",
    "description": "Current inert research boundary and safety gates.",
    "status": "current",
-   "sha256": "bb3ac86410075443d0a32f146f80f8995262ef7612f16b4cdc610dc5377e20b7",
-   "bytes": 6520,
+   "sha256": "801752872586acbea6ffc754926ff53d8d5b66a44059a3a0aa1c89433e63c95b",
+   "bytes": 7064,
    "class_label": "SPECIFICATION",
    "snapshot_path": "artifacts/docs/SAFETY.md"
   },
@@ -1231,7 +1231,7 @@
      "kind": "snapshot",
      "recorded": "2026-11-01",
      "recorded_by": "tooling snapshot (no human review)",
-     "note": "Added D-025 from reading the abort path in both firmwares: a launcher abort leaves an armed rocket armed. It is informational for C2 because deployment timing is unchanged; it does affect when the deploy trigger is live. No firmware changed. Automated snapshot, not a human review.",
+     "note": "D-025 gained a progress note: the safety checklist now warns that the rocket stays armed, and a read-only audit flags it. Firmware and the deployment-timing evidence are unchanged, so C2 reads as before; still no physical measurement.",
      "independent": false
     }
    },
@@ -3265,6 +3265,51 @@
    ],
    "found_by": "Tracing the abort path through both firmwares while building the ground status model. Source reading only; not observed on hardware.",
    "next_action": "A human decides the intended behavior under a separate safety review, for example a disarm command sent on abort. No gate was changed. Until then the status board raises W-ARMED-AFTER-ABORT, and an aborted rocket should be treated as armed until it is restarted.",
+   "progress": "docs/SAFETY.md now warns before the preflight steps that arm the rocket, and Firmware/preflight_audit.py flags a rocket still active after an abort. Firmware is unchanged.",
+   "resolution": null,
+   "resolved_by": null
+  },
+  {
+   "id": "D-026",
+   "kind": "documentation_vs_implementation",
+   "claims": [],
+   "effect": "informational",
+   "status": "open",
+   "title": "The roll correction has no guard for a near-vertical rocket",
+   "sides": [
+    {
+     "artifact": "rocket_firmware",
+     "says": "The comment above the accelerometer band says atan2 of near-zero axes is noise. The band tests total acceleration only, so a stationary rocket pointing straight up passes it, and roll is corrected from atan2(ay, az) while ay and az are both near zero."
+    },
+    {
+     "artifact": "launcher_firmware",
+     "says": "[FUSION] Pitch is atan2(-ax, hypot(ay, az)) from the same relayed values, so ay and az total g*cos(pitch) when stationary, and error on them is magnified by 1/cos(pitch)."
+    }
+   ],
+   "found_by": "Reading the roll estimator while adding the status board's roll reference. A software port of the equations, with invented noise of 0.012 and 0.05 m/s^2 and an invented 2 ms loop, gave a roll standard deviation of 0.08 to 0.35 deg at 5 deg from vertical and 0.4 to 1.8 deg at 1 deg, with excursions of 67 deg exactly at vertical. Not observed on hardware; sensor noise and loop period are not measured.",
+   "next_action": "A human decides whether firmware should also gate on the size of ay and az, under review because canard output depends on roll in FLIGHT. No firmware was changed. Until then the status board raises A-ROLL-REFERENCE-WEAK within 5 deg of vertical. An inert capture held near vertical would show the real size.",
+   "resolution": null,
+   "resolved_by": null
+  },
+  {
+   "id": "D-027",
+   "kind": "measurement_method",
+   "claims": [],
+   "effect": "informational",
+   "status": "open",
+   "title": "P-003 as first proposed could not see gyro drift, because the accelerometer holds roll in that pose",
+   "sides": [
+    {
+     "artifact": "rocket_firmware",
+     "says": "While stationary near 1 g, every loop sets roll to 0.98 (roll + rate dt) + 0.02 accel roll, so a residual gyro bias b settles at an offset of 49 b dt instead of growing. Roll runs on the gyro alone only in boost, coast, and FLIGHT."
+    },
+    {
+     "path": "evidence/preregistrations.json",
+     "says": "P-003 reads roll_deg from LOG rows over 600 s, stationary and level, to report drift."
+    }
+   ],
+   "found_by": "Reading the roll estimator. A software port of the equations with an invented 1 deg/s bias and 2 ms loop ended 600 s at 0.10 deg, matching 49 b dt, against 600 deg on the gyro alone. Not observed on hardware.",
+   "next_action": "A human reviews the revised P-003 before registering it. It now also integrates rate_deg_s from the same LOG rows, which reads the gyro without the correction and needs no firmware change.",
    "resolution": null,
    "resolved_by": null
   }
@@ -3373,7 +3418,8 @@
      "time since power-on"
     ],
     "measured": [
-     "roll_deg from LOG rows (rocket clock) over 600 s"
+     "roll_deg from LOG rows (rocket clock) over 600 s",
+     "rate_deg_s from the same LOG rows, integrated over time offline"
     ],
     "recorded": [
      "ambient temperature",
@@ -3381,10 +3427,11 @@
      "session ID and audit digest"
     ]
    },
-   "interpretation_rule": "Report the roll change over 600 s and the maximum excursion. Because no prediction exists, the result describes this unit only and sets a baseline; it cannot pass or fail.",
+   "interpretation_rule": "Report the roll change over 600 s, the maximum excursion, and the integrated rate over the same window. Because no prediction exists, the result describes this unit only and sets a baseline; it cannot pass or fail.",
    "measurement_method": "Dashboard session with DUMPLOG every 10 s to capture rocket-clock LOG rows; audit with python -m evidence audit.",
    "known_limitations": [
-    "The ring buffer holds about 12 s; missed dumps leave gaps that must be reported, not interpolated."
+    "The ring buffer holds about 12 s; missed dumps leave gaps that must be reported, not interpolated.",
+    "In this pose the accelerometer holds roll_deg near its reference, so roll_deg alone cannot show gyro drift. Integrated rate_deg_s reads the gyro without that correction, and only it applies to gyro-only operation (D-027)."
    ],
    "safety": "Inert only: ignition servo disconnected; launcher left in SAFE."
   }
@@ -3683,8 +3730,8 @@
    "requires_human_review": 4,
    "satisfied": 4
   },
-  "discrepancies_open": 18,
-  "discrepancies_total": 25,
+  "discrepancies_open": 20,
+  "discrepancies_total": 27,
   "predictions_not_measured": 5,
   "predictions_total": 5,
   "archived_items": 13
@@ -3955,6 +4002,14 @@
     {
      "discrepancy": "D-025",
      "next_action": "A human decides the intended behavior under a separate safety review, for example a disarm command sent on abort. No gate was changed. Until then the status board raises W-ARMED-AFTER-ABORT, and an aborted rocket should be treated as armed until it is restarted."
+    },
+    {
+     "discrepancy": "D-026",
+     "next_action": "A human decides whether firmware should also gate on the size of ay and az, under review because canard output depends on roll in FLIGHT. No firmware was changed. Until then the status board raises A-ROLL-REFERENCE-WEAK within 5 deg of vertical. An inert capture held near vertical would show the real size."
+    },
+    {
+     "discrepancy": "D-027",
+     "next_action": "A human reviews the revised P-003 before registering it. It now also integrates rate_deg_s from the same LOG rows, which reads the gyro without the correction and needs no firmware change."
     }
    ]
   },
@@ -4563,7 +4618,7 @@
   },
   "C2": {
    "current": {
-    "assumptions_sha256": "a7063228f14f6ce3505dd6177615c655259fd222fd1d15be53273678c57fc4bd",
+    "assumptions_sha256": "ae2ea79f418e97d88cfb6cebbc7eb3dbc0094b3a2e65206500fe20c4a29496f6",
     "dependencies": {
      "firmware_safety_tests": "ff5e17217ea229ee936dfa61180bb98c083475c4ce0ff1eb1f44aa348e466a77",
      "rocket_firmware": "4a14aac55f7f658ad74cca2738ffa49652595d811e94da35915854bdd5aba926",
@@ -4574,12 +4629,29 @@
      "timing_tests": "2012e20b2348325ddf94478678f8f8e053a5ad09e5b501ed9391797250fd8540"
     },
     "kind": "snapshot",
-    "note": "Added D-025 from reading the abort path in both firmwares: a launcher abort leaves an armed rocket armed. It is informational for C2 because deployment timing is unchanged; it does affect when the deploy trigger is live. No firmware changed. Automated snapshot, not a human review.",
+    "note": "D-025 gained a progress note: the safety checklist now warns that the rocket stays armed, and a read-only audit flags it. Firmware and the deployment-timing evidence are unchanged, so C2 reads as before; still no physical measurement.",
     "recorded": "2026-11-01",
     "recorded_by": "tooling snapshot (no human review)",
     "statement_sha256": "89c813e601f029d8c123406f34f8f6518a66ba74bad03982576bcb2f394c7af8"
    },
    "history": [
+    {
+     "assumptions_sha256": "a7063228f14f6ce3505dd6177615c655259fd222fd1d15be53273678c57fc4bd",
+     "dependencies": {
+      "firmware_safety_tests": "ff5e17217ea229ee936dfa61180bb98c083475c4ce0ff1eb1f44aa348e466a77",
+      "rocket_firmware": "4a14aac55f7f658ad74cca2738ffa49652595d811e94da35915854bdd5aba926",
+      "timing_bench_sketch": "add4c75d552ef7640487daeb7eecf33def960ea100b510accad1590417658419",
+      "timing_fixture": "8cf6f0fe7a94d49f4c3a872fdd400437addce23f03057ae8abe22bb778e69467",
+      "timing_header": "cd28abe0e40b3a53f98a2f04c03ff740f24a1457bf2d0dd818267a5952c88c9f",
+      "timing_source": "013cb6614c2cdb6b2d7a45cce893f89134e6f03cc5acc161dd36b5b23bec4028",
+      "timing_tests": "2012e20b2348325ddf94478678f8f8e053a5ad09e5b501ed9391797250fd8540"
+     },
+     "kind": "snapshot",
+     "note": "Added D-025 from reading the abort path in both firmwares: a launcher abort leaves an armed rocket armed. It is informational for C2 because deployment timing is unchanged; it does affect when the deploy trigger is live. No firmware changed. Automated snapshot, not a human review.",
+     "recorded": "2026-11-01",
+     "recorded_by": "tooling snapshot (no human review)",
+     "statement_sha256": "89c813e601f029d8c123406f34f8f6518a66ba74bad03982576bcb2f394c7af8"
+    },
     {
      "assumptions_sha256": "cde7a310452916d0a79b59bafb6bcb97712bfb804edf0a273966b660bdf40e16",
      "dependencies": {

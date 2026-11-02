@@ -12,7 +12,7 @@ import math
 import tkinter as tk
 
 from ground_status import (ADVISORY, AT_RISK, CAUTION, GroundStatus, LOST, NOT_SEEN, SEEN, SUPPORTED, SUSPECT,
-                           WARNING, diagnosis_text, gains_line, synthetic_demo_events)
+                           WARNING, calibration_line, diagnosis_text, gains_line, reference_text, synthetic_demo_events)
 
 BG, PANEL, INK, DIM = "#10151a", "#1a2128", "#e6edf3", "#8b98a5"
 GREEN, AMBER, RED, CYAN = "#3fb950", "#d29922", "#f85149", "#58a6ff"
@@ -127,6 +127,8 @@ class StatusPanel:
         gains.pack(fill=tk.X, pady=(0, 8))
         self.gains_label = tk.Label(gains, text="", bg=PANEL, fg=INK, font=(MONO, 10), anchor="w")
         self.gains_label.pack(fill=tk.X)
+        self.calibration_label = tk.Label(gains, text="", bg=PANEL, fg=DIM, font=(MONO, 10), anchor="w")
+        self.calibration_label.pack(fill=tk.X)
         alerts = self._frame(bottom, "ADVISORIES")
         alerts.pack(fill=tk.X)
         self.advisory_text = tk.Text(alerts, height=9, bg=PANEL, fg=INK, font=(MONO, 10), bd=0, wrap=tk.WORD,
@@ -159,6 +161,7 @@ class StatusPanel:
         for capability, state in snapshot["capabilities"].items():
             self.capability_rows[capability].config(text=state, fg=CAPABILITY_COLOURS.get(state, DIM))
         self.gains_label.config(text=gains_line(snapshot["gains"]))
+        self.calibration_label.config(text=calibration_line(snapshot["calibration"]))
         self._draw_advisories(snapshot["advisories"])
 
     def _draw_attitude(self, attitude):
@@ -180,7 +183,8 @@ class StatusPanel:
             dial.create_line(centre - dx, centre - dy, centre + dx, centre + dy, fill=GREEN, width=3)
             self.roll_label.config(text=f"{attitude['roll_deg']:+8.2f} deg", fg=INK)
             self.rate_label.config(text=f"{attitude['rate_deg_s']:+8.2f} deg/s", fg=INK)
-            note = f"Basis: {attitude['basis']}. {attitude['drift']}. {attitude['not_observed'].capitalize()}."
+            note = (f"Basis: {attitude['basis']}. {reference_text(attitude['reference'])} "
+                    f"{attitude['drift']}. {attitude['not_observed'].capitalize()}.")
         else:
             span = radius * 0.7
             dial.create_line(centre - span, centre - span, centre + span, centre + span, fill=RED, width=4)

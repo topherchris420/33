@@ -6,7 +6,7 @@ Two parts of the project disagreeing is information. Each entry names both sides
 | Status | Effect | Count |
 |---|---|---|
 | OPEN | Contradicts a claim or requirement | 5 |
-| OPEN | Informational | 5 |
+| OPEN | Informational | 7 |
 | OPEN | Weakens a claim's support | 8 |
 | RESOLVED | Contradicts a claim or requirement | 2 |
 | RESOLVED | Informational | 3 |
@@ -478,7 +478,45 @@ Two parts of the project disagreeing is information. Each entry names both sides
 
 **Next action.** A human decides the intended behavior under a separate safety review, for example a disarm command sent on abort. No gate was changed. Until then the status board raises W-ARMED-AFTER-ABORT, and an aborted rocket should be treated as armed until it is restarted.
 
+**Progress.** docs/SAFETY.md now warns before the preflight steps that arm the rocket, and Firmware/preflight_audit.py flags a rocket still active after an abort. Firmware is unchanged.
+
 *Found by:* Tracing the abort path through both firmwares while building the ground status model. Source reading only; not observed on hardware.
+
+## D-026
+
+**The roll correction has no guard for a near-vertical rocket**
+
+| Field | Value |
+|---|---|
+| Status | OPEN |
+| Effect | Informational |
+| Kind | documentation vs implementation — Documentation disagrees with firmware or software behavior. |
+| Claims | none |
+
+- [Firmware/Rocket/src/main.cpp](../Firmware/Rocket/src/main.cpp): The comment above the accelerometer band says atan2 of near-zero axes is noise. The band tests total acceleration only, so a stationary rocket pointing straight up passes it, and roll is corrected from atan2(ay, az) while ay and az are both near zero.
+- [Firmware/Launcher/src/main.cpp](../Firmware/Launcher/src/main.cpp): [FUSION] Pitch is atan2(-ax, hypot(ay, az)) from the same relayed values, so ay and az total g*cos(pitch) when stationary, and error on them is magnified by 1/cos(pitch).
+
+**Next action.** A human decides whether firmware should also gate on the size of ay and az, under review because canard output depends on roll in FLIGHT. No firmware was changed. Until then the status board raises A-ROLL-REFERENCE-WEAK within 5 deg of vertical. An inert capture held near vertical would show the real size.
+
+*Found by:* Reading the roll estimator while adding the status board's roll reference. A software port of the equations, with invented noise of 0.012 and 0.05 m/s^2 and an invented 2 ms loop, gave a roll standard deviation of 0.08 to 0.35 deg at 5 deg from vertical and 0.4 to 1.8 deg at 1 deg, with excursions of 67 deg exactly at vertical. Not observed on hardware; sensor noise and loop period are not measured.
+
+## D-027
+
+**P-003 as first proposed could not see gyro drift, because the accelerometer holds roll in that pose**
+
+| Field | Value |
+|---|---|
+| Status | OPEN |
+| Effect | Informational |
+| Kind | measurement method — A measurement procedure cannot establish what it is meant to measure. |
+| Claims | none |
+
+- [Firmware/Rocket/src/main.cpp](../Firmware/Rocket/src/main.cpp): While stationary near 1 g, every loop sets roll to 0.98 (roll + rate dt) + 0.02 accel roll, so a residual gyro bias b settles at an offset of 49 b dt instead of growing. Roll runs on the gyro alone only in boost, coast, and FLIGHT.
+- [evidence/preregistrations.json](../evidence/preregistrations.json): P-003 reads roll_deg from LOG rows over 600 s, stationary and level, to report drift.
+
+**Next action.** A human reviews the revised P-003 before registering it. It now also integrates rate_deg_s from the same LOG rows, which reads the gyro without the correction and needs no firmware change.
+
+*Found by:* Reading the roll estimator. A software port of the equations with an invented 1 deg/s bias and 2 ms loop ended 600 s at 0.10 deg, matching 49 b dt, against 600 deg on the gyro alone. Not observed on hardware.
 
 ## Failure archive
 

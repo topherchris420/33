@@ -79,4 +79,5 @@ Every capture goes through the session workflow in [BENCH_SESSIONS.md](BENCH_SES
 - Stabilization is roll-axis only; gyro integration drift is uncharacterized.
 - UDP does not guarantee delivery; the dashboard records "sent", not "received".
 - The status board has only seen synthetic packets; its diagnosis of real faults is unmeasured.
+- The preflight audit has only seen synthetic sessions.
 - Servo authority under aerodynamic load is unmeasured and outside inert bench scope.
