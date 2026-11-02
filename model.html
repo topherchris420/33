@@ -1,0 +1,339 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Faceted folding-fin study — Project 33</title>
+<meta name="description" content="Interactive faceted 3D model of the Project 33 folding-fin rocket and launcher platform. A design visualization, not evidence.">
+<link rel="icon" href="assets/marketing/mark.svg" type="image/svg+xml">
+<script type="importmap">
+{
+  "imports": {
+    "three": "https://unpkg.com/three@0.184.0/build/three.module.js",
+    "three/addons/controls/OrbitControls.js": "https://unpkg.com/three@0.184.0/examples/jsm/controls/OrbitControls.js",
+    "three/addons/exporters/OBJExporter.js": "https://unpkg.com/three@0.184.0/examples/jsm/exporters/OBJExporter.js",
+    "three/addons/exporters/GLTFExporter.js": "https://unpkg.com/three@0.184.0/examples/jsm/exporters/GLTFExporter.js"
+  },
+  "integrity": {
+    "https://unpkg.com/three@0.184.0/build/three.module.js": "sha384-8FCZ1eVO6it4+pbec2aDtnTrwjWXZLJRC+MAGCIPDgsYnUrl/E0A2YlF8ioMKI/J",
+    "https://unpkg.com/three@0.184.0/build/three.core.js": "sha384-dw2ooPewaEIrAgl6oFDBmmBWCE9oW9LxRGcfwZ0hLvEprzo202wXl7vCYHRlSnOT",
+    "https://unpkg.com/three@0.184.0/examples/jsm/controls/OrbitControls.js": "sha384-4rziNxOBZKQ69i+w+f89KJ55TCYquwchVbByQwmaOeIOXdOU2PLDn3kOfXHwIJC9",
+    "https://unpkg.com/three@0.184.0/examples/jsm/exporters/OBJExporter.js": "sha384-nbwtoZENJD3Vq+ACK0CuGQdPMuDWHkamC2KJD70EV5nfg6jQjfppKOea07YJN+N3",
+    "https://unpkg.com/three@0.184.0/examples/jsm/exporters/GLTFExporter.js": "sha384-VofkvpG6HERhFCYbsUOHeNXBCqID2nfqkQqnVzE1jc/oPcz+qJ13ADdXH08hE+cQ"
+  }
+}
+</script>
+<link rel="stylesheet" href="assets/model/industry.css">
+<style>
+  three-d-stage:not(:defined) { visibility: hidden; }
+  a { color: var(--color-accent-700); }
+  a:hover { color: var(--color-accent-800); }
+  .panel {
+    position: absolute; top: 20px; left: 20px; z-index: 2;
+    width: min(290px, calc(100vw - 40px));
+    padding: var(--space-4) var(--space-6);
+    display: flex; flex-direction: column; gap: var(--space-3);
+    background: color-mix(in srgb, var(--color-bg) 88%, transparent);
+  }
+  .kicker { font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--color-accent-700); }
+  .panel h1 { font-size: 30px; margin: 0; }
+  .sub { margin: 0; font-size: 14px; color: color-mix(in srgb, var(--color-text) 72%, transparent); }
+  .ctrl { display: grid; grid-template-columns: 74px 1fr; align-items: center; gap: var(--space-2) var(--space-3); }
+  .ctrl h6 { margin: 0; font-size: 11px; color: color-mix(in srgb, var(--color-text) 65%, transparent); }
+  .seg { width: 100%; }
+  .seg-opt { flex: 1; justify-content: center; padding-inline: 6px; white-space: nowrap; font-family: var(--font-heading); font-weight: 600; font-size: 14px; }
+  .specs { display: grid; grid-template-columns: auto 1fr; gap: 2px var(--space-4); margin: 0; font-size: 13px; line-height: 1.4; }
+  .specs dt { color: color-mix(in srgb, var(--color-text) 60%, transparent); }
+  .specs dd { margin: 0; text-wrap: pretty; }
+  .note { margin: 0; font-size: 12px; line-height: 1.5; color: color-mix(in srgb, var(--color-text) 66%, transparent); text-wrap: pretty; }
+  /* Narrow screens: model first, panel below it, so the panel never covers the model. */
+  @media (max-width: 760px) {
+    body { display: flex; flex-direction: column; }
+    three-d-stage { order: -1; height: 68vh; height: 68svh; }
+    .panel { position: static; width: auto; margin: var(--space-6) 16px 28px; background: transparent; }
+  }
+</style>
+</head>
+<body>
+<div class="panel blueprint">
+  <i class="corner tl"></i><i class="corner tr"></i><i class="corner bl"></i><i class="corner br"></i>
+  <div>
+    <div class="kicker">V3D / Design study 033</div>
+    <h1>Project 33</h1>
+    <p class="sub">Folding-fin airframe in a faceted skin</p>
+  </div>
+  <div class="ctrl">
+    <h6>Fins</h6>
+    <div class="seg" role="radiogroup" aria-label="Fins">
+      <label class="seg-opt"><input type="radio" name="fins" value="deployed" checked>Deployed</label>
+      <label class="seg-opt"><input type="radio" name="fins" value="folded">Folded</label>
+    </div>
+    <h6>Assembly</h6>
+    <div class="seg" role="radiogroup" aria-label="Assembly">
+      <label class="seg-opt"><input type="radio" name="explode" value="1" checked>Exploded</label>
+      <label class="seg-opt"><input type="radio" name="explode" value="0">Assembled</label>
+    </div>
+    <h6>Launcher</h6>
+    <div class="seg" role="radiogroup" aria-label="Launcher">
+      <label class="seg-opt"><input type="radio" name="launcher" value="1" checked>On</label>
+      <label class="seg-opt"><input type="radio" name="launcher" value="0">Off</label>
+    </div>
+  </div>
+  <dl class="specs">
+    <dt>Length</dt><dd>683 mm</dd>
+    <dt>Diameter</dt><dd>76.2 mm, octagonal</dd>
+    <dt>Fins</dt><dd>4 × NACA 0012, faceted, 130/110 × 180 mm</dd>
+    <dt>Canards</dt><dd>4 × 28 × 57 mm, SG90-driven</dd>
+  </dl>
+  <p class="note">PLA+/PETG print, stock hardware. Dimensions from the repo's OpenRocket model; faceting from the F-117A manual's cover aircraft. Fins fold 120° on a skewed hinge; the C1 four-bar is omitted because it does not close. Visualization only, not evidence.</p>
+  <p class="note"><a href="./">← Project 33</a> · <a href="https://github.com/topherchris420/33/blob/main/docs/MODEL_3D.md">Sources and assumptions</a></p>
+</div>
+
+<three-d-stage name="project33-faceted" background="var(--color-bg)"></three-d-stage>
+<script src="assets/model/three-d-stage.js"></script>
+<script type="module">
+const stage = document.querySelector('three-d-stage');
+const { THREE } = await stage.ready;
+
+// ── materials (prototype build) ──
+const M = {
+  airframe: new THREE.MeshStandardMaterial({ name: 'petg_charcoal', color: 0x34383d, roughness: 0.62, metalness: 0.05 }),
+  fin: new THREE.MeshStandardMaterial({ name: 'pla_steel_blue', color: 0x5980a6, roughness: 0.55, metalness: 0.05 }),
+  print: new THREE.MeshStandardMaterial({ name: 'pla_light_grey', color: 0xc8cbd0, roughness: 0.72, metalness: 0 }),
+  steel: new THREE.MeshStandardMaterial({ name: 'steel_hardware', color: 0xb9bec4, roughness: 0.32, metalness: 0.35 }),
+  elec: new THREE.MeshStandardMaterial({ name: 'electronics', color: 0x1e2226, roughness: 0.45, metalness: 0.1 }),
+  red: new THREE.MeshStandardMaterial({ name: 'indicator_red', color: 0xb5382d, roughness: 0.5, metalness: 0 }),
+};
+
+// ── helpers (all dimensions in mm; root is scaled to meters) ──
+const mesh = (name, geo, mat) => { const m = new THREE.Mesh(geo, mat); m.name = name; return m; };
+const at = (o, x = 0, y = 0, z = 0) => { o.position.set(x, y, z); return o; };
+const box = (name, w, h, d, mat, x, y, z) => at(mesh(name, new THREE.BoxGeometry(w, h, d), mat), x, y, z);
+const cylY = (name, r, h, mat, x, y, z, seg = 32) => at(mesh(name, new THREE.CylinderGeometry(r, r, h, seg), mat), x, y, z);
+const cylX = (name, r, h, mat, x, y, z, seg = 24) => { const g = new THREE.CylinderGeometry(r, r, h, seg); g.rotateZ(Math.PI / 2); return at(mesh(name, g, mat), x, y, z); };
+const cylZ = (name, r, h, mat, x, y, z, seg = 24) => { const g = new THREE.CylinderGeometry(r, r, h, seg); g.rotateX(Math.PI / 2); return at(mesh(name, g, mat), x, y, z); };
+const facet = (g) => { const n = g.index ? g.toNonIndexed() : g; n.computeVertexNormals(); return n; };
+const octPts = (rc) => Array.from({ length: 8 }, (_, k) => { const a = Math.PI / 8 + k * Math.PI / 4; return new THREE.Vector2(rc * Math.cos(a), rc * Math.sin(a)); });
+const octShape = (rc) => new THREE.Shape(octPts(rc));
+const octHole = (rc) => new THREE.Path(octPts(rc));
+const circShape = (r) => { const s = new THREE.Shape(); s.absarc(0, 0, r, 0, Math.PI * 2, false); return s; };
+const circHole = (r) => { const p = new THREE.Path(); p.absarc(0, 0, r, 0, Math.PI * 2, true); return p; };
+const rectShape = (x0, y0, x1, y1) => new THREE.Shape([new THREE.Vector2(x0, y0), new THREE.Vector2(x1, y0), new THREE.Vector2(x1, y1), new THREE.Vector2(x0, y1)]);
+// Extrude a plan shape upward (+y) by len; shape y maps to world -z.
+function prism(name, shape, len, mat, hole, bevel = 0) {
+  if (hole) shape.holes.push(hole);
+  const g = new THREE.ExtrudeGeometry(shape, { depth: len, bevelEnabled: bevel > 0, bevelSize: bevel, bevelThickness: bevel, bevelOffset: 0, bevelSegments: 1, curveSegments: 48 });
+  g.rotateX(-Math.PI / 2);
+  if (bevel) g.translate(0, bevel, 0);
+  return mesh(name, g, mat);
+}
+// Tapered, swept lifting surface lofted from a faceted section.
+// Local frame: X span (outward), Y chord (LE up, root TE at y=0), Z thickness.
+function loft(name, cr, ct, span, sweep, sec, mat) {
+  const ring = (f) => { const c = cr + (ct - cr) * f, le = cr - sweep * f; return sec.map(([x, z]) => [span * f, le - x * c, z * c]); };
+  const A = ring(0), B = ring(1), n = sec.length, pos = [];
+  const tri = (p, q, r) => pos.push(...p, ...q, ...r);
+  for (let k = 0; k < n; k++) { const k2 = (k + 1) % n; tri(A[k], A[k2], B[k2]); tri(A[k], B[k2], B[k]); }
+  for (let k = 1; k < n - 1; k++) { tri(A[0], A[k + 1], A[k]); tri(B[0], B[k], B[k + 1]); }
+  const g = new THREE.BufferGeometry();
+  g.setAttribute('position', new THREE.Float32BufferAttribute(pos, 3));
+  g.computeVertexNormals();
+  return mesh(name, g, mat);
+}
+const yt = (x) => 0.6 * (0.2969 * Math.sqrt(x) - 0.126 * x - 0.3516 * x * x + 0.2843 * x ** 3 - 0.1015 * x ** 4);
+const ST = [0.05, 0.2, 0.45, 0.75];
+const NACA0012 = [[0, 0], ...ST.map((x) => [x, yt(x)]), [1, 0], ...ST.slice().reverse().map((x) => [x, -yt(x)])];
+const DIAMOND = [[0, 0], [0.5, 0.06], [1, 0], [0.5, -0.06]];
+
+// ── parts registry for explode animation ──
+const parts = [];
+const part = (obj, ox = 0, oy = 0, oz = 0) => { parts.push({ obj, base: obj.position.clone(), off: new THREE.Vector3(ox, oy, oz) }); return obj; };
+const group = (name, parent, ry = 0) => { const g = new THREE.Group(); g.name = name; g.rotation.y = ry; parent.add(g); return g; };
+
+// ── airframe constants (Folding Stabilized Rocket.ork + side view) ──
+const RC = 38.1, COS8 = Math.cos(Math.PI / 8), APO = RC * COS8, WALL = 2.4;
+const RC_IN = RC - WALL / COS8;
+const L_TOT = 683, L_NOSE = 38.1, Y_SPLIT = 250, Y_NOSE = L_TOT - L_NOSE;
+const EX_FWD = 100;
+
+const root = new THREE.Group(); root.name = 'project33'; root.scale.setScalar(0.001);
+const rocket = group('rocket', root);
+const launcher = group('launcher', root);
+
+// Nose: faceted ellipsoid, 8 facets around, 4 tiers
+{
+  const prof = [[1, 0], [0.95, 0.3], [0.78, 0.6], [0.5, 0.85], [0, 1]].map(([r, y]) => new THREE.Vector2(r * RC, y * L_NOSE));
+  const nose = new THREE.Group(); nose.name = 'nose_assembly'; rocket.add(at(nose, 0, Y_NOSE, 0));
+  nose.add(mesh('nose_cone', facet(new THREE.LatheGeometry(prof, 8, Math.PI / 8, Math.PI * 2)), M.airframe));
+  const capG = new THREE.ShapeGeometry(octShape(RC)); capG.rotateX(Math.PI / 2);
+  nose.add(mesh('nose_base_cap', capG, M.airframe));
+  nose.add(at(prism('nose_shoulder', octShape(RC_IN - 0.3), 15, M.print), 0, -15, 0));
+  part(nose, 0, EX_FWD + 90, 0);
+}
+
+// Body tubes, coupler
+rocket.add(part(at(prism('body_tube_forward', octShape(RC), Y_NOSE - Y_SPLIT, M.airframe, octHole(RC_IN)), 0, Y_SPLIT, 0), 0, EX_FWD, 0));
+rocket.add(part(prism('body_tube_aft', octShape(RC), Y_SPLIT, M.airframe, octHole(RC_IN))));
+{
+  const cp = new THREE.Group(); cp.name = 'coupler_assembly'; rocket.add(at(cp, 0, Y_SPLIT - 20, 0));
+  cp.add(prism('coupler', octShape(RC_IN - 0.3), 40, M.print, octHole(RC_IN - 2.8)));
+  cp.add(at(prism('coupler_bulkhead', octShape(RC_IN - 2.8), 3, M.print), 0, 18.5, 0));
+  part(cp, 0, EX_FWD * 0.45, 0);
+}
+
+// Canards + SG90 servos (4, + configuration, 209 mm aft of nose tip)
+const Y_CAN = L_TOT - 209 - 28; // root TE
+for (let i = 0; i < 4; i++) {
+  const w = group(`canard_station_${i}`, rocket, i * Math.PI / 2);
+  const yMid = Y_CAN + 14;
+  w.add(part(at(loft(`canard_${i}`, 28, 25, 57, 4, DIAMOND, M.fin), APO + 0.5, Y_CAN, 0), 70, EX_FWD, 0));
+  w.add(part(cylX(`canard_shaft_${i}`, 1.5, 16, M.steel, APO - 5, yMid, 0), 52, EX_FWD, 0));
+  const sv = new THREE.Group(); sv.name = `canard_servo_${i}`; w.add(at(sv, 0, yMid, 0));
+  sv.add(box(`sg90_body_${i}`, 22.7, 22.5, 11.8, M.elec, 20.4, 0, 0));
+  sv.add(box(`sg90_tabs_${i}`, 2.5, 32.5, 11.8, M.elec, 26, 0, 0));
+  sv.add(cylX(`sg90_spline_${i}`, 2.4, 3, M.steel, 33.2 - 1.5, 0, 0));
+  part(sv, 30, EX_FWD, 0);
+}
+
+// Avionics sled (diagonal, pulled out of the forward bay)
+{
+  const w = group('avionics_station', rocket, Math.PI / 4);
+  const s = new THREE.Group(); s.name = 'avionics_sled'; w.add(s);
+  s.add(box('sled_plate', 58, 140, 3, M.print, 0, 350, 0));
+  // ESP32 DevKit V1 (+Z)
+  const ez = 1.5 + 3 + 0.8;
+  for (const [dx, dy] of [[-11, -22], [11, -22], [-11, 22], [11, 22]]) s.add(cylZ(`esp32_standoff_${dx}_${dy}`, 1.5, 3, M.steel, dx, 382 + dy, 3, 12));
+  s.add(box('esp32_devkit_pcb', 28.3, 51.5, 1.6, M.elec, 0, 382, ez));
+  s.add(box('esp32_wroom_shield', 18, 20, 3.1, M.steel, 0, 396, ez + 2.35));
+  s.add(box('esp32_header_l', 2.5, 46, 2.5, M.steel, -12.6, 381, ez + 2.05));
+  s.add(box('esp32_header_r', 2.5, 46, 2.5, M.steel, 12.6, 381, ez + 2.05));
+  s.add(box('esp32_usb', 8, 5, 3, M.steel, 0, 358.5, ez + 2.3));
+  // MPU6050
+  s.add(box('mpu6050_pcb', 16, 21, 1.6, M.elec, 0, 334, ez));
+  s.add(box('mpu6050_header', 2.5, 20, 2.5, M.steel, -6.5, 334, ez + 2.05));
+  // Regulator + power switch
+  s.add(box('regulator_pcb', 22, 17, 1.6, M.elec, -8, 302, ez));
+  s.add(box('regulator_inductor', 7, 7, 3.5, M.steel, -8, 302, ez + 2.55));
+  s.add(box('xl601_power_switch', 12, 8, 5, M.elec, 15, 296, 4));
+  s.add(box('xl601_slider', 3, 4, 3, M.steel, 15, 297, 8));
+  // Battery (−Z) with print straps
+  s.add(box('battery_pack', 34, 70, 14, M.elec, 0, 352, -8.5));
+  s.add(box('battery_strap_a', 37, 6, 15, M.print, 0, 332, -8.5));
+  s.add(box('battery_strap_b', 37, 6, 15, M.print, 0, 372, -8.5));
+  part(s, 175, EX_FWD, 0);
+}
+
+// Motor mount (diagonal, opposite side)
+{
+  const w = group('motor_mount_station', rocket, Math.PI * 1.25);
+  const mm = new THREE.Group(); mm.name = 'motor_mount'; w.add(mm);
+  mm.add(prism('motor_mount_tube', circShape(15.75), 142, M.print, circHole(14.75)));
+  mm.add(at(prism('centering_ring_aft', octShape(RC_IN - 0.3), 4, M.print, circHole(15.8)), 0, 4, 0));
+  mm.add(at(prism('centering_ring_fwd', octShape(RC_IN - 0.3), 4, M.print, circHole(15.8)), 0, 128, 0));
+  part(mm, 165, 0, 0);
+}
+
+// Folding fins on skewed hinges
+const SKEW = new THREE.Vector3(1, 1, 1).normalize();
+const Q_FOLD = new THREE.Quaternion().setFromAxisAngle(SKEW, Math.PI * 2 / 3);
+const Q_ID = new THREE.Quaternion();
+const alignTo = (m) => { m.quaternion.setFromUnitVectors(new THREE.Vector3(0, 1, 0), SKEW); return m; };
+const pivots = [];
+const PIV_X = APO + 8;
+const FIN_SWEEP = 90; // LE sweep from the OpenRocket side view; chords/span from the .ork inputs
+const FIN_DROP = FIN_SWEEP + 110 - 130; // deployed tip TE below the aft end
+for (let i = 0; i < 4; i++) {
+  const w = group(`fin_station_${i}`, rocket, i * Math.PI / 2);
+  w.add(box(`fin_root_rail_${i}`, 6, 114, 5, M.print, APO + 3, 73, 0));
+  const h = new THREE.Group(); h.name = `hinge_${i}`; w.add(h);
+  h.add(box(`hinge_block_${i}`, 8, 16, 14, M.print, APO + 4, 6, 0));
+  const pin = alignTo(cylY(`hinge_pin_${i}`, 1.5, 20, M.steel, PIV_X, 0, 0, 16)); h.add(pin);
+  for (let k = -1; k <= 1; k++) {
+    const t = mesh(`torsion_spring_${i}_${k + 1}`, new THREE.TorusGeometry(3.4, 0.6, 8, 24), M.steel);
+    t.quaternion.setFromUnitVectors(new THREE.Vector3(0, 0, 1), SKEW);
+    t.position.set(PIV_X, 0, 0).addScaledVector(SKEW, k * 2.2 + 6);
+    h.add(t);
+  }
+  part(h, 40, 0, 0);
+  const ex = new THREE.Group(); ex.name = `fin_explode_${i}`; w.add(ex);
+  const pv = new THREE.Group(); pv.name = `fin_pivot_${i}`; ex.add(at(pv, PIV_X + 0.01, 0, 0));
+  pv.add(loft(`fin_${i}`, 130, 110, 180, FIN_SWEEP, NACA0012, M.fin));
+  pivots.push(pv);
+  part(ex, 85, 0, 0);
+}
+
+// ── launcher platform (Launcher Platform.f3z components) ──
+{
+  const L = launcher;
+  L.add(prism('launcher_base', octShape(158), 4, M.print, null, 4));
+  L.add(at(mesh('launcher_pedestal', facet(new THREE.CylinderGeometry(28, 44, 50, 8, 1, false, Math.PI / 8)), M.airframe), 0, 37, 0));
+  L.add(cylY('launcher_stinger', 4, 198, M.steel, 0, 161, 0, 24));
+  L.add(cylY('launcher_stinger_stop', 17, 4, M.steel, 0, 158, 0, 32));
+  // Control housing (front)
+  L.add(at(prism('launcher_control_housing', rectShape(-72, -119, 72, -65), 26, M.airframe, null, 3), 0, 12, 0));
+  const top = 12 + 32;
+  L.add(box('launch_button_body', 6, 5, 6, M.elec, 42, top + 2.5, 92));
+  L.add(cylY('launch_button_cap', 3.5, 3, M.red, 42, top + 6.5, 92));
+  L.add(box('arm_microswitch_body', 20, 6.4, 10, M.elec, -8, top + 3.2, 92));
+  const lever = box('arm_microswitch_lever', 22, 1, 4, M.steel, -6, top + 8, 92); lever.rotation.z = 0.12; L.add(lever);
+  L.add(box('xl601_switch_body', 14, 8, 10, M.elec, -48, top + 4, 92));
+  const rocker = box('xl601_switch_rocker', 8, 3, 6, M.steel, -48, top + 9, 92); rocker.rotation.z = -0.2; L.add(rocker);
+  L.add(cylY('status_led_body', 2.5, 4, M.red, 18, top + 2, 78, 16));
+  L.add(at(mesh('status_led_dome', new THREE.SphereGeometry(2.5, 16, 8, 0, Math.PI * 2, 0, Math.PI / 2), M.red), 18, top + 4, 78));
+  L.add(cylY('buzzer', 6, 9.5, M.elec, 60, top + 4.75, 78));
+  // ESP32 WROOM with socket headers (rear left)
+  const ex = -92, ez = -34;
+  for (const [dx, dz] of [[-14, -27], [14, -27], [-14, 27], [14, 27]]) L.add(cylY(`launcher_standoff_${dx}_${dz}`, 1.5, 4, M.steel, ex + dx, 14, ez + dz, 12));
+  L.add(box('launcher_carrier_pcb', 34, 1.6, 62, M.elec, ex, 16.8, ez));
+  L.add(box('launcher_socket_header_l', 2.5, 8.5, 48, M.elec, ex - 12.6, 21.85, ez));
+  L.add(box('launcher_socket_header_r', 2.5, 8.5, 48, M.elec, ex + 12.6, 21.85, ez));
+  L.add(box('launcher_esp32_pcb', 28.3, 1.6, 51.5, M.elec, ex, 26.9, ez));
+  L.add(box('launcher_esp32_shield', 18, 3.1, 20, M.steel, ex, 29.25, ez - 14));
+  // GPS, compass, barometer (rear right)
+  L.add(box('gps_pcb', 35, 1.6, 25, M.elec, 92, 16.8, -40));
+  L.add(box('gps_patch_antenna', 25, 4, 25, M.print, 92, 19.6, -40));
+  L.add(box('qmc5883l_pcb', 14, 1.6, 13, M.elec, 84, 16.8, -4));
+  L.add(box('bmp180_pcb', 12, 1.6, 10, M.elec, 104, 16.8, -4));
+  for (const [x, z] of [[92, -40], [84, -4], [104, -4]]) L.add(cylY(`sensor_standoff_${x}_${z}`, 1.5, 4, M.steel, x, 14, z, 12));
+}
+
+// ── state + animation ──
+const cur = { te: 1, tf: 0, tl: 1 };
+const tgt = { ...cur };
+const ease = (t) => t * t * (3 - 2 * t);
+function apply() {
+  const te = ease(cur.te), tf = ease(cur.tf), tl = ease(cur.tl);
+  for (const p of parts) p.obj.position.copy(p.base).addScaledVector(p.off, te);
+  for (const pv of pivots) pv.quaternion.slerpQuaternions(Q_ID, Q_FOLD, tf);
+  rocket.position.y = tl * (160 + 80 * te) + (1 - tl) * FIN_DROP * (1 - tf);
+}
+apply();
+stage.setObject(root);
+
+let last = performance.now();
+function tick(now) {
+  const dt = Math.min((now - last) / 1000, 0.05); last = now;
+  let moved = false;
+  for (const k of Object.keys(cur)) {
+    if (cur[k] !== tgt[k]) {
+      const step = dt * 1.4;
+      cur[k] = Math.abs(tgt[k] - cur[k]) <= step ? tgt[k] : cur[k] + Math.sign(tgt[k] - cur[k]) * step;
+      moved = true;
+    }
+  }
+  if (moved) apply();
+  requestAnimationFrame(tick);
+}
+requestAnimationFrame(tick);
+
+const on = (name, fn) => document.querySelectorAll(`input[name="${name}"]`).forEach((el) => el.addEventListener('change', () => fn(el.value)));
+on('fins', (v) => { tgt.tf = v === 'folded' ? 1 : 0; });
+on('explode', (v) => { tgt.te = Number(v); });
+on('launcher', (v) => {
+  if (v === '1') { root.add(launcher); tgt.tl = 1; }
+  else { root.remove(launcher); tgt.tl = 0; }
+});
+window.__p33 = { tgt, cur, root, snap: () => { Object.assign(cur, tgt); apply(); stage._loop && stage._loop(); } };
+</script>
+</body>
+</html>

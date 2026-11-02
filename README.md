@@ -9,13 +9,35 @@
 
 Project 33 investigates a low-cost folding-fin rocket concept through mechanical analysis, CAD, embedded firmware, telemetry software, and reproducible research. But the more ambitious project is an **engineering evidence system**: a way to carry a claim from assumption to model, from model to implementation, and eventually from observation to independent review without confusing those stages.
 
-**[Explore the project](https://topherchris420.github.io/33/)** · **[Reproduce an offline review](#reproduce-the-review)** · **[Inspect the claim ledger](#claim-status)** · **[Read the roadmap](docs/ROADMAP.md)** · **[Contribute](CONTRIBUTING.md)**
+**[Explore the project](https://topherchris420.github.io/33/)** · **[Watch the utility bench manual](#v3d-to-33-1--utility-bench-manual)** · **[Reproduce an offline review](#reproduce-the-review)** · **[Inspect the claim ledger](#claim-status)** · **[Read the roadmap](docs/ROADMAP.md)** · **[Contribute](CONTRIBUTING.md)**
 
 ## From frequency to form
 
 [![Animated Project 33 rocket blueprint: Fourier epicycles trace contours, parts assemble, and the conceptual form rotates](assets/marketing/project33-blueprint.gif)](assets/marketing/project33-blueprint.mp4)
 
 *Design visualization, not a flight test, physical assembly record, or evidence of deployment.*
+
+**[Turn the faceted 3D model in your browser](https://topherchris420.github.io/33/model.html)**: deployed and folded fins, exploded and assembled views, the launcher platform, and OBJ/GLB download. Also a design visualization, not evidence; [sources and assumptions](docs/MODEL_3D.md).
+
+## V3D-TO-33-1 · Utility Bench Manual
+
+[![Illustrated cover of Project 33's claymation utility bench manual; click to open the film](assets/marketing/bench-manual-poster.svg)](project33-bench-manual-github-720p.mp4)
+
+**[▶ Watch the complete film](project33-bench-manual-github-720p.mp4)** · **[Direct MP4](https://raw.githubusercontent.com/topherchris420/33/main/project33-bench-manual-github-720p.mp4)** · **4:09 · 720p · 19.1 MB**
+
+**A 4:09 claymation engineering companion.** The repository hosts the optimized **720p MP4**, preserved from the original 1080p master. This miniature workshop turns Project 33's research record into a tactile technical manual: annotated pages, conceptual rocket assemblies, bench instruments, operator checklists, and a session-passport workflow. The visual language borrows from vintage utility manuals while keeping the actual engineering boundaries visible.
+
+| Film sequence | What it illustrates | Inspect the source |
+|---|---|---|
+| **Description and assembly** | The conceptual folding-fin rocket and its subsystems; exploded views are illustrative, not dimensioned CAD | [Architecture](docs/ARCHITECTURE.md) · [CAD assemblies](docs/CAD_ASSEMBLIES.md) |
+| **Offline evidence review** | Reproducible, hardware-free checks and a portable review packet | [Reproduce the review](#reproduce-the-review) · [Evidence Observatory](docs/EVIDENCE_OBSERVATORY.md) |
+| **Inert bench preflight** | A clearly bounded, non-energetic preparation workflow and source-based safety checks | [Bench configuration](docs/BENCH_CONFIGURATION.md) · [Safety](docs/SAFETY.md) |
+| **Session passport** | Provenance, raw records, review, and the requirement for named human acceptance | [Bench sessions](docs/BENCH_SESSIONS.md) · [Traceability](docs/TRACEABILITY.md) |
+| **What remains unresolved** | Contradicted model assumptions, unmet margins, and the gap between an animation and physical evidence | [Discrepancy register](docs/DISCREPANCIES.md) · [Claim passports](docs/claims/README.md) |
+
+**How to read the film:** It is a visual orientation and interpretive tutorial, **not** footage of an assembled flight article, a validated test, or a demonstration of flight readiness. A rendered deployment is not a measured deployment. The [claim ledger](#claim-status) remains the authority on the project's evidence state.
+
+**Film access:** Select the illustrated cover or the watch link above to open the complete MP4. The direct file link is also available for downloading or viewing in a compatible browser.
 
 ## Current status
 
@@ -41,7 +63,7 @@ Unresolved is a valid engineering state. Several research claims are currently c
 
 | Your interest | Start here |
 |---|---|
-| **The concept and visuals** | [Live project page](https://topherchris420.github.io/33/) and [architecture](docs/ARCHITECTURE.md) |
+| **The concept and visuals** | [Live project page](https://topherchris420.github.io/33/), [3D model](https://topherchris420.github.io/33/model.html) and [architecture](docs/ARCHITECTURE.md) |
 | **The scientific record** | [Claim passports](docs/claims/README.md), [traceability](docs/TRACEABILITY.md), and [discrepancies](docs/DISCREPANCIES.md) |
 | **Reproducibility** | [Offline review commands](#reproduce-the-review) and [Evidence Observatory](docs/EVIDENCE_OBSERVATORY.md) |
 | **Working on the project** | [Roadmap](docs/ROADMAP.md), [tests](docs/TESTING.md), and [contribution guide](CONTRIBUTING.md) |
