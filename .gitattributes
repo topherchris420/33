@@ -6,3 +6,5 @@
 *.mp4 binary
 *.f3d binary
 *.ork binary
+*.m4a binary
+*.ttf binary

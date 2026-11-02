@@ -77,6 +77,7 @@ Unresolved is a valid engineering state. Several research claims are currently c
 | **The scientific record** | [Claim passports](docs/claims/README.md), [traceability](docs/TRACEABILITY.md), and [discrepancies](docs/DISCREPANCIES.md) |
 | **Reproducibility** | [Offline review commands](#reproduce-the-review) and [Evidence Observatory](docs/EVIDENCE_OBSERVATORY.md) |
 | **Working on the project** | [Roadmap](docs/ROADMAP.md), [tests](docs/TESTING.md), and [contribution guide](CONTRIBUTING.md) |
+| **A guided walkthrough** | [Watch the tutorial](https://topherchris420.github.io/33/tutorial.html): a four-minute claymation bench manual for offline review and inert bench validation |
 
 ## Why evidence is the real instrument
 

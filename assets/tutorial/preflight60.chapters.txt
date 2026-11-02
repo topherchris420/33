@@ -1,0 +1,4 @@
+0:00 Preflight in 60 seconds
+0:03 Table of contents
+0:13 Inert bench preflight
+0:47 Run the review

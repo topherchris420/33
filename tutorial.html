@@ -1,0 +1,116 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#101310" />
+    <title>The Bench Manual — Project 33 tutorial</title>
+    <meta
+      name="description"
+      content="V3D-TO-33-1, a claymation tutorial for Project 33 by Vers3Dynamics: offline review of the evidence record and inert bench validation, in the grammar of a flight manual."
+    />
+    <meta property="og:image" content="assets/tutorial/poster.jpg" />
+    <link rel="icon" href="assets/marketing/mark.svg" type="image/svg+xml" />
+    <link rel="stylesheet" href="assets/tutorial/tutorial.css" />
+  </head>
+  <body>
+    <nav class="tnav shell" aria-label="Tutorial navigation">
+      <a href="./">← PROJECT 33</a>
+      <span class="title">V3D-TO-33-1 · THE BENCH MANUAL</span>
+      <span>
+        <a id="cut-link" href="tutorial.html?cut=preflight60">PREFLIGHT IN 60 SECONDS</a>
+        ·
+        <a id="download" href="assets/tutorial/project33-bench-manual.mp4" download>DOWNLOAD MP4 ↓</a>
+      </span>
+    </nav>
+
+    <main class="shell">
+      <div id="film-view">
+        <div class="stage" id="stage">
+          <canvas
+            id="film"
+            width="1920"
+            height="1080"
+            role="img"
+            aria-label="A claymation film. Two clay hands work through a flight-manual-style binder for the Project 33 rocket on a miniature workbench: offline review, an inert bench preflight, session passports, fault isolation and the project's operating limitations."
+          ></canvas>
+          <div class="caption" id="caption" aria-hidden="true"></div>
+          <div class="start" id="start">
+            <button class="play-sound" id="play-sound" type="button">▶ Play with sound</button>
+            <button class="play-quiet" id="play-quiet" type="button">Play without sound</button>
+          </div>
+        </div>
+        <div class="controls" role="group" aria-label="Playback">
+          <button id="toggle" type="button" aria-label="Play">▶</button>
+          <input id="timeline" type="range" min="0" max="249" step="0.0833" value="0" aria-label="Position in seconds" />
+          <output id="time" for="timeline">0:00 / 4:08</output>
+          <button id="mute" type="button" aria-pressed="false">Sound on</button>
+          <button id="cc" type="button" aria-pressed="true">Captions</button>
+          <button id="manual-toggle" type="button" aria-pressed="false">Page view</button>
+        </div>
+        <div class="tabs" id="tabs" role="tablist" aria-label="Chapters"></div>
+      </div>
+
+      <section class="manual" id="manual" hidden aria-label="Page-by-page manual view">
+        <div class="manual-nav">
+          <button id="prev" type="button">← Previous</button>
+          <output id="page-of"></output>
+          <button id="page-audio" type="button" aria-pressed="false">Play narration for this page</button>
+          <button id="next" type="button">Next →</button>
+        </div>
+        <article class="sheet" id="sheet" tabindex="-1"></article>
+        <div class="manual-nav"><button id="back-to-film" type="button">Back to the film</button></div>
+      </section>
+
+      <div class="below">
+        <section class="panel" aria-labelledby="copy-h">
+          <h2 id="copy-h">Commands for this step</h2>
+          <p class="hint" id="copy-chapter">Exactly as in the repository. Select or copy.</p>
+          <div id="copy-panel"></div>
+        </section>
+        <section class="panel" aria-labelledby="about-h">
+          <h2 id="about-h">About this film</h2>
+          <p class="disclaimer">
+            <strong>Claymation tutorial. Not a flight test, physical assembly record, or evidence of deployment.</strong>
+            Procedures are summarized from the Project 33 repository, which is authoritative. This film supplies no
+            engineering evidence and changes no claim status.
+          </p>
+          <p class="files">
+            <a href="assets/tutorial/tutorial.en.vtt">Captions (VTT)</a> ·
+            <a href="assets/tutorial/tutorial.en.srt">Captions (SRT)</a> ·
+            <a href="assets/tutorial/tutorial.chapters.vtt">Chapters (VTT)</a> ·
+            <a href="assets/tutorial/tutorial.chapters.txt">Timestamps</a> ·
+            <a href="https://github.com/topherchris420/33/blob/main/docs/TUTORIAL_FILM.md">Production note</a> ·
+            <a href="https://github.com/topherchris420/33">Repository</a>
+          </p>
+          <p class="disclaimer">
+            Run the review yourself: <code>python -m evidence status</code>. Keyboard: Space plays and pauses,
+            ← and → move five seconds, C toggles captions, M toggles sound.
+          </p>
+        </section>
+      </div>
+    </main>
+    <noscript>
+      <div class="shell">
+        <video controls playsinline poster="assets/tutorial/poster.jpg" style="width: 100%">
+          <source src="assets/tutorial/project33-bench-manual.mp4" type="video/mp4" />
+          <track kind="captions" srclang="en" label="English" src="assets/tutorial/tutorial.en.vtt" default />
+        </video>
+        <p class="disclaimer">Claymation tutorial. Not a flight test, physical assembly record, or evidence of deployment.</p>
+      </div>
+    </noscript>
+    <audio id="audio" preload="auto"></audio>
+
+    <script src="assets/tutorial/fonts.js"></script>
+    <script src="assets/tutorial/content.js"></script>
+    <script src="assets/tutorial/timeline.js"></script>
+    <script src="assets/tutorial/core.js"></script>
+    <script src="assets/tutorial/props.js"></script>
+    <script src="assets/tutorial/stage.js"></script>
+    <script src="assets/tutorial/scenes-a.js"></script>
+    <script src="assets/tutorial/scenes-b.js"></script>
+    <script src="assets/tutorial/scenes-c.js"></script>
+    <script src="assets/tutorial/scenes-v.js"></script>
+    <script src="assets/tutorial/player.js"></script>
+  </body>
+</html>

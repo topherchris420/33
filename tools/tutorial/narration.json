@@ -1,0 +1,202 @@
+{
+  "voice": "af_heart",
+  "speed": 0.94,
+  "note": "text is the caption, exactly as shown. say is what the voice reads, spelled for pronunciation. Facts re-verified against commit 217696a.",
+  "lines": [
+    {
+      "id": "s1a",
+      "text": "Every flying machine comes with a manual."
+    },
+    {
+      "id": "s1b",
+      "text": "This one is for a rocket that hasn't flown."
+    },
+    {
+      "id": "s1c",
+      "text": "Project 33 lives on a workbench, and this manual authorizes no ignition, no propulsion, and no flight.",
+      "say": "Project thirty-three lives on a workbench. And this manual authorizes no ignition, no propulsion, and no flight."
+    },
+    {
+      "id": "s2a",
+      "text": "Flight characteristics: not measured.",
+      "say": "Flight characteristics. Not measured."
+    },
+    {
+      "id": "s2b",
+      "text": "Performance data: not measured.",
+      "say": "Performance data. Not measured."
+    },
+    {
+      "id": "s2c",
+      "text": "Here, that isn't a gap. It's the status."
+    },
+    {
+      "id": "s3a",
+      "text": "Project 33 has four subsystems: the airframe, the rocket's flight computer, the launcher, and a laptop dashboard.",
+      "say": "Project thirty-three has four subsystems: the airframe, the rocket's flight computer, the launcher, and a laptop dashboard."
+    },
+    {
+      "id": "s3b",
+      "text": "The dashboard talks to the launcher over Wi-Fi.",
+      "say": "The dashboard talks to the launcher over Wi-Fi."
+    },
+    {
+      "id": "s3c",
+      "text": "The launcher talks to the rocket over a serial wire."
+    },
+    {
+      "id": "s3d",
+      "text": "Inside the rocket, an ESP32 reads a motion sensor and moves four small canards.",
+      "say": "Inside the rocket, an E.S.P. thirty-two reads a motion sensor, and moves four small canards."
+    },
+    {
+      "id": "s3e",
+      "text": "Its one job would be to stop the roll."
+    },
+    {
+      "id": "s3f",
+      "text": "No steering. No guidance. Just steady."
+    },
+    {
+      "id": "s4a",
+      "text": "Normal procedures start without hardware."
+    },
+    {
+      "id": "s4b",
+      "text": "The safest first experiment is reading the record."
+    },
+    {
+      "id": "s4c",
+      "text": "Python 3.11 or newer. Run status. Run check.",
+      "say": "Python three eleven, or newer. Run status. Run check."
+    },
+    {
+      "id": "s4d",
+      "text": "Build the review, verify it, and open it in a browser."
+    },
+    {
+      "id": "s4e",
+      "text": "Verification proves the packet is intact. Not that the rocket works."
+    },
+    {
+      "id": "s5a",
+      "text": "Before power: ignition servo mechanically disconnected. No energetic material on the bench.",
+      "say": "Before power. Ignition servo, mechanically disconnected. No energetic material on the bench."
+    },
+    {
+      "id": "s5b",
+      "text": "Servos get their own supply, sized for stall current."
+    },
+    {
+      "id": "s5c",
+      "text": "Wiring, verified. Firmware, built from a recorded commit."
+    },
+    {
+      "id": "s5d",
+      "text": "Dashboard open, and labeled RAW SESSION, because it isn't evidence yet.",
+      "say": "Dashboard open, and labeled raw session, because it isn't evidence yet."
+    },
+    {
+      "id": "s5e",
+      "text": "Arm switch on: the launcher reaches READY.",
+      "say": "Arm switch on. The launcher reaches ready."
+    },
+    {
+      "id": "s5f",
+      "text": "Arm switch off: back to SAFE, and the abort is written down.",
+      "say": "Arm switch off. Back to safe, and the abort is written down."
+    },
+    {
+      "id": "s5g",
+      "text": "Ask the dashboard to launch…",
+      "say": "Ask the dashboard to launch..."
+    },
+    {
+      "id": "s5h",
+      "text": "It refuses."
+    },
+    {
+      "id": "s5i",
+      "text": "Good."
+    },
+    {
+      "id": "s6a",
+      "text": "Each canard has its own center angle in firmware, and a limit of twelve degrees either way."
+    },
+    {
+      "id": "s6b",
+      "text": "Hold the rocket still and calibrate. The firmware won't confirm it; the dashboard only records that you asked.",
+      "say": "Hold the rocket still, and calibrate. The firmware won't confirm it. The dashboard only records that you asked."
+    },
+    {
+      "id": "s6c",
+      "text": "Then compare gains: one setting per session, the same fixture motion every time.",
+      "say": "Then compare gains. One setting per session, the same fixture motion every time."
+    },
+    {
+      "id": "s7a",
+      "text": "Close the dashboard cleanly. Declare what you did. Build a passport."
+    },
+    {
+      "id": "s7b",
+      "text": "Then a named human decides whether it counts."
+    },
+    {
+      "id": "s7c",
+      "text": "Software can organize evidence. It cannot accept it."
+    },
+    {
+      "id": "s8a",
+      "text": "If rocket telemetry stops but the launcher keeps talking, open the status board and press DUMP LOG.",
+      "say": "If rocket telemetry stops, but the launcher keeps talking, open the status board, and press dump log."
+    },
+    {
+      "id": "s8b",
+      "text": "A reply clears the serial wire and the rocket, and points to the motion sensor."
+    },
+    {
+      "id": "s8c",
+      "text": "Silence points to the wire or the rocket."
+    },
+    {
+      "id": "s8d",
+      "text": "Every failure leaves a map."
+    },
+    {
+      "id": "s9a",
+      "text": "Now the limits."
+    },
+    {
+      "id": "s9b",
+      "text": "In its own model, the folding-fin linkage, as specified, doesn't close."
+    },
+    {
+      "id": "s9c",
+      "text": "The spring margin is nineteen percent, against a twenty-percent requirement."
+    },
+    {
+      "id": "s9d",
+      "text": "Two stability models disagree."
+    },
+    {
+      "id": "s9e",
+      "text": "No physical measurement has been accepted. Not one."
+    },
+    {
+      "id": "s9f",
+      "text": "The record keeps all of it. The contradiction is part of the result."
+    },
+    {
+      "id": "s10a",
+      "text": "No claim has gone past the synthetic test. From here on, every gate needs a person."
+    },
+    {
+      "id": "s10b",
+      "text": "Build a model. Make a prediction. Measure the difference. Keep the record honest."
+    },
+    {
+      "id": "s10c",
+      "text": "Run the review."
+    }
+  ]
+}
