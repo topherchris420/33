@@ -131,9 +131,9 @@ The cover opens an HTML5 player on the project site; GitHub does not play reposi
 
 *Concept visualization; no physical deployment is represented as measured.*
 
-![OpenRocket 3D model](Simulation/OpenRocket_3D_View.png)
+![Roll angle, roll rate, and controller output from an early telemetry dashboard export](Simulation/OpenRocket_3D_View.png)
 
-*OpenRocket export; the model revision that produced it is not recorded (D-023).*
+*Not an OpenRocket view, despite the filename: a graph saved by an early version of the telemetry dashboard (`Firmware/dashboard.py`), showing roll angle, roll rate (×0.25), and the controller output shaded green and red over 1,096 samples. That version titled every saved graph "Rocket Flight Data". The session behind this one is not recorded, Project 33 is not flight-tested, and the plot is not part of the evidence record.*
 
 [Watch the 80-second opening film](https://topherchris420.github.io/33/lab/cinematic.html) · [Open the procedural tutorial](https://topherchris420.github.io/33/tutorial.html)
 
@@ -154,6 +154,7 @@ The cover opens an HTML5 player on the project site; GitHub does not play reposi
 | [C6](docs/claims/C6.md) | Spring margin consistency | **CONTRADICTED** | MODEL ONLY | R-C6-MARGIN NOT SATISFIED | D-009, D-010, D-011 |
 | [C7](docs/claims/C7.md) | Deployment reliability evidence | **UNRESOLVED** | MODEL ONLY | none failing | D-010, D-013 |
 | [C8](docs/claims/C8.md) | Structural claim boundaries | **CONTRADICTED** | MODEL ONLY | R-C8-MODULUS NOT SATISFIED | D-009, D-010, D-015 |
+
 <!-- /evidence:claims-table -->
 
 Each passport states the claim, its assumptions, its evidence classes, and the next measurement or review it needs. The [traceability matrix](docs/TRACEABILITY.md) connects requirements to implementations, tests, and predictions.

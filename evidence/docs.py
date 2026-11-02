@@ -275,8 +275,10 @@ def claims_fragment(review, from_file):
              ", ".join(f"{r['id']} {r['label']}" for r in c["requirement_results"]
                        if r["result"] in ("not_satisfied", "conflicting")) or "none failing",
              ", ".join(c["discrepancies_open"]) or "none"] for c in review["claims"]]
+    # The trailing blank line keeps the closing marker out of the table: without it,
+    # kramdown (GitHub Pages) renders the whole table as a paragraph of pipes.
     return counts_sentence(review) + "\n\n" + table(
-        ["Claim", "Subject", "Status", "Strongest accepted evidence", "Failing or disputed requirements", "Open discrepancies"], rows)
+        ["Claim", "Subject", "Status", "Strongest accepted evidence", "Failing or disputed requirements", "Open discrepancies"], rows) + "\n"
 
 
 def bom(root):

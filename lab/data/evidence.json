@@ -17,7 +17,7 @@
   "Simulation/barrowman_crosscheck.py": "844a03c57bed3292b205cf6225340c94f4e70162a0fb1d5793c619ddf18c0f1e",
   "Simulation/reliability_sweep.py": "08c76f04ad0476372c26a25a0f51efe3e5002df92d1f92e9c8596b7c307bac99",
   "Simulation/static_margin.py": "4e5749eb7ef8b3d0fa209980e1d999ce7535fc7d145496401876d656d4e4181b",
-  "docs/CAD_ASSEMBLIES.md": "4352bd376b309bc8e0ca856646b6d1c6e846fc40815f355387a47b139967c41d",
+  "docs/CAD_ASSEMBLIES.md": "62bbb45cca789d9419fb7058982c340263a0dcf26141d8bab4162a8bc2864517",
   "docs/EVIDENCE/C1_four_bar_plot.png": "5097fb03a463ccdeaaee248a93d88414d4ecce3cb76c2500aaec5a0c352790a7",
   "docs/EVIDENCE/C1_four_bar_sweep.json": "b5db59c4d5fcbc09379e046279f2cf5e778cb0d93f71a0df3ac0baba2ff4b0eb",
   "docs/EVIDENCE/C2_latency.csv": "8cf6f0fe7a94d49f4c3a872fdd400437addce23f03057ae8abe22bb778e69467",
@@ -59,7 +59,7 @@
   "evidence/predictions.json": "6aac364f253669cb33ed3aed7c0e53977376b60dad34511a0c819d868e57dd5c",
   "evidence/preregistrations.json": "37ed33bab3b45c7e32d0b48d49c948a2fb3f6bd0ff1312cce688a24576e8e29a",
   "evidence/requirements.json": "ef365bb51d1cd2dbe0ccbc63608957e4e64fc705295193e14231dfabee7d4b94",
-  "evidence/reviews.json": "9fbfbf1559b519dcbba3645eceba1ae4277f9cc28a77a4546969753497401b7e",
+  "evidence/reviews.json": "5b6edb84ec66b21ee4de2272fad34233bce2f33f58058771b3db427b9995de99",
   "evidence/safety_gates.json": "ab71eee7e344c78d16d5a39a864d56d636cc9446a88047ee57a2ba4f23790f13",
   "evidence/sessions.json": "a8486b0ce83596a773a27761db12830209c274dff74a35deba1dc5d51bc5433b",
   "materials/mass_rollup.py": "7e8b8ca2b46b20102721c645284fc7b1a81e8c4848e30ee4295a8a10260025ec",
@@ -292,8 +292,8 @@
    "format": "file",
    "description": "Prototype material plan: PLA+/PETG printed airframe and fins.",
    "status": "current",
-   "sha256": "4352bd376b309bc8e0ca856646b6d1c6e846fc40815f355387a47b139967c41d",
-   "bytes": 6181,
+   "sha256": "62bbb45cca789d9419fb7058982c340263a0dcf26141d8bab4162a8bc2864517",
+   "bytes": 6106,
    "class_label": "SPECIFICATION",
    "snapshot_path": "artifacts/docs/CAD_ASSEMBLIES.md"
   },
@@ -1432,9 +1432,9 @@
     "missing": [],
     "review": {
      "kind": "snapshot",
-     "recorded": "2026-09-28",
+     "recorded": "2026-11-02",
      "recorded_by": "tooling snapshot (no human review)",
-     "note": "CAD_ASSEMBLIES.md gained review figures and a CAD-versus-model discrepancy table; material plan unchanged.",
+     "note": "CAD_ASSEMBLIES.md no longer lists Simulation/OpenRocket_3D_View.png as a view of the folding rocket: the file is a telemetry dashboard graph, not an OpenRocket view. Editorial; material plan unchanged.",
      "independent": false
     }
    },
@@ -4795,7 +4795,7 @@
    "current": {
     "assumptions_sha256": "75387f1f396560b2d8a9048642a23c005894007e6421eb6c4a12f0b6932a0a93",
     "dependencies": {
-     "cad_materials_doc": "4352bd376b309bc8e0ca856646b6d1c6e846fc40815f355387a47b139967c41d",
+     "cad_materials_doc": "62bbb45cca789d9419fb7058982c340263a0dcf26141d8bab4162a8bc2864517",
      "mass_baseline": "aa54a78f60d0af0382307032aa31fef2f13fafa79c39cc50dabf13d4c0d91868",
      "mass_candidate": "c6dff1a044a6a2fc22ee873671dacb616ffad05a8dc055edcb8c4b81656e8cd7",
      "mass_inputs": "b2b65a256c6bfb9fa911b2b79a457d56e8fdf3bf29667c33a936bcd676d70542",
@@ -4804,12 +4804,29 @@
      "mass_tests": "a553cf030873f9b6ec7a16c35556306a04c8f614de506dae0ccf711425fb6bbb"
     },
     "kind": "snapshot",
-    "note": "CAD_ASSEMBLIES.md gained review figures and a CAD-versus-model discrepancy table; material plan unchanged.",
-    "recorded": "2026-09-28",
+    "note": "CAD_ASSEMBLIES.md no longer lists Simulation/OpenRocket_3D_View.png as a view of the folding rocket: the file is a telemetry dashboard graph, not an OpenRocket view. Editorial; material plan unchanged.",
+    "recorded": "2026-11-02",
     "recorded_by": "tooling snapshot (no human review)",
     "statement_sha256": "305c4f521e41edf64a3bd057c6db2082cf1d4f4e0f44c51048df74e2b8f0ee4c"
    },
    "history": [
+    {
+     "assumptions_sha256": "75387f1f396560b2d8a9048642a23c005894007e6421eb6c4a12f0b6932a0a93",
+     "dependencies": {
+      "cad_materials_doc": "4352bd376b309bc8e0ca856646b6d1c6e846fc40815f355387a47b139967c41d",
+      "mass_baseline": "aa54a78f60d0af0382307032aa31fef2f13fafa79c39cc50dabf13d4c0d91868",
+      "mass_candidate": "c6dff1a044a6a2fc22ee873671dacb616ffad05a8dc055edcb8c4b81656e8cd7",
+      "mass_inputs": "b2b65a256c6bfb9fa911b2b79a457d56e8fdf3bf29667c33a936bcd676d70542",
+      "mass_source": "7e8b8ca2b46b20102721c645284fc7b1a81e8c4848e30ee4295a8a10260025ec",
+      "mass_summary": "f2987d38960196ad414a181cbb34e72a85be9245eda11271ca7eb84c51e8a832",
+      "mass_tests": "a553cf030873f9b6ec7a16c35556306a04c8f614de506dae0ccf711425fb6bbb"
+     },
+     "kind": "snapshot",
+     "note": "CAD_ASSEMBLIES.md gained review figures and a CAD-versus-model discrepancy table; material plan unchanged.",
+     "recorded": "2026-09-28",
+     "recorded_by": "tooling snapshot (no human review)",
+     "statement_sha256": "305c4f521e41edf64a3bd057c6db2082cf1d4f4e0f44c51048df74e2b8f0ee4c"
+    },
     {
      "assumptions_sha256": "75387f1f396560b2d8a9048642a23c005894007e6421eb6c4a12f0b6932a0a93",
      "dependencies": {

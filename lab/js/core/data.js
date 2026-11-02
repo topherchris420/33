@@ -66,9 +66,13 @@ export function repoLink(path, line) {
   return `${REPO}/blob/${BRANCH}/${encoded}${line ? `#L${line}` : ""}`;
 }
 
-/** Link to a document rendered on the project site when it is Markdown, else to GitHub. */
+/** Link to a document rendered on the project site when it is Markdown, else to GitHub.
+ *  GitHub Pages publishes a folder's README.md as that folder's index page and does not
+ *  render the root README or CONTRIBUTING/LICENSE-style files, so those link to GitHub. */
 export function docLink(path) {
   const clean = path.replace(/^\/+/, "");
+  if (/^README\.md$/i.test(clean) || /(^|\/)(CONTRIBUTING|LICENSE|LICENCE|COPYING|CODE_OF_CONDUCT)\.md$/i.test(clean)) return repoLink(clean);
+  if (/\/README\.md$/i.test(clean)) return new URL(clean.replace(/README\.md$/i, ""), SITE_ROOT).href;
   if (clean.endsWith(".md")) return new URL(clean.replace(/\.md$/, ".html"), SITE_ROOT).href;
   return repoLink(clean);
 }

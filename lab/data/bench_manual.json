@@ -295,7 +295,7 @@
     },
     {
       "path": "docs/CAD_ASSEMBLIES.md",
-      "sha256": "4352bd376b309bc8e0ca856646b6d1c6e846fc40815f355387a47b139967c41d"
+      "sha256": "62bbb45cca789d9419fb7058982c340263a0dcf26141d8bab4162a8bc2864517"
     },
     {
       "path": "docs/DEGRADED_MODES.md",
@@ -319,7 +319,7 @@
     },
     {
       "path": "docs/LIVING_LAB.md",
-      "sha256": "e1ddc0f091a1d5c3b16fb4b959f989c35199dc2858ef0f11e11452e073b3de9d"
+      "sha256": "f468429aadf9935fc6c1bee65e003c67d9148375a161040950d4648cd10c1c88"
     },
     {
       "path": "docs/MODEL_ROCKET_REVIEW.md",
@@ -327,7 +327,7 @@
     },
     {
       "path": "docs/PROJECT_STATUS.md",
-      "sha256": "b8301da6c351df407015466627dd7d2cf6465aaf06181be88e8e4d0a69b542a4"
+      "sha256": "581f3f064aeaedbfe4496cd718b01ec0802cb784b78f15cb44b68647c5fe0e28"
     },
     {
       "path": "docs/PROTOCOL.md",
@@ -370,5 +370,5 @@
       "sha256": "a707d10558f18decdf53708184fb0ae7ccd74da85953f5bb8c2e6422e260afcb"
     }
   ],
-  "revision": "f78729c7226e2e15edb374d19dce144d6d73e5372809bea7de2d439a56f8810f"
+  "revision": "3b86d7bde5db354a2e32b18fb666c2c7e3c3857d473d6528586c921b19eb5b54"
 }

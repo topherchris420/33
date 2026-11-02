@@ -63,6 +63,7 @@ export function mountShell() {
     h("span", {}, "PROJECT 33 · VERS3DYNAMICS · BENCH-VALIDATION PROTOTYPE — NOT FLIGHT-TESTED"),
     h("span", {}, "Read-only laboratory: no interaction here can send a hardware command."),
     h("span", { class: "cluster" },
+      h("a", { href: siteURL("") }, "Project home"),
       h("a", { href: siteURL("docs/SAFETY.html") }, "Safety boundary"),
       h("a", { href: L("archive.html#rights") }, "Source rights audit"),
       h("a", { href: "https://github.com/topherchris420/33" }, "Repository ↗")));
