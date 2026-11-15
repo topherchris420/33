@@ -331,7 +331,7 @@
     },
     {
       "path": "docs/PROTOCOL.md",
-      "sha256": "e6c673d9c528f6cc723d5e4728c19876952a7ce9331663ba28b1a0437bda0494"
+      "sha256": "f404669657ffc177887332e3191c2760c76ba0c01bbbd96579a1a51ae5407cbe"
     },
     {
       "path": "docs/RELEASE_READINESS.md",
@@ -370,5 +370,5 @@
       "sha256": "095ecfd873973560e544d43bcf264652c3816faed111c3fef34214aff23c7562"
     }
   ],
-  "revision": "35bedd0a4af0d9aa38f157e6646e1f43732e5ad4aebdf74f45ae54b9cc28fa67"
+  "revision": "59848ccc552918541ec4edab897dbe566e571acd76d436d3c713c718824f491d"
 }
