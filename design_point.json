@@ -138,5 +138,37 @@
     "pd_delay_options_ms": [0, 5, 10, 20],
     "proximity_option": "5.8 GHz CW Doppler RF module, 0.5-2 mW, gated 2-6 m; acoustic backup under consideration",
     "backup_initiation": "ignition servo retained for motor ignition only (MIL-DEV-006); electric initiator is the primary motor path"
+  },
+  "phase4_structure": {
+    "comment": "Phase 4 military structure (MIL-DEV-007). Composite per the C8 laminate spec; 7075-T6 load-path metallics; PLA+/PETG airframe parts superseded.",
+    "tube_material": "G-10/epoxy, 2.0 mm walls",
+    "load_path_metallics": "7075-T6: hinge pins (3 mm), motor-mount rings, warhead case",
+    "fin_material": "molded CFRP sandwich with UD spar caps (unchanged from Phase 1)",
+    "canard_servos": {
+      "type": "metal-gear digital, 30 kg-cm class",
+      "load_case_n_m": 1.72,
+      "load_case": "burnout dynamic pressure, 15 deg alpha",
+      "margin": "~1.7x torque margin at the sizing load"
+    },
+    "motor": {
+      "designation": "MIL-33",
+      "class_comment": "Military-class solid sized by Simulation/motor_sizing.py for the 1-3 km tactical envelope with 10 percent margin; supersedes the G64W for tactical rounds (MIL-DEV-008). G64W retained for Phase 6 inert flights.",
+      "total_impulse_ns": 1235.0,
+      "burn_s": 2.0,
+      "avg_thrust_n": 617.0,
+      "propellant_kg": 0.63,
+      "wet_kg": 1.237,
+      "dry_kg": 0.607,
+      "round_wet_kg": 2.874,
+      "initial_accel_g": 21.9,
+      "ballistic_envelope_m": 3300.0,
+      "ignition": "electric initiator primary; ignition servo backup (MIL-DEV-006)",
+      "eng_file": "Simulation/MIL-33.eng"
+    },
+    "environmental_budgets": {
+      "launch_shock_g_design": 65.7,
+      "vibration": "MIL-STD-810 method 514 style, 20-2000 Hz random; canard servos hold position under burnout dynamic load",
+      "storage_temperature_c": [-40, 60]
+    }
   }
 }

@@ -291,7 +291,7 @@
     },
     {
       "path": "docs/BOM.md",
-      "sha256": "a6ca86963ffe35d933470c1861484482d44bb63a56d02acb14c15c459da2ba4c"
+      "sha256": "76d0fd4a6ee0a4bf826b123010069788fcdf398700b8227a32d9c818694c5611"
     },
     {
       "path": "docs/CAD_ASSEMBLIES.md",
@@ -370,5 +370,5 @@
       "sha256": "095ecfd873973560e544d43bcf264652c3816faed111c3fef34214aff23c7562"
     }
   ],
-  "revision": "e3a8ab6aeb39786f32a2e681a2873b8ddc2a583bd68c2617a20000cd81176b6f"
+  "revision": "ef20c57132e047047cceb6b505a571663504aad2164a99be702c84fba141f0e8"
 }

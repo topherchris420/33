@@ -54,7 +54,10 @@ def test_ork_parser_extracts_real_geometry():
     assert abs(geom['d_ref'] - 0.0762) < 0.001
     assert abs(geom['L_n'] - 0.0381) < 0.001
     assert geom['ork_nose_shape'] == 'ellipsoid'
-    assert geom['ork_motor'] == 'G64W'
+    # Phase 4: the .ork carries the militarized MIL-33 motor designation
+    # (thrust curve in Simulation/MIL-33.eng); the G64W is the Phase 6
+    # inert-flight motor, kept in the mass model and design point.
+    assert geom['ork_motor'] == 'MIL-33'
 
     # Both the canard set and the (resized) main fin set are parsed.
     assert len(geom['finsets']) == 2

@@ -228,7 +228,7 @@ For a review distribution containing firmware builds, run records, hashes, and a
 ## Cost
 
 <!-- evidence:cost -->
-Estimated prototype subtotal: **$81** from 10 BOM lines (10 estimates, 0 purchased prices recorded, source dates not recorded, shipping and spares excluded). An estimate is not a purchase record; see [BOM](docs/BOM.md) and D-021.
+Estimated prototype subtotal: **$187** from 14 BOM lines (14 estimates, 0 purchased prices recorded, source dates not recorded, shipping and spares excluded). An estimate is not a purchase record; see [BOM](docs/BOM.md) and D-021.
 <!-- /evidence:cost -->
 
 ## Contribute

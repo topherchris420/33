@@ -2,7 +2,7 @@
  "schema": "project33.lab.openrocket/1",
  "generated_by": "tools/export_lab_data.py",
  "inputs": {
-  "Simulation/Folding Stabilized Rocket.ork": "16283834e0ae4c174198b00d9cfd206615ed3a805fb8ead2b3e0193376eff09e",
+  "Simulation/Folding Stabilized Rocket.ork": "9f66d35b0e15144f94ae4a1381b92c76ea7ed87572add3b68d32c0755abe2f5d",
   "docs/EVIDENCE/C5_static_margin_inputs.json": "356c882c80f62ac5e7d811d86ad86849bb877b6dd869d933b8ad8e6c9c3b1af5",
   "evidence/archive/C5_openrocket_pre_retune.ork.xml": "082d383fb9626db223317b7fd008d4e12b4a5c443b448fb0e217a68d48090182"
  },
@@ -116,9 +116,9 @@
       "path": "openrocket/rocket/subcomponents/stage[1]/subcomponents/bodytube[1]/id"
      },
      "overridemass": {
-      "value": 0.635,
+      "value": 0.56,
       "path": "openrocket/rocket/subcomponents/stage[1]/subcomponents/bodytube[1]/overridemass",
-      "text": "0.635"
+      "text": "0.560"
      },
      "overridesubcomponentsmass": {
       "value": "true",
@@ -127,7 +127,7 @@
      "overridecg": {
       "value": 0.12,
       "path": "openrocket/rocket/subcomponents/stage[1]/subcomponents/bodytube[1]/overridecg",
-      "text": "0.12"
+      "text": "0.120"
      },
      "overridesubcomponentscg": {
       "value": "true",
@@ -281,18 +281,18 @@
       "path": "openrocket/rocket/subcomponents/stage[1]/subcomponents/bodytube[2]/id"
      },
      "overridemass": {
-      "value": 0.8,
+      "value": 0.76,
       "path": "openrocket/rocket/subcomponents/stage[1]/subcomponents/bodytube[2]/overridemass",
-      "text": "0.800"
+      "text": "0.760"
      },
      "overridesubcomponentsmass": {
       "value": "true",
       "path": "openrocket/rocket/subcomponents/stage[1]/subcomponents/bodytube[2]/overridesubcomponentsmass"
      },
      "overridecg": {
-      "value": 0.151,
+      "value": 0.17,
       "path": "openrocket/rocket/subcomponents/stage[1]/subcomponents/bodytube[2]/overridecg",
-      "text": "0.151"
+      "text": "0.170"
      },
      "overridesubcomponentscg": {
       "value": "true",
@@ -331,36 +331,36 @@
     "motor": {
      "fields": {
       "type": {
-       "value": "reload",
+       "value": "military",
        "path": "openrocket/rocket/subcomponents/stage[1]/subcomponents/bodytube[2]/motormount/motor/type"
       },
       "manufacturer": {
-       "value": "AeroTech",
+       "value": "Project 33",
        "path": "openrocket/rocket/subcomponents/stage[1]/subcomponents/bodytube[2]/motormount/motor/manufacturer"
       },
       "designation": {
-       "value": "G64W",
+       "value": "MIL-33",
        "path": "openrocket/rocket/subcomponents/stage[1]/subcomponents/bodytube[2]/motormount/motor/designation"
       },
       "diameter": {
-       "value": 0.029,
+       "value": 0.076,
        "path": "openrocket/rocket/subcomponents/stage[1]/subcomponents/bodytube[2]/motormount/motor/diameter",
-       "text": "0.029"
+       "text": "0.076"
       },
       "length": {
-       "value": 0.124,
+       "value": 0.42,
        "path": "openrocket/rocket/subcomponents/stage[1]/subcomponents/bodytube[2]/motormount/motor/length",
-       "text": "0.124"
+       "text": "0.420"
       },
       "delay": {
-       "value": 4.0,
+       "value": 0.0,
        "path": "openrocket/rocket/subcomponents/stage[1]/subcomponents/bodytube[2]/motormount/motor/delay",
-       "text": "4.0"
+       "text": "0"
       }
      },
      "path": "openrocket/rocket/subcomponents/stage[1]/subcomponents/bodytube[2]/motormount/motor",
      "overhang_m": 0.0,
-     "x_start_m": 0.477,
+     "x_start_m": 0.181,
      "x_end_m": 0.601
     }
    },
@@ -471,9 +471,9 @@
   ],
   "source": {
    "path": "Simulation/Folding Stabilized Rocket.ork",
-   "sha256": "16283834e0ae4c174198b00d9cfd206615ed3a805fb8ead2b3e0193376eff09e",
+   "sha256": "9f66d35b0e15144f94ae4a1381b92c76ea7ed87572add3b68d32c0755abe2f5d",
    "inner_file": "rocket.ork",
-   "inner_sha256": "8a7de01238fedf04add07506b5e1bac0cbdfbe87900ac09e52efd2768c1fb5ce"
+   "inner_sha256": "74630bc7ab697a0e33e2fa35b1d8a6816ff6069e4f6f4ee21d012dfaa7d6457d"
   }
  },
  "pre_retune": {
