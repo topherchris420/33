@@ -62,7 +62,7 @@
   "evidence/predictions.json": "898afd685bb3ca3a801f0f569d3811fb9a4de31bdef3416eba735eb77067f47e",
   "evidence/preregistrations.json": "37ed33bab3b45c7e32d0b48d49c948a2fb3f6bd0ff1312cce688a24576e8e29a",
   "evidence/requirements.json": "673a9f51fff37649303c2f3aa703ab5fb4f96a8c9a8ab3e9af05e9bf161d1d12",
-  "evidence/reviews.json": "901586d4e09cfd37338db599d352a1d45c499d356f5827d4589f96eb1f6d2a56",
+  "evidence/reviews.json": "571bc5f88e31baf11ad7a1dd6475eb6d31ca52bf99d17f66f3ea13a650cb38bb",
   "evidence/safety_gates.json": "532844e3527625880e4768fea3c59a3e279f67081baac07b5f6fe02ab4c0dad3",
   "evidence/sessions.json": "a8486b0ce83596a773a27761db12830209c274dff74a35deba1dc5d51bc5433b",
   "materials/mass_rollup.py": "7e8b8ca2b46b20102721c645284fc7b1a81e8c4848e30ee4295a8a10260025ec",
@@ -79,7 +79,7 @@
   "tests/test_naca_fin_generator.py": "4dba7f7013f2a2c3b902038062b7894ae239aa99b7b469b98b52cafb50ac96b5",
   "tests/test_reliability.py": "9a7fafce4bdedaa50a19a45438b3d66139a7f30ecfac6193ca43e021aa39f4be",
   "tests/test_spring_sizing.py": "24e6e66c244c84fd95d3e462c07a0411ae34fc49ab589dfd84411ec68e8d6f38",
-  "tests/test_static_margin.py": "a07dd0ebd112b3aceda6fa9d2955a33ade563f73797d5a0baca1031b8047afaf",
+  "tests/test_static_margin.py": "e8d78812fb388850b50ff02cfed18669bd0b3d7e6cdd7fb07952d2efba915d4d",
   "tests/test_structural.py": "3a6078b66cfcaa8b98f3508a08326ce8f7483f149363eba2f28f811691a487a8",
   "tools/review_figures.py": "73d43e02f4f5b7820580b68f93f815fa975d58057cab476e2887b9d3c253e799"
  },
@@ -943,8 +943,8 @@
    "format": "file",
    "description": "Parser and regression checks; no stability window is asserted by CI.",
    "status": "current",
-   "sha256": "a07dd0ebd112b3aceda6fa9d2955a33ade563f73797d5a0baca1031b8047afaf",
-   "bytes": 4137,
+   "sha256": "e8d78812fb388850b50ff02cfed18669bd0b3d7e6cdd7fb07952d2efba915d4d",
+   "bytes": 4350,
    "class_label": "TEST PROCEDURE",
    "snapshot_path": "artifacts/tests/test_static_margin.py"
   },
@@ -1608,7 +1608,7 @@
      "kind": "human",
      "recorded": "2026-11-14",
      "recorded_by": "chief weapons engineer",
-     "note": "Phase 4 militarization: MIL-33 motor (1235 Ns, 3.3 km envelope), composite airframe, militarized hinge FOS 5.71 at 65.7 g, metal-gear canard servos; .ork patched; G64W retained for Phase 6 inert flights.",
+     "note": "Phase 4: test updated for the MIL-33 motor designation in the .ork; claim unchanged.",
      "independent": false
     }
    },
@@ -5149,15 +5149,35 @@
      "stability_plot": "cf54d4d96660f66b5eeafd46891a8feef87eac66b9f2109161974677275bfa68",
      "stability_record": "356c882c80f62ac5e7d811d86ad86849bb877b6dd869d933b8ad8e6c9c3b1af5",
      "stability_source": "0a916be91d502f77cc44f32474208909c37675f03ab6c3893fe05c57af121850",
-     "stability_tests": "a07dd0ebd112b3aceda6fa9d2955a33ade563f73797d5a0baca1031b8047afaf"
+     "stability_tests": "e8d78812fb388850b50ff02cfed18669bd0b3d7e6cdd7fb07952d2efba915d4d"
     },
     "kind": "human",
-    "note": "Phase 4 militarization: MIL-33 motor (1235 Ns, 3.3 km envelope), composite airframe, militarized hinge FOS 5.71 at 65.7 g, metal-gear canard servos; .ork patched; G64W retained for Phase 6 inert flights.",
+    "note": "Phase 4: test updated for the MIL-33 motor designation in the .ork; claim unchanged.",
     "recorded": "2026-11-14",
     "recorded_by": "chief weapons engineer",
     "statement_sha256": "c26ccbdf5c5a97d6870612fd660a122ade4351839779699c9b73e4717e222ce5"
    },
    "history": [
+    {
+     "assumptions_sha256": "290343be6851ab7eb7ad05cca55fe141d6d99f448d2f2e7d5e03b86afa7e481c",
+     "dependencies": {
+      "crosscheck_data": "d6ac767808be0fa6f183f8abacae86f6a0298cab421df1f9aff8cc0815d0b659",
+      "crosscheck_source": "798850e2d7310cc4768781b569a726c279a34b49edae4cb7c348010b6fbe3fbe",
+      "design_point": "0cbd6f6706b9b678f015c200ebdcebf7ab5f190e0be6ae765675c980b5f4a9e3",
+      "divergence_log": "ec9345c71ad5d118a307b40346e82ca9c45110643b673c681e21dd97ff2d8d69",
+      "stability_data": "6fa213dbebb660edb00414093911e7adf97b0726051def483436f75e27b866cf",
+      "stability_inputs": "9f66d35b0e15144f94ae4a1381b92c76ea7ed87572add3b68d32c0755abe2f5d",
+      "stability_plot": "cf54d4d96660f66b5eeafd46891a8feef87eac66b9f2109161974677275bfa68",
+      "stability_record": "356c882c80f62ac5e7d811d86ad86849bb877b6dd869d933b8ad8e6c9c3b1af5",
+      "stability_source": "0a916be91d502f77cc44f32474208909c37675f03ab6c3893fe05c57af121850",
+      "stability_tests": "a07dd0ebd112b3aceda6fa9d2955a33ade563f73797d5a0baca1031b8047afaf"
+     },
+     "kind": "human",
+     "note": "Phase 4 militarization: MIL-33 motor (1235 Ns, 3.3 km envelope), composite airframe, militarized hinge FOS 5.71 at 65.7 g, metal-gear canard servos; .ork patched; G64W retained for Phase 6 inert flights.",
+     "recorded": "2026-11-14",
+     "recorded_by": "chief weapons engineer",
+     "statement_sha256": "c26ccbdf5c5a97d6870612fd660a122ade4351839779699c9b73e4717e222ce5"
+    },
     {
      "assumptions_sha256": "290343be6851ab7eb7ad05cca55fe141d6d99f448d2f2e7d5e03b86afa7e481c",
      "dependencies": {
