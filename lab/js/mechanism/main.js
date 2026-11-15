@@ -208,7 +208,7 @@ function openTechPanel(p) {
   const disc = (id) => ev.discrepancies.find((d) => d.id === id);
   const link = (href, id, text) => h("a", { href }, h("b", {}, id), h("span", {}, text));
   clear(tech,
-    h("div", { class: "panel-head" }, h("h4", { id: "tech-title" }, "Why the pieces refuse — the constraint, not the effort"), h("span", { class: "cluster" }, categoryBadge("research"), statusChip("contradicted", "Not repaired"))),
+    h("div", { class: "panel-head" }, h("h4", { id: "tech-title" }, "Why the pieces refuse — the constraint, not the effort"), h("span", { class: "cluster" }, categoryBadge("research"), statusChip("supported_within_limits", "Historical record · redesign resolved"))),
     h("div", { class: "panel-body mx-tech-grid" },
       h("div", {},
         h("p", {}, p.closed
@@ -231,12 +231,13 @@ function openTechPanel(p) {
           link(claimLink("C1"), "C1", "Claim passport — folding-fin mechanism model"),
           link(docLink("docs/TRACEABILITY.md"), "R-C1-CLOSURE", closure.text),
           ...["D-002", "D-004", "D-005"].map((id) => link(discrepancyLink(id), id, `${disc(id).title} (${disc(id).status})`)),
-          link(repoLink("docs/EVIDENCE/C1_four_bar_sweep.json"), "JSON", "Committed sweep: baseline + 81 variants, null where no value exists"),
+          link(repoLink("docs/EVIDENCE/C1_four_bar_sweep.json"), "JSON", "Committed historical sweep: baseline + 81 variants, null where no value exists"),
+          link(repoLink("docs/EVIDENCE/C1_four_bar_military.json"), "MILITARY", "Phase 1 redesign record: closes over the full stroke, locks over-center"),
           link(repoLink("mechanism/four_bar.py"), "MODEL", "mechanism/four_bar.py — circle-intersection closure, revision 2")))));
   tech.hidden = false;
   tech.focus({ preventScroll: true });
   tech.scrollIntoView({ behavior: reducedMotion() ? "auto" : "smooth", block: "nearest" });
-  announce(`The geometry cannot close. Gap ${p.gap.toFixed(2)} millimetres. Technical panel opened.`);
+  announce(`This historical configuration cannot close. Gap ${p.gap.toFixed(2)} millimetres. The Phase 1 redesign resolves it. Technical panel opened.`);
 }
 
 function buildVariants() {

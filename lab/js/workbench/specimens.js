@@ -102,7 +102,7 @@ export function buildRocket(or, extra) {
     explodeNote: "Separation paths are illustrative: the OpenRocket file records where components sit, not how they are assembled.",
     axis: [1, 0, 0], frameDir: new THREE.Vector3(0.3, 0.34, 1), lengthMM: L,
     info: `<b>${model.rocket_name}</b> · ${model.creator} · format ${model.format_version}<br>Overall ${L.toFixed(1)} mm · d<sub>ref</sub> ${(model.reference_diameter_m * 1000).toFixed(1)} mm · stations from nose tip along +X`,
-    claims: ["C5"], discrepancies: ["D-006", "D-007", "D-008", "D-009", "D-023"], observations: or.lab_observations,
+    claims: ["C5"], discrepancies: ["D-009", "D-023"], observations: or.lab_observations,
   };
 }
 
@@ -141,12 +141,12 @@ function rocketMeta(p, model, extra) {
       intro: big ? "These large fins sit at the tail. Pushed by the airflow, they move the centre of pressure aft, which is what keeps a rocket pointing into the wind."
         : "A small fin set further forward. The firmware drives four canard servos, but this file does not say whether these fins model them.",
       engineering: big ? ["Barrowman fin CP term (textbook): \\(X_F = X_f + \\dfrac{X_R}{3}\\dfrac{C_R + 2C_T}{C_R + C_T} + \\dfrac{1}{6}\\left[(C_R + C_T) - \\dfrac{C_R C_T}{C_R + C_T}\\right]\\).",
-        "D-006 records two differences: the reference script uses \\(C_R\\) where the textbook uses \\(X_R\\), and its normal-force term uses the sweep length where the textbook uses the mid-chord line length. Neither formulation has been independently reviewed, so neither is declared correct.",
-        "The script records \\(X_f = 0.381\\,\\text{m}\\); OpenRocket's \"bottom\" placement puts the leading edge at \\(0.471\\,\\text{m}\\) (LAB-OBS-1, unreviewed)."]
+        "D-006 recorded two differences: the reference script used \\(C_R\\) where the textbook uses \\(X_R\\), and its normal-force term used the sweep length where the textbook uses the mid-chord line length. Phase 1 resolved it: the textbook terms were correct, the revision-3 script uses them, and an independent strip integration agrees within 0.001 mm.",
+        "The file places the leading edge at \\(0.440\\,\\text{m}\\) with method \"absolute\" (LAB-OBS-1, resolved by the revision-3 parser)."]
         : ["Placed with method \"absolute\": 0.18 m from the nose tip regardless of the tube it belongs to.", "Rendered cross-section: flat plate with rounded edges (OpenRocket uses the cross-section setting for drag)."],
     };
     meta.limitations.push("Fixed fins in this file: no hinge, fold angle, or deployment geometry exists in the OpenRocket model.");
-    if (big) { meta.discrepancies = ["D-006", "D-009", "D-010"]; meta.observations = ["LAB-OBS-1"]; }
+    if (big) { meta.discrepancies = ["D-009", "D-010"]; meta.observations = ["LAB-OBS-1"]; }
   } else if (p.kind === "motor") {
     dims.push({ q: "Diameter", v: fmt(p.radius * 2), src: `${p.path}/diameter` });
     dims.push({ q: "Length", v: fmt(p.length, 1), src: `${p.path}/length` });
@@ -154,10 +154,11 @@ function rocketMeta(p, model, extra) {
     meta.assetClass = "source-model";
     meta.depths = {
       intro: "Only an envelope: the space the simulation file reserves for a motor. Nothing about propulsion is modelled or validated here.",
-      engineering: ["D-007: the static-margin script burns a hard-coded Estes C6-5 while this file specifies the motor shown. The script's CG history, which both CP formulations use, therefore does not describe this file's configuration."],
+      engineering: ["D-007 (resolved): the revision-3 static-margin script burns this file's motor — the MIL-33, with certified G64W data retained for Phase 6 inert flights — instead of the historical hard-coded Estes C6-5.",
+        "The MIL-33 designation and 0.42 m envelope come from the Phase 4 motor sizing (Simulation/motor_sizing.py); the thrust curve is the committed RASP file, PREDICTED and not static-fired."],
     };
-    meta.limitations.push("Live propulsion is outside this repository's validation boundary.");
-    meta.discrepancies = ["D-007"];
+    meta.limitations.push("Live propulsion is validated only by the live-fire program; the MIL-33 curve is a predicted plateau.");
+    meta.discrepancies = [];
   }
   dims.unshift(station);
   if (p.overrideMass !== null && p.overrideMass !== undefined) {
@@ -181,14 +182,14 @@ function stabilityOverlay(extra, parts) {
   group.add(stationBand({ x0: cgMax + 1.5 * dref, x1: cgMin + 2.0 * dref, radius: R + 7, color: 0x4cc9bb,
     text: `R-C5-WINDOW · CP meeting 1.5–2.0 cal at every recorded CG: ${(cgMax + 1.5 * dref).toFixed(1)}–${(cgMin + 2.0 * dref).toFixed(1)} mm`, sub: `x_CG,max + 1.5·d_ref to x_CG,min + 2.0·d_ref, d_ref ${dref.toFixed(1)} mm · derived for display` }));
   group.add(stationRing({ x: (cgMin + cgMax) / 2, radius: R + 4, color: 0xf1e9d6, text: `CG ${cgMin.toFixed(0)}–${cgMax.toFixed(0)} mm`, sub: "docs/EVIDENCE/C5_static_margin.csv · cg_m" }));
-  group.add(stationRing({ x: cpRef, radius: R + 4, color: 0x67d8cf, text: `CP reference ${cpRef.toFixed(1)} mm`, sub: "C5_static_margin_inputs.json · cp_m · SM 1.55–1.57 cal" }));
-  group.add(stationRing({ x: cpTxt, radius: R + 4, color: 0xe07650, text: `CP textbook ${cpTxt.toFixed(1)} mm`, sub: "C5_barrowman_crosscheck.json · cp_m · SM 0.74–0.76 cal" }));
+  group.add(stationRing({ x: cpRef, radius: R + 4, color: 0x67d8cf, text: `CP reference ${cpRef.toFixed(1)} mm`, sub: `C5_static_margin_inputs.json · cp_m · SM ${inputs.sm_min_calibers.toFixed(2)}–${inputs.sm_max_calibers.toFixed(2)} cal` }));
+  group.add(stationRing({ x: cpTxt, radius: R + 4, color: 0xe07650, text: `CP strip integration ${cpTxt.toFixed(1)} mm`, sub: `C5_barrowman_crosscheck.json · cp_m · SM ${cross.sm_min_calibers.toFixed(2)}–${cross.sm_max_calibers.toFixed(2)} cal` }));
   const obs = extra.observation;
   if (obs) {
-    group.add(stationRing({ x: obs.values_m.static_margin_inputs_X_f * 1000, radius: R + 22, color: 0xe3c27a, dashed: true, text: `Fin LE in script ${(obs.values_m.static_margin_inputs_X_f * 1000).toFixed(0)} mm`, sub: "LAB-OBS-1 · unreviewed candidate" }));
-    group.add(stationRing({ x: obs.values_m.ork_semantics * 1000, radius: R + 22, color: 0xe3c27a, dashed: true, text: `Fin LE by .ork rules ${(obs.values_m.ork_semantics * 1000).toFixed(0)} mm`, sub: "position type=\"bottom\" · LAB-OBS-1" }));
+    group.add(stationRing({ x: obs.values_m.static_margin_inputs_X_f * 1000, radius: R + 22, color: 0xe3c27a, dashed: true, text: `Fin LE in script ${(obs.values_m.static_margin_inputs_X_f * 1000).toFixed(0)} mm`, sub: "LAB-OBS-1 · resolved by the rev-3 parser" }));
+    group.add(stationRing({ x: obs.values_m.ork_semantics * 1000, radius: R + 22, color: 0xe3c27a, dashed: true, text: `Fin LE by .ork rules ${(obs.values_m.ork_semantics * 1000).toFixed(0)} mm`, sub: "method absolute · LAB-OBS-1 resolved" }));
   }
-  group.userData.legend = "Two formulations, one rocket: neither CP is declared correct (D-006). The window band is arithmetic on the requirement and the recorded CG.";
+  group.userData.legend = "Two formulations, one rocket, now agreeing: the revision-3 model and the strip-integration cross-check agree within 0.001 mm (D-006 resolved). The window band is arithmetic on the requirement and the recorded CG.";
   return group;
 }
 
@@ -290,13 +291,13 @@ function fourBarMeta(p, step) {
     ],
     mass: { text: "NOT MEASURED — no material or density is recorded for the STEP links", src: null },
     material: null,
-    assumptions: [p.role_basis, "Link width 5 mm, thickness 2 mm and hole Ø2 mm come from export_step() in Project33FourBar.py."],
-    limitations: ["The STEP places four separate bars; it is not a constrained or closed mechanism (D-005).", "Display tessellation is not the B-rep; measurements here use the B-rep values exported by the converter."],
-    claims: ["C1"], discrepancies: ["D-005", "D-002"], observations: [],
+    assumptions: [p.role_basis, "Link width 6 mm, thickness 3 mm and hole Ø2 mm come from export_step() in Project33FourBar.py (militarized Phase 1)."],
+    limitations: ["The STEP places four separate bars; it is not a constrained or closed mechanism (the kinematics live in mechanism/four_bar.py).", "Display tessellation is not the B-rep; measurements here use the B-rep values exported by the converter."],
+    claims: ["C1"], discrepancies: [], observations: [],
     depths: {
-      intro: role === "coupler" ? "The coupler is the long link that should join the input link to the output link. At 60 mm it is too long for the 15 mm links to reach — the loop cannot close." : "Each bar is a link. Pins through the holes would make joints; the distance between hole centres is what kinematics cares about.",
-      engineering: ["Pin-centre distance is the link length in the planar model. Grashof check for the recorded set: \\(s + l = 15 + 60 = 75 > p + q = 15 + 25 = 40\\), so non-Grashof.",
-        "D-005: the Fusion sketch script draws this coupler from (0, 15) to (25, 15) — 25 mm — while the STEP and the model use 60 mm."],
+      intro: role === "coupler" ? "The coupler joins the input link to the output link. The Phase 1 redesign sizes it at 15.5 mm so the loop closes over the full stroke and locks over-center — the historical 60 mm coupler could not close at any pose (D-002, resolved)." : "Each bar is a link. Pins through the holes would make joints; the distance between hole centres is what kinematics cares about.",
+      engineering: ["Pin-centre distance is the link length in the planar model. Grashof check for the recorded set: \\(s + l = 14 + 25 = 39 > p + q = 15 + 15 = 30\\), so non-Grashof — fine for a deployment mechanism.",
+        "D-005 (resolved): the regenerated STEP draws this coupler at the verified pin-centre distance; the assembly pose is the verified deployed-stop pose."],
     },
     research: [{ k: "STEP", v: step.source }, { k: "SHA-256", v: step.source_sha256 }, { k: "Product", v: `#${p.name} · colour ${JSON.stringify(p.color)}` }, { k: "Triangles", v: String(p.triangles) }, { k: "Converter", v: "tools/cad_to_web.py (OCP)" }],
   };

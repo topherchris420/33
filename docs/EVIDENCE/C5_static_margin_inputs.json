@@ -9,6 +9,18 @@
     "time": "s",
     "static_margin": "calibers"
   },
+  "geometry": {
+    "d_ref": 0.0762,
+    "L_n": 0.038099999999999995,
+    "X_f": 0.44,
+    "C_R": 0.16,
+    "C_T": 0.16,
+    "S": 0.22,
+    "L_f_sweeplength": 0.0,
+    "canard_X_f": 0.18,
+    "canard_span": 0.0508,
+    "note": "main fin set per design_point.json (militarized resize); canard fields included"
+  },
   "formulation_corrections_vs_rev1": [
     "fin CP sweep term uses the tip leading-edge sweep X_R (rev 1 used the root chord)",
     "fin normal-force term uses the mid-chord line length (rev 1 used the sweep length)",

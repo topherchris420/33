@@ -799,24 +799,44 @@
       "current": {
         "assumptions_sha256": "290343be6851ab7eb7ad05cca55fe141d6d99f448d2f2e7d5e03b86afa7e481c",
         "dependencies": {
-          "crosscheck_data": "ca117a845a1a54b1c3131aa35e4184f189e62a5e973ab30a28ae3f19dc72b8bf",
-          "crosscheck_source": "798850e2d7310cc4768781b569a726c279a34b49edae4cb7c348010b6fbe3fbe",
+          "crosscheck_data": "de233d88c68c7d9e29ed0c5dd65b41c319a9035ce43584f62134ee0840ae6684",
+          "crosscheck_source": "aed446e4235d9416cc03465189c96a2e58fa2d21a79bb56eee7abfa5053547b5",
           "design_point": "0cbd6f6706b9b678f015c200ebdcebf7ab5f190e0be6ae765675c980b5f4a9e3",
           "divergence_log": "ec9345c71ad5d118a307b40346e82ca9c45110643b673c681e21dd97ff2d8d69",
           "stability_data": "6fa213dbebb660edb00414093911e7adf97b0726051def483436f75e27b866cf",
           "stability_inputs": "9f66d35b0e15144f94ae4a1381b92c76ea7ed87572add3b68d32c0755abe2f5d",
           "stability_plot": "cf54d4d96660f66b5eeafd46891a8feef87eac66b9f2109161974677275bfa68",
-          "stability_record": "74f657cdee8d4c5c4dbcd00701ffa6b1eb9a9e0140d33daf3d8b8fbc4cbbad1b",
-          "stability_source": "0a916be91d502f77cc44f32474208909c37675f03ab6c3893fe05c57af121850",
+          "stability_record": "c2182ad7a4fa5fcca2ed817c0eeaa2dc87dd3f2f9ab20460ed78a922308613b1",
+          "stability_source": "594f50b659a59464241b55a692f337a3a04b78b86f8ec9dfd9a1527f44c6ad24",
           "stability_tests": "22a2af366d5c31af59c8d75989b09043ca0c8fc5477f967f520f7c44cf910bef"
         },
         "kind": "human",
-        "note": "test_static_margin gate test now writes to a temp directory so committed artifacts and their digests are never touched by test runs; C5 record regenerated on LF bytes.",
+        "note": "C5 records extended with laboratory-compatibility keys (geometry block, midchord_length_m) so the 3D workbench, mechanism comparison, cinematic, and guided pages keep loading after the rev-3 format change; lab narratives updated to the resolved record (D-006/7/8 resolved, militarized STEP dimensions).",
         "recorded": "2026-11-14",
         "recorded_by": "chief weapons engineer",
         "statement_sha256": "c26ccbdf5c5a97d6870612fd660a122ade4351839779699c9b73e4717e222ce5"
       },
       "history": [
+        {
+          "assumptions_sha256": "290343be6851ab7eb7ad05cca55fe141d6d99f448d2f2e7d5e03b86afa7e481c",
+          "dependencies": {
+            "crosscheck_data": "ca117a845a1a54b1c3131aa35e4184f189e62a5e973ab30a28ae3f19dc72b8bf",
+            "crosscheck_source": "798850e2d7310cc4768781b569a726c279a34b49edae4cb7c348010b6fbe3fbe",
+            "design_point": "0cbd6f6706b9b678f015c200ebdcebf7ab5f190e0be6ae765675c980b5f4a9e3",
+            "divergence_log": "ec9345c71ad5d118a307b40346e82ca9c45110643b673c681e21dd97ff2d8d69",
+            "stability_data": "6fa213dbebb660edb00414093911e7adf97b0726051def483436f75e27b866cf",
+            "stability_inputs": "9f66d35b0e15144f94ae4a1381b92c76ea7ed87572add3b68d32c0755abe2f5d",
+            "stability_plot": "cf54d4d96660f66b5eeafd46891a8feef87eac66b9f2109161974677275bfa68",
+            "stability_record": "74f657cdee8d4c5c4dbcd00701ffa6b1eb9a9e0140d33daf3d8b8fbc4cbbad1b",
+            "stability_source": "0a916be91d502f77cc44f32474208909c37675f03ab6c3893fe05c57af121850",
+            "stability_tests": "22a2af366d5c31af59c8d75989b09043ca0c8fc5477f967f520f7c44cf910bef"
+          },
+          "kind": "human",
+          "note": "test_static_margin gate test now writes to a temp directory so committed artifacts and their digests are never touched by test runs; C5 record regenerated on LF bytes.",
+          "recorded": "2026-11-14",
+          "recorded_by": "chief weapons engineer",
+          "statement_sha256": "c26ccbdf5c5a97d6870612fd660a122ade4351839779699c9b73e4717e222ce5"
+        },
         {
           "assumptions_sha256": "290343be6851ab7eb7ad05cca55fe141d6d99f448d2f2e7d5e03b86afa7e481c",
           "dependencies": {

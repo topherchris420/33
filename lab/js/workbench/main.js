@@ -480,7 +480,7 @@ function renderInspector(part) {
         h("dt", {}, "Parts"), h("dd", {}, String(c.parts.length))),
       h("section", {}, h("h4", {}, "Evidence"), evidenceChips(c.claims, c.discrepancies, (c.observations || []).map((o) => o.id))),
       ...(c.observations || []).map((o) => h("div", { class: "obs" }, h("div", { class: "label" }, `${o.id} · ${o.status}`), h("p", {}, h("b", {}, o.title)), h("p", {}, o.detail), h("p", { class: "muted" }, o.not_computed))),
-      c.joints ? h("section", {}, h("h4", {}, "Joint check (from STEP geometry)"), h("p", {}, `${c.joints.concentric.length} of ${c.joints.pairsConsidered} hole pairs on different links share an axis. A pinned four-bar needs four. The file is four separate bars, as D-005 records.`)) : null,
+      c.joints ? h("section", {}, h("h4", {}, "Joint check (from STEP geometry)"), h("p", {}, `${c.joints.concentric.length} of ${c.joints.pairsConsidered} hole pairs on different links share an axis. A pinned four-bar needs four. The file is four separate bars at the verified deployed-stop pose (D-005 resolved by regeneration).`)) : null,
       h("p", { class: "muted", style: { fontSize: "12px" } }, "Select a part in the viewport or the hierarchy to inspect it. Values come only from the source; anything absent is marked NOT SPECIFIED or NOT MEASURED."));
     return;
   }

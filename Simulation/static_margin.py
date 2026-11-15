@@ -90,6 +90,29 @@ def fin_terms(x_le, c_root, c_tip, span, sweep_xr, radius, d_ref, count, density
     return cn_f, x_f
 
 
+def _main_fin_geometry(ork_geom, dp):
+    """Main-fin geometry block for the laboratory views.
+
+    The revision-3 model takes its fin geometry from design_point.json; this
+    block reports the same values in the legacy key layout (d_ref, L_n, X_f,
+    C_R, C_T, S, L_f_sweeplength) so lab/js consumers keep working.
+    """
+    mf = dp['main_fins']
+    canards = dp['canards']
+    return {
+        'd_ref': ork_geom['d_ref'],
+        'L_n': ork_geom['L_n'],
+        'X_f': mf['leading_edge_x_mm'] / 1000.0,
+        'C_R': mf['root_chord_mm'] / 1000.0,
+        'C_T': mf['tip_chord_mm'] / 1000.0,
+        'S': mf['span_mm'] / 1000.0,
+        'L_f_sweeplength': mf['tip_le_sweep_mm'] / 1000.0,
+        'canard_X_f': canards['leading_edge_x_mm'] / 1000.0,
+        'canard_span': canards['span_mm'] / 1000.0,
+        'note': 'main fin set per design_point.json (militarized resize); canard fields included',
+    }
+
+
 def assemble_cp(dp, ork_geometry):
     """Total CP from nose, canards, and main fins. Returns (cp, terms)."""
     d_ref = ork_geometry['d_ref']
@@ -288,6 +311,9 @@ def generate_reports(csv_path, plot_path, ork_path=None, design_point_path=DESIG
         'design_point_revision': dp.get('revision'),
         'geometry_source': Path(ork_path).name if ork_path and Path(ork_path).exists() else 'design_point.json defaults',
         'units': {'length': 'm', 'mass': 'kg', 'time': 's', 'static_margin': 'calibers'},
+        # Geometry block kept for the laboratory views (lab/js reads these
+        # keys); values are the main fin set from the parsed .ork.
+        'geometry': _main_fin_geometry(ork_geom, dp),
         'formulation_corrections_vs_rev1': [
             'fin CP sweep term uses the tip leading-edge sweep X_R (rev 1 used the root chord)',
             'fin normal-force term uses the mid-chord line length (rev 1 used the sweep length)',

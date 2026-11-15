@@ -29,6 +29,7 @@
   "cp_m_closed_form": 0.450134,
   "cp_m_strip_integration": 0.450135,
   "cp_difference_mm": 0.001,
+  "midchord_length_m": 0.21997,
   "sm_min_calibers": 1.6684,
   "sm_max_calibers": 1.7603,
   "sm_min_calibers_reference_model": 1.6684,
