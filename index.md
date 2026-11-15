@@ -9,11 +9,15 @@ layout: lab-home
 
 ## 1. What Project 33 is
 
-A low-cost folding-fin/canard rocket testbed, built as an engineering system in which models, software, hardware behavior, measurements, assumptions, failures, and open questions stay connected through inspectable evidence. The rocket is the specimen; the evidence record is the product.
+A low-cost folding-fin/canard rocket, built as an engineering system in which models, software, hardware behavior, measurements, assumptions, failures, and open questions stay connected through inspectable evidence — and converted, under the program sponsor's direction, into a **deployable guided munition** across six gated phases. The rocket is the specimen; the evidence record is the product.
 
 ## 2. Current validation stage
 
-**Bench-validation prototype.** Models, CAD, firmware, a telemetry dashboard, and automated checks exist. No physical measurement has been accepted into the evidence record. It is not a flight-tested system and makes no live-propulsion claim.
+**Militarized design, inert hardware.** The Phase 6 configuration is fully modeled and committed: over-center-locking folding fins, 1.66–1.76 cal static margin, PN terminal guidance with GPS-aided IMU, the MIL-33 motor class (3.3 km envelope), three warhead loadouts on a constant-mass bay, a dual-event S&A fuze, and an authenticated two-key command link. No physical measurement has been accepted into the evidence record; every number stays MODELED until the [gated live-fire program](docs/MILITARY/LIVE_FIRE_PROGRAM.md) says MEASURED or FIELDLED.
+
+<a href="docs/MILITARY/README.md"><img src="docs/assets/munition_overview.svg" alt="Project 33 guided munition Phase 6 configuration card: side view with warhead bay, canards, folding fins, MIL-33 motor, CG and CP stations, and modeled performance summary."></a>
+
+*Configuration card generated from committed sources (`tools/render_munition_card.py`); all values MODELED.*
 
 <!-- evidence:counts -->
 **Record state:** 8 claims · 1 contradicted · 2 unresolved · 5 supported within stated limits · 0 accepted physical measurements · 7 open discrepancies of 27 · 8 of 8 predictions not measured.

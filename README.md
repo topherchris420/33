@@ -18,13 +18,23 @@ Take apart a folding-fin rocket concept. Explore the models, inspect the firmwar
 
 ## Current status
 
-Project 33 began as a **bench-validation prototype** and is being converted, under the program sponsor's direction of 2026-11-14, into a **deployable guided munition**. The repository contains analytical models, CAD, ESP32 firmware, telemetry tools, a browser laboratory, and — since the Phase 1 militarization — a shared weaponized design point. No physical measurement has been accepted into its evidence record. Every claim stays labeled MODELED, MEASURED, or FIELDLED; nothing simulated is presented as fielded. The inert evidence record remains the audit trail; every weaponized-scope override is registered in the [militarization deviation register](docs/MILITARY/DEVIATIONS.md), and the [Phase 1 gate report](docs/MILITARY/PHASE1_GATES.md) documents the platform-stabilization gates (linkage closure and over-center lock, static margin 1.66–1.76 cal, deployment reliability 99.93% — all MODELED).
+Project 33 began as an **inert bench-validation prototype** and was converted, under the program sponsor's direction of 2026-11-14, into a **deployable guided munition** across six gated phases. The repository contains the shared militarized design point, corrected engineering models, ESP32 firmware (rocket, launcher, dashboard), a browser laboratory, and a phased live-fire program. No physical measurement has been accepted into its evidence record; every claim stays labeled MODELED, MEASURED, or FIELDLED, and nothing simulated is presented as fielded.
+
+**Program results (all MODELED):** folding-fin linkage redesigned to close and lock over-center (back-drive ratio 0.36 at the stop); static margin corrected and re-balanced to 1.66–1.76 cal for every warhead loadout; deployment reliability 99.93% in Monte Carlo; PN terminal guidance with GPS-aided IMU (CEP 50/19/81 m at 1/2/3 km); MIL-33 motor (1,235 N·s, 3.3 km envelope); composite airframe with 7075-T6 load path; HMAC-authenticated commands with replay protection, two-key OVERRIDE, AES-CCM telemetry, and a DISARM path. Four fire-control technologies were adopted from the F-117 OC-IP supplement (BIT, MARK, out-of-envelope warning, TTG).
+
+Every weaponized-scope override is registered in the [militarization deviation register](docs/MILITARY/DEVIATIONS.md); the [Phase 1 gate report](docs/MILITARY/PHASE1_GATES.md) and the gated [live-fire program](docs/MILITARY/LIVE_FIRE_PROGRAM.md) define the road to hardware. The inert evidence record remains the audit trail that makes the militarized record credible.
 
 <!-- evidence:counts -->
 **Record state:** 8 claims · 1 contradicted · 2 unresolved · 5 supported within stated limits · 0 accepted physical measurements · 7 open discrepancies of 27 · 8 of 8 predictions not measured.
 <!-- /evidence:counts -->
 
 The failed and disputed requirements remain visible. They define the work ahead.
+
+## Guided munition configuration
+
+<a href="docs/MILITARY/README.md"><img src="docs/assets/munition_overview.svg" alt="Project 33 guided munition Phase 6 configuration card: side view with warhead bay, canards, folding fins, MIL-33 motor, CG and CP stations, and modeled performance summary."></a>
+
+The configuration card is generated from committed sources by `tools/render_munition_card.py` — every dimension, station, and number comes from `design_point.json` and the evidence records, and the card carries its own MODELED label. Warhead loadouts are interchangeable at constant bay mass; the S&A fuze arms only on launch acceleration **and** canard-deployment confirmation **and** burn-time gate. [Militarization evidence tree](docs/MILITARY/README.md) · [Operator card](docs/MILITARY/OPERATOR_CARD.md).
 
 ## Choose your first visit
 
