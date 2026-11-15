@@ -41,11 +41,13 @@ the machine only enforces what you check.
 ## ABORT / MISFIRE DRILL
 
 - **Switch off** → launcher safes and aborts (buzzer + `ABORT:` row logged).
-- **The rocket stays armed up to 60 s** after an abort (deploy trigger live).
-  Keep the rail clear; do not approach until the dashboard shows the rocket
-  restarted to `IDLE` / `FUZE,SAFE`.
+- **DISARM the rocket** (dashboard DISARM button) → the rocket replies
+  `DISARMED` and returns to safe. It refuses DISARM only if the round is in
+  FLIGHT (motor lit) — then wait for burnout.
+- **Fuze** stays SAFE unless the launch+deploy+burn-time chain all occurred.
 - **Misfire (no IGNITED within 5 s):** launcher aborts automatically. Wait
-  60 s, switch to SAFE, then approach from the side per range rules.
+  60 s, switch to SAFE, DISARM the rocket, then approach from the side per
+  range rules.
 - **Lost link:** physical interlocks still work; the round cannot fire on RF
   alone without the switch armed AND the fire discipline above.
 

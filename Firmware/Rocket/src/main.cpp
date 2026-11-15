@@ -280,6 +280,22 @@ void processSerialCommands() {
                 Serial2.println(mpuHealthy ? Project33Protocol::CMD_REJECT_ARM_NOT_IDLE
                                            : Project33Protocol::CMD_REJECT_SENSOR_UNAVAILABLE);
             }
+            // MIL-DEV-011 (D-025 resolution): DISARM safes an armed round
+            // without a restart, so a launcher abort does not leave an armed
+            // rocket on the rail. Accepted ONLY in ARMED: a round in FLIGHT
+            // (motor lit) is never disarmed remotely; IDLE needs nothing.
+            else if (cmdBuffer == Project33Protocol::CMD_DISARM) {
+                if (sysState == "ARMED") {
+                    sysState = "IDLE";
+                    launchDetectActive = false;
+                    igniteServo.write(IGNITE_SERVO_OFF);
+                    reset_fins_deployed();
+                    Serial2.println(Project33Protocol::DISARMED);
+                } else if (sysState != "IDLE") {
+                    Serial2.println(Project33Protocol::CMD_REJECT_DISARM_NOT_ARMED);
+                }
+                // in IDLE: nothing to do; no reply needed (already safe)
+            }
             else if (cmdBuffer == Project33Protocol::CMD_CALIBRATE) {
                 calibrateGyro();
             }

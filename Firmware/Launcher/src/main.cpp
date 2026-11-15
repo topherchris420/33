@@ -436,6 +436,11 @@ void processUDP() {
             // Phase 6 (BIT discipline): relay the rocket self-test; the
             // rocket's BIT reply travels back as a raw line.
             Serial2.println("BIT");
+        } else if (msg == Project33Protocol::DASHBOARD_DISARM) {
+            // MIL-DEV-011: safe an armed rocket after an abort without a
+            // restart. The rocket refuses it outside ARMED/IDLE and never
+            // disarms a round in FLIGHT.
+            Serial2.println(Project33Protocol::CMD_DISARM);
         } else if (msg.startsWith("PID,")) {
             if (isValidPidCommand(msg)) {
                 Serial2.println(msg);

@@ -285,6 +285,7 @@ class TelemetryApp:
         ttk.Button(fire_frame, text="SET FUZE", command=self.send_fuze_delay_command, width=int(9)).pack(side=tk.LEFT, padx=self.s(5))
         ttk.Button(fire_frame, text="MARK", command=self.send_mark_command, width=int(8)).pack(side=tk.LEFT, padx=self.s(5))
         ttk.Button(fire_frame, text="BIT", command=self.send_bit_command, width=int(8)).pack(side=tk.LEFT, padx=self.s(5))
+        ttk.Button(fire_frame, text="DISARM", command=self.send_disarm_command, width=int(9)).pack(side=tk.LEFT, padx=self.s(5))
         # Out-of-envelope advisory (F-117 out-of-corridor warning doctrine):
         # computed from the launcher GPS fix (ENV) and the target entry.
         self.range_label = ttk.Label(fire_frame, text="RNG: --- (no launcher GPS fix or no target)", font=self.f(9, "bold"))
@@ -445,6 +446,12 @@ class TelemetryApp:
     def send_bit_command(self):
         # Phase 6 (BIT discipline): machine-readable preflight self-test.
         self._send_udp_command("BIT")
+
+    def send_disarm_command(self):
+        # MIL-DEV-011: safe an armed rocket after an abort without a restart.
+        # The rocket refuses it outside ARMED/IDLE and never disarms a round
+        # in FLIGHT; DISARMED comes back as a raw row for the session record.
+        self._send_udp_command("disarm")
 
     def _current_target(self):
         try:

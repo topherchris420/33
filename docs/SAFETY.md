@@ -34,6 +34,7 @@ outside that program.
 | G-17 | Telemetry downlink is AES-128-CCM encrypted | Launcher | Downlink packets are authenticated-encrypted (AES-128-CCM, mbedtls); a crypto failure degrades to plain telemetry, never to silence (Phase 5). | [Firmware/Launcher/src/crypto.h](../Firmware/Launcher/src/crypto.h)<br>[Firmware/Launcher/src/main.cpp](../Firmware/Launcher/src/main.cpp) | NOT MEASURED |
 | G-18 | Fuze S&A requires all three arming events | Rocket | The fuze arms only on launch acceleration AND canard-deployment confirmation AND the flight-time gate; it functions only on a real impact deceleration (Phase 2). | [Firmware/Rocket/src/main.cpp](../Firmware/Rocket/src/main.cpp) | NOT MEASURED |
 | G-19 | AUTONOMOUS engagement is an explicit pre-launch selection | Rocket | MODE,AUTO (fire-and-forget) is accepted only in IDLE/ARMED as an explicit operator action; MITL is the default (Phase 3). | [Firmware/Rocket/src/main.cpp](../Firmware/Rocket/src/main.cpp) | NOT MEASURED |
+| G-20 | DISARM safes an armed rocket without a restart | Rocket + launcher + dashboard | DISARM returns an ARMED rocket to IDLE (launch detect cleared, ignition servo off, fins latch reset) and replies DISARMED; refused outside ARMED/IDLE and never in FLIGHT, so a burning round is not remotely safed (MIL-DEV-011, D-025). | [Firmware/Launcher/src/main.cpp](../Firmware/Launcher/src/main.cpp)<br>[Firmware/Rocket/src/main.cpp](../Firmware/Rocket/src/main.cpp) | NOT MEASURED |
 
 Generated from `evidence/safety_gates.json`. `tests/test_firmware_safety.py` fails if any gate's source text changes. Source inspection shows the gate is implemented; it does not show the hardware behaves that way.
 <!-- /evidence:safety-gates -->
@@ -59,7 +60,7 @@ Deterministic interlocks live in firmware and stay there. The rocket's IGNITE pa
 
 ## Preflight Checklist for Inert Demonstrations
 
-> **WARNING:** Step 6 arms the rocket. Step 7 returns only the launcher to `SAFE`: the rocket stays `ARMED` with its deploy trigger live, and the launcher cannot re-arm it, until the rocket is restarted (D-025). Treat it as armed through the remaining steps, restart it when they are done, and confirm `IDLE` on the dashboard before arming again.
+> **WARNING:** Step 6 arms the rocket. Step 7 returns only the launcher to `SAFE`: the rocket stays `ARMED` with its deploy trigger live until it is **DISARMed** (dashboard DISARM button; the rocket replies `DISARMED` and returns to `IDLE` — MIL-DEV-011, D-025) or restarted. Treat it as armed through the remaining steps, and confirm `IDLE` on the dashboard before arming again.
 
 1. Verify wiring against [WIRING.md](WIRING.md).
 2. Build both PlatformIO projects from a recorded commit.

@@ -5,10 +5,10 @@ Two parts of the project disagreeing is information. Each entry names both sides
 
 | Status | Effect | Count |
 |---|---|---|
-| OPEN | Informational | 7 |
+| OPEN | Informational | 6 |
 | OPEN | Weakens a claim's support | 1 |
 | RESOLVED | Contradicts a claim or requirement | 7 |
-| RESOLVED | Informational | 3 |
+| RESOLVED | Informational | 4 |
 | RESOLVED | Weakens a claim's support | 9 |
 
 ## D-001
@@ -493,7 +493,7 @@ Two parts of the project disagreeing is information. Each entry names both sides
 
 | Field | Value |
 |---|---|
-| Status | OPEN |
+| Status | RESOLVED |
 | Effect | Informational |
 | Kind | design logic — Two implemented rules cannot both be satisfied in the intended sequence. |
 | Claims | [C2](claims/C2.md) |
@@ -501,9 +501,9 @@ Two parts of the project disagreeing is information. Each entry names both sides
 - [Firmware/Launcher/src/main.cpp](../Firmware/Launcher/src/main.cpp): abortSequence returns the launcher to SAFE and sends the rocket nothing. Re-arming waits for a rocket READY line and aborts with Rocket Timeout after 8 s.
 - [Firmware/Rocket/src/main.cpp](../Firmware/Rocket/src/main.cpp): sysState moves IDLE, ARMED, IGNITING, FLIGHT with no path back, so only a restart returns it to IDLE. READY is sent only in IDLE, and the deploy trigger stays live in any non-IDLE state.
 
-**Next action.** A human decides the intended behavior under a separate safety review, for example a disarm command sent on abort. No gate was changed. Until then the status board raises W-ARMED-AFTER-ABORT, and an aborted rocket should be treated as armed until it is restarted.
+**Next action.** None for the record; the 6.1 gate bench-validates the DISARM path on hardware.
 
-**Progress.** docs/SAFETY.md now warns before the preflight steps that arm the rocket, and Firmware/preflight_audit.py flags a rocket still active after an abort. Firmware is unchanged.
+**Resolution.** The DISARM command is implemented (MIL-DEV-011): the rocket returns an ARMED round to IDLE, clearing the launch detect, dropping the ignition servo, and resetting the fins latch, and acknowledges with DISARMED. It is refused outside ARMED/IDLE and never accepted in FLIGHT, so a burning round is not remotely safed. The launcher relays the dashboard disarm command and the operator card abort drill uses it. An aborted round no longer needs a restart to be safe. (Firmware implementation in Firmware/Rocket/src/main.cpp and Firmware/Launcher/src/main.cpp, dashboard DISARM button, safety gate G-20, tests/test_disarm.py; compile-verified, bench validation deferred to the 6.1 gate. 2026-11-15.)
 
 *Found by:* Tracing the abort path through both firmwares while building the ground status model. Source reading only; not observed on hardware.
 

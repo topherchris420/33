@@ -52,6 +52,10 @@
      "source": [{"path": "Firmware/Rocket/src/main.cpp", "contains": "(current_time - flightStartMs) >= FUZE_FLIGHT_TIME_GATE_MS"},
                 {"path": "Firmware/Rocket/src/main.cpp", "contains": "a.acceleration.x < FUZE_IMPACT_THRESHOLD_MS2"}]},
     {"id": "G-19", "gate": "AUTONOMOUS engagement is an explicit pre-launch selection", "location": "Rocket", "behavior": "MODE,AUTO (fire-and-forget) is accepted only in IDLE/ARMED as an explicit operator action; MITL is the default (Phase 3).",
-     "source": [{"path": "Firmware/Rocket/src/main.cpp", "contains": "cmdBuffer == \"MODE,MITL\" || cmdBuffer == \"MODE,AUTO\""}]}
+     "source": [{"path": "Firmware/Rocket/src/main.cpp", "contains": "cmdBuffer == \"MODE,MITL\" || cmdBuffer == \"MODE,AUTO\""}]},
+    {"id": "G-20", "gate": "DISARM safes an armed rocket without a restart", "location": "Rocket + launcher + dashboard", "behavior": "DISARM returns an ARMED rocket to IDLE (launch detect cleared, ignition servo off, fins latch reset) and replies DISARMED; refused outside ARMED/IDLE and never in FLIGHT, so a burning round is not remotely safed (MIL-DEV-011, D-025).",
+     "source": [{"path": "Firmware/Rocket/src/main.cpp", "contains": "cmdBuffer == Project33Protocol::CMD_DISARM"},
+                {"path": "Firmware/Rocket/src/main.cpp", "contains": "Project33Protocol::CMD_REJECT_DISARM_NOT_ARMED"},
+                {"path": "Firmware/Launcher/src/main.cpp", "contains": "Project33Protocol::DASHBOARD_DISARM"}]}
   ]
 }

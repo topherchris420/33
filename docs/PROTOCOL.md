@@ -31,6 +31,10 @@ Generated from `protocol/project33_protocol.json`.
 | `CMD_REJECT_IGNITE_NOT_ARMED` | `CMD_REJECT:ignite_not_armed` |
 | `CMD_REJECT_IGNITE_FINS_NOT_DEPLOYED` | `CMD_REJECT:ignite_fins_not_deployed` |
 | `CMD_REJECT_SENSOR_UNAVAILABLE` | `CMD_REJECT:sensor_unavailable` |
+| `CMD_REJECT_DISARM_NOT_ARMED` | `CMD_REJECT:disarm_not_armed` |
+| `CMD_DISARM` | `DISARM` |
+| `DISARMED` | `DISARMED` |
+| `DASHBOARD_DISARM` | `disarm` |
 | `FUZE_PREFIX` | `FUZE,` |
 | `FUZE_STATE_SAFE` | `SAFE` |
 | `FUZE_STATE_ARMED` | `ARMED` |
@@ -55,6 +59,8 @@ Generated from `protocol/project33_protocol.json`.
 | Launcher -> Dashboard | `ENC,<iv_hex>,<ct_hex>` | Phase 5 AES-128-CCM authenticated-encrypted telemetry downlink |
 | Dashboard -> Launcher -> Rocket | `BIT` | Phase 6 built-in test: rocket replies BIT,<mpu>,<gps>,<fuze>,<fins>,<mode>,<target>,<state> so the pre-fire checklist is machine-checkable |
 | Dashboard -> Launcher | `MARK` | Phase 6 MARK-point designation: store the launcher's own surveyed GPS position as the target; echoed to the dashboard as MARK,<lat>,<lon>,<alt> |
+| Dashboard -> Launcher -> Rocket | `DISARM` | MIL-DEV-011: safe an ARMED rocket after an abort without a restart; the rocket replies DISARMED, refuses outside ARMED/IDLE, and never disarms a round in FLIGHT |
+| Rocket -> Launcher | `DISARMED` | Rocket acknowledgement that it returned to IDLE and is safe |
 | Launcher -> Rocket | `ARM` | Arm rocket flight computer |
 | Launcher -> Rocket | `IGNITE` | Start rocket ignition state |
 | Launcher -> Rocket | `DUMPLOG` | Request rocket onboard ring-buffer dump |

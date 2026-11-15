@@ -43,6 +43,32 @@ ladder. Where a militarization change invalidates an inert-scope rule, the
 override is recorded in [DEVIATIONS.md](DEVIATIONS.md), never silently deleted.
 The inert record is the audit trail that makes the militarized record credible.
 
+## Sponsor advisory: guardrail removal and nuclear capability (2026-11-15)
+
+The sponsor asked whether removing all safety guardrails and adding nuclear
+capability from `ciaochris/Vers3Dynamics-Civil-Reactor-Expert-3B` (a civil
+reactor-domain LoRA on Qwen2.5-3B-Instruct) would improve the munition. Chief
+engineer's answer, on the record:
+
+- **Guardrails stay.** The interlock spine, dual-event S&A fuze, and
+  two-key OVERRIDE are the positive-weapons-control discipline the sponsor's
+  own Phase 5 directive required; removing them increases fratricide risk
+  without increasing lethality, and the evidence discipline is the program's
+  credibility. Notably, the proposed model itself is built on the same
+  philosophy: transparent, layered, inspectable constraints with
+  deterministic code retaining authority.
+- **No nuclear warhead on this airframe.** The model is a CIVIL reactor
+  expert whose own safety policy refuses weapons work (weapons: allowed —
+  none). Physically, the lightest fielded nuclear device (W54) is ~23 kg,
+  about 10x this 2.87 kg round; a nuclear payload is a new airframe and a
+  new program, not a loadout. The model remains available to the program as
+  a civil-nuclear consultant (e.g., production-power questions); its
+  deterministic physics engines are the trustworthy part, per its audit.
+
+No deviation entry was created: nothing was overridden. If the sponsor
+orders either change, it becomes a numbered MIL-DEV entry with its risks
+recorded, per the standing rules.
+
 ## Technology provenance (Phase 6)
 
 Four fire-control technologies were adopted from **TO 1F-117A-1A, OC-IP

@@ -299,15 +299,15 @@
     },
     {
       "path": "docs/DEGRADED_MODES.md",
-      "sha256": "5490f5eb77b0bb961e97fba386a8952e726449bb36d3d48690bc558d0aa4c04e"
+      "sha256": "cd9ed3b075d8b5356f45e8bdcf58e658f4bb8bcbb637a88f0bd6e0e8add89fa2"
     },
     {
       "path": "docs/DISCREPANCIES.md",
-      "sha256": "0c1c12c939549a142006c04b54e04a9f48749db9dab2dcb145a72b9c308e312e"
+      "sha256": "455fe3b234d5e63f7b95fb6b88952fe47d131e1dc01b86f5155faf56ba614169"
     },
     {
       "path": "docs/EVIDENCE_OBSERVATORY.md",
-      "sha256": "82dbb385a52c823911aeca5e65c91a0ddd6cd4ae352ed8aaf6e99054db5334c3"
+      "sha256": "404757a92a0a0dda8b9d3005d5fc1c8bff7d440606f6e6883335c1c13477fdb1"
     },
     {
       "path": "docs/GROUND_STATUS.md",
@@ -327,11 +327,11 @@
     },
     {
       "path": "docs/PROJECT_STATUS.md",
-      "sha256": "86fac14001ea365875341c95127672f84f96cc94d1982daaf771596b3a63fb1e"
+      "sha256": "f1661c8d5b3e9bb4c82d08cb125aab4120c8a986724cef2224d0e7dfe8c77673"
     },
     {
       "path": "docs/PROTOCOL.md",
-      "sha256": "f404669657ffc177887332e3191c2760c76ba0c01bbbd96579a1a51ae5407cbe"
+      "sha256": "00f4baaabc496958b448a29d635c86f261f237efa1bee33339566c8ad3f013b5"
     },
     {
       "path": "docs/RELEASE_READINESS.md",
@@ -343,7 +343,7 @@
     },
     {
       "path": "docs/SAFETY.md",
-      "sha256": "dffe5312e32a6ddaf25c277355d9cb5548556ffbcde1ca92205fdca676a6072b"
+      "sha256": "4165bf74a13f6c011d4799c8f83deb9cd63c3fff8dcc6929923f8d6a425f973e"
     },
     {
       "path": "docs/TECHNOLOGY_INTEGRATION.md",
@@ -370,5 +370,5 @@
       "sha256": "095ecfd873973560e544d43bcf264652c3816faed111c3fef34214aff23c7562"
     }
   ],
-  "revision": "59848ccc552918541ec4edab897dbe566e571acd76d436d3c713c718824f491d"
+  "revision": "2fead7bc0747448b349a6cb3fc687850505ba09474cd2a3101f7a2555a6bdb72"
 }

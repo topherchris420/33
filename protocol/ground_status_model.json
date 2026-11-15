@@ -198,15 +198,6 @@
   ],
   "absent_capabilities": [
     {
-      "id": "rocket_disarm",
-      "name": "Returning an armed rocket to IDLE without a restart",
-      "why": "The only IDLE assignment in the rocket firmware is its initial value, and the launcher's abort path sends the rocket nothing. See discrepancy D-025.",
-      "source": [
-        {"path": "Firmware/Rocket/src/main.cpp", "count": "sysState = \"IDLE\"", "equals": 1},
-        {"path": "protocol/project33_protocol.json", "absent": "DISARM"}
-      ]
-    },
-    {
       "id": "launcher_state_report",
       "name": "The launcher reporting SAFE, ARMING, READY, or IGNITING to the dashboard",
       "why": "STATUS carries the rocket's state. The dashboard can only infer the launcher's state.",

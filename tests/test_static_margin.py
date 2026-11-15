@@ -86,13 +86,15 @@ def test_fin_terms_are_the_textbook_form():
     assert cn > 0
 
 
-def test_static_margin_stays_in_the_required_window():
+def test_static_margin_stays_in_the_required_window(tmp_path):
     # Requirement R-C5-WINDOW is evaluated by the evidence record; this test
     # documents the Phase 1 gate for the militarized design point and fails
-    # loudly if a design change breaks it.
+    # loudly if a design change breaks it. It writes to a temp directory so
+    # the committed artifacts (and their digests) are never touched by CI runs
+    # on any platform.
     ork_path = ROOT / "Simulation" / "Folding Stabilized Rocket.ork"
     record = static_margin.generate_reports(
-        str(ROOT / "docs" / "EVIDENCE" / "C5_static_margin.csv"),
-        str(ROOT / "docs" / "EVIDENCE" / "C5_static_margin.png"), str(ork_path))
+        str(tmp_path / "C5_static_margin.csv"),
+        str(tmp_path / "C5_static_margin.png"), str(ork_path))
     assert 1.5 <= record['sm_min_calibers']
     assert record['sm_max_calibers'] <= 2.0
