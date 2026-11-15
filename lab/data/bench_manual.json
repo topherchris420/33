@@ -343,7 +343,7 @@
     },
     {
       "path": "docs/SAFETY.md",
-      "sha256": "ec629be363b8c6a74f12743fec9fe58a6c35a632512ecd0bc2027bf773a1e103"
+      "sha256": "dffe5312e32a6ddaf25c277355d9cb5548556ffbcde1ca92205fdca676a6072b"
     },
     {
       "path": "docs/TECHNOLOGY_INTEGRATION.md",
@@ -370,5 +370,5 @@
       "sha256": "095ecfd873973560e544d43bcf264652c3816faed111c3fef34214aff23c7562"
     }
   ],
-  "revision": "867365c9727c97fb88db364baab21ac679966b011abee4464d57d4c9ecd355d5"
+  "revision": "b743a537f4959a44a0a1cb92eaf340ce8239544879c2f5b39eed6ed56aac4973"
 }

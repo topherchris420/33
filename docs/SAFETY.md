@@ -1,6 +1,14 @@
 # Safety and Test Boundaries
 
-Project 33 is intended for inert bench validation, simulation, and supervised educational testing. Treat any live propulsion or ignition work as a separate safety-reviewed activity under local law, launch-site rules, and qualified supervision. Nothing in this repository, including a passing CI run, a clean audit, or an evidence packet, authorizes live propulsion or flight activity.
+Project 33 began as an inert bench-validation repository. Under the program
+sponsor's direction of 2026-11-14 it is a guided-munition program: live
+propulsion and live fire are planned as the separately gated
+[live-fire program](MILITARY/LIVE_FIRE_PROGRAM.md) (militarization deviation
+MIL-DEV-002), executed under the sponsor's written order, local law,
+launch-site rules, and qualified supervision. All inert bench work remains
+governed by this page: nothing here, including a passing CI run, a clean
+audit, or an evidence packet, authorizes live propulsion or flight activity
+outside that program.
 
 ## Current Safety Gates
 
@@ -35,6 +43,7 @@ Deterministic interlocks live in firmware and stay there. The rocket's IGNITE pa
 ## Automated tools and AI
 
 - No AI feature, script, or CI job may send launch, ignition, or arming commands, change a gate, or enable `ENABLE_DASHBOARD_LAUNCH`.
+- The wartime autonomous engagement mode (`MODE,AUTO`) is a firmware mode selected by an operator behind an explicit arm toggle (MIL-DEV-003); it is not an automated tool.
 - Automated tools may interpret the evidence record and draft inert-test proposals. A human decides whether a test is run, and only a named human accepts its evidence.
 - Model confidence, test results, and clean telemetry never stand in for readiness.
 

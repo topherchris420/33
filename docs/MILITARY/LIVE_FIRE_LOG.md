@@ -1,4 +1,9 @@
-# LIVE_FIRE_LOG
+# Live-Fire Test Log
 
-PENDING: filled by its program phase (see docs/MILITARY/PHASE1_GATES.md for phase order).
+Filled as the [live-fire program](LIVE_FIRE_PROGRAM.md) executes. Entries
+move claims from MODELED to MEASURED or FIELDLED; nothing is edited after
+filing — corrections are new entries.
 
+| Date | Phase/Test ID | Round s/n | Configuration | Result | Gate | Evidence class | Session folder |
+|---|---|---|---|---|---|---|---|
+| — | — | — | — | No live fire has occurred. | — | — | — |

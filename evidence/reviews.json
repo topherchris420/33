@@ -172,12 +172,29 @@
           "timing_tests": "2012e20b2348325ddf94478678f8f8e053a5ad09e5b501ed9391797250fd8540"
         },
         "kind": "human",
-        "note": "Phase 5 combat C2: authenticated command wrapper (HMAC + replay window), two-key OVERRIDE, AES-128-CCM telemetry, ENABLE_DASHBOARD_LAUNCH=true with strengthened fire discipline; safety gates G-04/G-05 restated, G-15..G-19 added.",
+        "note": "Phase 6: live-fire program defined (MIL-DEV-002); safety-gate table extended (G-15..G-19) and the safety prose updated for the wartime program boundary.",
         "recorded": "2026-11-14",
         "recorded_by": "chief weapons engineer",
         "statement_sha256": "89c813e601f029d8c123406f34f8f6518a66ba74bad03982576bcb2f394c7af8"
       },
       "history": [
+        {
+          "assumptions_sha256": "d2293d2d9b142e85ea659460925ac1b7b3fe4347d52e7b7613d5b4f8c95f7d37",
+          "dependencies": {
+            "firmware_safety_tests": "0db8d57b66f7822e40646dfbf1d584d96dc9e17680f86f672c929a070e16a1dd",
+            "rocket_firmware": "52b7f4da41ac7e10f8d8ac95209064dbee2882b55490ca72da8dd805a130391a",
+            "timing_bench_sketch": "add4c75d552ef7640487daeb7eecf33def960ea100b510accad1590417658419",
+            "timing_fixture": "8cf6f0fe7a94d49f4c3a872fdd400437addce23f03057ae8abe22bb778e69467",
+            "timing_header": "e9743228cb3d7d938d266173d9014eba42612a06b985b951841a82f52f3b97ea",
+            "timing_source": "5038d4b4b943fed761edb9f6a907a9645d8a1b137e5e9dd0e7e625263a1b7bed",
+            "timing_tests": "2012e20b2348325ddf94478678f8f8e053a5ad09e5b501ed9391797250fd8540"
+          },
+          "kind": "human",
+          "note": "Phase 5 combat C2: authenticated command wrapper (HMAC + replay window), two-key OVERRIDE, AES-128-CCM telemetry, ENABLE_DASHBOARD_LAUNCH=true with strengthened fire discipline; safety gates G-04/G-05 restated, G-15..G-19 added.",
+          "recorded": "2026-11-14",
+          "recorded_by": "chief weapons engineer",
+          "statement_sha256": "89c813e601f029d8c123406f34f8f6518a66ba74bad03982576bcb2f394c7af8"
+        },
         {
           "assumptions_sha256": "d2293d2d9b142e85ea659460925ac1b7b3fe4347d52e7b7613d5b4f8c95f7d37",
           "dependencies": {
