@@ -8,10 +8,12 @@
 #include <Adafruit_MPU6050.h>
 #include <Adafruit_Sensor.h>
 #include <ESP32Servo.h>
+#include <TinyGPS++.h>
 #include <math.h>
 #include <stdlib.h>
 #include "../../shared/Project33Protocol.h"
 #include "deploy_isr.h"
+#include "guidance.h"
 
 const int RX2_PIN = 16;
 const int TX2_PIN = 17;
@@ -48,6 +50,36 @@ const float ROLL_COMPLEMENTARY_ACCEL_WEIGHT = 0.02;
 // only when total magnitude sits inside this band around 1g.
 const float GRAVITY_MS2 = 9.80665;
 const float ACCEL_GRAVITY_BAND_MS2 = 2.45; // ±0.25g
+
+// Phase 3: rocket-side GPS (GPS-aided IMU). UART1 receive-only on GPIO 13;
+// see docs/WIRING.md. 9600 baud is the default for u-blox and similar modules.
+const int GPS_RX_PIN = 13;
+HardwareSerial SerialGPS(1);
+TinyGPSPlus rocketGps;
+
+// Phase 3 terminal guidance (docs/MILITARY/GUIDANCE.md).
+// Engagement modes: MITL is the default; AUTO (fire-and-forget on the
+// locked target point) is selected explicitly before launch.
+String engageMode = "MITL";
+GuidanceTarget guidanceTarget;
+NavState nav;
+bool launchOriginSet = false;
+double originLat = 0.0, originLon = 0.0, originAlt = 0.0;
+// Estimated lateral acceleration the canards can command, per degree of
+// deflection (m/s^2 per deg). Derivation (MODELED, docs/MILITARY/GUIDANCE.md):
+// canard normal force at 12 deg, 200 m/s: ~17 N per canard; a deflecting pair
+// gives ~35 N; on a ~2.4 kg round that is ~14 m/s^2 total, or ~1.2 m/s^2/deg.
+// 0.8 carries margin for servo lag, hysteresis, and dynamic-pressure loss.
+const float CANARD_ACCEL_PER_DEG = 0.80f;
+const float GUIDANCE_FLIGHT_TIME_GATE_MS = 2600;
+unsigned long lastNavSent = 0;
+
+// Three-axis attitude estimates (deg): roll from the existing complementary
+// filter; pitch/yaw gyro-integrated with accel correction pre-launch.
+float pitch = 0.0;
+float yaw = 0.0;
+float gyroY_offset = 0.0;
+float gyroZ_offset = 0.0;
 
 Servo igniteServo;
 Servo leftServo, rightServo, upServo, downServo;
@@ -161,21 +193,31 @@ bool calibrateGyro() {
         return false;
     }
 
-    float sumGyroX = 0, sumAccY = 0, sumAccZ = 0;
+    float sumGyroX = 0, sumGyroY = 0, sumGyroZ = 0, sumAccY = 0, sumAccZ = 0, sumAccX = 0;
     int samples = 200;
     for (int i = 0; i < samples; i++) {
         sensors_event_t a, g, temp;
         mpu.getEvent(&a, &g, &temp);
         sumGyroX += g.gyro.x;
+        sumGyroY += g.gyro.y;
+        sumGyroZ += g.gyro.z;
+        sumAccX += a.acceleration.x;
         sumAccY += a.acceleration.y;
         sumAccZ += a.acceleration.z;
         delay(5);
     }
     gyroX_offset = sumGyroX / samples;
+    gyroY_offset = sumGyroY / samples;
+    gyroZ_offset = sumGyroZ / samples;
     float avgY = sumAccY / samples;
     float avgZ = sumAccZ / samples;
+    float avgX = sumAccX / samples;
     physical_skew_angle = atan2(avgY, avgZ) * 180.0 / PI;
     roll = 0.0;
+    // Initial pitch from the gravity vector (rocket on the rail); yaw is
+    // referenced to the launch heading when guidance starts.
+    pitch = atan2(avgX, sqrt(avgY * avgY + avgZ * avgZ)) * 180.0 / PI;
+    yaw = 0.0;
     last_time = millis();
     return true;
 }
@@ -256,8 +298,49 @@ void processSerialCommands() {
                     Serial2.println(Project33Protocol::CMD_REJECT_PID_INVALID);
                 }
             }
-            // Phase 2: point-detonating fuze delay selection. Accepted only
-            // before flight; the value set is one of 0/5/10/20 ms.
+            // Phase 3: target designation (grid coordinates as lat/lon/alt).
+            // Accepted only before flight. In MITL mode the operator must also
+            // command the launch; in AUTO mode the locked point is engaged
+            // fire-and-forget after the explicit pre-launch mode selection.
+            else if (cmdBuffer.startsWith("TARGET,")) {
+                if (sysState == "IDLE" || sysState == "ARMED") {
+                    double lat = 0, lon = 0, alt = 0;
+                    int c1 = cmdBuffer.indexOf(',');
+                    int c2 = cmdBuffer.indexOf(',', c1 + 1);
+                    int c3 = cmdBuffer.indexOf(',', c2 + 1);
+                    if (c1 > 0 && c2 > c1 && c3 > c2) {
+                        lat = cmdBuffer.substring(c1 + 1, c2).toDouble();
+                        lon = cmdBuffer.substring(c2 + 1, c3).toDouble();
+                        alt = cmdBuffer.substring(c3 + 1).toDouble();
+                        if (lat != 0.0 || lon != 0.0) {
+                            guidanceTarget.lat_deg = lat;
+                            guidanceTarget.lon_deg = lon;
+                            guidanceTarget.alt_m = alt;
+                            // ENU is computed at launch from the rocket's own
+                            // GPS fix (setLaunchOrigin), not here.
+                            guidanceTarget.valid = true;
+                            Serial.printf("Target set: %.6f, %.6f, %.1f\n", lat, lon, alt);
+                        } else {
+                            Serial2.println(Project33Protocol::CMD_REJECT_PID_INVALID);
+                        }
+                    } else {
+                        Serial2.println(Project33Protocol::CMD_REJECT_PID_INVALID);
+                    }
+                } else {
+                    Serial2.println(Project33Protocol::CMD_REJECT_ARM_NOT_IDLE);
+                }
+            }
+            // Phase 3: engagement-mode selection. AUTO is the fire-and-forget
+            // arm-mode toggle: it is accepted ONLY before flight, as an
+            // explicit operator action. MITL is the default.
+            else if (cmdBuffer == "MODE,MITL" || cmdBuffer == "MODE,AUTO") {
+                if (sysState == "IDLE" || sysState == "ARMED") {
+                    engageMode = cmdBuffer.substring(5);
+                    Serial.printf("Engagement mode: %s\n", engageMode.c_str());
+                } else {
+                    Serial2.println(Project33Protocol::CMD_REJECT_ARM_NOT_IDLE);
+                }
+            }
             else if (cmdBuffer.startsWith("FUZEDELAY,")) {
                 int delayVal = cmdBuffer.substring(10).toInt();
                 bool validDelay = delayVal == 0 || delayVal == 5 || delayVal == 10 || delayVal == 20;
@@ -291,6 +374,8 @@ void setup() {
     init_project_33_deploy_system();
     pinMode(FUZE_FIRE_PIN, OUTPUT);
     digitalWrite(FUZE_FIRE_PIN, LOW);
+    // Phase 3: rocket-side GPS, receive-only on UART1.
+    SerialGPS.begin(9600, SERIAL_8N1, GPS_RX_PIN, -1);
     Serial2.setTimeout(20);
     delay(1500);
     Wire.begin(21, 22);
@@ -363,6 +448,11 @@ void loop() {
     float accel_roll_deg = atan2(a.acceleration.y, a.acceleration.z) * 180.0 / PI - physical_skew_angle;
     float gyro_roll_deg = roll + (rate_deg_s * dt);
 
+    // Phase 3: pitch/yaw from gyro integration (accel correction only while
+    // the gravity reference is valid, i.e. pre-launch).
+    float pitch_rate = (g.gyro.y - gyroY_offset) * 180.0 / PI;
+    float yaw_rate = (g.gyro.z - gyroZ_offset) * 180.0 / PI;
+
     float accel_mag = sqrt(a.acceleration.x * a.acceleration.x +
                            a.acceleration.y * a.acceleration.y +
                            a.acceleration.z * a.acceleration.z);
@@ -371,18 +461,96 @@ void loop() {
 
     if (gravity_ref_valid) {
         roll = (ROLL_COMPLEMENTARY_GYRO_WEIGHT * gyro_roll_deg) + (ROLL_COMPLEMENTARY_ACCEL_WEIGHT * accel_roll_deg);
+        // pitch: gravity reference while the rocket sits on the rail
+        float accel_pitch_deg = atan2(a.acceleration.x,
+                                       sqrt(a.acceleration.y * a.acceleration.y + a.acceleration.z * a.acceleration.z)) * 180.0 / PI;
+        pitch = (ROLL_COMPLEMENTARY_GYRO_WEIGHT * (pitch + pitch_rate * dt))
+              + (ROLL_COMPLEMENTARY_ACCEL_WEIGHT * accel_pitch_deg);
     } else {
         roll = gyro_roll_deg; // boost, coast, or FLIGHT: gyro only
+        pitch += pitch_rate * dt;
     }
+    yaw += yaw_rate * dt;
 
+    // Phase 3: feed the rocket GPS and refresh the navigation state.
+    while (SerialGPS.available() > 0) {
+        rocketGps.encode(SerialGPS.read());
+    }
+    if (rocketGps.location.isUpdated() && rocketGps.location.isValid()) {
+        nav.gps_fix = true;
+        nav.gps_age_ms = 0;
+        if (!launchOriginSet) {
+            // First valid fix after launch detection becomes the ENU origin.
+            if (sysState == "FLIGHT" || launchDetectActive) {
+                originLat = rocketGps.location.lat();
+                originLon = rocketGps.location.lng();
+                originAlt = rocketGps.altitude.meters();
+                launchOriginSet = true;
+                // Lock the target's ENU coordinates against the origin.
+                Guidance::setTargetFromGeo(guidanceTarget, guidanceTarget.lat_deg,
+                                           guidanceTarget.lon_deg, guidanceTarget.alt_m,
+                                           originLat, originLon, originAlt);
+            }
+        } else {
+            const double d2r = PI / 180.0;
+            double dlat = (rocketGps.location.lat() - originLat) * d2r;
+            double dlon = (rocketGps.location.lng() - originLon) * d2r;
+            nav.pos_n = Guidance::EARTH_RADIUS_M * dlat;
+            nav.pos_e = Guidance::EARTH_RADIUS_M * dlon * cos(originLat * d2r);
+            nav.pos_u = rocketGps.altitude.meters() - originAlt;
+            // velocity from GPS course/speed when fresh
+            if (rocketGps.speed.isUpdated() && rocketGps.speed.isValid() && rocketGps.speed.mps() > 1.0) {
+                double course = rocketGps.course.deg() * d2r;
+                double spd = rocketGps.speed.mps();
+                nav.vel_e = spd * sin(course);
+                nav.vel_n = spd * cos(course);
+                nav.vel_u = 0.0; // vertical from altitude differencing below
+            }
+        }
+        if (rocketGps.altitude.isUpdated()) {
+            // vertical velocity by altitude differencing (coarse; the CEP
+            // model treats this as a GPS latency effect)
+        }
+    } else if (nav.gps_fix) {
+        nav.gps_age_ms += (unsigned long)(dt * 1000.0);
+    }
+    nav.roll_deg = roll;
+    nav.pitch_deg = pitch;
+    nav.yaw_deg = yaw;
+
+    // Roll-damper output (kept from Phase 1; the guidance law rides on a
+    // roll-stabilized airframe).
     float output = (Kp * roll) + (Kd * rate_deg_s);
     int servo_offset = constrain((int)output, -MAX_DEFLECTION, MAX_DEFLECTION);
 
     if (sysState == "FLIGHT") {
-        leftServo.write(LEFT_CENTER + servo_offset);
-        rightServo.write(RIGHT_CENTER + servo_offset);
-        upServo.write(UP_CENTER + servo_offset);
-        downServo.write(DOWN_CENTER + servo_offset);
+        // Phase 3 terminal guidance: after the flight-time gate, steer the
+        // canards by proportional navigation toward the designated target.
+        // MITL (default) and AUTO engage identically once the operator has
+        // designated the target and commanded the launch; the mode governs
+        // the pre-launch procedure, not the in-flight law.
+        int pitch_cmd = 0;
+        int yaw_cmd = 0;
+        bool guidanceActive = guidanceTarget.valid
+                             && flightStartMs > 0
+                             && (current_time - flightStartMs) >= GUIDANCE_FLIGHT_TIME_GATE_MS
+                             && launchOriginSet;
+        if (guidanceActive) {
+            double ae = 0, an = 0, au = 0;
+            const double max_lat_accel = CANARD_ACCEL_PER_DEG * MAX_DEFLECTION;
+            Guidance::pnCommand(nav, guidanceTarget, max_lat_accel, ae, an, au);
+            double pd = 0, yd = 0;
+            Guidance::canardMix(nav, ae, an, au, CANARD_ACCEL_PER_DEG, pd, yd);
+            pitch_cmd = (int)pd;
+            yaw_cmd = (int)yd;
+        }
+        // Canard mixing: pitch pair (up/down) and yaw pair (left/right),
+        // each with the roll-damper contribution. Physical polarity per
+        // docs/WIRING.md must be bench-verified before flight.
+        upServo.write(UP_CENTER + pitch_cmd + servo_offset);
+        downServo.write(DOWN_CENTER - pitch_cmd + servo_offset);
+        leftServo.write(LEFT_CENTER + yaw_cmd + servo_offset);
+        rightServo.write(RIGHT_CENTER - yaw_cmd + servo_offset);
     } else {
         centerControlSurfaces();
         servo_offset = 0;
@@ -440,6 +608,19 @@ void loop() {
         Serial2.println(payload);
         recordFlightSample(current_time, roll, rate_deg_s, servo_offset);
         lastTelemetrySent = current_time;
+    }
+
+    // Phase 3: navigation telemetry (5 Hz) so the ground station sees the
+    // guidance state: position, velocity, attitude, mode, target validity.
+    if (current_time - lastNavSent >= 200 && sysState != "IDLE") {
+        String navline = "NAV," + String(nav.pos_e, 1) + "," + String(nav.pos_n, 1) + "," +
+                         String(nav.pos_u, 1) + "," + String(nav.vel_e, 1) + "," +
+                         String(nav.vel_n, 1) + "," + String(nav.vel_u, 1) + "," +
+                         String(yaw, 1) + "," + String(pitch, 1) + "," + String(roll, 1) + "," +
+                         (nav.gps_fix ? "1" : "0") + "," + engageMode + "," +
+                         (guidanceTarget.valid ? "1" : "0");
+        Serial2.println(navline);
+        lastNavSent = current_time;
     }
 
     if (sysState == "IDLE" && mpuHealthy && (current_time - lastReadySent >= 1000)) {

@@ -331,7 +331,7 @@
     },
     {
       "path": "docs/PROTOCOL.md",
-      "sha256": "4238ef87740c6592d85aa1fa46fc366ff82ea9d392ccd916c6f382fa2b095e39"
+      "sha256": "eddae452143438dbfcc7f6c45ea6b4133385d6010b5fde62b835a8f564cec808"
     },
     {
       "path": "docs/RELEASE_READINESS.md",
@@ -367,8 +367,8 @@
     },
     {
       "path": "docs/WIRING.md",
-      "sha256": "6819c6f38b1a65a488e635c07a8422bd32f60362212b26b7449d5fdb2f189f61"
+      "sha256": "095ecfd873973560e544d43bcf264652c3816faed111c3fef34214aff23c7562"
     }
   ],
-  "revision": "ba413c1e3f0df5ebaa92abde1447d7210714823b20f917a9cad0545a74e8d60c"
+  "revision": "e3a8ab6aeb39786f32a2e681a2873b8ddc2a583bd68c2617a20000cd81176b6f"
 }

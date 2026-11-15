@@ -201,6 +201,35 @@ def test_fuze_state_is_telemetered():
     assert "lastFuzeSent >= 1000" in rocket
 
 
+def test_guidance_uses_correct_pn_cross_order():
+    # The independent Python CEP model caught a sign error in the first cut
+    # (V x omega steers away from the target). The firmware must use omega x V.
+    guidance = _read("Firmware/Rocket/src/guidance.h")
+    assert "PN_GAIN * (w_n * nav.vel_u - w_u * nav.vel_n)" in guidance
+    assert "a_cmd = N * (omega x V)" in guidance or "omega x V" in guidance
+
+
+def test_engagement_mode_is_an_explicit_prelaunch_selection():
+    rocket = _read("Firmware/Rocket/src/main.cpp")
+    # AUTO (fire-and-forget) is accepted only before flight.
+    assert 'cmdBuffer == "MODE,MITL" || cmdBuffer == "MODE,AUTO"' in rocket
+    assert 'engageMode = cmdBuffer.substring(5)' in rocket
+    # MITL is the default.
+    assert 'String engageMode = "MITL";' in rocket
+    # Targets are only accepted before flight.
+    assert 'cmdBuffer.startsWith("TARGET,")' in rocket
+
+
+def test_guidance_starts_after_the_flight_time_gate():
+    rocket = _read("Firmware/Rocket/src/main.cpp")
+    assert "(current_time - flightStartMs) >= GUIDANCE_FLIGHT_TIME_GATE_MS" in rocket
+    # Rocket-side GPS is fed and the origin latched from the rocket's own fix.
+    assert "rocketGps.encode(SerialGPS.read())" in rocket
+    assert "Guidance::setTargetFromGeo" in rocket
+    # Navigation state is telemetered so the ground station sees the guidance.
+    assert '"NAV,"' in rocket
+
+
 def test_safety_gate_registry_matches_firmware_source():
     import json
 

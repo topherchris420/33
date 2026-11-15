@@ -46,7 +46,10 @@ Generated from `protocol/project33_protocol.json`.
 | Rocket -> Launcher | `DATA,<ax>,<ay>,<az>,<roll>,<rate>,<output>,<state>,<Kp>,<Kd>,<skew>` | Live rocket telemetry packet |
 | Rocket -> Launcher | `LOG,<ms>,<roll>,<rate>,<output>,<state>,<Kp>,<Kd>,<skew>` | Onboard ring-buffer log dump sample |
 | Rocket -> Launcher | `FUZE,<state>` | Warhead fuze state (SAFE / ARMED / FUNCTION); dual-event S&A arming chain telemetry |
+| Rocket -> Launcher | `NAV,<e_m>,<n_m>,<u_m>,<ve>,<vn>,<vu>,<yaw>,<pitch>,<roll>,<gps_fix>,<mode>,<target_valid>` | Phase 3 navigation and guidance state (ENU from launch point, GPS-aided IMU) |
 | Launcher -> Rocket | `FUZEDELAY,<ms>` | Set point-detonating fuze delay (0, 5, 10, or 20 ms); zero accepted in IDLE or ARMED |
+| Launcher -> Rocket | `TARGET,<lat>,<lon>,<alt_m>` | Phase 3 target designation by grid coordinates; accepted before flight only |
+| Launcher -> Rocket | `MODE,MITL | MODE,AUTO` | Engagement-mode selection: man-in-the-loop (default) or autonomous fire-and-forget on the locked target point; explicit pre-launch operator action |
 | Launcher -> Rocket | `ARM` | Arm rocket flight computer |
 | Launcher -> Rocket | `IGNITE` | Start rocket ignition state |
 | Launcher -> Rocket | `DUMPLOG` | Request rocket onboard ring-buffer dump |

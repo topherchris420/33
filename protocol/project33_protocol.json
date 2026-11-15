@@ -59,9 +59,24 @@
       "purpose": "Warhead fuze state (SAFE / ARMED / FUNCTION); dual-event S&A arming chain telemetry"
     },
     {
+      "direction": "Rocket -> Launcher",
+      "format": "NAV,<e_m>,<n_m>,<u_m>,<ve>,<vn>,<vu>,<yaw>,<pitch>,<roll>,<gps_fix>,<mode>,<target_valid>",
+      "purpose": "Phase 3 navigation and guidance state (ENU from launch point, GPS-aided IMU)"
+    },
+    {
       "direction": "Launcher -> Rocket",
       "format": "FUZEDELAY,<ms>",
       "purpose": "Set point-detonating fuze delay (0, 5, 10, or 20 ms); zero accepted in IDLE or ARMED"
+    },
+    {
+      "direction": "Launcher -> Rocket",
+      "format": "TARGET,<lat>,<lon>,<alt_m>",
+      "purpose": "Phase 3 target designation by grid coordinates; accepted before flight only"
+    },
+    {
+      "direction": "Launcher -> Rocket",
+      "format": "MODE,MITL | MODE,AUTO",
+      "purpose": "Engagement-mode selection: man-in-the-loop (default) or autonomous fire-and-forget on the locked target point; explicit pre-launch operator action"
     },
     {
       "direction": "Launcher -> Rocket",

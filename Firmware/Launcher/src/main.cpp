@@ -317,6 +317,11 @@ void processUDP() {
             // Phase 2: point-detonating fuze delay selection (0/5/10/20 ms).
             // The rocket refuses it outside IDLE/ARMED and validates the value.
             Serial2.println(msg);
+        } else if (msg.startsWith("TARGET,") || msg == "MODE,MITL" || msg == "MODE,AUTO") {
+            // Phase 3: target designation and engagement-mode selection. The
+            // rocket accepts both only before flight; the launcher only
+            // relays them, it does not interpret coordinates.
+            Serial2.println(msg);
         } else if (msg.startsWith("PID,")) {
             if (isValidPidCommand(msg)) {
                 Serial2.println(msg);
