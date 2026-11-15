@@ -1,34 +1,66 @@
 # Project 33
 
+[![Project 33 — The record is the experiment. Conceptual cover with layered archival sheets.](docs/assets/readme/project33-cover.png)](https://topherchris420.github.io/33/lab/observatory.html)
+
+**An open engineering laboratory and evidence record by Vers3Dynamics.**
+
 [![Project checks](https://github.com/topherchris420/33/actions/workflows/ci.yml/badge.svg)](https://github.com/topherchris420/33/actions/workflows/ci.yml)
 [![Laboratory and site checks](https://github.com/topherchris420/33/actions/workflows/marketing.yml/badge.svg)](https://github.com/topherchris420/33/actions/workflows/marketing.yml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 
-**An open engineering laboratory by Vers3Dynamics.**
-
-Take apart a folding-fin rocket concept. Explore the models, inspect the firmware, and follow each engineering claim back to its source. Project 33 combines a tactile 3D laboratory with a reproducible evidence record: assumptions, predictions, contradictions, and the measurements still needed.
+Project 33 pairs an interactive browser laboratory with an inspectable engineering record. A folding-fin rocket concept is the case study; the record connects each claim to its sources, assumptions, discrepancies, and missing measurements. You can explore the visual laboratory, read the claim passports, or verify a portable review packet offline.
 
 > **The rocket is the specimen. The record is the experiment.**
 
-**[Enter the laboratory](https://topherchris420.github.io/33/lab/)** · **[Explore the 3D workbench](https://topherchris420.github.io/33/lab/workbench.html)** · **[Watch the bench manual](https://topherchris420.github.io/33/lab/bench-manual.html)** · **[Read the flier](docs/media/project33-issue-b-flier.pdf)** · **[Start here](docs/START_HERE.md)**
+**[Explore the evidence](https://topherchris420.github.io/33/lab/observatory.html)** · **[Enter the laboratory](https://topherchris420.github.io/33/lab/)** · **[Start here](docs/START_HERE.md)**
 
-[![A clay engineer watches a scanning beam turn the Project 33 rocket into an engineering wireframe. Open the laboratory.](lab/assets/poster.jpg)](https://topherchris420.github.io/33/lab/)
+[Current status](#current-status) · [First visit](#choose-your-first-visit) · [Offline review](#reproduce-the-review) · [Claim status](#claim-status) · [Development](#develop-and-verify) · [Contribute](#contribute)
 
-*Design-file geometry rendered for the opening film. The scene illustrates the concept; it records no physical assembly or test.*
+*Cover: conceptual artwork, not a photograph, technical drawing, or test result. [Image sources and provenance](docs/assets/readme/README.md).*
 
 ## Current status
 
-Project 33 began as an **inert bench-validation prototype** and was converted, under the program sponsor's direction of 2026-11-14, into a **deployable guided munition** across six gated phases. The repository contains the shared militarized design point, corrected engineering models, ESP32 firmware (rocket, launcher, dashboard), a browser laboratory, and a phased live-fire program. No physical measurement has been accepted into its evidence record; every claim stays labeled MODELED, MEASURED, or FIELDLED, and nothing simulated is presented as fielded.
+Project 33 began as an **inert bench-validation prototype**. The repository now also contains a guided-munition design study, alongside its browser laboratory and evidence-review software. That design material is modeled or implemented work; it does not establish a physically validated or deployable system.
 
-**Program results (all MODELED):** folding-fin linkage redesigned to close and lock over-center (back-drive ratio 0.36 at the stop); static margin corrected and re-balanced to 1.66–1.76 cal for every warhead loadout; deployment reliability 99.93% in Monte Carlo; PN terminal guidance with GPS-aided IMU (CEP 50/19/81 m at 1/2/3 km); MIL-33 motor (1,235 N·s, 3.3 km envelope); composite airframe with 7075-T6 load path; HMAC-authenticated commands with replay protection, two-key OVERRIDE, AES-CCM telemetry, and a DISARM path. Four fire-control technologies were adopted from the F-117 OC-IP supplement (BIT, MARK, out-of-envelope warning, TTG).
-
-Every weaponized-scope override is registered in the [militarization deviation register](docs/MILITARY/DEVIATIONS.md); the [Phase 1 gate report](docs/MILITARY/PHASE1_GATES.md) and the gated [live-fire program](docs/MILITARY/LIVE_FIRE_PROGRAM.md) define the road to hardware. The inert evidence record remains the audit trail that makes the militarized record credible.
+**No physical measurement has been accepted into the evidence record. The project is not flight-tested.** Software checks, simulated outputs, and rendered assemblies each have a defined scope. None substitutes for an accepted physical measurement.
 
 <!-- evidence:counts -->
 **Record state:** 8 claims · 1 contradicted · 2 unresolved · 5 supported within stated limits · 0 accepted physical measurements · 7 open discrepancies of 27 · 8 of 8 predictions not measured.
 <!-- /evidence:counts -->
 
-The failed and disputed requirements remain visible. They define the work ahead.
+The summary and claim table below are generated from the committed record. **Supported within stated limits** means support for the statement at its recorded evidence class; it does not mean hardware validation. Contradictions and unresolved questions remain visible.
+
+| What is available | What it establishes |
+|---|---|
+| Browser laboratory | Read-only exploration of committed models and records |
+| Claim passports and discrepancy register | The current statements, their sources, and recorded disagreements |
+| Portable review packets | A reviewable snapshot with copied sources and integrity verification |
+| Synthetic examples and illustrations | Tooling demonstrations and visual orientation, clearly labeled |
+| Physical performance | **Not established** by the current evidence record |
+
+## Choose your first visit
+
+| You want to… | Start with | What you get |
+|---|---|---|
+| **See the idea** | [3D workbench](https://topherchris420.github.io/33/lab/workbench.html) | Rotate, explode, section, and inspect source-derived geometry |
+| **Learn through exploration** | [Guided laboratory](https://topherchris420.github.io/33/lab/guided.html) | Six lessons and challenges grounded in committed data |
+| **Watch the workshop** | [Utility Bench Manual film](https://topherchris420.github.io/33/lab/bench-manual.html) | A 4:09 claymation engineering companion with sound |
+| **Review the research** | [Claim passports](docs/claims/README.md) and [discrepancies](docs/DISCREPANCIES.md) | Statements, assumptions, source files, and unresolved questions |
+| **Reproduce the record** | [Offline review below](#reproduce-the-review) | A portable, locally verifiable review packet |
+| **Contribute** | [First contribution routes](docs/START_HERE.md#make-a-useful-contribution) | Specific review questions and the checks for each kind of change |
+
+The browser laboratory is read-only. Its values come from committed sources; synthetic data and conceptual illustrations are labeled, and unknown measurements stay **NOT MEASURED**. [How the laboratory is built](docs/LIVING_LAB.md).
+
+## The evidence, made visible
+
+[![The live Evidence Observatory interface: eight claims, one contradicted, two unresolved, five supported within stated limits, and zero accepted physical measurements.](docs/assets/readme/evidence-observatory.jpg)](https://topherchris420.github.io/33/lab/observatory.html)
+
+*Actual screenshot of the published Evidence Observatory, captured 2026-11-15 UTC. This is a dated interface snapshot; the generated summary and [claim table](#claim-status) describe the committed record. [Capture provenance](docs/assets/readme/README.md).*
+
+The Observatory lets you follow a claim into its requirements, cited artifacts, review history, and missing evidence. Its constellation, evidence ladder, and table show the same record in different forms. The offline review below makes that record available without the website.
+
+<details>
+<summary><b>Existing design illustrations</b> · modeled material</summary>
 
 ## Guided munition configuration
 
@@ -45,18 +77,10 @@ Rendered by `tools/render_munition_blueprint.py`; the four-bar detail is drawn f
 
 </details>
 
-## Choose your first visit
+</details>
 
-| You want to… | Start with | What you get |
-|---|---|---|
-| **See the idea** | [3D workbench](https://topherchris420.github.io/33/lab/workbench.html) | Rotate, explode, section, and inspect source-derived geometry |
-| **Learn through exploration** | [Guided laboratory](https://topherchris420.github.io/33/lab/guided.html) | Six lessons and challenges grounded in committed data |
-| **Watch the workshop** | [Utility Bench Manual film](https://topherchris420.github.io/33/lab/bench-manual.html) | A 4:09 claymation engineering companion with sound |
-| **Review the research** | [Claim passports](docs/claims/README.md) and [discrepancies](docs/DISCREPANCIES.md) | Statements, assumptions, source files, and unresolved questions |
-| **Reproduce the record** | [Offline review below](#reproduce-the-review) | A portable, locally verifiable review packet |
-| **Contribute** | [First contribution routes](docs/START_HERE.md#make-a-useful-contribution) | Specific review questions and the checks for each kind of change |
-
-The browser laboratory is read-only. Its values come from committed sources; synthetic data and conceptual illustrations are labeled, and unknown measurements stay **NOT MEASURED**. [How the laboratory is built](docs/LIVING_LAB.md).
+<details>
+<summary><b>Illustrated overview</b> · Issue B flier and PDF</summary>
 
 ## Project 33 · Issue B flier
 
@@ -70,6 +94,8 @@ An illustrated overview of the concept and its proposed technology integrations.
 <summary>Preview sheet 2: technology integration and configurations</summary>
 
 <a href="docs/media/project33-issue-b-flier.pdf"><img src="assets/marketing/project33-flier-page-2.png" alt="Project 33 Issue B flier, page 2: proposed technology integration, evidence-assistant authority order, and stowed, deployed, and launcher illustrations." width="640"></a>
+
+</details>
 
 </details>
 
@@ -99,12 +125,12 @@ The comparison identifies changed artifact bytes, record files, claim statuses, 
 
 ## The Living Engineering Laboratory
 
-The laboratory gives the record a spatial form. Disassemble the machine, examine the four-bar model's closure failure, compare competing formulations, and replay synthetic telemetry with its gaps and clock domains visible.
+The laboratory gives the record a spatial form. Explore source-derived geometry, inspect model histories, follow claim relationships, and replay explicitly synthetic telemetry. Current results and historical discrepancies have separate records; use the claim passports for the present assessment.
 
 | Room | Explore |
 |---|---|
 | [Workbench](https://topherchris420.github.io/33/lab/workbench.html) | Exploded assemblies, section planes, orthographic views, and source categories |
-| [Mechanism Lab](https://topherchris420.github.io/33/lab/mechanism.html) | The committed linkage sweep, closure gap, and model comparisons |
+| [Mechanism Lab](https://topherchris420.github.io/33/lab/mechanism.html) | The committed linkage sweep and model-comparison views |
 | [Evidence Observatory](https://topherchris420.github.io/33/lab/observatory.html) | Claims, evidence classes, discrepancies, and grounded questions |
 | [Telemetry Theater](https://topherchris420.github.io/33/lab/telemetry.html) | Replay, timing gaps, duplicate samples, filtering, and spectra |
 | [Instrumentation](https://topherchris420.github.io/33/lab/instruments.html) | Stale readings, alert ages, configuration identity, and local report inspection |
@@ -178,20 +204,14 @@ The cover opens an HTML5 player on the project site; GitHub does not play reposi
 
 Each passport states the claim, its assumptions, its evidence classes, and the next measurement or review it needs. The [traceability matrix](docs/TRACEABILITY.md) connects requirements to implementations, tests, and predictions.
 
-### Questions worth working on
+### Read the record with its limits
 
-| Question | Why it matters | Record |
-|---|---|---|
-| Which linkage topology and dimensions were intended? | The specified four-bar model fails loop closure. | [C1](docs/claims/C1.md) · D-002 |
-| Which stability formulation and inputs are justified? | Two formulations disagree; source models also specify different motors. | [C5](docs/claims/C5.md) · D-006, D-007 |
-| How should the spring requirement be addressed? | The modeled 19% margin is below the 20% requirement. | [C6](docs/claims/C6.md) · D-011 |
-| Does the reliability model actually exercise failure cases? | The current simulation does not generate the failures it purports to count. | [C7](docs/claims/C7.md) · D-013 |
+- **Current and historical results are distinct.** Resolved discrepancies remain in the archive; an earlier failed result is not automatically the current claim status.
+- **Claim status and evidence class answer different questions.** A supported model claim can still have no accepted physical measurement.
+- **Integrity and validity are separate.** Matching file hashes establish that a packet has not changed relative to its manifest, not that its scientific interpretation is correct.
+- **Unknown stays unknown.** Missing measurements, instrument provenance, and human acceptance cannot be supplied by a rendering or an automated summary.
 
-![Analytical C1 linkage loop-closure check](docs/assets/review/c1_loop_closure.svg)
-
-*Model output. The contradiction is retained as a result. Full context: [discrepancy register](docs/DISCREPANCIES.md).*
-
-The next validation milestone is a human-accepted inert session with raw records, declared configuration, instrument provenance, and a passport. Timing jitter, spring rate, part masses, dry CG, gyro drift, current draw, mechanism deployment, and stiffness remain **NOT MEASURED**. [Validation roadmap](docs/ROADMAP.md).
+The [Evidence Observatory guide](docs/EVIDENCE_OBSERVATORY.md) explains these distinctions. The [discrepancy register](docs/DISCREPANCIES.md) retains both open and resolved entries, while the [failure archive](evidence/archive/index.json) preserves superseded material.
 
 ## System components
 
