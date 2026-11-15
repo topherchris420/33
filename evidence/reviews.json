@@ -272,12 +272,29 @@
           "timing_tests": "2012e20b2348325ddf94478678f8f8e053a5ad09e5b501ed9391797250fd8540"
         },
         "kind": "human",
-        "note": "MIL-DEV-011 implemented: DISARM command; D-025 resolved; sponsor advisory documented. Digests recomputed on LF bytes.",
-        "recorded": "2026-11-14",
+        "note": "Phase 6.1 software-in-the-loop implementation: S&A harness (20 fidelity-enforced cases) and crypto harness (15 cases incl. cross-language AES-CCM round-trip); preregistrations P-006..P-011 added; cryptography added to the firmware test requirements.",
+        "recorded": "2026-11-15",
         "recorded_by": "chief weapons engineer",
         "statement_sha256": "89c813e601f029d8c123406f34f8f6518a66ba74bad03982576bcb2f394c7af8"
       },
       "history": [
+        {
+          "assumptions_sha256": "66c12587b3a25a92f0263a80ab7d42fa99d8656adc953b62bcac441efa314d3f",
+          "dependencies": {
+            "firmware_safety_tests": "0db8d57b66f7822e40646dfbf1d584d96dc9e17680f86f672c929a070e16a1dd",
+            "rocket_firmware": "6b0acdffafbc7dd8ed7efc4ee2bc2869f9d549fca8f41e8cf36893613be4fc14",
+            "timing_bench_sketch": "add4c75d552ef7640487daeb7eecf33def960ea100b510accad1590417658419",
+            "timing_fixture": "8cf6f0fe7a94d49f4c3a872fdd400437addce23f03057ae8abe22bb778e69467",
+            "timing_header": "e9743228cb3d7d938d266173d9014eba42612a06b985b951841a82f52f3b97ea",
+            "timing_source": "5038d4b4b943fed761edb9f6a907a9645d8a1b137e5e9dd0e7e625263a1b7bed",
+            "timing_tests": "2012e20b2348325ddf94478678f8f8e053a5ad09e5b501ed9391797250fd8540"
+          },
+          "kind": "human",
+          "note": "MIL-DEV-011 implemented: DISARM command; D-025 resolved; sponsor advisory documented. Digests recomputed on LF bytes.",
+          "recorded": "2026-11-14",
+          "recorded_by": "chief weapons engineer",
+          "statement_sha256": "89c813e601f029d8c123406f34f8f6518a66ba74bad03982576bcb2f394c7af8"
+        },
         {
           "assumptions_sha256": "66c12587b3a25a92f0263a80ab7d42fa99d8656adc953b62bcac441efa314d3f",
           "dependencies": {

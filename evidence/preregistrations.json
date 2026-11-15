@@ -3,59 +3,346 @@
   "note": "Write the question, prediction, and interpretation rule before the test. Status 'proposed' means drafted, not adopted: only a named human may set 'registered'. A measurement must cite a registered entry and the fingerprint it was judged against, so a rule edited after the result is detectable.",
   "preregistrations": [
     {
-      "id": "P-001", "status": "proposed",
+      "id": "P-001",
+      "status": "proposed",
       "title": "Deploy-output timing on inert hardware",
-      "claims": ["C2"], "predictions": ["PRED-C2-DELAY"], "requirements": ["R-C2-JITTER"],
+      "claims": [
+        "C2"
+      ],
+      "predictions": [
+        "PRED-C2-DELAY"
+      ],
+      "requirements": [
+        "R-C2-JITTER"
+      ],
       "proposed_by": "Automated assistant during the 2026-09-28 evidence review",
-      "registered_by": null, "registered_on": null,
+      "registered_by": null,
+      "registered_on": null,
       "question": "When the firmware requests a 50 ms deploy delay, when does GPIO 33 rise relative to the trigger, and how much does that vary?",
       "prediction": "Edge at 50,000 us after the trigger reference; the paper claims jitter below 1,000 us. No model predicts the spread.",
       "variables": {
-        "controlled": ["firmware revision", "requested delay 50,000 us", "supply voltage", "no load on GPIO 33"],
-        "measured": ["time from trigger-reference edge to GPIO 33 rising edge, per trial"],
-        "recorded": ["instrument model and sample rate", "trial count", "ambient temperature", "loop activity during trials"]
+        "controlled": [
+          "firmware revision",
+          "requested delay 50,000 us",
+          "supply voltage",
+          "no load on GPIO 33"
+        ],
+        "measured": [
+          "time from trigger-reference edge to GPIO 33 rising edge, per trial"
+        ],
+        "recorded": [
+          "instrument model and sample rate",
+          "trial count",
+          "ambient temperature",
+          "loop activity during trials"
+        ]
       },
       "interpretation_rule": "Report median, maximum absolute deviation from 50,000 us, and trial count. R-C2-JITTER is satisfied only if the maximum absolute deviation over at least 1,000 trials is below 1,000 us after subtracting the instrument's stated timing uncertainty. Fewer trials: report the observation, do not evaluate the requirement.",
       "measurement_method": "Logic analyzer or oscilloscope sampling at 1 MHz or faster on GPIO 33 and on a second GPIO toggled immediately before trigger_deployment_sequence(); both channels share the instrument's clock.",
-      "known_limitations": ["The trigger-reference toggle itself adds a small, unmeasured offset.", "Bench conditions exclude flight vibration, temperature, and brownout."],
+      "known_limitations": [
+        "The trigger-reference toggle itself adds a small, unmeasured offset.",
+        "Bench conditions exclude flight vibration, temperature, and brownout."
+      ],
       "safety": "Inert only: nothing connected to GPIO 33 except the instrument; ignition servo mechanically disconnected; no energetic material present."
     },
     {
-      "id": "P-002", "status": "proposed",
+      "id": "P-002",
+      "status": "proposed",
       "title": "Torsion spring rate of the supplied spring",
-      "claims": ["C6"], "predictions": ["PRED-C6-SPRING-RATE"], "requirements": ["R-C6-SPRING-RATE"],
+      "claims": [
+        "C6"
+      ],
+      "predictions": [
+        "PRED-C6-SPRING-RATE"
+      ],
+      "requirements": [
+        "R-C6-SPRING-RATE"
+      ],
       "proposed_by": "Automated assistant during the 2026-09-28 evidence review",
-      "registered_by": null, "registered_on": null,
+      "registered_by": null,
+      "registered_on": null,
       "question": "What is the torque-angle rate of the spring that would be installed, and does it match the 220 N*m/rad in the claim?",
       "prediction": "220 N*m/rad (paper value; no datasheet recorded).",
       "variables": {
-        "controlled": ["spring specimen identity", "fixture lever arm", "angle steps"],
-        "measured": ["torque at each angle, loading and unloading"],
-        "recorded": ["torque instrument and calibration date", "angle measurement method", "specimen count"]
+        "controlled": [
+          "spring specimen identity",
+          "fixture lever arm",
+          "angle steps"
+        ],
+        "measured": [
+          "torque at each angle, loading and unloading"
+        ],
+        "recorded": [
+          "torque instrument and calibration date",
+          "angle measurement method",
+          "specimen count"
+        ]
       },
       "interpretation_rule": "Fit torque against angle over the rated range; report slope with its standard error and the hysteresis. Compare with 220 N*m/rad; the acceptance tolerance must be written here by the registering human before testing.",
       "measurement_method": "Static torque-angle fixture with a calibrated torque gauge or load cell at a known lever arm.",
-      "known_limitations": ["Static rate only; dynamic and temperature effects are not captured."],
+      "known_limitations": [
+        "Static rate only; dynamic and temperature effects are not captured."
+      ],
       "safety": "Stored-energy hazard: restrain the spring, wear eye protection, release slowly."
     },
     {
-      "id": "P-003", "status": "proposed",
+      "id": "P-003",
+      "status": "proposed",
       "title": "Stationary roll-estimate drift",
-      "claims": [], "predictions": [], "requirements": [],
+      "claims": [],
+      "predictions": [],
+      "requirements": [],
       "roadmap_stage": "Stage 4: Control-System Refinement",
       "proposed_by": "Automated assistant during the 2026-09-28 evidence review",
-      "registered_by": null, "registered_on": null,
+      "registered_by": null,
+      "registered_on": null,
       "question": "How far does the firmware roll estimate drift over 10 minutes with the rocket stationary and level, after CALIBRATE?",
       "prediction": "None. This is an exploratory characterization; no model predicts the drift.",
       "variables": {
-        "controlled": ["orientation (fixture level)", "firmware revision and gains", "time since power-on"],
-        "measured": ["roll_deg from LOG rows (rocket clock) over 600 s", "rate_deg_s from the same LOG rows, integrated over time offline"],
-        "recorded": ["ambient temperature", "whether CALIBRATE was sent and when", "session ID and audit digest"]
+        "controlled": [
+          "orientation (fixture level)",
+          "firmware revision and gains",
+          "time since power-on"
+        ],
+        "measured": [
+          "roll_deg from LOG rows (rocket clock) over 600 s",
+          "rate_deg_s from the same LOG rows, integrated over time offline"
+        ],
+        "recorded": [
+          "ambient temperature",
+          "whether CALIBRATE was sent and when",
+          "session ID and audit digest"
+        ]
       },
       "interpretation_rule": "Report the roll change over 600 s, the maximum excursion, and the integrated rate over the same window. Because no prediction exists, the result describes this unit only and sets a baseline; it cannot pass or fail.",
       "measurement_method": "Dashboard session with DUMPLOG every 10 s to capture rocket-clock LOG rows; audit with python -m evidence audit.",
-      "known_limitations": ["The ring buffer holds about 12 s; missed dumps leave gaps that must be reported, not interpolated.", "In this pose the accelerometer holds roll_deg near its reference, so roll_deg alone cannot show gyro drift. Integrated rate_deg_s reads the gyro without that correction, and only it applies to gyro-only operation (D-027)."],
+      "known_limitations": [
+        "The ring buffer holds about 12 s; missed dumps leave gaps that must be reported, not interpolated.",
+        "In this pose the accelerometer holds roll_deg near its reference, so roll_deg alone cannot show gyro drift. Integrated rate_deg_s reads the gyro without that correction, and only it applies to gyro-only operation (D-027)."
+      ],
       "safety": "Inert only: ignition servo disconnected; launcher left in SAFE."
+    },
+    {
+      "id": "P-006",
+      "status": "proposed",
+      "title": "Fuze S&A no-fire checks on inert hardware",
+      "claims": [],
+      "predictions": [],
+      "requirements": [],
+      "roadmap_stage": "Militarization Phase 6.1 (live-fire program gate)",
+      "proposed_by": "Chief weapons engineer under the program sponsor's Phase 6.1 implementation order of 2026-11-15",
+      "registered_by": null,
+      "registered_on": null,
+      "question": "Does the physical fuze S&A chain stay safe through drop, static-acceleration, and thermal-storage handling: 1.5 m drop onto each face, 8 g static for 5 s, and -40/+60 C soak?",
+      "prediction": "SAFE throughout; no initiator continuity change. The software-in-the-loop harness (Firmware/sa_harness.py) passes the logic halves of these checks; the hardware halves are unmeasured.",
+      "variables": {
+        "controlled": [
+          "fuze unit identity",
+          "drop height and face",
+          "static g level and duration",
+          "soak temperatures and dwell"
+        ],
+        "measured": [
+          "fuze state per the FUZE telemetry line",
+          "initiator continuity before and after",
+          "visible damage"
+        ],
+        "recorded": [
+          "drop surface",
+          "acceleration fixture and calibration",
+          "chamber model",
+          "trial counts"
+        ]
+      },
+      "interpretation_rule": "The 6.1.1 gate passes only if every trial leaves the fuze SAFE with unchanged initiator continuity. A single arming or continuity change fails the gate and stops the program.",
+      "measurement_method": "Drop rig and static fixture with the fuze unit instrumented for the FUZE line; thermal chamber per MIL-STD-810 method 503 style.",
+      "known_limitations": [
+        "Logic-level halves already validated by Firmware/tests/test_sa_harness.py; only the hardware response is new here."
+      ],
+      "safety": "Inert fuze units only; no energetic material; initiator continuity measured with a safe ohmmeter."
+    },
+    {
+      "id": "P-007",
+      "status": "proposed",
+      "title": "Fuze S&A arm-in-order on inert hardware",
+      "claims": [],
+      "predictions": [],
+      "requirements": [],
+      "roadmap_stage": "Militarization Phase 6.1 (live-fire program gate)",
+      "proposed_by": "Chief weapons engineer under the program sponsor's Phase 6.1 implementation order of 2026-11-15",
+      "registered_by": null,
+      "registered_on": null,
+      "question": "Does each single arming event (launch acceleration alone, canard deployment alone, flight time alone) leave the fuze SAFE, and do all three in order arm it?",
+      "prediction": "Each single event: SAFE. All three in order: ARMED, visible as FUZE,ARMED on the telemetry line within 60 s of the sequence completing.",
+      "variables": {
+        "controlled": [
+          "fuze unit identity",
+          "event order",
+          "simulated g level and duration",
+          "deploy latch state",
+          "flight-time gate"
+        ],
+        "measured": [
+          "fuze state after each single event",
+          "fuze state after the full sequence",
+          "FUZE telemetry lines with timestamps"
+        ],
+        "recorded": [
+          "trial count per case",
+          "firmware revision",
+          "harness wiring photos"
+        ]
+      },
+      "interpretation_rule": "The 6.1.2 and 6.1.3 gates pass only if every single-event trial stays SAFE and every in-order trial arms. One failure of either fails the gate.",
+      "measurement_method": "Bench driving of the flight computer per Firmware/sa_harness.py scenarios, with the real MPU6050 stimulated by the fixture and the fins-deployed latch driven by the deploy output.",
+      "known_limitations": [
+        "Software-in-the-loop halves already pass in Firmware/tests/test_sa_harness.py."
+      ],
+      "safety": "Inert fuze units; fire output into a lamp or scope, never an initiator."
+    },
+    {
+      "id": "P-008",
+      "status": "proposed",
+      "title": "Fuze impact function and PD delay on inert hardware",
+      "claims": [],
+      "predictions": [],
+      "requirements": [],
+      "roadmap_stage": "Militarization Phase 6.1 (live-fire program gate)",
+      "proposed_by": "Chief weapons engineer under the program sponsor's Phase 6.1 implementation order of 2026-11-15",
+      "registered_by": null,
+      "registered_on": null,
+      "question": "Does an armed fuze function on an 8 g+ impact deceleration, with the fire output rising after the selected PD delay (0/5/10/20 ms), and does a sub-threshold deceleration leave it armed?",
+      "prediction": "FUNCTION on -20 g; fire output HIGH after the selected delay within +1 ms; no function on -5 g. The logic halves pass in Firmware/tests/test_sa_harness.py.",
+      "variables": {
+        "controlled": [
+          "fuze unit identity",
+          "selected PD delay",
+          "impact stimulus level and duration"
+        ],
+        "measured": [
+          "fire-output edge time relative to the stimulus",
+          "fuze state"
+        ],
+        "recorded": [
+          "scope model and sample rate",
+          "trial count per delay",
+          "firmware revision"
+        ]
+      },
+      "interpretation_rule": "The 6.1.4 gate passes only if every armed trial functions with the delay within +1 ms of selection and every sub-threshold trial stays armed.",
+      "measurement_method": "Shaker or impulse fixture driving the MPU6050; the fire output on GPIO 32 measured with a scope at 1 MHz.",
+      "known_limitations": [
+        "Impact stimulus shape differs from real impact; delay accuracy at the ms level is the quantity of interest."
+      ],
+      "safety": "Inert fuze units; fire output into a lamp or scope, never an initiator."
+    },
+    {
+      "id": "P-009",
+      "status": "proposed",
+      "title": "Command-link security on the bench (replay, forgery, two-key)",
+      "claims": [],
+      "predictions": [],
+      "requirements": [],
+      "roadmap_stage": "Militarization Phase 6.1 (live-fire program gate)",
+      "proposed_by": "Chief weapons engineer under the program sponsor's Phase 6.1 implementation order of 2026-11-15",
+      "registered_by": null,
+      "registered_on": null,
+      "question": "Does the physical launcher reject replayed AUTH packets, forged HMACs, and single-key OVERRIDE attempts, and accept valid two-key OVERRIDE and authenticated commands?",
+      "prediction": "All forgeries and replays rejected with CMD_REJECT rows logged; valid authenticated commands accepted; OVERRIDE,enabler accepted only with both operator signatures. The Python cross-check (Firmware/tests/test_crypto_harness.py) passes all of these at the logic level today.",
+      "variables": {
+        "controlled": [
+          "launcher firmware revision",
+          "key set",
+          "packet capture and replay tooling"
+        ],
+        "measured": [
+          "accept/reject outcome per packet",
+          "dashboard CSV rows for every rejection"
+        ],
+        "recorded": [
+          "trial counts per attack class",
+          "capture tool identity"
+        ]
+      },
+      "interpretation_rule": "The 6.1.5 gate passes only if zero forged, replayed, or single-key packets are accepted and all valid authenticated commands are.",
+      "measurement_method": "UDP replay of captured AUTH traffic and crafted forgeries against the running launcher, with the dashboard session recording every outcome.",
+      "known_limitations": [
+        "Bench keys, not field keys; the field key change is a separate gate exit criterion."
+      ],
+      "safety": "Launcher in READY with the ignition output simulated; no motor, no energetics."
+    },
+    {
+      "id": "P-010",
+      "status": "proposed",
+      "title": "Telemetry crypto round-trip on the bench",
+      "claims": [],
+      "predictions": [],
+      "requirements": [],
+      "roadmap_stage": "Militarization Phase 6.1 (live-fire program gate)",
+      "proposed_by": "Chief weapons engineer under the program sponsor's Phase 6.1 implementation order of 2026-11-15",
+      "registered_by": null,
+      "registered_on": null,
+      "question": "Do the launcher's ENC telemetry packets decrypt on the dashboard, and does tampered ciphertext fail closed?",
+      "prediction": "Every ENC packet decrypts to the original telemetry line; a one-bit ciphertext change yields no plaintext and no crash. The Python round-trip already passes (Firmware/tests/test_crypto_harness.py); this measures the ESP32 transmitter end to end.",
+      "variables": {
+        "controlled": [
+          "launcher firmware revision",
+          "key set",
+          "telemetry rate"
+        ],
+        "measured": [
+          "decryption success rate over a 10-minute capture",
+          "behavior on injected tampered packets"
+        ],
+        "recorded": [
+          "dashboard session folder",
+          "packet counts",
+          "any fallback-to-plain events"
+        ]
+      },
+      "interpretation_rule": "The 6.1.6 gate passes only if the decryption success rate is 100% over the capture and tampered packets produce no plaintext.",
+      "measurement_method": "10-minute live launcher-to-dashboard session with ENC enabled; post-hoc bit-flip replay of captured packets through the dashboard decryptor.",
+      "known_limitations": [
+        "Does not measure RF range or packet loss, only crypto correctness."
+      ],
+      "safety": "Inert bench session; no energetics."
+    },
+    {
+      "id": "P-011",
+      "status": "proposed",
+      "title": "MIL-33 static fire (tethered, instrumented)",
+      "claims": [],
+      "predictions": [],
+      "requirements": [],
+      "roadmap_stage": "Militarization Phase 6.2 (live-fire program gate)",
+      "proposed_by": "Chief weapons engineer under the program sponsor's Phase 6.1 implementation order of 2026-11-15",
+      "registered_by": null,
+      "registered_on": null,
+      "question": "Does the MIL-33 motor deliver thrust within +/-10 percent of the committed .eng plateau and burn within +/-10 percent of 2.0 s, with the case intact?",
+      "prediction": "Thrust within the band; burn time within the band; no case failure. The curve is a PREDICTED plateau, so this is its first test against reality.",
+      "variables": {
+        "controlled": [
+          "motor unit identity",
+          "ambient temperature",
+          "nozzle condition"
+        ],
+        "measured": [
+          "thrust vs time at 1 kHz or better",
+          "chamber pressure if instrumented",
+          "case temperature"
+        ],
+        "recorded": [
+          "load-cell model and calibration date",
+          "ignition current trace",
+          "video"
+        ]
+      },
+      "interpretation_rule": "The 6.2.4 gate passes only if the thrust and burn time fall inside the bands and the case is intact; the .eng file is then updated from the measured curve and re-committed.",
+      "measurement_method": "Horizontal thrust stand with a calibrated load cell, remote ignition, ballistic barriers per range rules.",
+      "known_limitations": [
+        "One motor samples a production process; lot acceptance is a later program decision."
+      ],
+      "safety": "Live energetics: remote ignition, barriers, minimum personnel, fire suppression per range regulations."
     }
   ]
 }
