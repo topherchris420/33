@@ -1,34 +1,52 @@
-# Project 33
+# PROJECT 33
 
 [![Project 33 — The record is the experiment. Conceptual cover with layered archival sheets.](docs/assets/readme/project33-cover.png)](https://topherchris420.github.io/33/lab/observatory.html)
 
-**An open engineering laboratory and evidence record by Vers3Dynamics.**
+**ONE ROCKET. ZERO EXCUSES.**
+
+A folding-fin **guided munition** — redesigned from broken to brilliant in six gated phases, with every number labeled and nothing simulated sold as fielded. This is what weapons engineering looks like when the evidence record is the product.
 
 [![Project checks](https://github.com/topherchris420/33/actions/workflows/ci.yml/badge.svg)](https://github.com/topherchris420/33/actions/workflows/ci.yml)
 [![Laboratory and site checks](https://github.com/topherchris420/33/actions/workflows/marketing.yml/badge.svg)](https://github.com/topherchris420/33/actions/workflows/marketing.yml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 
-Project 33 pairs an interactive browser laboratory with an inspectable engineering record. A folding-fin rocket concept is the case study; the record connects each claim to its sources, assumptions, discrepancies, and missing measurements. You can explore the visual laboratory, read the claim passports, or verify a portable review packet offline.
-
 > **The rocket is the specimen. The record is the experiment.**
 
-**[Explore the evidence](https://topherchris420.github.io/33/lab/observatory.html)** · **[Enter the laboratory](https://topherchris420.github.io/33/lab/)** · **[Start here](docs/START_HERE.md)**
+**[See the rocket](#guided-munition-configuration)** · **[Explore the evidence](https://topherchris420.github.io/33/lab/observatory.html)** · **[Enter the laboratory](https://topherchris420.github.io/33/lab/)** · **[Start here](docs/START_HERE.md)**
 
-[Current status](#current-status) · [First visit](#choose-your-first-visit) · [Offline review](#reproduce-the-review) · [Claim status](#claim-status) · [Development](#develop-and-verify) · [Contribute](#contribute)
+[The numbers](#the-numbers) · [Current status](#current-status) · [First visit](#choose-your-first-visit) · [Offline review](#reproduce-the-review) · [Claim status](#claim-status) · [Development](#develop-and-verify) · [Contribute](#contribute)
 
 *Cover: conceptual artwork, not a photograph, technical drawing, or test result. [Image sources and provenance](docs/assets/readme/README.md).*
 
+## The numbers
+
+Spec-sheet energy, evidence-grade discipline. Every figure below is **MODELED** — designed, cross-checked, and committed, but not yet measured on hardware. When hardware speaks, the [live-fire log](docs/MILITARY/LIVE_FIRE_LOG.md) — not this table — flips the labels.
+
+| Spec | Value | How it got there |
+|---|---|---|
+| **Fin deployment reliability** | **99.93%** | 10,000-trial Monte Carlo through the verified four-bar kinematics |
+| **Static margin** | **1.66–1.76 cal** | Corrected Barrowman model + independent strip integration agreeing to 0.001 mm |
+| **Linkage lock** | **Over-center, 1.55° margin** | Redesigned four-bar that closes at every pose — the original closed at none |
+| **Guided CEP** | **50 / 19 / 81 m @ 1/2/3 km** | Proportional navigation, GPS-aided IMU, wind + drift in the loop |
+| **Motor** | **MIL-33 · 1,235 N·s · 3.3 km** | Sized by bisection on the flight model; predicted thrust curve committed |
+| **Warheads** | **3 loadouts, 1 mass point** | GP · HEAT · EFP on a constant-mass bay — zero re-trim on swap |
+| **Fuze** | **Triple-event S&A** | Launch-g ∧ canard-deploy ∧ burn-time; no single event can arm it |
+| **Command link** | **HMAC + replay-proof + two-key OVERRIDE** | A stolen key, a captured packet, one operator error — none of them fires the round |
+| **Discrepancies resolved** | **14 of 27** | The old design couldn't close, couldn't stabilize, couldn't deploy. This one is designed to |
+
+**Bench-validation prototype → guided munition design → gated live-fire program.** [Project Status](docs/PROJECT_STATUS.md) · [Roadmap](docs/ROADMAP.md) · [Paper Alignment](docs/PAPER_ALIGNMENT.md) · [Militarization tree](docs/MILITARY/README.md)
+
 ## Current status
 
-Project 33 began as an **inert bench-validation prototype**. The repository now also contains a guided-munition design study, alongside its browser laboratory and evidence-review software. That design material is modeled or implemented work; it does not establish a physically validated or deployable system.
+Project 33 began as an **inert bench-validation prototype**. It now contains a complete guided-munition design study: corrected models, compiling firmware, a browser laboratory, and a phased live-fire program — built in six gated phases under the program sponsor's direction, with every weaponized-scope override registered in the [militarization deviation register](docs/MILITARY/DEVIATIONS.md).
 
-**No physical measurement has been accepted into the evidence record. The project is not flight-tested.** Software checks, simulated outputs, and rendered assemblies each have a defined scope. None substitutes for an accepted physical measurement.
+**Zero physical measurements. Not flight-tested. And proud of saying so.** That sentence is what makes every other sentence on this page trustworthy. Software checks, simulated outputs, and rendered assemblies each have a defined scope; none substitutes for an accepted physical measurement.
 
 <!-- evidence:counts -->
 **Record state:** 8 claims · 1 contradicted · 2 unresolved · 5 supported within stated limits · 0 accepted physical measurements · 7 open discrepancies of 27 · 8 of 8 predictions not measured.
 <!-- /evidence:counts -->
 
-The summary and claim table below are generated from the committed record. **Supported within stated limits** means support for the statement at its recorded evidence class; it does not mean hardware validation. Contradictions and unresolved questions remain visible.
+The summary and claim table below are generated from the committed record. **Supported within stated limits** means support for the statement at its recorded evidence class; it does not mean hardware validation. Contradictions and unresolved questions remain visible — on purpose.
 
 | What is available | What it establishes |
 |---|---|
@@ -60,20 +78,20 @@ The browser laboratory is read-only. Its values come from committed sources; syn
 The Observatory lets you follow a claim into its requirements, cited artifacts, review history, and missing evidence. Its constellation, evidence ladder, and table show the same record in different forms. The offline review below makes that record available without the website.
 
 <details>
-<summary><b>Existing design illustrations</b> · modeled material</summary>
+<summary><b>The design, drawn from its own data</b> · modeled material</summary>
 
 ## Guided munition configuration
 
 <a href="docs/MILITARY/README.md"><img src="docs/assets/munition_overview.svg" alt="Project 33 guided munition Phase 6 configuration card: side view with warhead bay, canards, folding fins, MIL-33 motor, CG and CP stations, and modeled performance summary."></a>
 
-The configuration card is generated from committed sources by `tools/render_munition_card.py` — every dimension, station, and number comes from `design_point.json` and the evidence records, and the card carries its own MODELED label. Warhead loadouts are interchangeable at constant bay mass; the S&A fuze arms only on launch acceleration **and** canard-deployment confirmation **and** burn-time gate. [Militarization evidence tree](docs/MILITARY/README.md) · [Operator card](docs/MILITARY/OPERATOR_CARD.md).
+**One card. Every station. Zero hand-drawing.** The configuration card is generated from committed sources by `tools/render_munition_card.py` — every dimension, station, and number comes from `design_point.json` and the evidence records, and the card carries its own MODELED label. Warhead loadouts are interchangeable at constant bay mass; the S&A fuze arms only on launch acceleration **and** canard-deployment confirmation **and** burn-time gate — three events, no shortcuts. [Militarization evidence tree](docs/MILITARY/README.md) · [Operator card](docs/MILITARY/OPERATOR_CARD.md).
 
 <details>
 <summary><b>Exploded assembly blueprint</b> (generated from the design point and the verified linkage kinematics)</summary>
 
 <a href="docs/assets/munition_blueprint.svg"><img src="docs/assets/munition_blueprint.svg" alt="Project 33 guided munition exploded assembly blueprint: nose cone and S&A fuze, constant-mass warhead bay, avionics with GPS-aided IMU, canard ring, G-10 aft body with folding-fin section and MIL-33 motor, plus a verified four-bar linkage detail drawing with stations and the CG/CP ruler."></a>
 
-Rendered by `tools/render_munition_blueprint.py`; the four-bar detail is drawn from the actual kinematic trace at the deployed-stop pose. All values MODELED. The interactive [3D workbench](https://topherchris420.github.io/33/lab/workbench.html) explodes the same geometry from the committed OpenRocket file.
+**Every part separated. Every joint real.** Rendered by `tools/render_munition_blueprint.py`; the four-bar detail is drawn from the actual kinematic trace at the deployed-stop pose — not an artist's impression, a computation. All values MODELED. The interactive [3D workbench](https://topherchris420.github.io/33/lab/workbench.html) explodes the same geometry from the committed OpenRocket file.
 
 </details>
 
