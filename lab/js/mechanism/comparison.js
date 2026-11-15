@@ -44,7 +44,7 @@ export async function buildComparison(root, { ev }) {
 
   /* ---------------- C5 ---------------- */
   const stations = [
-    { min: cgMin * M, max: cgMax * M, color: "#f1e9d6", symbol: "cg", label: `CG ${(cgMin * M).toFixed(0)}–${(cgMax * M).toFixed(0)} mm · C5_static_margin.csv cg_m (burn history, hard-coded Estes C6-5 — D-007)` },
+    { min: cgMin * M, max: cgMax * M, color: "#f1e9d6", symbol: "cg", label: `CG ${(cgMin * M).toFixed(0)}–${(cgMax * M).toFixed(0)} mm · C5_static_margin.csv cg_m (burn history, the file's motor — D-007 resolved)` },
     { min: inputs.cp_m * M, color: "#67d8cf", symbol: "cp", label: `CP reference ${(inputs.cp_m * M).toFixed(1)} mm · C5_static_margin_inputs.json cp_m` },
     { min: cross.cp_m * M, color: "#e3c27a", symbol: "cp", label: `CP textbook ${(cross.cp_m * M).toFixed(1)} mm · C5_barrowman_crosscheck.json cp_m` },
     { min: cgMax * M + win.min * dRef, max: cgMin * M + win.max * dRef, color: "#4cc9bb", dashed: true, label: `CP that would meet ${win.min}–${win.max} cal at every recorded CG: x_CG,max + ${win.min}·d_ref to x_CG,min + ${win.max}·d_ref (derived, d_ref ${dRef.toFixed(1)} mm)` },
@@ -78,7 +78,7 @@ export async function buildComparison(root, { ev }) {
       h("span", { class: "label" }, `support ${claim.C5.support_label}`)),
     reqLine(req["R-C5-WINDOW"]),
     h("div", { class: "mx-scroll" }, caliberAxis({ window: win, reference: { min: smMin, max: smMax }, textbook: { min: cross.sm_min_calibers, max: cross.sm_max_calibers } })),
-    h("p", { class: "mx-note" }, "Both formulations are on record and share every input except the fin term. The requirement result is MODELS DISAGREE; neither model has been independently reviewed, so neither is declared correct. A static margin is not dynamic stability or flight readiness."),
+    h("p", { class: "mx-note" }, "D-006 is resolved: the textbook fin terms were correct, the revision-3 model uses them, and this strip-integration cross-check agrees within 0.001 mm. The historical disagreement shown here is kept as the lesson; matching a window is still a result, not a validation, and a static margin is not dynamic stability or flight readiness."),
     h("h4", { style: { marginTop: "18px" } }, "Where the stations fall on the OpenRocket geometry"),
     h("div", { class: "mx-scroll" }, stabilityElevation({ elevation, stations, ghostFin: ghost, dRef })),
     h("p", { class: "mx-note" }, "Side elevation generated from the parameters in Simulation/Folding Stabilized Rocket.ork (fins shown in the upper half only). Stations are millimetres from the nose tip."),

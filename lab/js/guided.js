@@ -56,13 +56,13 @@ function lessons(ev, or, fixture, inputs) {
       id: "models", n: 3, title: "Two models, one rocket", cat: "research", sign: "TWO MODELS.\nONE ROCKET.", prop: "rocket-rings",
       caption: "Tally holds up the disagreement; Wren shrugs.",
       body: [
-        "Static margin measures how far the centre of pressure sits behind the centre of gravity, in body diameters. The repository holds two formulations that disagree about it — and the record refuses to pick a winner without evidence.",
-        "The comparison studio puts both on one axis against the 1.5–2.0 caliber requirement, and marks a station the lab thinks a human should review.",
+        "Static margin measures how far the centre of pressure sits behind the centre of gravity, in body diameters. The repository held two formulations that disagreed about it — and the record refused to pick a winner without evidence until the disagreement itself was resolved.",
+        "The comparison studio puts both on one axis against the 1.5–2.0 caliber requirement, and marks the station the lab once flagged for human review.",
       ],
       tool: { href: "mechanism.html#comparison", label: "Open the model comparison studio" },
-      q: `The reference formulation gives ${inputs.sm_min_calibers.toFixed(2)}–${inputs.sm_max_calibers.toFixed(2)} cal, inside the window. Does that make it the correct model?`,
+      q: `The revision-3 formulation gives ${inputs.sm_min_calibers.toFixed(2)}–${inputs.sm_max_calibers.toFixed(2)} cal, inside the window. Does that make it a valid rocket?`,
       options: [{ t: "Yes — it satisfies the requirement" }, { t: "No — satisfying a requirement is not validating the model", ok: true }],
-      explain: "Both formulations share questioned inputs: a hard-coded motor that differs from the design file (D-007) and an ogive nose coefficient for an ellipsoid nose (D-008). The two disagree by a factor of two (D-006). Landing inside a window is a result, not a validation.",
+      explain: "D-006 resolved the disagreement: the textbook fin terms were correct, the reference script was wrong, and the true margin at the old geometry was about 0.7 cal. D-007 and D-008 resolved the inputs (the file's motor, an ellipsoid-derived nose coefficient, canards modeled). Landing inside a window is a result, not a validation.",
     },
     {
       id: "signal", n: 4, title: "From signal to evidence", cat: "synthetic", sign: "WHOSE\nCLOCK?", prop: "scope",

@@ -36,6 +36,15 @@ The failed and disputed requirements remain visible. They define the work ahead.
 
 The configuration card is generated from committed sources by `tools/render_munition_card.py` — every dimension, station, and number comes from `design_point.json` and the evidence records, and the card carries its own MODELED label. Warhead loadouts are interchangeable at constant bay mass; the S&A fuze arms only on launch acceleration **and** canard-deployment confirmation **and** burn-time gate. [Militarization evidence tree](docs/MILITARY/README.md) · [Operator card](docs/MILITARY/OPERATOR_CARD.md).
 
+<details>
+<summary><b>Exploded assembly blueprint</b> (generated from the design point and the verified linkage kinematics)</summary>
+
+<a href="docs/assets/munition_blueprint.svg"><img src="docs/assets/munition_blueprint.svg" alt="Project 33 guided munition exploded assembly blueprint: nose cone and S&A fuze, constant-mass warhead bay, avionics with GPS-aided IMU, canard ring, G-10 aft body with folding-fin section and MIL-33 motor, plus a verified four-bar linkage detail drawing with stations and the CG/CP ruler."></a>
+
+Rendered by `tools/render_munition_blueprint.py`; the four-bar detail is drawn from the actual kinematic trace at the deployed-stop pose. All values MODELED. The interactive [3D workbench](https://topherchris420.github.io/33/lab/workbench.html) explodes the same geometry from the committed OpenRocket file.
+
+</details>
+
 ## Choose your first visit
 
 | You want to… | Start with | What you get |

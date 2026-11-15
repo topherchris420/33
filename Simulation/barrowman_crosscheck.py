@@ -100,11 +100,14 @@ def crosscheck(ork_path, reference_csv, design_point_path=static_margin.DESIGN_P
     checks = {}
     cn_terms = 2.0
     x_terms = 2.0 * discrete_nose_fraction_x(ork_geom, ork_geom['ork_nose_shape'])
+    mid_num_main = 0.0
     for name, spec in (('canards', ca), ('main_fins', mf)):
         x_cp, mean_chord, mid_num = strip_fin_cp(
             spec['leading_edge_x_mm'] / 1000.0, spec['root_chord_mm'] / 1000.0,
             spec['tip_chord_mm'] / 1000.0, spec['span_mm'] / 1000.0,
             spec['tip_le_sweep_mm'] / 1000.0)
+        if name == 'main_fins':
+            mid_num_main = mid_num
         cn = strip_fin_cn(spec['span_mm'] / 1000.0, d_ref, radius, spec['count'],
                          mid_num, spec['root_chord_mm'] / 1000.0, spec['tip_chord_mm'] / 1000.0)
         closed = static_margin.fin_terms(
@@ -142,6 +145,7 @@ def crosscheck(ork_path, reference_csv, design_point_path=static_margin.DESIGN_P
         'cp_m_closed_form': round(cp_ref, 6),
         'cp_m_strip_integration': round(cp_num, 6),
         'cp_difference_mm': round(abs(cp_ref - cp_num) * 1000.0, 3),
+        'midchord_length_m': round(mid_num_main, 5),
         'sm_min_calibers': round(min(margins), 4),
         'sm_max_calibers': round(max(margins), 4),
         'sm_min_calibers_reference_model': round(min(margins_ref), 4),
