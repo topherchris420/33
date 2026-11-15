@@ -62,9 +62,9 @@
   "evidence/discrepancies.json": "b1cc087e2cb85c64e249030075d2f60814db2040e393c87e536133a628205ec3",
   "evidence/measurements.json": "7ad754f8947ac4fa9183b2da1b3d9735cdf8833af1965f91c116a072107b0e9d",
   "evidence/predictions.json": "74ebc74780ebcf634cfb2228d682e32b9d22478d63352d06fc2fe0f5e25769fd",
-  "evidence/preregistrations.json": "37ed33bab3b45c7e32d0b48d49c948a2fb3f6bd0ff1312cce688a24576e8e29a",
+  "evidence/preregistrations.json": "132dcad9299ba5c0d86cb038efcea21a6c80e41e1942f19a451ffb5b3877a5e1",
   "evidence/requirements.json": "096b7dd218a6b51799e912b4d172cdd41e084de921963244a24ae93f2250befa",
-  "evidence/reviews.json": "83d30fe1a463d8a730d68f252e9fc6e1b66fdd0f44ba1691ffc4fb112ffc42c2",
+  "evidence/reviews.json": "162e82c3d6f6c6efafa483f336138a39cafd5087ba7fdf39218b467fffa84c5e",
   "evidence/safety_gates.json": "8c5d3ef9db7f7b808a1d002e488f0cd95ae19583df9577628561654b7f48acf9",
   "evidence/sessions.json": "a8486b0ce83596a773a27761db12830209c274dff74a35deba1dc5d51bc5433b",
   "materials/mass_rollup.py": "7e8b8ca2b46b20102721c645284fc7b1a81e8c4848e30ee4295a8a10260025ec",
@@ -1316,9 +1316,9 @@
     "missing": [],
     "review": {
      "kind": "human",
-     "recorded": "2026-11-14",
+     "recorded": "2026-11-15",
      "recorded_by": "chief weapons engineer",
-     "note": "MIL-DEV-011 implemented: DISARM command; D-025 resolved; sponsor advisory documented. Digests recomputed on LF bytes.",
+     "note": "Phase 6.1 software-in-the-loop implementation: S&A harness (20 fidelity-enforced cases) and crypto harness (15 cases incl. cross-language AES-CCM round-trip); preregistrations P-006..P-011 added; cryptography added to the firmware test requirements.",
      "independent": false
     }
    },
@@ -3612,6 +3612,228 @@
     "In this pose the accelerometer holds roll_deg near its reference, so roll_deg alone cannot show gyro drift. Integrated rate_deg_s reads the gyro without that correction, and only it applies to gyro-only operation (D-027)."
    ],
    "safety": "Inert only: ignition servo disconnected; launcher left in SAFE."
+  },
+  {
+   "id": "P-006",
+   "status": "proposed",
+   "title": "Fuze S&A no-fire checks on inert hardware",
+   "claims": [],
+   "predictions": [],
+   "requirements": [],
+   "roadmap_stage": "Militarization Phase 6.1 (live-fire program gate)",
+   "proposed_by": "Chief weapons engineer under the program sponsor's Phase 6.1 implementation order of 2026-11-15",
+   "registered_by": null,
+   "registered_on": null,
+   "question": "Does the physical fuze S&A chain stay safe through drop, static-acceleration, and thermal-storage handling: 1.5 m drop onto each face, 8 g static for 5 s, and -40/+60 C soak?",
+   "prediction": "SAFE throughout; no initiator continuity change. The software-in-the-loop harness (Firmware/sa_harness.py) passes the logic halves of these checks; the hardware halves are unmeasured.",
+   "variables": {
+    "controlled": [
+     "fuze unit identity",
+     "drop height and face",
+     "static g level and duration",
+     "soak temperatures and dwell"
+    ],
+    "measured": [
+     "fuze state per the FUZE telemetry line",
+     "initiator continuity before and after",
+     "visible damage"
+    ],
+    "recorded": [
+     "drop surface",
+     "acceleration fixture and calibration",
+     "chamber model",
+     "trial counts"
+    ]
+   },
+   "interpretation_rule": "The 6.1.1 gate passes only if every trial leaves the fuze SAFE with unchanged initiator continuity. A single arming or continuity change fails the gate and stops the program.",
+   "measurement_method": "Drop rig and static fixture with the fuze unit instrumented for the FUZE line; thermal chamber per MIL-STD-810 method 503 style.",
+   "known_limitations": [
+    "Logic-level halves already validated by Firmware/tests/test_sa_harness.py; only the hardware response is new here."
+   ],
+   "safety": "Inert fuze units only; no energetic material; initiator continuity measured with a safe ohmmeter."
+  },
+  {
+   "id": "P-007",
+   "status": "proposed",
+   "title": "Fuze S&A arm-in-order on inert hardware",
+   "claims": [],
+   "predictions": [],
+   "requirements": [],
+   "roadmap_stage": "Militarization Phase 6.1 (live-fire program gate)",
+   "proposed_by": "Chief weapons engineer under the program sponsor's Phase 6.1 implementation order of 2026-11-15",
+   "registered_by": null,
+   "registered_on": null,
+   "question": "Does each single arming event (launch acceleration alone, canard deployment alone, flight time alone) leave the fuze SAFE, and do all three in order arm it?",
+   "prediction": "Each single event: SAFE. All three in order: ARMED, visible as FUZE,ARMED on the telemetry line within 60 s of the sequence completing.",
+   "variables": {
+    "controlled": [
+     "fuze unit identity",
+     "event order",
+     "simulated g level and duration",
+     "deploy latch state",
+     "flight-time gate"
+    ],
+    "measured": [
+     "fuze state after each single event",
+     "fuze state after the full sequence",
+     "FUZE telemetry lines with timestamps"
+    ],
+    "recorded": [
+     "trial count per case",
+     "firmware revision",
+     "harness wiring photos"
+    ]
+   },
+   "interpretation_rule": "The 6.1.2 and 6.1.3 gates pass only if every single-event trial stays SAFE and every in-order trial arms. One failure of either fails the gate.",
+   "measurement_method": "Bench driving of the flight computer per Firmware/sa_harness.py scenarios, with the real MPU6050 stimulated by the fixture and the fins-deployed latch driven by the deploy output.",
+   "known_limitations": [
+    "Software-in-the-loop halves already pass in Firmware/tests/test_sa_harness.py."
+   ],
+   "safety": "Inert fuze units; fire output into a lamp or scope, never an initiator."
+  },
+  {
+   "id": "P-008",
+   "status": "proposed",
+   "title": "Fuze impact function and PD delay on inert hardware",
+   "claims": [],
+   "predictions": [],
+   "requirements": [],
+   "roadmap_stage": "Militarization Phase 6.1 (live-fire program gate)",
+   "proposed_by": "Chief weapons engineer under the program sponsor's Phase 6.1 implementation order of 2026-11-15",
+   "registered_by": null,
+   "registered_on": null,
+   "question": "Does an armed fuze function on an 8 g+ impact deceleration, with the fire output rising after the selected PD delay (0/5/10/20 ms), and does a sub-threshold deceleration leave it armed?",
+   "prediction": "FUNCTION on -20 g; fire output HIGH after the selected delay within +1 ms; no function on -5 g. The logic halves pass in Firmware/tests/test_sa_harness.py.",
+   "variables": {
+    "controlled": [
+     "fuze unit identity",
+     "selected PD delay",
+     "impact stimulus level and duration"
+    ],
+    "measured": [
+     "fire-output edge time relative to the stimulus",
+     "fuze state"
+    ],
+    "recorded": [
+     "scope model and sample rate",
+     "trial count per delay",
+     "firmware revision"
+    ]
+   },
+   "interpretation_rule": "The 6.1.4 gate passes only if every armed trial functions with the delay within +1 ms of selection and every sub-threshold trial stays armed.",
+   "measurement_method": "Shaker or impulse fixture driving the MPU6050; the fire output on GPIO 32 measured with a scope at 1 MHz.",
+   "known_limitations": [
+    "Impact stimulus shape differs from real impact; delay accuracy at the ms level is the quantity of interest."
+   ],
+   "safety": "Inert fuze units; fire output into a lamp or scope, never an initiator."
+  },
+  {
+   "id": "P-009",
+   "status": "proposed",
+   "title": "Command-link security on the bench (replay, forgery, two-key)",
+   "claims": [],
+   "predictions": [],
+   "requirements": [],
+   "roadmap_stage": "Militarization Phase 6.1 (live-fire program gate)",
+   "proposed_by": "Chief weapons engineer under the program sponsor's Phase 6.1 implementation order of 2026-11-15",
+   "registered_by": null,
+   "registered_on": null,
+   "question": "Does the physical launcher reject replayed AUTH packets, forged HMACs, and single-key OVERRIDE attempts, and accept valid two-key OVERRIDE and authenticated commands?",
+   "prediction": "All forgeries and replays rejected with CMD_REJECT rows logged; valid authenticated commands accepted; OVERRIDE,enabler accepted only with both operator signatures. The Python cross-check (Firmware/tests/test_crypto_harness.py) passes all of these at the logic level today.",
+   "variables": {
+    "controlled": [
+     "launcher firmware revision",
+     "key set",
+     "packet capture and replay tooling"
+    ],
+    "measured": [
+     "accept/reject outcome per packet",
+     "dashboard CSV rows for every rejection"
+    ],
+    "recorded": [
+     "trial counts per attack class",
+     "capture tool identity"
+    ]
+   },
+   "interpretation_rule": "The 6.1.5 gate passes only if zero forged, replayed, or single-key packets are accepted and all valid authenticated commands are.",
+   "measurement_method": "UDP replay of captured AUTH traffic and crafted forgeries against the running launcher, with the dashboard session recording every outcome.",
+   "known_limitations": [
+    "Bench keys, not field keys; the field key change is a separate gate exit criterion."
+   ],
+   "safety": "Launcher in READY with the ignition output simulated; no motor, no energetics."
+  },
+  {
+   "id": "P-010",
+   "status": "proposed",
+   "title": "Telemetry crypto round-trip on the bench",
+   "claims": [],
+   "predictions": [],
+   "requirements": [],
+   "roadmap_stage": "Militarization Phase 6.1 (live-fire program gate)",
+   "proposed_by": "Chief weapons engineer under the program sponsor's Phase 6.1 implementation order of 2026-11-15",
+   "registered_by": null,
+   "registered_on": null,
+   "question": "Do the launcher's ENC telemetry packets decrypt on the dashboard, and does tampered ciphertext fail closed?",
+   "prediction": "Every ENC packet decrypts to the original telemetry line; a one-bit ciphertext change yields no plaintext and no crash. The Python round-trip already passes (Firmware/tests/test_crypto_harness.py); this measures the ESP32 transmitter end to end.",
+   "variables": {
+    "controlled": [
+     "launcher firmware revision",
+     "key set",
+     "telemetry rate"
+    ],
+    "measured": [
+     "decryption success rate over a 10-minute capture",
+     "behavior on injected tampered packets"
+    ],
+    "recorded": [
+     "dashboard session folder",
+     "packet counts",
+     "any fallback-to-plain events"
+    ]
+   },
+   "interpretation_rule": "The 6.1.6 gate passes only if the decryption success rate is 100% over the capture and tampered packets produce no plaintext.",
+   "measurement_method": "10-minute live launcher-to-dashboard session with ENC enabled; post-hoc bit-flip replay of captured packets through the dashboard decryptor.",
+   "known_limitations": [
+    "Does not measure RF range or packet loss, only crypto correctness."
+   ],
+   "safety": "Inert bench session; no energetics."
+  },
+  {
+   "id": "P-011",
+   "status": "proposed",
+   "title": "MIL-33 static fire (tethered, instrumented)",
+   "claims": [],
+   "predictions": [],
+   "requirements": [],
+   "roadmap_stage": "Militarization Phase 6.2 (live-fire program gate)",
+   "proposed_by": "Chief weapons engineer under the program sponsor's Phase 6.1 implementation order of 2026-11-15",
+   "registered_by": null,
+   "registered_on": null,
+   "question": "Does the MIL-33 motor deliver thrust within +/-10 percent of the committed .eng plateau and burn within +/-10 percent of 2.0 s, with the case intact?",
+   "prediction": "Thrust within the band; burn time within the band; no case failure. The curve is a PREDICTED plateau, so this is its first test against reality.",
+   "variables": {
+    "controlled": [
+     "motor unit identity",
+     "ambient temperature",
+     "nozzle condition"
+    ],
+    "measured": [
+     "thrust vs time at 1 kHz or better",
+     "chamber pressure if instrumented",
+     "case temperature"
+    ],
+    "recorded": [
+     "load-cell model and calibration date",
+     "ignition current trace",
+     "video"
+    ]
+   },
+   "interpretation_rule": "The 6.2.4 gate passes only if the thrust and burn time fall inside the bands and the case is intact; the .eng file is then updated from the measured curve and re-committed.",
+   "measurement_method": "Horizontal thrust stand with a calibrated load cell, remote ignition, ballistic barriers per range rules.",
+   "known_limitations": [
+    "One motor samples a production process; lot acceptance is a later program decision."
+   ],
+   "safety": "Live energetics: remote ignition, barriers, minimum personnel, fire suppression per range regulations."
   }
  ],
  "sessions": [],
@@ -4106,6 +4328,36 @@
     {
      "preregistration": "P-003",
      "title": "Stationary roll-estimate drift",
+     "status": "proposed"
+    },
+    {
+     "preregistration": "P-006",
+     "title": "Fuze S&A no-fire checks on inert hardware",
+     "status": "proposed"
+    },
+    {
+     "preregistration": "P-007",
+     "title": "Fuze S&A arm-in-order on inert hardware",
+     "status": "proposed"
+    },
+    {
+     "preregistration": "P-008",
+     "title": "Fuze impact function and PD delay on inert hardware",
+     "status": "proposed"
+    },
+    {
+     "preregistration": "P-009",
+     "title": "Command-link security on the bench (replay, forgery, two-key)",
+     "status": "proposed"
+    },
+    {
+     "preregistration": "P-010",
+     "title": "Telemetry crypto round-trip on the bench",
+     "status": "proposed"
+    },
+    {
+     "preregistration": "P-011",
+     "title": "MIL-33 static fire (tethered, instrumented)",
      "status": "proposed"
     }
    ]
@@ -5050,12 +5302,29 @@
      "timing_tests": "2012e20b2348325ddf94478678f8f8e053a5ad09e5b501ed9391797250fd8540"
     },
     "kind": "human",
-    "note": "MIL-DEV-011 implemented: DISARM command; D-025 resolved; sponsor advisory documented. Digests recomputed on LF bytes.",
-    "recorded": "2026-11-14",
+    "note": "Phase 6.1 software-in-the-loop implementation: S&A harness (20 fidelity-enforced cases) and crypto harness (15 cases incl. cross-language AES-CCM round-trip); preregistrations P-006..P-011 added; cryptography added to the firmware test requirements.",
+    "recorded": "2026-11-15",
     "recorded_by": "chief weapons engineer",
     "statement_sha256": "89c813e601f029d8c123406f34f8f6518a66ba74bad03982576bcb2f394c7af8"
    },
    "history": [
+    {
+     "assumptions_sha256": "66c12587b3a25a92f0263a80ab7d42fa99d8656adc953b62bcac441efa314d3f",
+     "dependencies": {
+      "firmware_safety_tests": "0db8d57b66f7822e40646dfbf1d584d96dc9e17680f86f672c929a070e16a1dd",
+      "rocket_firmware": "6b0acdffafbc7dd8ed7efc4ee2bc2869f9d549fca8f41e8cf36893613be4fc14",
+      "timing_bench_sketch": "add4c75d552ef7640487daeb7eecf33def960ea100b510accad1590417658419",
+      "timing_fixture": "8cf6f0fe7a94d49f4c3a872fdd400437addce23f03057ae8abe22bb778e69467",
+      "timing_header": "e9743228cb3d7d938d266173d9014eba42612a06b985b951841a82f52f3b97ea",
+      "timing_source": "5038d4b4b943fed761edb9f6a907a9645d8a1b137e5e9dd0e7e625263a1b7bed",
+      "timing_tests": "2012e20b2348325ddf94478678f8f8e053a5ad09e5b501ed9391797250fd8540"
+     },
+     "kind": "human",
+     "note": "MIL-DEV-011 implemented: DISARM command; D-025 resolved; sponsor advisory documented. Digests recomputed on LF bytes.",
+     "recorded": "2026-11-14",
+     "recorded_by": "chief weapons engineer",
+     "statement_sha256": "89c813e601f029d8c123406f34f8f6518a66ba74bad03982576bcb2f394c7af8"
+    },
     {
      "assumptions_sha256": "66c12587b3a25a92f0263a80ab7d42fa99d8656adc953b62bcac441efa314d3f",
      "dependencies": {

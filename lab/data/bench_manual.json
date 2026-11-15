@@ -355,7 +355,7 @@
     },
     {
       "path": "docs/TRACEABILITY.md",
-      "sha256": "26bbc5d647c126d7f2b3b2a6e889ca3568298608e03493c05f114ebd69d88519"
+      "sha256": "4ac29a12dda99b1cfe5e7cc064fe63c261525d376cfe25b70387096b820417c3"
     },
     {
       "path": "docs/USB_BENCH_MONITOR.md",
@@ -370,5 +370,5 @@
       "sha256": "095ecfd873973560e544d43bcf264652c3816faed111c3fef34214aff23c7562"
     }
   ],
-  "revision": "2fead7bc0747448b349a6cb3fc687850505ba09474cd2a3101f7a2555a6bdb72"
+  "revision": "03dbce40bcbcbfb6d08d98676e07951cbb55f75e6ed296e7ee20d294d8512003"
 }
