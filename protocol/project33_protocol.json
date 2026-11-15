@@ -94,6 +94,16 @@
       "purpose": "Phase 5 AES-128-CCM authenticated-encrypted telemetry downlink"
     },
     {
+      "direction": "Dashboard -> Launcher -> Rocket",
+      "format": "BIT",
+      "purpose": "Phase 6 built-in test: rocket replies BIT,<mpu>,<gps>,<fuze>,<fins>,<mode>,<target>,<state> so the pre-fire checklist is machine-checkable"
+    },
+    {
+      "direction": "Dashboard -> Launcher",
+      "format": "MARK",
+      "purpose": "Phase 6 MARK-point designation: store the launcher's own surveyed GPS position as the target; echoed to the dashboard as MARK,<lat>,<lon>,<alt>"
+    },
+    {
       "direction": "Launcher -> Rocket",
       "format": "ARM",
       "purpose": "Arm rocket flight computer"

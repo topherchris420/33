@@ -5,12 +5,11 @@ Two parts of the project disagreeing is information. Each entry names both sides
 
 | Status | Effect | Count |
 |---|---|---|
-| OPEN | Contradicts a claim or requirement | 1 |
 | OPEN | Informational | 7 |
-| OPEN | Weakens a claim's support | 2 |
-| RESOLVED | Contradicts a claim or requirement | 6 |
+| OPEN | Weakens a claim's support | 1 |
+| RESOLVED | Contradicts a claim or requirement | 7 |
 | RESOLVED | Informational | 3 |
-| RESOLVED | Weakens a claim's support | 8 |
+| RESOLVED | Weakens a claim's support | 9 |
 
 ## D-001
 
@@ -300,7 +299,7 @@ Two parts of the project disagreeing is information. Each entry names both sides
 
 | Field | Value |
 |---|---|
-| Status | OPEN |
+| Status | RESOLVED |
 | Effect | Contradicts a claim or requirement |
 | Kind | requirement vs model — A model result does not meet a stated requirement. |
 | Claims | [C8](claims/C8.md) |
@@ -308,7 +307,9 @@ Two parts of the project disagreeing is information. Each entry names both sides
 - [evidence/archive/notes-v1/C8_clt.md](../evidence/archive/notes-v1/C8_clt.md): Claim: match or exceed aluminium stiffness; relies on increased section thickness.
 - [docs/EVIDENCE/C8_clt.csv](EVIDENCE/C8_clt.csv): Ex = 56.68 GPa, below 69.0 GPa.
 
-**Next action.** Calculate equal-mass section bending stiffness (R-C8-COMPONENT-STIFFNESS) or restate the claim.
+**Next action.** Coupon or component stiffness measurement if a CFRP fin is ever made (Phase 6 option).
+
+**Resolution.** The equal-mass section-stiffness calculation the historical note relied on is now committed (structures/fea_lite.py, docs/EVIDENCE/C8_equal_mass_stiffness.json): at equal areal mass the 4.0 mm quasi-isotropic CFRP fin section is 4.28x stiffer in bending than the 2.28 mm 7075-T6 section of the same mass. The raw material-modulus comparison (56.68 vs 69 GPa) understates the structural trade, which is why R-C8-MODULUS is kept honestly unmet on its own terms while the component-stiffness question is answered. (Phase 4 equal-mass plate-bending calculation, 2026-11-14; analytical, software-tested.)
 
 *Found by:* Requirement R-C8-MODULUS evaluated from the CLT output.
 
@@ -338,7 +339,7 @@ Two parts of the project disagreeing is information. Each entry names both sides
 
 | Field | Value |
 |---|---|
-| Status | OPEN |
+| Status | RESOLVED |
 | Effect | Weakens a claim's support |
 | Kind | design logic — Two implemented rules cannot both be satisfied in the intended sequence. |
 | Claims | [C2](claims/C2.md) |
@@ -346,9 +347,11 @@ Two parts of the project disagreeing is information. Each entry names both sides
 - [Firmware/Rocket/src/main.cpp](../Firmware/Rocket/src/main.cpp): Deploy fires only after a >15 g x-axis reading while not IDLE; IGNITE is refused unless the deploy flag is set.
 - [Firmware/Launcher/src/main.cpp](../Firmware/Launcher/src/main.cpp): After sending IGNITE the launcher waits 5 s for IGNITED, then aborts.
 
-**Next action.** A human decides the intended ordering. On the bench this ordering acts as an extra interlock; do not remove it without a safety review.
+**Next action.** None for the record; the 6.1 gate bench-validates the arming chain as designed.
 
 **Progress.** Phase 1 (MIL-DEV-010): the deploy trigger was re-derived for rail launch (2.0 g sustained 150 ms) because the G64W cannot produce the historical 15 g on this mass. The ignition-vs-deployment ordering question itself remains open and must be resolved by the Phase 6 live-fire program design.
+
+**Resolution.** Design decision (chief weapons engineer under the sponsor's Phase 4/6 direction): the PRIMARY ignition path is the launcher-side electric initiator (MIL-DEV-006), which lights the motor without any rocket command. The rocket then senses the sustained >=2 g launch event, deploys fins (~200 ms), and its fins-deployed gate on the rocket-side IGNITE servo path becomes an intentional extra interlock rather than a deadlock: the rocket-side servo is the BACKUP path, used only after a launch has already been detected (fins deployed), exactly when its gate passes. The wartime sequence is therefore: operator fire command -> launcher initiator -> acceleration -> fin deployment -> fuze S&A events. The launcher 5 s IGNITED-wait observes the rocket's IGNITED line, which the rocket emits from its own FLIGHT transition. (Design decision recorded by the chief weapons engineer, 2026-11-14, under the sponsor's militarization authority; documented in docs/MILITARY/FUZE.md and the operator card. The firmware gates themselves are unchanged.)
 
 *Found by:* Tracing the nominal command sequence through both firmwares.
 

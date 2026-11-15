@@ -29,18 +29,18 @@ No integration work in this repository should:
 ## Current status of each claim
 
 <!-- evidence:claims-table -->
-**Record state:** 8 claims · 1 contradicted · 2 unresolved · 5 supported within stated limits · 0 accepted physical measurements · 10 open discrepancies of 27 · 8 of 8 predictions not measured.
+**Record state:** 8 claims · 1 contradicted · 2 unresolved · 5 supported within stated limits · 0 accepted physical measurements · 8 open discrepancies of 27 · 8 of 8 predictions not measured.
 
 | Claim | Subject | Status | Strongest accepted evidence | Failing or disputed requirements | Open discrepancies |
 |---|---|---|---|---|---|
 | [C1](claims/C1.md) | Folding-fin mechanism model | **SUPPORTED WITHIN STATED LIMITS** | MODEL ONLY | none failing | none |
-| [C2](claims/C2.md) | Deployment timing | **UNRESOLVED** | IMPLEMENTATION ONLY | none failing | D-017, D-018, D-024, D-025 |
+| [C2](claims/C2.md) | Deployment timing | **UNRESOLVED** | IMPLEMENTATION ONLY | none failing | D-018, D-024, D-025 |
 | [C3](claims/C3.md) | CAD generator software | **SUPPORTED WITHIN STATED LIMITS** | IMPLEMENTATION ONLY | none failing | none |
 | [C4](claims/C4.md) | Material mass accounting | **UNRESOLVED** | MODEL ONLY | none failing | D-022 |
 | [C5](claims/C5.md) | Static-stability model | **SUPPORTED WITHIN STATED LIMITS** | MODEL ONLY | none failing | D-023 |
 | [C6](claims/C6.md) | Spring margin consistency | **SUPPORTED WITHIN STATED LIMITS** | MODEL ONLY | none failing | none |
 | [C7](claims/C7.md) | Deployment reliability evidence | **SUPPORTED WITHIN STATED LIMITS** | MODEL ONLY | none failing | none |
-| [C8](claims/C8.md) | Structural claim boundaries | **CONTRADICTED** | MODEL ONLY | R-C8-MODULUS NOT SATISFIED | D-015 |
+| [C8](claims/C8.md) | Structural claim boundaries | **CONTRADICTED** | MODEL ONLY | R-C8-MODULUS NOT SATISFIED | none |
 
 <!-- /evidence:claims-table -->
 

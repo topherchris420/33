@@ -53,6 +53,8 @@ Generated from `protocol/project33_protocol.json`.
 | Dashboard -> Launcher | `AUTH,<seq>,<operator>,<payload>,<hmac_hex>` | Phase 5 authenticated command wrapper: HMAC-SHA256 over seq,operator,payload with replay-window sequence numbers |
 | Dashboard -> Launcher | `OVERRIDE,enabler,<nonce_hex>,<hmacA_hex>,<hmacB_hex>` | Phase 5 wartime two-key OVERRIDE authorization (both operator keys must sign; valid 60 s) |
 | Launcher -> Dashboard | `ENC,<iv_hex>,<ct_hex>` | Phase 5 AES-128-CCM authenticated-encrypted telemetry downlink |
+| Dashboard -> Launcher -> Rocket | `BIT` | Phase 6 built-in test: rocket replies BIT,<mpu>,<gps>,<fuze>,<fins>,<mode>,<target>,<state> so the pre-fire checklist is machine-checkable |
+| Dashboard -> Launcher | `MARK` | Phase 6 MARK-point designation: store the launcher's own surveyed GPS position as the target; echoed to the dashboard as MARK,<lat>,<lon>,<alt> |
 | Launcher -> Rocket | `ARM` | Arm rocket flight computer |
 | Launcher -> Rocket | `IGNITE` | Start rocket ignition state |
 | Launcher -> Rocket | `DUMPLOG` | Request rocket onboard ring-buffer dump |

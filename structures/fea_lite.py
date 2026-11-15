@@ -86,6 +86,40 @@ def compute_hinge_fos():
     fos = Sy / sigma_vm
     return fos, sigma_vm, tau, sigma_b
 
+def equal_mass_stiffness():
+    """
+    Phase 4: equal-mass section bending stiffness, CFRP vs aluminium (D-015).
+
+    The historical C8 claim ("match or exceed aluminium stiffness; relies on
+    increased section thickness") is made concrete: at EQUAL MASS PER UNIT
+    AREA, compare bending stiffness per unit width, D = E t^3 / 12.
+
+    - CFRP quasi-isotropic laminate: Ex = 56.68 GPa (computed above),
+      density 1600 kg/m^3, section thickness 4.0 mm (molded fin).
+    - 7075-T6 aluminium: E = 71.7 GPa, density 2810 kg/m^3; the equal-mass
+      section is thinner: t_al = t_cfrp * (rho_cfrp / rho_al).
+    """
+    Ex_cfrp = 56.68e9
+    E_al = 71.7e9
+    rho_cfrp = 1600.0
+    rho_al = 2810.0
+    t_cfrp = 4.0e-3
+
+    t_al = t_cfrp * rho_cfrp / rho_al
+    D_cfrp = Ex_cfrp * t_cfrp ** 3 / 12.0
+    D_al = E_al * t_al ** 3 / 12.0
+    return {
+        'cfrp': {'modulus_GPa': 56.68, 'thickness_mm': 4.0, 'density': rho_cfrp},
+        'aluminium_7075': {'modulus_GPa': 71.7, 'thickness_mm': round(t_al * 1000, 2), 'density': rho_al},
+        'bending_stiffness_cfrp_N_m': D_cfrp,
+        'bending_stiffness_aluminium_N_m': D_al,
+        'stiffness_ratio_cfrp_over_al': round(D_cfrp / D_al, 2),
+        'conclusion': 'At equal mass per unit area the CFRP section is stiffer in bending '
+                     'by the ratio above; the material-modulus comparison alone (56.68 vs '
+                     '69 GPa) understates the structural trade.',
+    }
+
+
 def militarized_hinge_fos():
     """
     Phase 4 militarized hinge-pin check (all MODELED).
@@ -167,6 +201,14 @@ def generate_reports(clt_csv_path, fos_json_path):
 
     mil_path = Path(fos_json_path).parent / 'C8_hinge_fos_military.json'
     mil_path.write_text(json.dumps(militarized_hinge_record(), indent=2) + "\n", encoding="utf-8")
+
+    eq_path = Path(fos_json_path).parent / 'C8_equal_mass_stiffness.json'
+    eq = equal_mass_stiffness()
+    eq['schema'] = 'project33.c8.equal_mass_stiffness/1'
+    eq['generator'] = 'structures/fea_lite.py'
+    eq['evidence_class'] = 'MODELED'
+    eq['basis'] = 'closed-form plate bending at equal areal mass; no coupon was tested'
+    eq_path.write_text(json.dumps(eq, indent=2) + "\n", encoding="utf-8")
 
 
 if __name__ == '__main__':

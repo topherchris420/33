@@ -286,6 +286,21 @@ void processSerialCommands() {
             else if (cmdBuffer == Project33Protocol::CMD_DUMPLOG) {
                 dumpFlightLog();
             }
+            // Phase 6 (F-117 OC-IP BIT discipline): machine-readable preflight
+            // self-test. The reply lets the operator's checklist be checked
+            // instead of trusted.
+            else if (cmdBuffer == "BIT") {
+                bool rocketGpsFix = rocketGps.location.isValid();
+                String bitLine = String("BIT,")
+                    + (mpuHealthy ? "1" : "0") + ","
+                    + (rocketGpsFix ? "1" : "0") + ","
+                    + fuzeState + ","
+                    + (is_fins_deployed() ? "1" : "0") + ","
+                    + engageMode + ","
+                    + (guidanceTarget.valid ? "1" : "0") + ","
+                    + sysState;
+                Serial2.println(bitLine);
+            }
             else if (cmdBuffer.startsWith("PID,")) {
                 float newKp = 0.0;
                 float newKd = 0.0;

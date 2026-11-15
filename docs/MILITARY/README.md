@@ -42,3 +42,23 @@ and continue to describe the bench-validation program with their own evidence
 ladder. Where a militarization change invalidates an inert-scope rule, the
 override is recorded in [DEVIATIONS.md](DEVIATIONS.md), never silently deleted.
 The inert record is the audit trail that makes the militarized record credible.
+
+## Technology provenance (Phase 6)
+
+Four fire-control technologies were adopted from **TO 1F-117A-1A, OC-IP
+Supplement to the Utility Flight Manual, USAF Series F-117A Aircraft
+(3 Feb 1992)** — the program sponsor's reference copy (a 94 MB scan in the
+sponsor's Downloads; **the scan itself is deliberately NOT committed**, per
+this repository's own manual-scan rule, `tests/test_lab_data.py::
+test_manual_scan_is_not_published`):
+
+| Adopted technology | F-117 source concept | Project 33 implementation |
+|---|---|---|
+| **BIT** — preflight built-in test | FCS prestart BIT procedure (numbered tests, pass/fail per item) | `BIT` command: rocket replies `BIT,<mpu>,<gps>,<fuze>,<fins>,<mode>,<target>,<state>`; the dashboard renders it so the operator's pre-fire checklist is machine-checked, not trusted |
+| **MARK** — one-button designation | MARK points (store current position as a destination) | `MARK` command: the launcher designates its own surveyed GPS position as the target and echoes `MARK,<lat>,<lon>,<alt>` back for verification |
+| **Range readout + out-of-envelope warning** | HUD range readout; out-of-corridor warning symbol | Dashboard fire-control advisory: great-circle range and bearing from the launcher GPS fix to the target, red **OUT OF ENVELOPE — DO NOT FIRE** beyond the MIL-33 ballistic envelope (3.3 km) |
+| **TTG/ETA** | HUD time-to-go / estimated time of arrival | Time-to-go from range and live ground speed (NAV packets in flight; modeled 200 m/s cruise on the ground) |
+
+The display doctrine also matches the F-117's invalidity-flagging rule the
+repository already follows: invalid data is flagged, never zero-filled.
+

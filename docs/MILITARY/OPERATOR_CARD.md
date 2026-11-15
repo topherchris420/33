@@ -14,9 +14,13 @@ the machine only enforces what you check.
    defaults (ask the armorer).
 4. **LINK** — dashboard connected to launcher AP; `FUZE,SAFE` and rocket
    heartbeat visible; GPS fix on launcher.
-5. **TARGET** — enter target lat/lon/alt on the fire-control panel → **SET
-   TARGET** → confirm the rocket echoes it. Wrong target = wrong place.
-6. **MODE** — `MITL` unless ordered otherwise. `AUTO` (fire-and-forget) only
+5. **BIT** — press **BIT**: every field green (IMU OK, GPS OK, FUZE SAFE,
+   FINS STOWED, mode, TGT as intended). Any FAIL = stop and fix.
+6. **TARGET** — enter target lat/lon/alt → **SET TARGET** (or **MARK** to
+   designate the launcher's own position). Check the **RNG** readout: green
+   and inside the envelope; red OUT OF ENVELOPE = do not fire. TTG is your
+   flight-time estimate.
+7. **MODE** — `MITL` unless ordered otherwise. `AUTO` (fire-and-forget) only
    on explicit order — it is an arm-mode decision, not a convenience.
 
 ## ARM

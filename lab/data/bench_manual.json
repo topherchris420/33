@@ -303,11 +303,11 @@
     },
     {
       "path": "docs/DISCREPANCIES.md",
-      "sha256": "39b0bd03dd16b3c9b97f6b22d79edb8041b148c7b9b65948163376c18c959dd4"
+      "sha256": "0c1c12c939549a142006c04b54e04a9f48749db9dab2dcb145a72b9c308e312e"
     },
     {
       "path": "docs/EVIDENCE_OBSERVATORY.md",
-      "sha256": "4a19a8f9a008d4c61c216aa4e6fe9c172c8ab731d3ea0035d5b920a1427f2743"
+      "sha256": "82dbb385a52c823911aeca5e65c91a0ddd6cd4ae352ed8aaf6e99054db5334c3"
     },
     {
       "path": "docs/GROUND_STATUS.md",
@@ -327,11 +327,11 @@
     },
     {
       "path": "docs/PROJECT_STATUS.md",
-      "sha256": "f83e9025bb69a2d1487ee81cf6fe28fce14a766f894191f9de453999b2233dd4"
+      "sha256": "86fac14001ea365875341c95127672f84f96cc94d1982daaf771596b3a63fb1e"
     },
     {
       "path": "docs/PROTOCOL.md",
-      "sha256": "e98582b98a2655d551d564886f892a4b65b892c7657b7427be0149c97a4097c3"
+      "sha256": "e6c673d9c528f6cc723d5e4728c19876952a7ce9331663ba28b1a0437bda0494"
     },
     {
       "path": "docs/RELEASE_READINESS.md",
@@ -355,7 +355,7 @@
     },
     {
       "path": "docs/TRACEABILITY.md",
-      "sha256": "989200769c82cc77caa38d8d2194e1678d408af731be7d519fe8c14816be99b5"
+      "sha256": "26bbc5d647c126d7f2b3b2a6e889ca3568298608e03493c05f114ebd69d88519"
     },
     {
       "path": "docs/USB_BENCH_MONITOR.md",
@@ -370,5 +370,5 @@
       "sha256": "095ecfd873973560e544d43bcf264652c3816faed111c3fef34214aff23c7562"
     }
   ],
-  "revision": "b743a537f4959a44a0a1cb92eaf340ce8239544879c2f5b39eed6ed56aac4973"
+  "revision": "35bedd0a4af0d9aa38f157e6646e1f43732e5ad4aebdf74f45ae54b9cc28fa67"
 }

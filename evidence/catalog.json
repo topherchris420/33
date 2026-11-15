@@ -602,6 +602,27 @@
       "description": "Hinge-pin stresses and factor of safety with inputs and load case."
     },
     {
+      "id": "hinge_data_military",
+      "path": "docs/EVIDENCE/C8_hinge_fos_military.json",
+      "class": "analytical",
+      "format": "json",
+      "derived_from": [
+        "structural_source",
+        "design_point"
+      ],
+      "description": "Phase 4 militarized hinge-pin check at the 65.7 g launch-shock budget: FOS 5.71."
+    },
+    {
+      "id": "equal_mass_data",
+      "path": "docs/EVIDENCE/C8_equal_mass_stiffness.json",
+      "class": "analytical",
+      "format": "json",
+      "derived_from": [
+        "structural_source"
+      ],
+      "description": "Equal-mass section bending stiffness: the 4.0 mm CFRP section is 4.28x stiffer than the equal-mass 2.28 mm 7075-T6 section (D-015)."
+    },
+    {
       "id": "structural_tests",
       "path": "tests/test_structural.py",
       "class": "test_procedure",

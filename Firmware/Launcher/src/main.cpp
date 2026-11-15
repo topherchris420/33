@@ -416,6 +416,26 @@ void processUDP() {
             // rocket accepts both only before flight; the launcher only
             // relays them, it does not interpret coordinates.
             Serial2.println(msg);
+        } else if (msg == "MARK") {
+            // Phase 6 (F-117 OC-IP MARK-point discipline): designate the
+            // launcher's own surveyed GPS position as the target with one
+            // command. Requires a valid fix; the designated point is echoed
+            // to the dashboard so the operator verifies what was stored.
+            if (gps.location.isValid() && gps.location.lat() != 0.0) {
+                String targetMsg = String("TARGET,") + String(gps.location.lat(), 6) + ","
+                                 + String(gps.location.lng(), 6) + ","
+                                 + String(gps.altitude.meters(), 1);
+                Serial2.println(targetMsg);
+                sendToDashboard("MARK," + String(gps.location.lat(), 6) + ","
+                                + String(gps.location.lng(), 6) + ","
+                                + String(gps.altitude.meters(), 1));
+            } else {
+                sendToDashboard("CMD_REJECT:mark_no_gps_fix");
+            }
+        } else if (msg == "BIT") {
+            // Phase 6 (BIT discipline): relay the rocket self-test; the
+            // rocket's BIT reply travels back as a raw line.
+            Serial2.println("BIT");
         } else if (msg.startsWith("PID,")) {
             if (isValidPidCommand(msg)) {
                 Serial2.println(msg);
