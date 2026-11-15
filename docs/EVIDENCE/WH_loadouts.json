@@ -1,0 +1,104 @@
+{
+  "schema": "project33.mil.warheads/1",
+  "generator": "Simulation/warheads.py",
+  "design_point_revision": "2026-11-14-phase1",
+  "evidence_class": "MODELED",
+  "bay": {
+    "total_mass_kg": 0.25,
+    "cg_m": 0.03,
+    "constant_mass_note": "all loadouts share the 250 g bay total (case, liner, fill, ballast), so mass properties and the Phase 1 static margin hold for every loadout"
+  },
+  "static_margin_per_loadout": {
+    "GP_HE_FRAG": {
+      "sm_ignition_cal": 1.663,
+      "sm_burnout_cal": 1.758,
+      "cg_ignition_m": 0.3234,
+      "wet_mass_kg": 1.903
+    },
+    "HEAT": {
+      "sm_ignition_cal": 1.663,
+      "sm_burnout_cal": 1.758,
+      "cg_ignition_m": 0.3234,
+      "wet_mass_kg": 1.903
+    },
+    "EFP": {
+      "sm_ignition_cal": 1.663,
+      "sm_burnout_cal": 1.758,
+      "cg_ignition_m": 0.3234,
+      "wet_mass_kg": 1.903
+    }
+  },
+  "static_margin_window_cal": [
+    1.5,
+    2.0
+  ],
+  "static_margin_all_loadouts_in_window": true,
+  "cp_m": 0.45013,
+  "terminal_ballistics": {
+    "GP_HE_FRAG": {
+      "gurney_velocity_m_s": 2091.0,
+      "fragment_class_g": 0.2,
+      "lethal_radius_energy_limit_58j_m": 67.0,
+      "lethal_radius_energy_limit_80j_m": 56.4,
+      "fragment_spread_radius_p50_m": 6.8,
+      "casualty_radius_m": 6.8,
+      "casualty_radius_definition": "radius where a 0.5 m^2 presented human is hit with >=50% probability AND the striking fragment still carries >=58 J; the smaller of the two limits governs",
+      "effective_fragment_count_est": 287,
+      "assumptions": [
+        "Gurney cylinder relation with Comp A5 sqrt(2E) = 2600 m/s",
+        "spherical-fragment drag, Cd 0.47, sea-level density",
+        "natural fragmentation, ~0.2 g class, half the case mass fragmenting usefully",
+        "hemispherical fragment spread, 0.5 m^2 presented area, no terrain masking"
+      ],
+      "confidence": "MODERATE: closed-form Gurney, drag, and spread estimates; no arena test performed"
+    },
+    "HEAT": {
+      "liner_cd_mm": 58.0,
+      "liner_angle_deg": 60,
+      "jet_length_cd": [
+        1.0,
+        1.5
+      ],
+      "penetration_rha_mm": [
+        62.0,
+        93.0
+      ],
+      "optimal_standoff_mm": [
+        116.0,
+        174.0
+      ],
+      "jet_formation": "unconfined copper cone, Comp B fill, wave shaper optional",
+      "assumptions": [
+        "hydrodynamic jet penetration P ~ L_jet * sqrt(rho_jet/rho_target)",
+        "jet length 1.0-1.5 liner CD, consistent with the P/CD 1.0-2.0 band for charges this size",
+        "RHA target at normal incidence, fuze-initiated at 2 CD standoff"
+      ],
+      "confidence": "MODERATE: calibrated closed-form; shaped-charge performance is highly design-sensitive",
+      "defeats": "APC/IFV side and roof armor (~30-50 mm RHA); not MBT frontal armor"
+    },
+    "EFP": {
+      "efp_velocity_m_s": 2303.0,
+      "penetration_rha_mm": [
+        28.0,
+        44.0
+      ],
+      "effective_standoff_m": [
+        1.0,
+        50.0
+      ],
+      "assumptions": [
+        "Gurney plate relation with a dish liner mass ratio giving 1.6-2.2 km/s",
+        "penetration 0.5-0.8 liner CD RHA at 1-50 m standoff (small-EFP literature band)",
+        "liner: armco iron or OFHC copper dish"
+      ],
+      "confidence": "LOW-TO-MODERATE: EFP performance scatters widely with liner fabrication; stated as a band",
+      "defeats": "light-skinned vehicles and APC roofs at standoff; soft targets out to 50 m"
+    }
+  },
+  "fuze_summary": {
+    "baseline": "contact point-detonating, crush switch plus accelerometer impact sensing, delay-selectable 0/5/10/20 ms",
+    "standoff_option": "5.8 GHz CW Doppler RF proximity module gated 2-6 m for the HEAT loadout optimal standoff",
+    "arming": "dual-event S&A: sustained >=2 g launch acceleration AND canard-deployment confirmation AND motor-burn time gate; no single event or stray signal can arm the fire set"
+  },
+  "basis": "closed-form terminal-ballistics estimates at the shared design point; no warhead has been built or detonated"
+}

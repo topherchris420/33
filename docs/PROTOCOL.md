@@ -31,6 +31,11 @@ Generated from `protocol/project33_protocol.json`.
 | `CMD_REJECT_IGNITE_NOT_ARMED` | `CMD_REJECT:ignite_not_armed` |
 | `CMD_REJECT_IGNITE_FINS_NOT_DEPLOYED` | `CMD_REJECT:ignite_fins_not_deployed` |
 | `CMD_REJECT_SENSOR_UNAVAILABLE` | `CMD_REJECT:sensor_unavailable` |
+| `FUZE_PREFIX` | `FUZE,` |
+| `FUZE_STATE_SAFE` | `SAFE` |
+| `FUZE_STATE_ARMED` | `ARMED` |
+| `FUZE_STATE_FUNCTION` | `FUNCTION` |
+| `CMD_FUZE_DELAY` | `FUZEDELAY` |
 
 ## Messages
 
@@ -40,6 +45,8 @@ Generated from `protocol/project33_protocol.json`.
 | Rocket -> Launcher | `IGNITED` | Rocket-side ignition acknowledgement |
 | Rocket -> Launcher | `DATA,<ax>,<ay>,<az>,<roll>,<rate>,<output>,<state>,<Kp>,<Kd>,<skew>` | Live rocket telemetry packet |
 | Rocket -> Launcher | `LOG,<ms>,<roll>,<rate>,<output>,<state>,<Kp>,<Kd>,<skew>` | Onboard ring-buffer log dump sample |
+| Rocket -> Launcher | `FUZE,<state>` | Warhead fuze state (SAFE / ARMED / FUNCTION); dual-event S&A arming chain telemetry |
+| Launcher -> Rocket | `FUZEDELAY,<ms>` | Set point-detonating fuze delay (0, 5, 10, or 20 ms); zero accepted in IDLE or ARMED |
 | Launcher -> Rocket | `ARM` | Arm rocket flight computer |
 | Launcher -> Rocket | `IGNITE` | Start rocket ignition state |
 | Launcher -> Rocket | `DUMPLOG` | Request rocket onboard ring-buffer dump |

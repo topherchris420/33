@@ -331,7 +331,7 @@
     },
     {
       "path": "docs/PROTOCOL.md",
-      "sha256": "0a10d053d4714643bf828b7ee90eaa42ee82b25c283b72ff1a83931d903bb70e"
+      "sha256": "4238ef87740c6592d85aa1fa46fc366ff82ea9d392ccd916c6f382fa2b095e39"
     },
     {
       "path": "docs/RELEASE_READINESS.md",
@@ -343,7 +343,7 @@
     },
     {
       "path": "docs/SAFETY.md",
-      "sha256": "23735b90e04e3026f5d8db3ea9b1d0216d0aad542cd1ef63f839c4d26f0fb578"
+      "sha256": "72589c0515ee6b7cdab41d3942b18d48e5ff3a721fb86438c4b6a274448a817f"
     },
     {
       "path": "docs/TECHNOLOGY_INTEGRATION.md",
@@ -367,8 +367,8 @@
     },
     {
       "path": "docs/WIRING.md",
-      "sha256": "a707d10558f18decdf53708184fb0ae7ccd74da85953f5bb8c2e6422e260afcb"
+      "sha256": "6819c6f38b1a65a488e635c07a8422bd32f60362212b26b7449d5fdb2f189f61"
     }
   ],
-  "revision": "c0ec46fa6dd2b027b30bb734c499e8857dea53b3d84270e2695faf91cde5503b"
+  "revision": "ba413c1e3f0df5ebaa92abde1447d7210714823b20f917a9cad0545a74e8d60c"
 }

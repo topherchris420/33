@@ -25,6 +25,16 @@ const int DOWN_SERVO_PIN = 14;
 const int IGNITE_SERVO_ON = 150;
 const int IGNITE_SERVO_OFF = 35;
 
+// Phase 2 warhead fuze (dual-event S&A, docs/MILITARY/FUZE.md). GPIO 32 is
+// clear of every servo, UART, I2C, and deploy assignment in docs/WIRING.md.
+const int FUZE_FIRE_PIN = 32;
+// Impact detection: sustained deceleration while in FLIGHT with the fuze
+// armed. The MPU6050 is at +/-16 g, so a real impact rails the reading;
+// 8 g is above any drag or tumble deceleration this airframe produces.
+const float FUZE_IMPACT_THRESHOLD_MS2 = -8.0 * 9.80665;
+// Arming flight-time gate: motor burn (2.1 s) plus 0.5 s (design_point.json).
+const unsigned long FUZE_FLIGHT_TIME_GATE_MS = 2600;
+
 const int LEFT_CENTER = 115;
 const int RIGHT_CENTER = 80;
 const int UP_CENTER = 80;
@@ -65,6 +75,16 @@ unsigned long igniteStartTime = 0;
 // launch from bench handling; the sustain time does.
 unsigned long launchDetectStartMs = 0;
 bool launchDetectActive = false;
+
+// Phase 2 fuze state (dual-event S&A): SAFE -> ARMED requires launch
+// acceleration AND canard-deployment confirmation AND the flight-time gate;
+// ARMED -> FUNCTION requires a real impact deceleration. No single event
+// or stray signal can arm or function the fuze.
+String fuzeState = Project33Protocol::FUZE_STATE_SAFE;
+int fuzeDelayMs = 0;
+unsigned long flightStartMs = 0;
+unsigned long fuzeFunctionMs = 0;
+unsigned long lastFuzeSent = 0;
 
 const int FLIGHT_LOG_CAPACITY = 240;
 const int LOG_STATE_LEN = 12;
@@ -236,6 +256,23 @@ void processSerialCommands() {
                     Serial2.println(Project33Protocol::CMD_REJECT_PID_INVALID);
                 }
             }
+            // Phase 2: point-detonating fuze delay selection. Accepted only
+            // before flight; the value set is one of 0/5/10/20 ms.
+            else if (cmdBuffer.startsWith("FUZEDELAY,")) {
+                int delayVal = cmdBuffer.substring(10).toInt();
+                bool validDelay = delayVal == 0 || delayVal == 5 || delayVal == 10 || delayVal == 20;
+                if (sysState == "IDLE" || sysState == "ARMED") {
+                    if (validDelay) {
+                        fuzeDelayMs = delayVal;
+                        Serial.printf("Fuze delay set: %d ms\n", fuzeDelayMs);
+                    } else {
+                        Serial.printf("Fuze delay validation failed: %s\n", cmdBuffer.c_str());
+                        Serial2.println(Project33Protocol::CMD_REJECT_PID_INVALID);
+                    }
+                } else {
+                    Serial2.println(Project33Protocol::CMD_REJECT_ARM_NOT_IDLE);
+                }
+            }
             cmdBuffer = "";
         } else if (c != '\r') {
             if (cmdBuffer.length() >= MAX_SERIAL_COMMAND_LENGTH) {
@@ -252,6 +289,8 @@ void setup() {
     Serial.begin(115200);
     Serial2.begin(115200, SERIAL_8N1, RX2_PIN, TX2_PIN);
     init_project_33_deploy_system();
+    pinMode(FUZE_FIRE_PIN, OUTPUT);
+    digitalWrite(FUZE_FIRE_PIN, LOW);
     Serial2.setTimeout(20);
     delay(1500);
     Wire.begin(21, 22);
@@ -354,7 +393,40 @@ void loop() {
         // Bench note: FLIGHT state reflects actuation commanded, not confirmed ignition;
         // do not treat this timer-only transition as live propulsion telemetry.
         sysState = "FLIGHT";
+        flightStartMs = current_time;
         Serial2.println(Project33Protocol::IGNITED);
+    }
+
+    // ----- Phase 2 fuze S&A (docs/MILITARY/FUZE.md) -----
+    // Arming: launch acceleration AND canard-deployment confirmation AND
+    // flight-time gate. All three must hold; each alone does nothing.
+    if (fuzeState == Project33Protocol::FUZE_STATE_SAFE
+        && sysState == "FLIGHT"
+        && is_fins_deployed()
+        && flightStartMs > 0
+        && (current_time - flightStartMs) >= FUZE_FLIGHT_TIME_GATE_MS) {
+        fuzeState = Project33Protocol::FUZE_STATE_ARMED;
+        Serial2.println(String(Project33Protocol::FUZE_PREFIX) + fuzeState);
+        lastFuzeSent = current_time;
+    }
+    // Function: real impact deceleration with the fuze armed.
+    if (fuzeState == Project33Protocol::FUZE_STATE_ARMED
+        && sysState == "FLIGHT"
+        && a.acceleration.x < FUZE_IMPACT_THRESHOLD_MS2) {
+        fuzeState = Project33Protocol::FUZE_STATE_FUNCTION;
+        fuzeFunctionMs = current_time;
+        Serial2.println(String(Project33Protocol::FUZE_PREFIX) + fuzeState);
+        lastFuzeSent = current_time;
+    }
+    // Fire output after the selectable PD delay. FUNCTION state is one-shot.
+    if (fuzeState == Project33Protocol::FUZE_STATE_FUNCTION
+        && (current_time - fuzeFunctionMs) >= (unsigned long)fuzeDelayMs) {
+        digitalWrite(FUZE_FIRE_PIN, HIGH);
+    }
+    // Fuze state heartbeat so the ground station sees an unarmed fuze.
+    if (current_time - lastFuzeSent >= 1000) {
+        Serial2.println(String(Project33Protocol::FUZE_PREFIX) + fuzeState);
+        lastFuzeSent = current_time;
     }
 
     if (current_time - lastTelemetrySent >= 50) {

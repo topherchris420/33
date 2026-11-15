@@ -62,6 +62,7 @@ def test_rocket_gpio_assignments_are_unique():
         "RIGHT_SERVO_PIN",
         "UP_SERVO_PIN",
         "DOWN_SERVO_PIN",
+        "FUZE_FIRE_PIN",
     ):
         pins[name] = int(_const(rocket, "int", name))
     pins["DEPLOY_OUTPUT_PIN"] = int(_const(isr_cpp, "int", "DEPLOY_OUTPUT_PIN"))
@@ -175,6 +176,29 @@ def test_rejection_logging_does_not_reorder_or_weaken_gates():
 def test_launcher_reports_missing_altitude_as_nan_not_zero():
     launcher = _read("Firmware/Launcher/src/main.cpp")
     assert "float altOut = bmpHealthy ? filteredAlt : NAN;" in launcher
+
+
+def test_fuze_sa_requires_all_three_arming_events():
+    # Phase 2 dual-event S&A (docs/MILITARY/FUZE.md): no single event can arm.
+    rocket = _read("Firmware/Rocket/src/main.cpp")
+    assert 'fuzeState == Project33Protocol::FUZE_STATE_SAFE' in rocket
+    assert 'sysState == "FLIGHT"' in rocket
+    assert "is_fins_deployed()" in rocket
+    assert "(current_time - flightStartMs) >= FUZE_FLIGHT_TIME_GATE_MS" in rocket
+    # Function requires an armed fuze plus a real impact deceleration.
+    assert "a.acceleration.x < FUZE_IMPACT_THRESHOLD_MS2" in rocket
+    # The fire output is safe LOW at boot and only rises after the PD delay.
+    assert "digitalWrite(FUZE_FIRE_PIN, LOW);" in rocket
+    assert "digitalWrite(FUZE_FIRE_PIN, HIGH);" in rocket
+    # The fuze delay set is closed and only settable before flight.
+    assert "delayVal == 0 || delayVal == 5 || delayVal == 10 || delayVal == 20" in rocket
+
+
+def test_fuze_state_is_telemetered():
+    rocket = _read("Firmware/Rocket/src/main.cpp")
+    assert "Project33Protocol::FUZE_PREFIX" in rocket
+    # A fuze that never arms must be visible on the ground station, not at the target.
+    assert "lastFuzeSent >= 1000" in rocket
 
 
 def test_safety_gate_registry_matches_firmware_source():

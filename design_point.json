@@ -89,5 +89,54 @@
     "deploy_start_speed_m_s": 30.0,
     "mach_range": [0.0, 0.21],
     "barrowman_validity": "subsonic, low aspect-ratio interference included; no compressibility correction applied"
+  },
+  "warhead_bay": {
+    "comment": "Phase 2: forward bay ahead of the CG, replacing the Phase 1 inert ballast. CONSTANT TOTAL BAY MASS of 250 g across all loadouts (case + liner + fill + structural ballast ring), so every loadout shares the Phase 1 mass properties and static margin 1.66-1.76 cal. Bay occupies the nose cone and the first 60 mm of the forward body; the canard servo ring moves aft of the bay.",
+    "bay_total_mass_kg": 0.250,
+    "bay_cg_m": 0.030,
+    "bay_od_mm": 70.0,
+    "bay_length_mm": 85.0,
+    "case_material": "7075-T6 or heat-treated steel, fragmenting",
+    "loadouts": {
+      "GP_HE_FRAG": {
+        "description": "General purpose HE-fragmentation",
+        "explosive_kg": 0.110,
+        "explosive_type": "Composition A5 (TNT equivalent factor 1.15; effective ~127 g TNT-eq)",
+        "case_and_fragments_kg": 0.115,
+        "fragment_design": "natural fragments from heat-treated case, ~0.15-0.25 g class",
+        "ballast_kg": 0.025,
+        "fuze": "contact PD, instantaneous or 0-20 ms selectable"
+      },
+      "HEAT": {
+        "description": "Shaped charge, anti-armor",
+        "explosive_kg": 0.120,
+        "explosive_type": "Composition B (TNT equivalent factor 1.12)",
+        "liner_kg": 0.050,
+        "liner_material": "OFHC copper, 60 deg conical, liner CD 58 mm",
+        "case_and_wave_shaper_kg": 0.060,
+        "ballast_kg": 0.020,
+        "fuze": "contact PD through standoff probe, PI (point initiate) at 2 CD standoff"
+      },
+      "EFP": {
+        "description": "Explosively-formed penetrator (light armor / vehicle kill at standoff)",
+        "explosive_kg": 0.095,
+        "explosive_type": "Composition A5",
+        "liner_kg": 0.040,
+        "liner_material": "armco iron or OFHC copper dish, CD 55 mm",
+        "case_kg": 0.055,
+        "ballast_kg": 0.060,
+        "fuze": "RF proximity (2-6 m gate) or contact PD"
+      }
+    }
+  },
+  "fuze": {
+    "comment": "Phase 2: dual-event S&A. Safe until launch; armed only by BOTH sustained launch acceleration (the same 2 g / 150 ms event that gates fin deployment) AND canard-deployment confirmation, plus a motor-burn time gate. The S&A logic lives in rocket firmware with a hardware interrupt chain to the fire set.",
+    "type": "contact PD baseline, standoff RF proximity option, delay-selectable",
+    "arming_events": ["sustained launch acceleration >= 2 g for 150 ms",
+                       "canard deployment confirmed (fins-deployed latch)",
+                       "flight time >= motor burn time + 0.5 s"],
+    "pd_delay_options_ms": [0, 5, 10, 20],
+    "proximity_option": "5.8 GHz CW Doppler RF module, 0.5-2 mW, gated 2-6 m; acoustic backup under consideration",
+    "backup_initiation": "ignition servo retained for motor ignition only (MIL-DEV-006); electric initiator is the primary motor path"
   }
 }

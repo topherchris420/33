@@ -25,7 +25,12 @@
     "CMD_REJECT_ARM_NOT_IDLE": "CMD_REJECT:arm_not_idle",
     "CMD_REJECT_IGNITE_NOT_ARMED": "CMD_REJECT:ignite_not_armed",
     "CMD_REJECT_IGNITE_FINS_NOT_DEPLOYED": "CMD_REJECT:ignite_fins_not_deployed",
-    "CMD_REJECT_SENSOR_UNAVAILABLE": "CMD_REJECT:sensor_unavailable"
+    "CMD_REJECT_SENSOR_UNAVAILABLE": "CMD_REJECT:sensor_unavailable",
+    "FUZE_PREFIX": "FUZE,",
+    "FUZE_STATE_SAFE": "SAFE",
+    "FUZE_STATE_ARMED": "ARMED",
+    "FUZE_STATE_FUNCTION": "FUNCTION",
+    "CMD_FUZE_DELAY": "FUZEDELAY"
   },
   "messages": [
     {
@@ -47,6 +52,16 @@
       "direction": "Rocket -> Launcher",
       "format": "LOG,<ms>,<roll>,<rate>,<output>,<state>,<Kp>,<Kd>,<skew>",
       "purpose": "Onboard ring-buffer log dump sample"
+    },
+    {
+      "direction": "Rocket -> Launcher",
+      "format": "FUZE,<state>",
+      "purpose": "Warhead fuze state (SAFE / ARMED / FUNCTION); dual-event S&A arming chain telemetry"
+    },
+    {
+      "direction": "Launcher -> Rocket",
+      "format": "FUZEDELAY,<ms>",
+      "purpose": "Set point-detonating fuze delay (0, 5, 10, or 20 ms); zero accepted in IDLE or ARMED"
     },
     {
       "direction": "Launcher -> Rocket",

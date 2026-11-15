@@ -313,6 +313,10 @@ void processUDP() {
             Serial2.println(Project33Protocol::CMD_CALIBRATE);
         } else if (msg == Project33Protocol::DASHBOARD_DUMPLOG) {
             Serial2.println(Project33Protocol::CMD_DUMPLOG);
+        } else if (msg.startsWith("FUZEDELAY,")) {
+            // Phase 2: point-detonating fuze delay selection (0/5/10/20 ms).
+            // The rocket refuses it outside IDLE/ARMED and validates the value.
+            Serial2.println(msg);
         } else if (msg.startsWith("PID,")) {
             if (isValidPidCommand(msg)) {
                 Serial2.println(msg);
