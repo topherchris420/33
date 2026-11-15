@@ -18,10 +18,10 @@ Take apart a folding-fin rocket concept. Explore the models, inspect the firmwar
 
 ## Current status
 
-Project 33 is a **bench-validation prototype**. The repository contains analytical models, CAD, ESP32 firmware, telemetry tools, and a browser laboratory. No physical measurement has been accepted into its evidence record. Flight readiness has not been established; live propulsion is outside this repository's validation boundary.
+Project 33 began as a **bench-validation prototype** and is being converted, under the program sponsor's direction of 2026-11-14, into a **deployable guided munition**. The repository contains analytical models, CAD, ESP32 firmware, telemetry tools, a browser laboratory, and — since the Phase 1 militarization — a shared weaponized design point. No physical measurement has been accepted into its evidence record. Every claim stays labeled MODELED, MEASURED, or FIELDLED; nothing simulated is presented as fielded. The inert evidence record remains the audit trail; every weaponized-scope override is registered in the [militarization deviation register](docs/MILITARY/DEVIATIONS.md), and the [Phase 1 gate report](docs/MILITARY/PHASE1_GATES.md) documents the platform-stabilization gates (linkage closure and over-center lock, static margin 1.66–1.76 cal, deployment reliability 99.93% — all MODELED).
 
 <!-- evidence:counts -->
-**Record state:** 8 claims · 3 contradicted · 4 unresolved · 1 supported within stated limits · 0 accepted physical measurements · 20 open discrepancies of 27 · 5 of 5 predictions not measured.
+**Record state:** 8 claims · 1 contradicted · 2 unresolved · 5 supported within stated limits · 0 accepted physical measurements · 10 open discrepancies of 27 · 8 of 8 predictions not measured.
 <!-- /evidence:counts -->
 
 The failed and disputed requirements remain visible. They define the work ahead.
@@ -142,18 +142,18 @@ The cover opens an HTML5 player on the project site; GitHub does not play reposi
 ## Claim status
 
 <!-- evidence:claims-table -->
-**Record state:** 8 claims · 3 contradicted · 4 unresolved · 1 supported within stated limits · 0 accepted physical measurements · 20 open discrepancies of 27 · 5 of 5 predictions not measured.
+**Record state:** 8 claims · 1 contradicted · 2 unresolved · 5 supported within stated limits · 0 accepted physical measurements · 10 open discrepancies of 27 · 8 of 8 predictions not measured.
 
 | Claim | Subject | Status | Strongest accepted evidence | Failing or disputed requirements | Open discrepancies |
 |---|---|---|---|---|---|
-| [C1](docs/claims/C1.md) | Folding-fin mechanism model | **CONTRADICTED** | MODEL ONLY | R-C1-CLOSURE NOT SATISFIED | D-002, D-004, D-005 |
+| [C1](docs/claims/C1.md) | Folding-fin mechanism model | **SUPPORTED WITHIN STATED LIMITS** | MODEL ONLY | none failing | none |
 | [C2](docs/claims/C2.md) | Deployment timing | **UNRESOLVED** | IMPLEMENTATION ONLY | none failing | D-017, D-018, D-024, D-025 |
 | [C3](docs/claims/C3.md) | CAD generator software | **SUPPORTED WITHIN STATED LIMITS** | IMPLEMENTATION ONLY | none failing | none |
-| [C4](docs/claims/C4.md) | Material mass accounting | **UNRESOLVED** | MODEL ONLY | none failing | D-010, D-022 |
-| [C5](docs/claims/C5.md) | Static-stability model | **UNRESOLVED** | MODEL ONLY | R-C5-WINDOW MODELS DISAGREE | D-006, D-007, D-008, D-009, D-023 |
-| [C6](docs/claims/C6.md) | Spring margin consistency | **CONTRADICTED** | MODEL ONLY | R-C6-MARGIN NOT SATISFIED | D-009, D-010, D-011 |
-| [C7](docs/claims/C7.md) | Deployment reliability evidence | **UNRESOLVED** | MODEL ONLY | none failing | D-010, D-013 |
-| [C8](docs/claims/C8.md) | Structural claim boundaries | **CONTRADICTED** | MODEL ONLY | R-C8-MODULUS NOT SATISFIED | D-009, D-010, D-015 |
+| [C4](docs/claims/C4.md) | Material mass accounting | **UNRESOLVED** | MODEL ONLY | none failing | D-022 |
+| [C5](docs/claims/C5.md) | Static-stability model | **SUPPORTED WITHIN STATED LIMITS** | MODEL ONLY | none failing | D-023 |
+| [C6](docs/claims/C6.md) | Spring margin consistency | **SUPPORTED WITHIN STATED LIMITS** | MODEL ONLY | none failing | none |
+| [C7](docs/claims/C7.md) | Deployment reliability evidence | **SUPPORTED WITHIN STATED LIMITS** | MODEL ONLY | none failing | none |
+| [C8](docs/claims/C8.md) | Structural claim boundaries | **CONTRADICTED** | MODEL ONLY | R-C8-MODULUS NOT SATISFIED | D-015 |
 
 <!-- /evidence:claims-table -->
 

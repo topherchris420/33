@@ -3,33 +3,33 @@
   "requirements": [
     {
       "id": "R-C1-CLOSURE", "claims": ["C1"], "check": "machine",
-      "text": "The baseline linkage closes (assembles) at every drive angle from 0 to 92 deg.",
-      "source": "Implicit precondition of the paper's four-bar deployment claim.",
-      "quantity": "baseline assemblable over the drive range", "unit": "boolean",
+      "text": "The militarized baseline linkage closes (assembles) at every pose of the deployment stroke.",
+      "source": "Phase 1 militarization redesign of the paper's four-bar deployment claim; resolves D-002.",
+      "quantity": "militarized linkage assemblable over the stroke", "unit": "boolean",
       "bound": {"equals": true},
-      "value": {"artifact": "four_bar_data", "json": "/baseline/assemblable_over_range"},
-      "assumptions": ["Planar pin-jointed loop; lengths are pin-centre distances."],
-      "implementation": ["four_bar_source"], "tests": ["four_bar_tests"]
+      "value": {"artifact": "four_bar_military_data", "json": "/assemblable_over_range"},
+      "assumptions": ["Planar pin-jointed loop; lengths are pin-centre distances.", "The historical baseline (25/60/15/15 mm, kept in the C1 sweep artifact) closes at no pose and remains on record."],
+      "implementation": ["four_bar_source", "design_point"], "tests": ["four_bar_tests"]
     },
     {
       "id": "R-C1-TRANSMISSION", "claims": ["C1"], "check": "machine",
-      "text": "The transmission angle stays within 40-140 deg throughout deployment.",
-      "source": "Common linkage design guidance cited by the historical C1 note and tests.",
-      "quantity": "baseline transmission angle range", "unit": "deg",
+      "text": "The coupler-output transmission angle stays within 40-140 deg over the power stroke (fin angle 20 deg to the stop).",
+      "source": "Common linkage design guidance; window restated for the militarized stroke because the stowed end is tube-supported and the final approach is the deliberate near-toggle lock approach.",
+      "quantity": "power-stroke transmission angle range", "unit": "deg",
       "bound": {"min": 40, "max": 140},
-      "value": [{"artifact": "four_bar_data", "json": "/baseline/min_transmission_angle"},
-                {"artifact": "four_bar_data", "json": "/baseline/max_transmission_angle"}],
+      "value": [{"artifact": "four_bar_military_data", "json": "/transmission/mu_min_power_stroke_deg"},
+                {"artifact": "four_bar_military_data", "json": "/transmission/mu_max_power_stroke_deg"}],
       "assumptions": ["The angle is only defined for poses where the loop closes."],
-      "implementation": ["four_bar_source"], "tests": ["four_bar_tests"]
+      "implementation": ["four_bar_source", "design_point"], "tests": ["four_bar_tests"]
     },
     {
       "id": "R-C1-LOCK", "claims": ["C1"], "check": "physical_measurement",
       "text": "The over-center toggle holds the fin at the deployed position against the design hinge moment.",
-      "source": "Paper claim: over-center locking at a 92 deg toggle.",
+      "source": "Paper claim: over-center locking; modeled in the Phase 1 militarized record (D-004 resolved at model level).",
       "quantity": "holding moment at the deployed position", "unit": "N*m",
       "assumptions": ["Requires a linkage that can be assembled (R-C1-CLOSURE)."],
-      "implementation": [], "tests": [],
-      "note": "Not modeled: the only over-center helper compares angles and ignores geometry."
+      "implementation": ["four_bar_source"], "tests": ["four_bar_tests"],
+      "note": "Modeled: the toggle sits 1.5 deg of fin angle beyond the stop and the back-drive ratio at the stop is 0.363, so fin hinge moments reach the crank attenuated and the spring preload (5.8 N*m) must be overcome to fold back. The physical holding-moment test is still pending."
     },
     {
       "id": "R-C2-JITTER", "claims": ["C2"], "check": "physical_measurement",
@@ -90,10 +90,10 @@
       "bound": {"min": 1.5, "max": 2.0},
       "value": {"artifact": "stability_data", "csv": "sm_calibers", "reduce": "values"},
       "alternate_values": [
-        {"label": "textbook fin-term cross-check", "value": [{"artifact": "crosscheck_data", "json": "/sm_min_calibers"}, {"artifact": "crosscheck_data", "json": "/sm_max_calibers"}]}
+        {"label": "strip-integration numerical cross-check", "value": [{"artifact": "crosscheck_data", "json": "/sm_min_calibers"}, {"artifact": "crosscheck_data", "json": "/sm_max_calibers"}]}
       ],
-      "assumptions": ["Barrowman static margin is the intended metric.", "The CG history uses the hard-coded Estes C6-5, not the OpenRocket file's G64W."],
-      "implementation": ["stability_source", "stability_inputs", "crosscheck_source"], "tests": ["stability_tests"]
+      "assumptions": ["Barrowman static margin is the intended metric.", "The CG history uses the certified G64W motor data and the explicit design-point mass model."],
+      "implementation": ["stability_source", "stability_inputs", "crosscheck_source", "design_point"], "tests": ["stability_tests"]
     },
     {
       "id": "R-C5-FORMULATION", "claims": ["C5"], "check": "human_review",
@@ -104,12 +104,12 @@
     {
       "id": "R-C6-KMIN", "claims": ["C6"], "check": "machine",
       "text": "The supplied spring rate is at least the calculated minimum.",
-      "source": "Paper claim: k >= 185 N*m/rad with k_supplied = 220 N*m/rad.",
+      "source": "Militarized Phase 1 spring sizing (crank-driven four-bar); historical paper basis superseded.",
       "quantity": "margin fraction", "unit": "fraction",
       "bound": {"min": 0.0},
-      "value": {"artifact": "spring_design_point", "json": "/margin_fraction"},
+      "value": {"artifact": "spring_design_point_mil", "json": "/margin_fraction"},
       "assumptions": ["Margin = (k_supplied - k_min) / k_min."],
-      "implementation": ["spring_source"], "tests": ["spring_tests"]
+      "implementation": ["spring_source", "four_bar_source", "design_point"], "tests": ["spring_tests"]
     },
     {
       "id": "R-C6-MARGIN", "claims": ["C6"], "check": "machine",
@@ -117,27 +117,27 @@
       "source": "Paper claim: at least 20% margin.",
       "quantity": "margin fraction", "unit": "fraction",
       "bound": {"min": 0.20},
-      "value": {"artifact": "spring_design_point", "json": "/margin_fraction"},
-      "assumptions": ["Margin = (k_supplied - k_min) / k_min."],
-      "implementation": ["spring_source"], "tests": ["spring_tests"]
+      "value": {"artifact": "spring_design_point_mil", "json": "/margin_fraction"},
+      "assumptions": ["Margin = (k_supplied - k_min) / k_min at the militarized crank-spring design point."],
+      "implementation": ["spring_source", "four_bar_source", "design_point"], "tests": ["spring_tests"]
     },
     {
       "id": "R-C6-SPRING-RATE", "claims": ["C6"], "check": "physical_measurement",
-      "text": "The supplied spring's measured rate is 220 N*m/rad within its stated tolerance.",
-      "source": "Paper value for k_supplied.",
+      "text": "The supplied spring's measured rate is 11.0 N*m/rad within its stated tolerance.",
+      "source": "Militarized design-point spring specification (specified, not measured).",
       "quantity": "torsion spring rate", "unit": "N*m/rad",
       "measured_by": ["PRED-C6-SPRING-RATE"],
-      "assumptions": [], "implementation": [], "tests": []
+      "assumptions": [], "implementation": ["design_point"], "tests": []
     },
     {
       "id": "R-C7-RELIABILITY", "claims": ["C7"], "check": "machine",
       "text": "Simulated deployment succeeds in at least 99.9% of trials.",
-      "source": "Paper claim: at least 99.9% reliability from Monte Carlo.",
+      "source": "Paper claim: at least 99.9% reliability from Monte Carlo; sponsor Phase 1 gate is 99%.",
       "quantity": "simulated success fraction", "unit": "fraction",
       "bound": {"min": 0.999},
       "value": {"artifact": "reliability_run_record", "json": "/success_fraction"},
-      "assumptions": ["The simulation's success criterion can fail; see D-013, which says it cannot for its velocity test."],
-      "implementation": ["reliability_source"], "tests": ["reliability_tests"]
+      "assumptions": ["The revision-2 simulation's failure modes can each occur on the sampled ranges (D-013 resolved)."],
+      "implementation": ["reliability_source", "design_point"], "tests": ["reliability_tests"]
     },
     {
       "id": "R-C7-PHYSICAL", "claims": ["C7"], "check": "physical_measurement",

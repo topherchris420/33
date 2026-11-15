@@ -1,0 +1,80 @@
+{
+  "schema": "project33.c1.four_bar_military/1",
+  "generator": "mechanism/four_bar.py",
+  "design_point_revision": "2026-11-14-phase1",
+  "units": {
+    "length": "mm",
+    "angle": "deg"
+  },
+  "links": {
+    "ground": 25.0,
+    "crank": 14.0,
+    "coupler": 15.5,
+    "output": 15.0
+  },
+  "stroke": {
+    "stowed_crank_deg": 278.0,
+    "stop_crank_deg": 381.7,
+    "toggle_crank_deg": 390.52,
+    "crank_sweep_deg": 103.7,
+    "fin_stop_deg": 90.0
+  },
+  "lock": {
+    "toggle_fin_deg": 91.547,
+    "over_center_margin_fin_deg": 1.547,
+    "over_center_margin_crank_deg": 8.82,
+    "backdrive_ratio_at_stop": 0.363,
+    "backdrive_ratio_meaning": "fraction of fin hinge torque reaching the crank at the stop pose"
+  },
+  "transmission": {
+    "mu_min_power_stroke_deg": 42.24,
+    "mu_max_power_stroke_deg": 75.25,
+    "window_note": "power stroke is psi 20 deg to the stop; the stowed end is tube-supported and the final approach is the near-toggle lock"
+  },
+  "closure": {
+    "radial_margin_at_stop_mm": 17.438,
+    "link_tolerance_mm": 0.15,
+    "worst_case_tolerance_closes_at_stop": true,
+    "tolerance_cases": [
+      {
+        "delta_mm": [
+          0.15,
+          -0.15,
+          -0.15,
+          -0.15
+        ],
+        "stop_pose_closes": true
+      },
+      {
+        "delta_mm": [
+          -0.15,
+          0.15,
+          0.15,
+          0.15
+        ],
+        "stop_pose_closes": true
+      },
+      {
+        "delta_mm": [
+          0.15,
+          0.15,
+          -0.15,
+          0.15
+        ],
+        "stop_pose_closes": true
+      },
+      {
+        "delta_mm": [
+          -0.15,
+          -0.15,
+          0.15,
+          -0.15
+        ],
+        "stop_pose_closes": true
+      }
+    ]
+  },
+  "poses_checked": 1201,
+  "assemblable_over_range": true,
+  "basis": "analytical planar kinematics with continuity-tracked assembly branch; no physical mechanism observed"
+}

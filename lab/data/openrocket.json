@@ -2,8 +2,8 @@
  "schema": "project33.lab.openrocket/1",
  "generated_by": "tools/export_lab_data.py",
  "inputs": {
-  "Simulation/Folding Stabilized Rocket.ork": "26087d70e4929b10acc960569d8211b4f2985004c545698ccd52e07eed02ae6a",
-  "docs/EVIDENCE/C5_static_margin_inputs.json": "642c367181cab4d0b1b66054ddc0ee6c1a31af8b9c62560b3454f56ab32da821",
+  "Simulation/Folding Stabilized Rocket.ork": "16283834e0ae4c174198b00d9cfd206615ed3a805fb8ead2b3e0193376eff09e",
+  "docs/EVIDENCE/C5_static_margin_inputs.json": "356c882c80f62ac5e7d811d86ad86849bb877b6dd869d933b8ad8e6c9c3b1af5",
   "evidence/archive/C5_openrocket_pre_retune.ork.xml": "082d383fb9626db223317b7fd008d4e12b4a5c443b448fb0e217a68d48090182"
  },
  "current": {
@@ -50,9 +50,9 @@
       "path": "openrocket/rocket/subcomponents/stage[1]/subcomponents/nosecone[1]/id"
      },
      "overridemass": {
-      "value": 0.067,
+      "value": 0.317,
       "path": "openrocket/rocket/subcomponents/stage[1]/subcomponents/nosecone[1]/overridemass",
-      "text": "0.067"
+      "text": "0.317"
      },
      "overridesubcomponentsmass": {
       "value": "false",
@@ -205,13 +205,13 @@
       "value": 0.18,
       "path": "openrocket/rocket/subcomponents/stage[1]/subcomponents/bodytube[1]/subcomponents/trapezoidfinset[1]/axialoffset",
       "method": "absolute",
-      "text": "0.18"
+      "text": "0.180"
      },
      "position": {
       "value": 0.18,
       "path": "openrocket/rocket/subcomponents/stage[1]/subcomponents/bodytube[1]/subcomponents/trapezoidfinset[1]/position",
       "method": "absolute",
-      "text": "0.18"
+      "text": "0.180"
      },
      "finish": {
       "value": "normal",
@@ -281,18 +281,18 @@
       "path": "openrocket/rocket/subcomponents/stage[1]/subcomponents/bodytube[2]/id"
      },
      "overridemass": {
-      "value": 0.55,
+      "value": 0.8,
       "path": "openrocket/rocket/subcomponents/stage[1]/subcomponents/bodytube[2]/overridemass",
-      "text": "0.55"
+      "text": "0.800"
      },
      "overridesubcomponentsmass": {
       "value": "true",
       "path": "openrocket/rocket/subcomponents/stage[1]/subcomponents/bodytube[2]/overridesubcomponentsmass"
      },
      "overridecg": {
-      "value": 0.16,
+      "value": 0.151,
       "path": "openrocket/rocket/subcomponents/stage[1]/subcomponents/bodytube[2]/overridecg",
-      "text": "0.16"
+      "text": "0.151"
      },
      "overridesubcomponentscg": {
       "value": "true",
@@ -402,16 +402,16 @@
       "text": "0.0"
      },
      "axialoffset": {
-      "value": 0.0,
+      "value": 0.44,
       "path": "openrocket/rocket/subcomponents/stage[1]/subcomponents/bodytube[2]/subcomponents/trapezoidfinset[1]/axialoffset",
-      "method": "bottom",
-      "text": "0.0"
+      "method": "absolute",
+      "text": "0.440"
      },
      "position": {
-      "value": 0.0,
+      "value": 0.44,
       "path": "openrocket/rocket/subcomponents/stage[1]/subcomponents/bodytube[2]/subcomponents/trapezoidfinset[1]/position",
-      "method": "bottom",
-      "text": "0.0"
+      "method": "absolute",
+      "text": "0.440"
      },
      "finish": {
       "value": "normal",
@@ -441,39 +441,39 @@
       "text": "0.0"
      },
      "rootchord": {
-      "value": 0.13,
+      "value": 0.16,
       "path": "openrocket/rocket/subcomponents/stage[1]/subcomponents/bodytube[2]/subcomponents/trapezoidfinset[1]/rootchord",
-      "text": "0.130"
+      "text": "0.160"
      },
      "tipchord": {
-      "value": 0.11,
+      "value": 0.16,
       "path": "openrocket/rocket/subcomponents/stage[1]/subcomponents/bodytube[2]/subcomponents/trapezoidfinset[1]/tipchord",
-      "text": "0.110"
+      "text": "0.160"
      },
      "sweeplength": {
-      "value": 0.01,
+      "value": 0.0,
       "path": "openrocket/rocket/subcomponents/stage[1]/subcomponents/bodytube[2]/subcomponents/trapezoidfinset[1]/sweeplength",
-      "text": "0.010"
+      "text": "0.000"
      },
      "height": {
-      "value": 0.18,
+      "value": 0.22,
       "path": "openrocket/rocket/subcomponents/stage[1]/subcomponents/bodytube[2]/subcomponents/trapezoidfinset[1]/height",
-      "text": "0.180"
+      "text": "0.220"
      }
     },
     "parent": "d945c493-4ded-4d2c-a8e4-7e9f6d6d96f7",
     "id": "dc6aa6ee-e343-4eba-b7ba-8d424327ddf7",
-    "axial_method": "bottom",
-    "axial_offset_m": 0.0,
-    "x_start_m": 0.471,
-    "x_end_m": 0.601
+    "axial_method": "absolute",
+    "axial_offset_m": 0.44,
+    "x_start_m": 0.44,
+    "x_end_m": 0.6
    }
   ],
   "source": {
    "path": "Simulation/Folding Stabilized Rocket.ork",
-   "sha256": "26087d70e4929b10acc960569d8211b4f2985004c545698ccd52e07eed02ae6a",
+   "sha256": "16283834e0ae4c174198b00d9cfd206615ed3a805fb8ead2b3e0193376eff09e",
    "inner_file": "rocket.ork",
-   "inner_sha256": "e750009cd4a03a53d95757a258cc645654e0310e1f4697cb288a2954e5538daf"
+   "inner_sha256": "8a7de01238fedf04add07506b5e1bac0cbdfbe87900ac09e52efd2768c1fb5ce"
   }
  },
  "pre_retune": {
@@ -947,13 +947,13 @@
  "lab_observations": [
   {
    "id": "LAB-OBS-1",
-   "status": "candidate for human review; not entered in the discrepancy register",
+   "status": "resolved by the Phase 1 revision-3 static-margin parser; kept as history",
    "title": "Fin root leading-edge station: static-margin parser versus OpenRocket axial semantics",
-   "detail": "The largest-span fin set is positioned with method 'bottom' and offset 0.0 m in its parent tube. OpenRocket places a 'bottom'-referenced component so that its aft end aligns with the parent's aft end, which puts the root leading edge at 0.471 m from the nose tip. Simulation/static_margin.py reads the <position> value without its type attribute and records X_f = 0.381 m in docs/EVIDENCE/C5_static_margin_inputs.json.",
+   "detail": "The largest-span fin set is positioned with method 'absolute' and offset 0.44 m in its parent tube. OpenRocket places an 'absolute'-referenced component so its start (root leading edge) sits at 0.440 m from the nose tip. The pre-Phase-1 parser read the raw <position> value without its type attribute and recorded a different X_f; the revision-3 parser applies OpenRocket axial-method semantics, and the militarized .ork positions both fin sets with unambiguous 'absolute' offsets. Simulation/static_margin.py rev 3 now records the main-fin leading edge at 0.48 m in docs/EVIDENCE/C5_static_margin_inputs.json.",
    "values_m": {
-    "ork_semantics": 0.471,
-    "static_margin_inputs_X_f": 0.381,
-    "difference": 0.09
+    "ork_semantics": 0.44,
+    "static_margin_inputs_X_f": 0.48,
+    "difference": -0.04
    },
    "not_computed": "The effect on either centre-of-pressure formulation is not computed here; doing so would be a third model. It needs a reviewed model change.",
    "sources": [

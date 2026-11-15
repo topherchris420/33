@@ -1,0 +1,93 @@
+{
+  "schema": "project33.design_point/2",
+  "title": "Project 33 shared militarized design point (Phase 1)",
+  "basis": "Single reviewed input file for every model (four-bar, static margin, spring, reliability), resolving discrepancy D-010. Phase 1 values; Phase 2 (warhead) and Phase 4 (motor/structure) revisions will supersede with a new revision field, never silently.",
+  "evidence_class": "MODELED (authored design inputs; nothing measured)",
+  "revision": "2026-11-14-phase1",
+  "units": {
+    "length": "mm unless stated",
+    "mass": "kg",
+    "angle": "deg",
+    "spring_rate": "N*m/rad"
+  },
+  "four_bar": {
+    "comment": "Crank pivot A forward (toward nose), fin hinge D aft; +x from A to D. Fin panel rides the output link DC. Fin folds flush FORWARD alongside the body and deploys to a 90 deg hard stop. Linkage toggle (crank-coupler collinearity, |AC| = b + c) sits 1.5 deg BEYOND the stop, so the spring-loaded crank cannot be back-driven by fin loads without overcoming the near-toggle mechanical advantage.",
+    "ground_mm": 25.0,
+    "crank_mm": 14.0,
+    "coupler_mm": 15.5,
+    "output_mm": 15.0,
+    "stowed_crank_deg": 278.0,
+    "fin_stop_deg": 90.0,
+    "toggle_fin_deg": 91.55,
+    "toggle_crank_deg": 390.5,
+    "stop_crank_deg": 381.8,
+    "crank_sweep_deg": 103.8,
+    "tolerance_mm": 0.15
+  },
+  "main_fins": {
+    "comment": "Resized per corrected Barrowman derivation (C5 resolution). Rectangular planform; molded CFRP sandwich with unidirectional spar caps; areal mass target 3.4 kg/m^2.",
+    "count": 4,
+    "root_chord_mm": 160.0,
+    "tip_chord_mm": 160.0,
+    "span_mm": 220.0,
+    "leading_edge_x_mm": 440.0,
+    "thickness_mm": 4.0,
+    "tip_le_sweep_mm": 0.0,
+    "mass_each_kg": 0.120,
+    "centroid_x_mm": 520.0,
+    "material": "CFRP quasi-isotropic faces over foam core with UD spar caps"
+  },
+  "canards": {
+    "comment": "Unchanged planform from the committed OpenRocket model; leading-edge station now follows OpenRocket absolute axial semantics (0.180 m from the nose tip; the pre-Phase-1 scripts misread 0.218 m).",
+    "count": 4,
+    "root_chord_mm": 25.4,
+    "tip_chord_mm": 25.4,
+    "span_mm": 50.8,
+    "tip_le_sweep_mm": 5.0,
+    "leading_edge_x_mm": 180.0
+  },
+  "mass_model": {
+    "comment": "Explicit component breakdown replacing the ambiguous OpenRocket tube overrides (which lumped unknown contents). Positions from nose tip.",
+    "dry_components": [
+      {"name": "nose_cone_assembly", "mass_kg": 0.067, "cg_m": 0.019, "source": "OpenRocket override (ellipsoid PLA nose)"},
+      {"name": "warhead_simulator_ballast", "mass_kg": 0.250, "cg_m": 0.030, "source": "Phase 2 GP loadout mass simulator; inert ballast until Phase 2"},
+      {"name": "forward_body_assembly", "mass_kg": 0.635, "cg_m": 0.158, "source": "OpenRocket tube-1 override (tube, canards, canard servos, avionics, battery)"},
+      {"name": "aft_body_structure", "mass_kg": 0.320, "cg_m": 0.550, "source": "derived: fiberglass tube 2 (2.54 mm wall), motor mount, centering rings, hinges, linkages, springs"},
+      {"name": "main_fins", "mass_kg": 0.480, "cg_m": 0.520, "source": "4 x 0.120 kg per main_fins spec above"}
+    ],
+    "motor": {
+      "designation": "G64W",
+      "manufacturer": "AeroTech",
+      "wet_kg": 0.151,
+      "dry_kg": 0.088,
+      "propellant_kg": 0.063,
+      "cg_m": 0.535,
+      "burn_s": 2.1,
+      "avg_thrust_n": 56.8,
+      "max_thrust_n": 98.3,
+      "total_impulse_ns": 118.8,
+      "data_source": "thrustcurve.org motor page for AeroTech G64W (NAR-certified), retrieved 2026-11-14"
+    }
+  },
+  "spring": {
+    "comment": "Torsion spring on the four-bar crank pivot. Free position 30 deg of crank beyond the fin stop. Rate is a specified design value, not a measured one.",
+    "rate_n_m_per_rad": 11.0,
+    "preload_beyond_stop_deg": 30.0,
+    "stowed_crank_torque_n_m": 25.7,
+    "stop_torque_n_m": 5.76,
+    "rate_basis": "sized by mechanism/spring_sizing.py at this design point; catalog-scale music-wire torsion spring, specified not measured"
+  },
+  "deployment_trigger": {
+    "comment": "Rocket-side launch detection gating fin release. Supersedes the 15 g one-shot threshold (MIL-DEV-010): the G64W cannot produce 15 g on this mass.",
+    "threshold_g": 2.0,
+    "sustain_ms": 150,
+    "hardware_delay_ms": 50
+  },
+  "flight_regime": {
+    "egress_speed_m_s": 25.0,
+    "max_speed_m_s": 70.0,
+    "deploy_start_speed_m_s": 30.0,
+    "mach_range": [0.0, 0.21],
+    "barrowman_validity": "subsonic, low aspect-ratio interference included; no compressibility correction applied"
+  }
+}

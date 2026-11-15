@@ -59,6 +59,13 @@ unsigned long lastTelemetrySent = 0;
 unsigned long lastReadySent = 0;
 unsigned long igniteStartTime = 0;
 
+// Launch detection (MIL-DEV-010): the deploy output fires only after the
+// x-axis acceleration has held above DEPLOY_ACCEL_THRESHOLD_MS2 continuously
+// for DEPLOY_ACCEL_SUSTAIN_MS. A one-shot threshold cannot distinguish a
+// launch from bench handling; the sustain time does.
+unsigned long launchDetectStartMs = 0;
+bool launchDetectActive = false;
+
 const int FLIGHT_LOG_CAPACITY = 240;
 const int LOG_STATE_LEN = 12;
 
@@ -293,9 +300,23 @@ void loop() {
 
     // C2: Hardware-timed zero-blocking deployment. Gated on an armed state so
     // bench handling of an unarmed rocket can never fire the deploy output,
-    // and compared in m/s² to match the Adafruit driver's units.
-    if (sysState != "IDLE" && a.acceleration.x > DEPLOY_ACCEL_THRESHOLD_MS2) {
-        trigger_deployment_sequence(50000); // 50ms delay
+    // and compared in m/s² to match the Adafruit driver's units. The trigger
+    // requires sustained acceleration (MIL-DEV-010): the G64W motor produces
+    // about 4.8 g initial / 2.8 g sustained on this round, so the historical
+    // 15 g one-shot threshold could never fire from a rail launch.
+    if (sysState != "IDLE") {
+        if (a.acceleration.x > DEPLOY_ACCEL_THRESHOLD_MS2) {
+            if (!launchDetectActive) {
+                launchDetectActive = true;
+                launchDetectStartMs = current_time;
+            } else if (current_time - launchDetectStartMs >= DEPLOY_ACCEL_SUSTAIN_MS) {
+                trigger_deployment_sequence(50000); // 50ms hardware delay
+            }
+        } else {
+            launchDetectActive = false;
+        }
+    } else {
+        launchDetectActive = false;
     }
 
     float raw_rate_rad = g.gyro.x - gyroX_offset;

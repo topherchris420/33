@@ -17,7 +17,7 @@ Project 33 is intended for inert bench validation, simulation, and supervised ed
 | G-08 | Rocket ARM requires IDLE and a healthy IMU | Rocket | ARM is refused (and now reported) otherwise. | [Firmware/Rocket/src/main.cpp](../Firmware/Rocket/src/main.cpp) | NOT MEASURED |
 | G-09 | Rocket IGNITE requires ARMED and a healthy IMU | Rocket | IGNITE is refused (and now reported) otherwise. | [Firmware/Rocket/src/main.cpp](../Firmware/Rocket/src/main.cpp) | NOT MEASURED |
 | G-10 | Rocket IGNITE requires the deploy flag | Rocket | IGNITE is refused unless the deploy timer has fired; see discrepancy D-017 for the ordering question. | [Firmware/Rocket/src/main.cpp](../Firmware/Rocket/src/main.cpp) | NOT MEASURED |
-| G-11 | Deploy trigger requires a non-IDLE state | Rocket | Handling an unarmed rocket cannot fire the deploy output. | [Firmware/Rocket/src/main.cpp](../Firmware/Rocket/src/main.cpp) | NOT MEASURED |
+| G-11 | Deploy trigger requires a non-IDLE state and sustained launch acceleration | Rocket | Handling an unarmed rocket cannot fire the deploy output, and a single bump cannot either: the deploy output fires only after the x-axis acceleration holds above the threshold continuously for the sustain time (MIL-DEV-010). | [Firmware/Rocket/src/main.cpp](../Firmware/Rocket/src/main.cpp) | NOT MEASURED |
 | G-12 | Forced ignition is bench-build only | Rocket | IGNITE_FORCE exists only when BENCH_MODE is defined; the committed build does not define it. | [Firmware/Rocket/platformio.ini](../Firmware/Rocket/platformio.ini)<br>[Firmware/Rocket/src/main.cpp](../Firmware/Rocket/src/main.cpp) | NOT MEASURED |
 | G-13 | Refusals and aborts are logged | Rocket + launcher + dashboard | Rocket refusals travel over UART as CMD_REJECT lines; the launcher forwards them and its own ABORT reasons to the dashboard CSV. | [Firmware/Launcher/src/main.cpp](../Firmware/Launcher/src/main.cpp)<br>[Firmware/Rocket/src/main.cpp](../Firmware/Rocket/src/main.cpp) | NOT MEASURED |
 | G-14 | Bounded controller gains | Launcher + rocket | PID values outside 0-10 or malformed are rejected on both boards. | [Firmware/Launcher/src/main.cpp](../Firmware/Launcher/src/main.cpp)<br>[Firmware/Rocket/src/main.cpp](../Firmware/Rocket/src/main.cpp) | NOT MEASURED |
@@ -25,7 +25,7 @@ Project 33 is intended for inert bench validation, simulation, and supervised ed
 Generated from `evidence/safety_gates.json`. `tests/test_firmware_safety.py` fails if any gate's source text changes. Source inspection shows the gate is implemented; it does not show the hardware behaves that way.
 <!-- /evidence:safety-gates -->
 
-Deterministic interlocks live in firmware and stay there. The rocket's IGNITE path additionally requires the deploy flag, which is set only by a >15 g event while not IDLE; on the bench this acts as an extra interlock, and its intended ordering is an open design question (D-017). Do not remove or reorder any gate without a separate safety review.
+Deterministic interlocks live in firmware and stay there. The rocket's IGNITE path additionally requires the deploy flag, which is set only by a sustained above-2 g launch-acceleration event (150 ms qualification plus a 50 ms hardware delay; see G-11 and militarization deviation MIL-DEV-010) while not IDLE; on the bench this acts as an extra interlock, and its intended ordering is an open design question (D-017). Do not remove or reorder any gate without a separate safety review.
 
 ## Automated tools and AI
 

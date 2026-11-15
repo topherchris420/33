@@ -1,25 +1,36 @@
 {
-  "schema": "project33.c5.barrowman_crosscheck/1",
+  "schema": "project33.c5.barrowman_crosscheck/2",
   "generator": "Simulation/barrowman_crosscheck.py",
-  "status": "unreviewed cross-check; not a replacement for static_margin.py",
+  "status": "numerical cross-check of the rev 3 model; both are MODELED",
   "units": {
     "length": "m",
     "static_margin": "calibers"
   },
-  "differs_from_reference_in": [
-    "fin CP sweep term uses X_R (tip leading-edge sweep)",
-    "fin normal-force term uses mid-chord line length"
-  ],
-  "shared_with_reference": [
-    "parsed geometry",
-    "nose term (ogive coefficient)",
-    "CG history from reference CSV",
-    "hard-coded motor assumption"
-  ],
-  "fin_cp_m": 0.415931,
-  "fin_normal_force_coefficient": 37.418828,
-  "midchord_length_m": 0.18,
-  "cp_m": 0.395728,
-  "sm_min_calibers": 0.7445,
-  "sm_max_calibers": 0.7576
+  "method": "spanwise strip integration (chord-weighted, local quarter-chord pressure centers) and discrete nose d(r^2) sums, independent of the closed-form algebra they check",
+  "checks": {
+    "canards": {
+      "cp_closed_form_m": 0.18885,
+      "cp_strip_integration_m": 0.18885,
+      "cp_difference_mm": 0.0,
+      "cn_closed_form": 3.1309,
+      "cn_strip_integration": 3.1311,
+      "cn_relative_difference": 6.9e-05
+    },
+    "main_fins": {
+      "cp_closed_form_m": 0.48,
+      "cp_strip_integration_m": 0.48,
+      "cp_difference_mm": 0.0,
+      "cn_closed_form": 56.6838,
+      "cn_strip_integration": 56.6867,
+      "cn_relative_difference": 5.1e-05
+    }
+  },
+  "nose_cp_fraction_numeric": 0.3335,
+  "cp_m_closed_form": 0.450134,
+  "cp_m_strip_integration": 0.450135,
+  "cp_difference_mm": 0.001,
+  "sm_min_calibers": 1.6684,
+  "sm_max_calibers": 1.7603,
+  "sm_min_calibers_reference_model": 1.6684,
+  "agreement_statement": "strip integration and closed form agree within tolerance if the differences above are below 1 mm (CP) and 1 percent (CN)"
 }

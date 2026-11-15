@@ -38,16 +38,17 @@ def test_openrocket_stations_follow_axial_method_semantics():
     rocket = _json("lab/data/openrocket.json")["current"]
     assert rocket["overall_length_m"] == 0.601
     fins = [c for c in rocket["components"] if c["kind"] == "trapezoidfinset"]
-    forward = next(f for f in fins if f["axial_method"] == "absolute")
-    aft = next(f for f in fins if f["axial_method"] == "bottom")
-    assert forward["x_start_m"] == 0.18
-    # 'bottom' aligns the fin set's aft end with the parent tube's aft end: 0.601 - 0.130.
-    assert abs(aft["x_start_m"] - 0.471) < 1e-9 and abs(aft["x_end_m"] - 0.601) < 1e-9
+    forward = next(f for f in fins if f["axial_method"] == "absolute" and f["fields"]["rootchord"]["value"] < 0.1)
+    aft = next(f for f in fins if f["fields"]["rootchord"]["value"] > 0.1)
+    # canards: absolute 0.180 m from the nose tip (OpenRocket absolute semantics)
+    assert abs(forward["x_start_m"] - 0.180) < 1e-9
+    # main fins (militarized resize): absolute, LE at 0.440, TE at 0.600
+    assert abs(aft["x_start_m"] - 0.440) < 1e-9 and abs(aft["x_end_m"] - 0.600) < 1e-9
 
 
 def test_lab_observation_is_flagged_as_unreviewed_candidate():
     obs = _json("lab/data/openrocket.json")["lab_observations"][0]
-    assert "not entered in the discrepancy register" in obs["status"]
+    assert "resolved by the Phase 1 revision-3" in obs["status"]
     ids = {d["id"] for d in _json("evidence/discrepancies.json")["discrepancies"]}
     assert obs["id"] not in ids
 
@@ -57,7 +58,9 @@ def test_step_view_matches_recorded_linkage_and_source_digest():
     step = (ROOT / view["source"]).read_bytes()
     assert hashlib.sha256(step).hexdigest() == view["source_sha256"]
     spacing = {p["role"]: p["pin_spacing_mm_brep"] for p in view["parts"]}
-    assert spacing == {"ground": 25.0, "input": 15.0, "coupler": 60.0, "output": 15.0}
+    # Militarized Phase 1 linkage (design_point.json): the STEP is generated
+    # from these verified pin-centre distances.
+    assert spacing == {"ground": 25.0, "input": 14.0, "coupler": 15.5, "output": 15.0}
 
 
 def test_fusion_archives_are_inventoried_not_presented_as_translated():

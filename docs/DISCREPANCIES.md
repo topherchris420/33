@@ -5,12 +5,12 @@ Two parts of the project disagreeing is information. Each entry names both sides
 
 | Status | Effect | Count |
 |---|---|---|
-| OPEN | Contradicts a claim or requirement | 5 |
+| OPEN | Contradicts a claim or requirement | 1 |
 | OPEN | Informational | 7 |
-| OPEN | Weakens a claim's support | 8 |
-| RESOLVED | Contradicts a claim or requirement | 2 |
+| OPEN | Weakens a claim's support | 2 |
+| RESOLVED | Contradicts a claim or requirement | 6 |
 | RESOLVED | Informational | 3 |
-| RESOLVED | Weakens a claim's support | 2 |
+| RESOLVED | Weakens a claim's support | 8 |
 
 ## D-001
 
@@ -38,7 +38,7 @@ Two parts of the project disagreeing is information. Each entry names both sides
 
 | Field | Value |
 |---|---|
-| Status | OPEN |
+| Status | RESOLVED |
 | Effect | Contradicts a claim or requirement |
 | Kind | requirement vs model — A model result does not meet a stated requirement. |
 | Claims | [C1](claims/C1.md) |
@@ -46,7 +46,9 @@ Two parts of the project disagreeing is information. Each entry names both sides
 - [evidence/archive/notes-v1/C1_four_bar.md](../evidence/archive/notes-v1/C1_four_bar.md): Ground 25, coupler 60, input 15, output 15 mm deploys the fin 0-92 deg.
 - [docs/EVIDENCE/C1_four_bar_sweep.json](EVIDENCE/C1_four_bar_sweep.json): Over the 0-92 deg drive range the B-D distance never exceeds 29.6 mm (40 mm at any angle), but the coupler and output circles only meet at 45 mm or more; no pose closes. None of the 81 variants closes at any pose.
 
-**Next action.** A human confirms the intended topology and link dimensions; then the model is re-run and reviewed.
+**Next action.** None for the record; the redesigned linkage's physical test is tracked by R-C1-LOCK and the live-fire program.
+
+**Resolution.** Phase 1 militarization: the linkage was redesigned (ground 25, crank 14, coupler 15.5, output 15 mm, design_point.json) with a continuity-tracked deployment stroke from folded-flush to a 90 deg stop and a toggle 1.5 deg beyond it. The record (four_bar_military_data) closes at every pose, self-checks every link length, and survives worst-case plus/minus 0.15 mm tolerances. The historical sweep stays committed as the failure record. (Engineering redesign by the chief weapons engineer under the sponsor's Phase 1 direction, 2026-11-14; analytical, software-tested, no physical mechanism observed.)
 
 *Found by:* Loop-closure check (circle intersection) added in model revision 2.
 
@@ -76,7 +78,7 @@ Two parts of the project disagreeing is information. Each entry names both sides
 
 | Field | Value |
 |---|---|
-| Status | OPEN |
+| Status | RESOLVED |
 | Effect | Contradicts a claim or requirement |
 | Kind | claim vs artifact — What a claim or note says differs from what its artifact contains. |
 | Claims | [C1](claims/C1.md) |
@@ -84,7 +86,9 @@ Two parts of the project disagreeing is information. Each entry names both sides
 - [evidence/archive/notes-v1/C1_four_bar.md](../evidence/archive/notes-v1/C1_four_bar.md): Over-center detection: confirmed (moment sign flips at toggle).
 - [mechanism/four_bar.py](../mechanism/four_bar.py): over_center_moment_sign() compares the drive angle with 92 deg and ignores every link length.
 
-**Next action.** Model the locking moment for an assemblable linkage, or state that locking is a physical-test question only.
+**Next action.** None; the physical holding-moment test is tracked by R-C1-LOCK.
+
+**Resolution.** The militarized record models the lock: the toggle (crank-coupler collinearity, verified where |AC| = b + c) sits 1.5 deg of fin angle beyond the stop, and the back-drive ratio dpsi/dt2 at the stop pose is 0.363, so fin hinge moments reach the crank attenuated. The historical angle-comparison helper remains for the archived record only. (Phase 1 militarization analysis in mechanism/four_bar.py, 2026-11-14; analytical, software-tested.)
 
 *Found by:* Reading the helper's implementation.
 
@@ -94,15 +98,17 @@ Two parts of the project disagreeing is information. Each entry names both sides
 
 | Field | Value |
 |---|---|
-| Status | OPEN |
+| Status | RESOLVED |
 | Effect | Weakens a claim's support |
 | Kind | simulation vs cad — Simulation or model geometry disagrees with CAD geometry. |
 | Claims | [C1](claims/C1.md) |
 
-- [CAD Files/FusionScripts/Project33FourBar/Project33FourBar.py](<../CAD Files/FusionScripts/Project33FourBar/Project33FourBar.py>): The Fusion sketch draws the coupler from (0, 15) to (25, 15) mm, 25 mm long, and dimensions it as drawn; the CadQuery export places four separate bars and calls the assembly purely illustrative.
-- [docs/EVIDENCE/C1_four_bar_sweep.json](EVIDENCE/C1_four_bar_sweep.json): The modeled coupler is 60 mm and the loop cannot close.
+- [CAD Files/FusionScripts/Project33FourBar/Project33FourBar.py](<../CAD Files/FusionScripts/Project33FourBar/Project33FourBar.py>): The historical Fusion sketch drew a 25 mm coupler while the model specified 60 mm; the STEP was four separate illustrative bars.
+- [docs/EVIDENCE/C1_four_bar_sweep.json](EVIDENCE/C1_four_bar_sweep.json): The modeled coupler was 60 mm and the loop could not close.
 
-**Next action.** Regenerate CAD only after D-002 is resolved; never cite the STEP as evidence the mechanism assembles.
+**Next action.** None; the STEP is now generated from the verified kinematic dimensions, but an assembled CAD model is still not a physical test.
+
+**Resolution.** The CAD script and STEP export were regenerated from design_point.json at the verified deployed-stop pose with the militarized pin-centre dimensions (ground 25, crank 14, coupler 15.5, output 15 mm). (Phase 1 militarization CAD regeneration, 2026-11-14; software-generated, unreviewed in Fusion.)
 
 *Found by:* Reading the CAD script coordinates against the model inputs.
 
@@ -112,7 +118,7 @@ Two parts of the project disagreeing is information. Each entry names both sides
 
 | Field | Value |
 |---|---|
-| Status | OPEN |
+| Status | RESOLVED |
 | Effect | Contradicts a claim or requirement |
 | Kind | model vs model — Two models of the same quantity disagree. |
 | Claims | [C5](claims/C5.md) |
@@ -120,7 +126,9 @@ Two parts of the project disagreeing is information. Each entry names both sides
 - [docs/EVIDENCE/C5_static_margin_inputs.json](EVIDENCE/C5_static_margin_inputs.json): Fin CP sweep term uses the root chord; margin 1.55-1.57 cal (inside 1.5-2.0).
 - [docs/EVIDENCE/C5_barrowman_crosscheck.json](EVIDENCE/C5_barrowman_crosscheck.json): Textbook Barrowman sweep term (tip leading-edge sweep X_R) and mid-chord line length give 0.74-0.76 cal (outside 1.5-2.0).
 
-**Next action.** A human reviews both formulations against Barrowman (1967) or OpenRocket's component CP output.
+**Next action.** None for the record; the physical CG measurement is tracked by PRED-C5-DRY-CG.
+
+**Resolution.** Phase 1: the reference script was WRONG and the textbook cross-check was right. The revision-2 script used the root chord where the tip leading-edge sweep X_R belongs in the fin CP term, and the sweep length where the mid-chord line length belongs in the normal-force term; both errors pushed the CP aft and inflated the margin to a false 1.55-1.57 cal (true value about 0.7 cal at the old geometry). Revision 3 uses the textbook terms, and an independent strip-integration cross-check now agrees with the closed form within 0.001 mm (CP) and 0.01 percent (CN). Fins were resized so the margin is 1.69-1.78 cal. (Formulation correction in Simulation/static_margin.py rev 3 plus numerical cross-check, 2026-11-14; analytical, software-tested.)
 
 *Found by:* Independent re-derivation of the fin terms during the 2026-09-28 review.
 
@@ -130,7 +138,7 @@ Two parts of the project disagreeing is information. Each entry names both sides
 
 | Field | Value |
 |---|---|
-| Status | OPEN |
+| Status | RESOLVED |
 | Effect | Weakens a claim's support |
 | Kind | model vs input — A model's inputs differ from the design source it claims to use. |
 | Claims | [C5](claims/C5.md) |
@@ -138,7 +146,9 @@ Two parts of the project disagreeing is information. Each entry names both sides
 - [Simulation/Folding Stabilized Rocket.ork](<../Simulation/Folding Stabilized Rocket.ork>): Motor configuration: AeroTech G64W (29 mm reload).
 - [Simulation/static_margin.py](../Simulation/static_margin.py): Hard-coded Estes C6-5: 24 g wet, 11 g dry, 1.8 s burn, CG at 0.520 m.
 
-**Next action.** Use the OpenRocket motor (or justify the substitute) and record the motor mass data source.
+**Next action.** None for the record.
+
+**Resolution.** Revision 3 burns the OpenRocket model's AeroTech G64W with certified data (151 g wet, 88 g dry, 63 g propellant, 2.1 s, from thrustcurve.org, retrieved 2026-11-14); the Estes C6-5 hard-coding is gone. (Input correction in Simulation/static_margin.py rev 3, 2026-11-14; motor data from the NAR-certified record on thrustcurve.org.)
 
 *Found by:* Parsing the motor designation from the .ork file.
 
@@ -148,7 +158,7 @@ Two parts of the project disagreeing is information. Each entry names both sides
 
 | Field | Value |
 |---|---|
-| Status | OPEN |
+| Status | RESOLVED |
 | Effect | Weakens a claim's support |
 | Kind | model vs input — A model's inputs differ from the design source it claims to use. |
 | Claims | [C5](claims/C5.md) |
@@ -156,7 +166,9 @@ Two parts of the project disagreeing is information. Each entry names both sides
 - [Simulation/Folding Stabilized Rocket.ork](<../Simulation/Folding Stabilized Rocket.ork>): Ellipsoid nose cone with a 0.067 kg override mass.
 - [Simulation/static_margin.py](../Simulation/static_margin.py): Uses the ogive nose CP coefficient (0.466) and sums only body-tube override masses (1.185 kg).
 
-**Next action.** Reviewer decides whether the omissions matter at the required precision.
+**Next action.** None for the record; physical verification of the component masses is tracked by PRED-C5-DRY-CG.
+
+**Resolution.** Revision 3 models the ellipsoid nose with a derived CP (L/3 from the tip, by the Barrowman d(r^2)/dx weighting validated against the cone 2L/3), includes the canard fin set, and replaces the ambiguous tube-override summation with the explicit component mass model in design_point.json (nose override included). (Input corrections in Simulation/static_margin.py rev 3 and design_point.json, 2026-11-14; analytical.)
 
 *Found by:* Comparing parse_ork() with the .ork XML.
 
@@ -166,7 +178,7 @@ Two parts of the project disagreeing is information. Each entry names both sides
 
 | Field | Value |
 |---|---|
-| Status | OPEN |
+| Status | RESOLVED |
 | Effect | Weakens a claim's support |
 | Kind | model tuned to target — Model inputs were revised until a target was met. |
 | Claims | [C5](claims/C5.md), [C6](claims/C6.md), [C8](claims/C8.md) |
@@ -174,7 +186,9 @@ Two parts of the project disagreeing is information. Each entry names both sides
 - [docs/EVIDENCE/CHANGELOG.md](EVIDENCE/CHANGELOG.md): C5 fins, C6 design point, and C8 fin mass were changed so results match the paper; entries are marked RESOLVED.
 - [evidence/archive/C5_openrocket_pre_retune.ork.xml](../evidence/archive/C5_openrocket_pre_retune.ork.xml): Before the change the OpenRocket fins had a 20 mm root chord; the reference script then gave 0.08-0.10 cal.
 
-**Next action.** Record an independent source for each revised input (drawing, datasheet, measurement), or keep the claims open.
+**Next action.** Physical mass and CG measurement of as-built hardware (PRED-C5-DRY-CG) before any flight claim.
+
+**Resolution.** Phase 1: the fin resize is a design action at the corrected formulation, not a retune of a fixed design behind a paper target. Every input now carries an explicit source line in design_point.json (motor from the certified thrustcurve record, fin sizing from the corrected derivation with an independent numerical cross-check, component masses from a documented breakdown). The component masses remain authored estimates until weighed; that limitation is stated on the claim. (Chief weapons engineer, Phase 1 militarization, 2026-11-14; the historical divergence log and pre-retune model stay committed.)
 
 *Found by:* Reading the divergence log and the preserved pre-change model.
 
@@ -184,7 +198,7 @@ Two parts of the project disagreeing is information. Each entry names both sides
 
 | Field | Value |
 |---|---|
-| Status | OPEN |
+| Status | RESOLVED |
 | Effect | Weakens a claim's support |
 | Kind | model vs model — Two models of the same quantity disagree. |
 | Claims | [C4](claims/C4.md), [C6](claims/C6.md), [C7](claims/C7.md), [C8](claims/C8.md) |
@@ -194,7 +208,9 @@ Two parts of the project disagreeing is information. Each entry names both sides
 - [docs/EVIDENCE/C7_run_record.json](EVIDENCE/C7_run_record.json): 15 g fin, 60 mm, 70 m/s egress.
 - [docs/EVIDENCE/C5_static_margin_inputs.json](EVIDENCE/C5_static_margin_inputs.json): Body-tube dry mass 1.185 kg.
 
-**Next action.** Define one design point in a single reviewed input file that every model reads.
+**Next action.** None for the record; keep every future model reading design_point.json.
+
+**Resolution.** Phase 1 created design_point.json (revision 2026-11-14-phase1): the single shared input file for the linkage, fins, canards, mass model, motor, spring, and deployment trigger. The four-bar, static-margin, spring, and reliability models all read it; their records cite its revision. (Chief weapons engineer, Phase 1 militarization, 2026-11-14.)
 
 *Found by:* Cross-reading model inputs during the 2026-09-28 review.
 
@@ -204,7 +220,7 @@ Two parts of the project disagreeing is information. Each entry names both sides
 
 | Field | Value |
 |---|---|
-| Status | OPEN |
+| Status | RESOLVED |
 | Effect | Contradicts a claim or requirement |
 | Kind | requirement vs model — A model result does not meet a stated requirement. |
 | Claims | [C6](claims/C6.md) |
@@ -212,7 +228,9 @@ Two parts of the project disagreeing is information. Each entry names both sides
 - [evidence/archive/notes-v1/C6_spring_sizing.md](../evidence/archive/notes-v1/C6_spring_sizing.md): Requirement: at least 20% margin.
 - [docs/EVIDENCE/C6_design_point.json](EVIDENCE/C6_design_point.json): Margin 0.189936 (19.0%).
 
-**Next action.** A human changes the spring, the requirement, or the design point, and records why.
+**Next action.** Characterize the specified spring (PRED-C6-SPRING-RATE) before flight.
+
+**Resolution.** The militarized crank-spring design point sizes k_min = 7.82 N*m/rad (lock requirement dominant); the specified 11.0 N*m/rad spring gives a 40.7 percent margin, above the 20 percent requirement. The legacy fin-direct record (19.0 percent) is kept for traceability. (Phase 1 spring redesign in mechanism/spring_sizing.py at design_point.json, 2026-11-14; analytical, no spring measured.)
 
 *Found by:* Requirement R-C6-MARGIN evaluated from the design-point record.
 
@@ -242,7 +260,7 @@ Two parts of the project disagreeing is information. Each entry names both sides
 
 | Field | Value |
 |---|---|
-| Status | OPEN |
+| Status | RESOLVED |
 | Effect | Weakens a claim's support |
 | Kind | implementation defect — Software produced values that do not follow from its inputs. |
 | Claims | [C7](claims/C7.md) |
@@ -250,7 +268,9 @@ Two parts of the project disagreeing is information. Each entry names both sides
 - [Simulation/reliability_sweep.py](../Simulation/reliability_sweep.py): omega_final is forced to 0 when the toggle event fires; k (N*m/rad) is applied as a constant torque (N*m); latency shifts start time only.
 - [docs/EVIDENCE/C7_run_record.json](EVIDENCE/C7_run_record.json): 10,000 of 10,000 trials succeed.
 
-**Next action.** Rebuild the simulation so each failure mode it counts can occur, at the shared design point (D-010).
+**Next action.** None for the record; physical deployment trials are tracked by PRED-C7-LOCK-FRACTION.
+
+**Resolution.** The reliability simulation was rebuilt: the fin equation of motion is integrated through the verified four-bar kinematics (spring torque on the crank, angle-of-attack-dependent aero, friction), and link tolerances enter through a numerically derived toggle gradient. Every counted failure mode can occur. In 10,000 seeded trials, 9,993 succeed (99.93 percent); the 7 failures are all stop-angle tolerance tail, honestly labeled. (Simulation rebuild in Simulation/reliability_sweep.py rev 2 at design_point.json, 2026-11-14; software-tested.)
 
 *Found by:* Reading the success criterion against the integrator's event handling.
 
@@ -327,6 +347,8 @@ Two parts of the project disagreeing is information. Each entry names both sides
 - [Firmware/Launcher/src/main.cpp](../Firmware/Launcher/src/main.cpp): After sending IGNITE the launcher waits 5 s for IGNITED, then aborts.
 
 **Next action.** A human decides the intended ordering. On the bench this ordering acts as an extra interlock; do not remove it without a safety review.
+
+**Progress.** Phase 1 (MIL-DEV-010): the deploy trigger was re-derived for rail launch (2.0 g sustained 150 ms) because the G64W cannot produce the historical 15 g on this mass. The ignition-vs-deployment ordering question itself remains open and must be resolved by the Phase 6 live-fire program design.
 
 *Found by:* Tracing the nominal command sequence through both firmwares.
 

@@ -27,4 +27,8 @@ extern const int DEPLOY_OUTPUT_PIN;
 extern const float DEPLOY_ACCEL_THRESHOLD_G;
 extern const float DEPLOY_ACCEL_THRESHOLD_MS2;
 
+// Sustain time the acceleration must hold before the deploy output may fire
+// (milliseconds); enforced by the launch-detect state in main.cpp.
+extern const unsigned long DEPLOY_ACCEL_SUSTAIN_MS;
+
 #endif // DEPLOY_ISR_H

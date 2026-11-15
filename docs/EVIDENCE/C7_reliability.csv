@@ -1,1 +1,8 @@
-trial,theta_final,omega_final,v_egress,Cm_alpha
+trial,psi_final_deg,t_reach_s,v_egress,k_spring,friction_n_m,reason
+1129,88.92,0.0146,10.48,10.388,0.173,stop_angle_under_tolerance
+2121,88.91,0.0144,17.47,9.973,0.326,stop_angle_under_tolerance
+6261,88.95,0.0153,12.63,11.036,0.281,stop_angle_under_tolerance
+6485,88.79,0.0138,18.5,10.891,0.313,stop_angle_under_tolerance
+8314,88.92,0.0158,8.98,10.513,0.165,stop_angle_under_tolerance
+9490,88.85,0.0153,20.51,9.925,0.252,stop_angle_under_tolerance
+9840,88.94,0.0157,28.46,11.041,0.223,stop_angle_under_tolerance

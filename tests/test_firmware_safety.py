@@ -106,7 +106,14 @@ def test_deploy_trigger_uses_consistent_units_and_reachable_threshold():
 def test_deploy_trigger_requires_armed_state():
     rocket = _read("Firmware/Rocket/src/main.cpp")
 
-    assert 'sysState != "IDLE" && a.acceleration.x > DEPLOY_ACCEL_THRESHOLD_MS2' in rocket
+    # MIL-DEV-010: sustained launch detection. The deploy output may fire only
+    # when the rocket is not IDLE, the acceleration is above threshold, and it
+    # has held for the sustain time.
+    assert 'if (sysState != "IDLE") {' in rocket
+    assert "current_time - launchDetectStartMs >= DEPLOY_ACCEL_SUSTAIN_MS" in rocket
+    assert "a.acceleration.x > DEPLOY_ACCEL_THRESHOLD_MS2" in rocket
+    # A drop below the threshold resets the sustain timer.
+    assert "launchDetectActive = false;" in rocket
 
 
 def test_roll_filter_blends_accel_only_with_valid_gravity_reference():

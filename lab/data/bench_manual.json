@@ -303,11 +303,11 @@
     },
     {
       "path": "docs/DISCREPANCIES.md",
-      "sha256": "d1d78acfd4d2699d2e3e0740686b260d8a3d15f8334b084987475296fe21475a"
+      "sha256": "39b0bd03dd16b3c9b97f6b22d79edb8041b148c7b9b65948163376c18c959dd4"
     },
     {
       "path": "docs/EVIDENCE_OBSERVATORY.md",
-      "sha256": "972d757b52960a7d561e6f5c77b6d09109e9875759af3c5e2118e8d536fa09ec"
+      "sha256": "4a19a8f9a008d4c61c216aa4e6fe9c172c8ab731d3ea0035d5b920a1427f2743"
     },
     {
       "path": "docs/GROUND_STATUS.md",
@@ -327,7 +327,7 @@
     },
     {
       "path": "docs/PROJECT_STATUS.md",
-      "sha256": "581f3f064aeaedbfe4496cd718b01ec0802cb784b78f15cb44b68647c5fe0e28"
+      "sha256": "f83e9025bb69a2d1487ee81cf6fe28fce14a766f894191f9de453999b2233dd4"
     },
     {
       "path": "docs/PROTOCOL.md",
@@ -343,7 +343,7 @@
     },
     {
       "path": "docs/SAFETY.md",
-      "sha256": "801752872586acbea6ffc754926ff53d8d5b66a44059a3a0aa1c89433e63c95b"
+      "sha256": "23735b90e04e3026f5d8db3ea9b1d0216d0aad542cd1ef63f839c4d26f0fb578"
     },
     {
       "path": "docs/TECHNOLOGY_INTEGRATION.md",
@@ -355,7 +355,7 @@
     },
     {
       "path": "docs/TRACEABILITY.md",
-      "sha256": "84166f43f82d3f002b673d48a5d4f1b3a6da077dcb13444b5752039e70171fd7"
+      "sha256": "989200769c82cc77caa38d8d2194e1678d408af731be7d519fe8c14816be99b5"
     },
     {
       "path": "docs/USB_BENCH_MONITOR.md",
@@ -370,5 +370,5 @@
       "sha256": "a707d10558f18decdf53708184fb0ae7ccd74da85953f5bb8c2e6422e260afcb"
     }
   ],
-  "revision": "3b86d7bde5db354a2e32b18fb666c2c7e3c3857d473d6528586c921b19eb5b54"
+  "revision": "c0ec46fa6dd2b027b30bb734c499e8857dea53b3d84270e2695faf91cde5503b"
 }

@@ -1,52 +1,81 @@
 {
-  "schema": "project33.c7.run_record/1",
+  "schema": "project33.c7.run_record/2",
   "generator": "Simulation/reliability_sweep.py",
+  "design_point_revision": "2026-11-14-phase1",
   "trials": 10000,
-  "successes": 10000,
-  "failures": 0,
+  "successes": 9993,
+  "failures": 7,
   "seed": 33,
-  "rng": "numpy.random.seed + numpy.random.uniform (legacy global RNG)",
+  "rng": "numpy.random.default_rng",
+  "kinematics": "verified four-bar trace psi(s), r(s)=dpsi/dt2 from mechanism/four_bar.py",
   "sampled_ranges": {
-    "k_spring": [
-      198.0,
-      242.00000000000003
+    "k_spring_n_m_rad": [
+      9.9,
+      12.1
     ],
-    "theta_toggle_deg": [
-      85.0,
-      95.0
+    "preload_beyond_stop_deg": [
+      "nominal 30 minus/plus 3",
+      null
+    ],
+    "fin_mass_kg": [
+      0.108,
+      0.132
     ],
     "v_egress_m_s": [
-      63.0,
-      77.0
+      8.0,
+      35.0
     ],
-    "I_fin_kg_m2": [
-      1.5299999999999996e-05,
-      2.0699999999999995e-05
+    "friction_n_m": [
+      0.05,
+      0.35
     ],
-    "Cm_alpha": [
-      0.6000000000000001,
-      1.0
+    "cn_scale": [
+      0.8,
+      1.2
     ],
-    "timer_latency_ms": [
-      40.0,
+    "trigger_latency_ms": [
+      10.0,
       60.0
+    ],
+    "stop_angle_deg": "N(90, 0.3)",
+    "link_tolerance_mm": [
+      -0.15,
+      0.15
     ]
   },
-  "fixed_parameters": {
-    "S_fin_m2": 0.0036,
-    "c_fin_m": 0.06,
-    "fin_mass_kg": 0.015,
-    "fin_length_m": 0.06,
-    "damping_N_m_s": 0.05,
-    "rho_kg_m3": 1.225
-  },
-  "success_criterion": "|theta_final - theta_toggle| <= 0.1 deg and |omega_final| <= 50 deg/s",
-  "model_structure_notes": [
-    "omega_final is set to 0 whenever the toggle event fires, so the omega test cannot fail for a locked trial",
-    "k_spring (stated in N*m/rad) is applied as a constant torque in N*m",
-    "timer_latency_ms delays the start but has no effect on the final state",
-    "fin mass, size and egress speed differ from the C6 design point"
+  "failure_modes_modeled": [
+    "stalled_short",
+    "window_timeout",
+    "toggle_inside_stop_underdeploy",
+    "stop_angle_under_tolerance",
+    "foldback_at_stop"
   ],
-  "success_fraction": 1.0,
+  "failure_counts": {
+    "stalled_short": 0,
+    "window_timeout": 0,
+    "toggle_inside_stop_underdeploy": 0,
+    "stop_angle_under_tolerance": 7,
+    "foldback_at_stop": 0
+  },
+  "success_criterion": "psi_final >= 89.0 deg within 0.15 s and static hold at stop",
+  "fixed_parameters": {
+    "fin_chord_m": 0.16,
+    "fin_span_m": 0.22,
+    "fin_area_m2": 0.0352,
+    "x_cp_from_le_m": 0.04,
+    "cn_alpha_per_rad": 3.638,
+    "cn_cap": 1.2,
+    "rho_kg_m3": 1.225,
+    "hold_speed_m_s": 70.0,
+    "r_stop": 0.3608,
+    "r_worst_hold": 0.5052
+  },
+  "model_structure_notes": [
+    "fin equation of motion integrated in the crank coordinate with the chain-rule inertia term",
+    "aero hinge moment follows effective angle of attack during deployment (peak while folding, not constant)",
+    "link tolerances enter through a numerically derived toggle-position gradient",
+    "fold-back judged statically at the stop: reflected gust moment vs spring preload"
+  ],
+  "success_fraction": 0.9993,
   "basis": "numerical simulation; no physical deployment was observed"
 }
