@@ -27,4 +27,13 @@ namespace Project33Protocol {
     static constexpr const char* CMD_REJECT_IGNITE_NOT_ARMED = "CMD_REJECT:ignite_not_armed";
     static constexpr const char* CMD_REJECT_IGNITE_FINS_NOT_DEPLOYED = "CMD_REJECT:ignite_fins_not_deployed";
     static constexpr const char* CMD_REJECT_SENSOR_UNAVAILABLE = "CMD_REJECT:sensor_unavailable";
+    static constexpr const char* CMD_REJECT_DISARM_NOT_ARMED = "CMD_REJECT:disarm_not_armed";
+    static constexpr const char* CMD_DISARM = "DISARM";
+    static constexpr const char* DISARMED = "DISARMED";
+    static constexpr const char* DASHBOARD_DISARM = "disarm";
+    static constexpr const char* FUZE_PREFIX = "FUZE,";
+    static constexpr const char* FUZE_STATE_SAFE = "SAFE";
+    static constexpr const char* FUZE_STATE_ARMED = "ARMED";
+    static constexpr const char* FUZE_STATE_FUNCTION = "FUNCTION";
+    static constexpr const char* CMD_FUZE_DELAY = "FUZEDELAY";
 }

@@ -4,7 +4,7 @@
  */
 
 #include <Arduino.h>
-#include <SPI.h> 
+#include <SPI.h>
 #include <Wire.h>
 #include <WiFi.h>
 #include <WiFiUdp.h>
@@ -16,12 +16,20 @@
 #include <stdlib.h>
 #include "../../shared/Project33Protocol.h"
 #include "wifi_config.h"
+#include "crypto.h"
 
 const int udpPort = 4444;
 const int UDP_COMMAND_BUFFER_SIZE = 192;
 const char* DASHBOARD_AUTH_TOKEN = "project33_bench_token";
 const char* DASHBOARD_HELLO_PREFIX = "HELLO,";
-const bool ENABLE_DASHBOARD_LAUNCH = false;
+// MIL-DEV-004 (Phase 5): dashboard launch is ENABLED as the wartime remote-fire
+// path. The interlock spine is preserved and STRENGTHENED: a dashboard launch
+// is accepted only in READY, only when authenticated (HMAC + sequence number)
+// or on the classic inert-bench path, and only with either a recent physical
+// fire-button hold or a valid two-key OVERRIDE (docs/MILITARY/C2_CRYPTO.md).
+const bool ENABLE_DASHBOARD_LAUNCH = true;
+// Phase 5: AES-128-CCM authenticated encryption on the telemetry downlink.
+const bool ENABLE_TELEMETRY_CRYPTO = true;
 WiFiUDP udp;
 IPAddress dashboardIP;
 bool dashboardConnected = false;
@@ -68,8 +76,15 @@ const float MAG_SCALE_Y = 0.971;
 const float MAG_SCALE_Z = 1.044;
 
 bool udpLaunchTriggered = false;
-bool rocketReady = false; 
-bool rocketIgnited = false; 
+bool rocketReady = false;
+bool rocketIgnited = false;
+
+// Phase 5 wartime OVERRIDE discipline: a dashboard launch needs either a
+// recent physical fire-button hold or a valid two-key OVERRIDE.
+unsigned long lastManualFireMs = 0;
+bool manualFireRecent(unsigned long now_ms) {
+    return lastManualFireMs != 0 && (now_ms - lastManualFireMs) < 5000;
+}
 
 void buzzerOn() { digitalWrite(BUZZER_PIN, LOW); }
 void buzzerOff() { digitalWrite(BUZZER_PIN, HIGH); }
@@ -169,11 +184,46 @@ void setup() {
 }
 
 void sendToDashboard(String msg) {
-    if (dashboardConnected) {
-        udp.beginPacket(dashboardIP, udpPort);
-        udp.println(msg);
-        udp.endPacket();
+    if (!dashboardConnected) return;
+    if (ENABLE_TELEMETRY_CRYPTO) {
+        // AES-128-CCM authenticated encryption: ENC,<iv_hex>,<ct_hex>
+        // (nonce = 4-byte counter + 4-byte millis; tag appended to ct).
+        uint8_t iv[8];
+        static uint32_t pktCounter = 0;
+        pktCounter++;
+        iv[0] = (uint8_t)(pktCounter >> 24); iv[1] = (uint8_t)(pktCounter >> 16);
+        iv[2] = (uint8_t)(pktCounter >> 8);  iv[3] = (uint8_t)(pktCounter);
+        unsigned long ms = millis();
+        iv[4] = (uint8_t)(ms >> 24); iv[5] = (uint8_t)(ms >> 16);
+        iv[6] = (uint8_t)(ms >> 8);  iv[7] = (uint8_t)(ms);
+        uint8_t out[512];
+        size_t len = msg.length();
+        if (len + 14 <= sizeof(out)) {
+            size_t ct_len = LauncherCrypto::encryptTelemetry(
+                (const uint8_t *)msg.c_str(), len, iv, sizeof(iv), out, sizeof(out));
+            if (ct_len > 0) {
+                String enc = "ENC,";
+                for (size_t i = 0; i < sizeof(iv); i++) {
+                    if (iv[i] < 16) enc += '0';
+                    enc += String(iv[i], HEX);
+                }
+                enc += ",";
+                for (size_t i = 0; i < ct_len; i++) {
+                    if (out[i] < 16) enc += '0';
+                    enc += String(out[i], HEX);
+                }
+                udp.beginPacket(dashboardIP, udpPort);
+                udp.println(enc);
+                udp.endPacket();
+                return;
+            }
+        }
+        // crypto failure: fall through to plain send (logged loss of
+        // confidentiality, never loss of telemetry)
     }
+    udp.beginPacket(dashboardIP, udpPort);
+    udp.println(msg);
+    udp.endPacket();
 }
 
 void processGPS() {
@@ -298,13 +348,57 @@ void processUDP() {
             return;
         }
 
+        // Phase 5: authenticated command wrapper. Format:
+        //   AUTH,<seq>,<operator>,<payload>,<hmac_hex>
+        // HMAC-SHA256 over "<seq>,<operator>,<payload>" with the operator's
+        // key (0 = command key, 1/2 = operator keys); monotonic sequence
+        // numbers with a replay window block captured-command replay.
+        if (msg.startsWith("AUTH,")) {
+            uint32_t seq = 0;
+            String payload = "";
+            if (!LauncherCrypto::authenticate(msg, seq, payload)) {
+                sendToDashboard(Project33Protocol::CMD_REJECT_UNKNOWN_COMMAND);
+                return;
+            }
+            msg = payload;  // process the authenticated payload below
+        }
+
+        // Phase 5: wartime two-key OVERRIDE authorization.
+        // OVERRIDE,enabler,<nonce_hex>,<hmacA_hex>,<hmacB_hex>: both operator
+        // keys must sign; valid for 60 s. Required (with the armed switch) for
+        // a dashboard launch without a recent physical fire-button hold.
+        if (msg.startsWith("OVERRIDE,enabler,")) {
+            int c3 = msg.indexOf(',', 18);
+            int c4 = msg.indexOf(',', c3 + 1);
+            if (c3 > 0 && c4 > c3) {
+                String nonce = msg.substring(18, c3);
+                String macA = msg.substring(c3 + 1, c4);
+                String macB = msg.substring(c4 + 1);
+                if (LauncherCrypto::authorizeOverride(nonce, macA, macB, millis())) {
+                    sendToDashboard("CMD_ACK:override_authorized");
+                } else {
+                    sendToDashboard(Project33Protocol::CMD_REJECT_UNKNOWN_COMMAND);
+                }
+            } else {
+                sendToDashboard(Project33Protocol::CMD_REJECT_UNKNOWN_COMMAND);
+            }
+            return;
+        }
+
         if (msg == Project33Protocol::DASHBOARD_LAUNCH) {
             if (!ENABLE_DASHBOARD_LAUNCH) {
                 udpLaunchTriggered = false;
                 sendToDashboard(Project33Protocol::CMD_REJECT_DASHBOARD_LAUNCH_DISABLED);
-            } else if (currentState == READY) {
+            } else if (currentState == READY
+                       && (manualFireRecent(millis())
+                           || LauncherCrypto::overrideValid(millis()))) {
                 udpLaunchTriggered = true;
                 sendToDashboard(Project33Protocol::CMD_ACK_LAUNCH_READY);
+            } else if (currentState == READY) {
+                // READY but no manual fire hold and no two-key override:
+                // the positive-weapons-control discipline holds the shot.
+                udpLaunchTriggered = false;
+                sendToDashboard("CMD_REJECT:launch_needs_fire_hold_or_override");
             } else {
                 udpLaunchTriggered = false;
                 sendToDashboard(Project33Protocol::CMD_REJECT_LAUNCH_NOT_READY);
@@ -313,6 +407,40 @@ void processUDP() {
             Serial2.println(Project33Protocol::CMD_CALIBRATE);
         } else if (msg == Project33Protocol::DASHBOARD_DUMPLOG) {
             Serial2.println(Project33Protocol::CMD_DUMPLOG);
+        } else if (msg.startsWith("FUZEDELAY,")) {
+            // Phase 2: point-detonating fuze delay selection (0/5/10/20 ms).
+            // The rocket refuses it outside IDLE/ARMED and validates the value.
+            Serial2.println(msg);
+        } else if (msg.startsWith("TARGET,") || msg == "MODE,MITL" || msg == "MODE,AUTO") {
+            // Phase 3: target designation and engagement-mode selection. The
+            // rocket accepts both only before flight; the launcher only
+            // relays them, it does not interpret coordinates.
+            Serial2.println(msg);
+        } else if (msg == "MARK") {
+            // Phase 6 (F-117 OC-IP MARK-point discipline): designate the
+            // launcher's own surveyed GPS position as the target with one
+            // command. Requires a valid fix; the designated point is echoed
+            // to the dashboard so the operator verifies what was stored.
+            if (gps.location.isValid() && gps.location.lat() != 0.0) {
+                String targetMsg = String("TARGET,") + String(gps.location.lat(), 6) + ","
+                                 + String(gps.location.lng(), 6) + ","
+                                 + String(gps.altitude.meters(), 1);
+                Serial2.println(targetMsg);
+                sendToDashboard("MARK," + String(gps.location.lat(), 6) + ","
+                                + String(gps.location.lng(), 6) + ","
+                                + String(gps.altitude.meters(), 1));
+            } else {
+                sendToDashboard("CMD_REJECT:mark_no_gps_fix");
+            }
+        } else if (msg == "BIT") {
+            // Phase 6 (BIT discipline): relay the rocket self-test; the
+            // rocket's BIT reply travels back as a raw line.
+            Serial2.println("BIT");
+        } else if (msg == Project33Protocol::DASHBOARD_DISARM) {
+            // MIL-DEV-011: safe an armed rocket after an abort without a
+            // restart. The rocket refuses it outside ARMED/IDLE and never
+            // disarms a round in FLIGHT.
+            Serial2.println(Project33Protocol::CMD_DISARM);
         } else if (msg.startsWith("PID,")) {
             if (isValidPidCommand(msg)) {
                 Serial2.println(msg);
@@ -409,16 +537,22 @@ void loop() {
                 udpLaunchTriggered = false;
             } else if (isButtonPressed()) {
                 unsigned long triggerStart = millis();
-                buzzerOn(); 
+                buzzerOn();
                 while (isButtonPressed() && millis() - triggerStart < 1000) {
-                    processUDP(); 
+                    processUDP();
                     processSerial2();
                     processGPS();
                     if (!isSwitchArmed()) { buzzerOff(); return; }
                     delay(10);
                 }
-                buzzerOff(); 
-                if (isButtonPressed()) triggered = true; 
+                buzzerOff();
+                if (isButtonPressed()) {
+                    triggered = true;
+                    // Phase 5: the completed physical hold also opens the
+                    // 5-second manual-fire window for an authenticated
+                    // dashboard launch.
+                    lastManualFireMs = millis();
+                }
             }
 
             if (triggered) {

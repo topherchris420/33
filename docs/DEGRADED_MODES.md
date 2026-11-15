@@ -101,7 +101,6 @@ Pinned so that adding one fails a test and forces this model and the board to be
 
 | Missing | Why it matters |
 |---|---|
-| Returning an armed rocket to IDLE without a restart | The only IDLE assignment in the rocket firmware is its initial value, and the launcher's abort path sends the rocket nothing. See discrepancy D-025. |
 | The launcher reporting SAFE, ARMING, READY, or IGNITING to the dashboard | STATUS carries the rocket's state. The dashboard can only infer the launcher's state. |
 | A rocket heartbeat that does not depend on the IMU | The launcher accepts an ALIVE line as a heartbeat, but the rocket never sends one, so a failed IMU looks the same as a dead rocket until a log dump is requested. |
 

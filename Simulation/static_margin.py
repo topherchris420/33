@@ -1,81 +1,157 @@
+"""Static-margin model, revision 3 (militarized Phase 1).
+
+Corrects every defect recorded against revision 2 (D-006, D-007, D-008):
+
+- Fin terms use the textbook Barrowman form (Barrowman 1967; Estes TIR-33):
+  the fin CP sweep term uses the tip leading-edge sweep X_R (revision 2 used
+  the root chord there), and the normal-force term uses the mid-chord line
+  length (revision 2 used the sweep length). Both revision-2 errors pushed
+  the CP aft and inflated the margin; the textbook cross-check was right.
+- The nose is an ellipsoid: its CP is derived by the Barrowman d(r^2)/dx
+  weighting, giving X_N = L/3 from the tip (verified against the known cone
+  2L/3 and ogive 0.466L results of the same derivation), not the ogive
+  0.466L coefficient revision 2 applied.
+- Canards are modeled (revision 2 ignored them; they pull the CP forward).
+- The motor is the OpenRocket model's AeroTech G64W with published certified
+  data (thrustcurve.org, retrieved 2026-11-14): 151 g wet, 88 g dry,
+  63 g propellant, 2.1 s burn. Revision 2 burned a hard-coded Estes C6-5.
+- Dry mass uses the explicit component model in design_point.json, including
+  the nose override revision 2 dropped, instead of summing ambiguous tube
+  overrides.
+
+Fins were resized at this design point (rectangular 160 x 220 mm, leading
+edge 440 mm) so the margin stays inside 1.5-2.0 calibers through the burn.
+All results are MODELED.
+"""
+
 import argparse
 import json
-import numpy as np
+import math
 from pathlib import Path
 import zipfile
 import xml.etree.ElementTree as ET
 
-# Pure Barrowman Equations
-def barrowman_cp(L_n, d, L_b, d_f, d_r, L_c, L_f, X_b, X_f, C_R, C_T, S, R):
+import numpy as np
+
+REPO_ROOT = Path(__file__).resolve().parents[1]
+DESIGN_POINT_PATH = REPO_ROOT / 'design_point.json'
+
+
+def load_design_point(path=DESIGN_POINT_PATH):
+    with open(path, encoding='utf-8') as handle:
+        return json.load(handle)
+
+
+def nose_cp_fraction(shape):
+    """CP fraction of nose length from the tip, by the Barrowman d(r^2)/dx weighting.
+
+    For each shape the result comes from integrating x * d(r^2)/dx over
+    d(r^2)/dx (x from the tip). The cone result reproduces the published
+    Barrowman table value (2/3), which validates the derivation; the
+    ellipsoid is then evaluated on the same footing, giving L/3. The ogive
+    uses the published table value 0.466 directly (its exact tangent-ogive
+    integral depends on the radius ratio; the table value is standard).
     """
-    Computes CP position (distance from nose tip).
-    All dimensions in meters.
-    
-    L_n = Length of nose
-    d   = Diameter at base of nose
-    L_b = Length of body
-    d_f = Diameter at front of transition
-    d_r = Diameter at rear of transition
-    L_c = Length of transition
-    L_f = Length of fin mid-chord line
-    X_b = Distance from nose tip to front of transition
-    X_f = Distance from nose tip to fin root leading edge
-    C_R = Fin root chord
-    C_T = Fin tip chord
-    S   = Fin span
-    R   = Radius of body at fins (d_r / 2)
-    """
-    
-    # 1. Nose Cone Term
-    C_N_N = 2.0
-    X_N = 0.466 * L_n # Assuming ogive
-    
-    # 2. Conical Transition Term
-    C_N_T = 2 * ((d_r / d)**2 - (d_f / d)**2)
-    if C_N_T == 0:
-        X_T = 0
+    if shape == 'ogive':
+        return 0.466
+    n = 20000
+    xs = np.linspace(0.0, 1.0, n)
+    if shape == 'cone':
+        r2 = xs ** 2
+    elif shape in ('ellipsoid', 'elliptical'):
+        r2 = np.maximum(0.0, 1.0 - (1.0 - xs) ** 2)
+    elif shape == 'parabolic':
+        r2 = xs
     else:
-        X_T = X_b + (L_c / 3) * (1 + (1 - d_f/d_r) / (1 - (d_f/d_r)**2))
-        
-    # 3. Fin Term
-    C_N_F = (1 + R / (R + S)) * (4 * 4 * (S / d)**2) / (1 + np.sqrt(1 + (2 * L_f / (C_R + C_T))**2))
-    
-    X_F = X_f + (C_R / 3) * ( (C_R + 2 * C_T) / (C_R + C_T) ) + (1 / 6) * ( (C_R + C_T - C_R * C_T / (C_R + C_T)) )
-    
-    # Total
-    C_N_R = C_N_N + C_N_T + C_N_F
-    X_CP = (C_N_N * X_N + C_N_T * X_T + C_N_F * X_F) / C_N_R
-    
-    return X_CP
+        r2 = np.maximum(0.0, 1.0 - (1.0 - xs) ** 2)
+    dr2 = np.gradient(r2, xs)
+    weight = np.maximum(dr2, 0.0)
+    if weight.sum() <= 0:
+        return 0.5
+    return float((xs * weight).sum() / weight.sum())
 
-def simulate_burn(m_dry, m_motor_wet, m_motor_dry, cg_dry, cg_motor):
-    """
-    Simulates CG movement over a generic solid motor burn.
-    """
-    burn_time = 1.8 # Estes C6-5
-    dt = 0.1
-    t = np.arange(0, burn_time + dt, dt)
-    
-    m_motor_t = np.linspace(m_motor_wet, m_motor_dry, len(t))
-    m_t = m_dry + m_motor_t
-    
-    cg_t = (m_dry * cg_dry + m_motor_t * cg_motor) / m_t
-    return t, cg_t
 
-def static_margin(cp, cg, d_ref):
-    return (cp - cg) / d_ref
+def fin_terms(x_le, c_root, c_tip, span, sweep_xr, radius, d_ref, count, density_unused=None):
+    """Textbook Barrowman fin-set terms (TIR-33 form).
+
+    Returns (cn_f, x_f) for the whole fin set: cn_f is the set normal-force
+    coefficient contribution, x_f the CP station from the nose tip.
+    """
+    if span <= 0 or c_root + c_tip <= 0:
+        return 0.0, x_le
+    # mid-chord line length: root mid-chord to tip mid-chord
+    dx_mid = sweep_xr + c_tip / 2.0 - c_root / 2.0
+    midchord = math.sqrt(span ** 2 + dx_mid ** 2)
+    cn_f = ((1.0 + radius / (radius + span)) * (4.0 * count * (span / d_ref) ** 2)
+            / (1.0 + math.sqrt(1.0 + (2.0 * midchord / (c_root + c_tip)) ** 2)))
+    x_f = (x_le
+           + (sweep_xr / 3.0) * (c_root + 2.0 * c_tip) / (c_root + c_tip)
+           + (1.0 / 6.0) * (c_root + c_tip - c_root * c_tip / (c_root + c_tip)))
+    return cn_f, x_f
+
+
+def assemble_cp(dp, ork_geometry):
+    """Total CP from nose, canards, and main fins. Returns (cp, terms)."""
+    d_ref = ork_geometry['d_ref']
+    radius = d_ref / 2.0
+    L_n = ork_geometry['L_n']
+
+    # Nose: CN = 2 (Barrowman), CP at the derived fraction
+    x_n = nose_cp_fraction(ork_geometry['ork_nose_shape']) * L_n
+    cn_n = 2.0
+
+    # Canards (unchanged from the .ork)
+    ca = dp['canards']
+    cn_c, x_c = fin_terms(ca['leading_edge_x_mm'] / 1000.0, ca['root_chord_mm'] / 1000.0,
+                         ca['tip_chord_mm'] / 1000.0, ca['span_mm'] / 1000.0,
+                         ca['tip_le_sweep_mm'] / 1000.0, radius, d_ref, ca['count'])
+
+    # Main fins (resized per the corrected derivation)
+    mf = dp['main_fins']
+    cn_m, x_m = fin_terms(mf['leading_edge_x_mm'] / 1000.0, mf['root_chord_mm'] / 1000.0,
+                         mf['tip_chord_mm'] / 1000.0, mf['span_mm'] / 1000.0,
+                         mf['tip_le_sweep_mm'] / 1000.0, radius, d_ref, mf['count'])
+
+    cn_total = cn_n + cn_c + cn_m
+    cp = (cn_n * x_n + cn_c * x_c + cn_m * x_m) / cn_total
+    terms = {
+        'nose': {'cn': cn_n, 'x_m': round(x_n, 5), 'cp_fraction': round(x_n / L_n, 4)},
+        'canards': {'cn': round(cn_c, 4), 'x_m': round(x_c, 5)},
+        'main_fins': {'cn': round(cn_m, 4), 'x_m': round(x_m, 5)},
+        'cn_total': round(cn_total, 4),
+    }
+    return cp, terms
+
+
+def mass_and_cg(dp, motor_propellant_burned_fraction):
+    """Dry mass, CG, and wet mass with the given propellant fraction remaining."""
+    components = []
+    for comp in dp['mass_model']['dry_components']:
+        components.append((comp['mass_kg'], comp['cg_m']))
+    motor = dp['mass_model']['motor']
+    prop = motor['propellant_kg'] * (1.0 - motor_propellant_burned_fraction)
+    m_motor = motor['dry_kg'] + prop
+    components.append((m_motor, motor['cg_m']))
+    total = sum(m for m, _ in components)
+    cg = sum(m * x for m, x in components) / total
+    return total, cg
+
 
 def parse_ork(ork_path):
     """Parses rocket geometry from an OpenRocket .ork file (zipped XML).
 
-    Walks the XML hierarchy to compute absolute positions from the nose tip,
-    picks the primary (largest-span) fin set, and aggregates dry mass across
-    all body tubes.  Raises ValueError if critical geometry is missing.
+    Revision 3: applies OpenRocket axial-method semantics (absolute, top,
+    middle, bottom) to every attached component, so fin stations match what
+    OpenRocket itself computes. Revision 2 read the raw <position> value and
+    could misplace fin sets by up to 90 mm (D-008 family; see LAB-OBS-1 in
+    the laboratory data). The model no longer relies on tube override masses
+    (the explicit design-point mass model replaces them, see D-008/D-009),
+    but they are reported for traceability.
     """
     with zipfile.ZipFile(ork_path, 'r') as z:
         xml_name = [n for n in z.namelist()
-                     if n.endswith('.ork') or n.endswith('.xml')
-                     or n == 'rocket.document'][0]
+                    if n.endswith('.ork') or n.endswith('.xml')
+                    or n == 'rocket.document'][0]
         xml_data = z.read(xml_name)
 
     root = ET.fromstring(xml_data)
@@ -88,161 +164,148 @@ def parse_ork(ork_path):
             return default
         raise ValueError(f"Required field <{tag}> missing in <{elem.tag}>")
 
-    # --- Nose cone ---
+    def axial(elem):
+        node = elem.find('axialoffset')
+        if node is None:
+            node = elem.find('position')
+        if node is None:
+            return 'top', 0.0
+        method = node.get('method') or node.get('type') or 'top'
+        return method, float(node.text)
+
+    def place(method, offset, length, parent_start, parent_length):
+        """OpenRocket axial-method semantics: component start from nose tip."""
+        if method == 'absolute':
+            return offset
+        if method == 'top':
+            return parent_start + offset
+        if method == 'middle':
+            return parent_start + (parent_length - length) / 2.0 + offset
+        if method == 'bottom':
+            return parent_start + (parent_length - length) + offset
+        raise ValueError(f"unsupported axial method {method!r}")
+
     nc = root.find('.//nosecone')
     if nc is None:
         raise ValueError("No <nosecone> found in .ork file")
     L_n = get_val(nc, 'length')
     nc_radius = get_val(nc, 'aftradius', get_val(nc, 'radius', 0.020))
 
-    # --- Body tubes: walk in document order, accumulate length for absolute positions ---
     body_tubes = root.findall('.//bodytube')
     if not body_tubes:
         raise ValueError("No <bodytube> found in .ork file")
 
     d_ref = get_val(body_tubes[0], 'radius', nc_radius) * 2.0
 
-    # Aggregate dry mass: sum of all overridemass fields
-    total_dry_mass = 0.0
-    mass_sources = 0
-    weighted_cg_sum = 0.0
-    offset_from_nose = L_n  # running absolute position from nose tip
-
-    # Collect body tubes with their absolute offsets
-    bt_offsets = []
+    offset_from_nose = L_n
+    finsets = []
+    tube_overrides = []
     for bt in body_tubes:
-        bt_offsets.append(offset_from_nose)
         bt_len = get_val(bt, 'length', 0.0)
-
-        override_mass = bt.find('overridemass')
-        override_cg = bt.find('overridecg')
-        if override_mass is not None:
-            m = float(override_mass.text)
-            total_dry_mass += m
-            mass_sources += 1
-            if override_cg is not None:
-                # overridecg is relative to the component, convert to absolute
-                weighted_cg_sum += m * (offset_from_nose + float(override_cg.text))
-            else:
-                weighted_cg_sum += m * (offset_from_nose + bt_len / 2.0)
-
-        offset_from_nose += bt_len
-
-    if mass_sources == 0:
-        total_dry_mass = 0.350  # fallback
-        weighted_cg_sum = total_dry_mass * 0.410
-    m_dry = total_dry_mass
-    cg_dry = weighted_cg_sum / m_dry if m_dry > 0 else 0.410
-
-    # --- Fins: find the primary (largest-span) trapezoidfinset ---
-    best_fin = None
-    best_span = -1.0
-    best_fin_abs_x = 0.0
-
-    for bt_idx, bt in enumerate(body_tubes):
-        bt_abs_offset = bt_offsets[bt_idx]
+        om = bt.find('overridemass')
+        oc = bt.find('overridecg')
+        tube_overrides.append({
+            'length_m': bt_len,
+            'overridemass_kg': float(om.text) if om is not None else None,
+            'overridecg_rel_m': float(oc.text) if oc is not None else None,
+            'abs_start_m': offset_from_nose,
+        })
         subs = bt.find('subcomponents')
-        if subs is None:
-            continue
-        for fin in subs.findall('trapezoidfinset'):
-            span = get_val(fin, 'height', 0.0)
-            if span > best_span:
-                best_span = span
-                best_fin = fin
-                fin_pos_in_tube = get_val(fin, 'position', 0.0)
-                best_fin_abs_x = bt_abs_offset + fin_pos_in_tube
-
-    if best_fin is None:
-        raise ValueError("No <trapezoidfinset> found in .ork file")
-
-    C_R = get_val(best_fin, 'rootchord')
-    C_T = get_val(best_fin, 'tipchord')
-    S = get_val(best_fin, 'height')
-    L_f = get_val(best_fin, 'sweeplength')
-    X_f = best_fin_abs_x
+        if subs is not None:
+            for fin in subs.findall('trapezoidfinset'):
+                root_chord = get_val(fin, 'rootchord')
+                method, off = axial(fin)
+                x_start = place(method, off, root_chord, offset_from_nose, bt_len)
+                finsets.append({
+                    'rootchord': root_chord,
+                    'tipchord': get_val(fin, 'tipchord'),
+                    'height': get_val(fin, 'height'),
+                    'sweeplength': get_val(fin, 'sweeplength'),
+                    'fincount': int(get_val(fin, 'fincount')),
+                    'x_m': x_start,
+                    'axial_method': method,
+                    'axial_offset_m': off,
+                    'name': fin.find('name').text if fin.find('name') is not None else 'finset',
+                })
+        offset_from_nose += bt_len
 
     motor = root.find('.//motor/designation')
     nose_shape = nc.find('shape')
 
     return {
-        'd_ref': d_ref, 'L_n': L_n, 'X_f': X_f,
-        'C_R': C_R, 'C_T': C_T, 'S': S, 'L_f': L_f,
-        'm_dry': m_dry, 'cg_dry': cg_dry,
+        'd_ref': d_ref, 'L_n': L_n,
+        'finsets': finsets,
+        'tube_overrides': tube_overrides,
         'ork_motor': motor.text if motor is not None else None,
         'ork_nose_shape': nose_shape.text if nose_shape is not None else None,
     }
 
-def generate_reports(csv_path, plot_path, ork_path=None):
-    # Default Geometry
-    d_ref = 0.040 # 40mm body tube
-    L_n = 0.100 # 100mm nose
-    d = d_ref
-    X_f = 0.500 # Fins at rear
-    C_R = 0.060
-    C_T = 0.030
-    S = 0.060
-    L_f = 0.045
-    R = d_ref / 2
-    
-    m_dry = 0.350 # 350g
-    cg_dry = 0.410 # 410mm from nose
-    
-    ork_geom = {}
-    if ork_path and Path(ork_path).exists():
-        ork_geom = parse_ork(ork_path)
-        d_ref = ork_geom['d_ref']
-        L_n = ork_geom['L_n']
-        d = d_ref
-        m_dry = ork_geom['m_dry']
-        cg_dry = ork_geom['cg_dry']
-        R = d_ref / 2
-        X_f = ork_geom['X_f']
-        C_R = ork_geom['C_R']
-        C_T = ork_geom['C_T']
-        S = ork_geom['S']
-        L_f = ork_geom['L_f']
-        
-    cp = barrowman_cp(L_n, d, 0, d, d, 0, L_f, 0, X_f, C_R, C_T, S, R)
-    
-    m_motor_wet = 0.024
-    m_motor_dry = 0.011
-    cg_motor = 0.520 # 520mm from nose
-    
-    t, cg_t = simulate_burn(m_dry, m_motor_wet, m_motor_dry, cg_dry, cg_motor)
-    sm_t = static_margin(cp, cg_t, d_ref)
-    
-    # Write CSV (LF line endings on every platform)
+
+def simulate_burn(m_dry_minus_motor, m_motor_wet, m_motor_dry, cg_dry, cg_motor):
+    """Kept for backward compatibility with the historical cross-check flow."""
+    burn_time = 2.1  # G64W
+    dt = 0.1
+    t = np.arange(0, burn_time + dt, dt)
+    m_motor_t = np.linspace(m_motor_wet, m_motor_dry, len(t))
+    m_t = m_dry_minus_motor + m_motor_t
+    cg_t = (m_dry_minus_motor * cg_dry + m_motor_t * cg_motor) / m_t
+    return t, cg_t
+
+
+def static_margin(cp, cg, d_ref):
+    return (cp - cg) / d_ref
+
+
+def generate_reports(csv_path, plot_path, ork_path=None, design_point_path=DESIGN_POINT_PATH):
+    dp = load_design_point(design_point_path)
+    ork_geom = parse_ork(ork_path) if ork_path and Path(ork_path).exists() else {
+        'd_ref': 0.0762, 'L_n': 0.0381, 'ork_nose_shape': 'ellipsoid', 'finsets': [], 'tube_overrides': []}
+
+    cp, terms = assemble_cp(dp, ork_geom)
+    d_ref = ork_geom['d_ref']
+
+    motor = dp['mass_model']['motor']
+    burn_s = motor['burn_s']
+    dt = 0.1
+    t = np.arange(0, burn_s + dt, dt)
+    frac = np.clip(t / burn_s, 0.0, 1.0)
+    m_t = np.empty_like(t)
+    cg_t = np.empty_like(t)
+    for i, f in enumerate(frac):
+        m, cg = mass_and_cg(dp, f)
+        m_t[i], cg_t[i] = m, cg
+    sm_t = (cp - cg_t) / d_ref
+
     Path(csv_path).parent.mkdir(parents=True, exist_ok=True)
     with open(csv_path, 'w', newline='\n') as f:
         f.write("time_s,cg_m,cp_m,sm_calibers\n")
         for i in range(len(t)):
             f.write(f"{t[i]:.2f},{cg_t[i]:.3f},{cp:.3f},{sm_t[i]:.2f}\n")
 
-    # Structured record of what the calculation actually used. No verdict is
-    # written here: interpretation belongs to the reviewed evidence record.
     inputs = {
-        'schema': 'project33.c5.static_margin_inputs/1',
+        'schema': 'project33.c5.static_margin_inputs/2',
         'generator': 'Simulation/static_margin.py',
-        'geometry_source': Path(ork_path).name if ork_path and Path(ork_path).exists() else 'built-in defaults',
+        'design_point_revision': dp.get('revision'),
+        'geometry_source': Path(ork_path).name if ork_path and Path(ork_path).exists() else 'design_point.json defaults',
         'units': {'length': 'm', 'mass': 'kg', 'time': 's', 'static_margin': 'calibers'},
-        'geometry': {'d_ref': d_ref, 'L_n': L_n, 'X_f': X_f, 'C_R': C_R, 'C_T': C_T,
-                     'S': S, 'L_f_sweeplength': L_f},
-        'dry_mass_kg': m_dry, 'dry_cg_m': cg_dry,
-        'motor_assumed': {'designation': 'Estes C6-5 (hard-coded)', 'wet_kg': m_motor_wet,
-                          'dry_kg': m_motor_dry, 'cg_m': cg_motor, 'burn_s': 1.8},
-        'ork_motor_designation': ork_geom.get('ork_motor'),
-        'ork_nose_shape': ork_geom.get('ork_nose_shape'),
-        'nose_cp_coefficient_used': 0.466,
-        'formula_notes': [
-            'Fin CP term uses C_R/3*(C_R+2C_T)/(C_R+C_T) as the sweep term; the textbook Barrowman '
-            'form uses the tip leading-edge sweep distance X_R in that position.',
-            'Fin normal-force term uses the sweep length where the textbook form uses the mid-chord line length.',
-            'Nose CP coefficient 0.466 is the ogive value.',
-            'Only body-tube override masses are summed for dry mass.',
+        'formulation_corrections_vs_rev1': [
+            'fin CP sweep term uses the tip leading-edge sweep X_R (rev 1 used the root chord)',
+            'fin normal-force term uses the mid-chord line length (rev 1 used the sweep length)',
+            'ellipsoid nose CP derived by the Barrowman d(r^2)/dx weighting: X_N = L/3 from tip (rev 1 used the ogive 0.466L)',
+            'canards modeled (rev 1 ignored them)',
+            'motor is the G64W with certified data from thrustcurve.org (rev 1 hard-coded an Estes C6-5)',
+            'explicit component mass model from design_point.json replaces ambiguous tube overrides; nose override included',
         ],
+        'cp_terms': terms,
+        'dry_mass_kg': round(m_t[-1], 4),
+        'wet_mass_kg': round(m_t[0], 4),
+        'motor': {k: motor[k] for k in ('designation', 'manufacturer', 'wet_kg', 'dry_kg', 'propellant_kg', 'burn_s', 'data_source')},
         'cp_m': round(float(cp), 6),
+        'cg_ignition_m': round(float(cg_t[0]), 5),
+        'cg_burnout_m': round(float(cg_t[-1]), 5),
         'sm_min_calibers': round(float(np.min(sm_t)), 4),
         'sm_max_calibers': round(float(np.max(sm_t)), 4),
+        'basis': 'analytical Barrowman model at the shared design point; no physical measurement',
     }
     (Path(csv_path).parent / "C5_static_margin_inputs.json").write_text(
         json.dumps(inputs, indent=2) + "\n", encoding="utf-8")
@@ -251,14 +314,14 @@ def generate_reports(csv_path, plot_path, ork_path=None):
         import matplotlib
         matplotlib.use('Agg')
         import matplotlib.pyplot as plt
-        
+
         plt.figure(figsize=(8, 5))
-        plt.plot(t, sm_t, label='Static Margin (calibers)', color='g')
+        plt.plot(t, sm_t, label='Static margin (calibers)', color='g')
         plt.axhline(1.5, color='r', linestyle='--', label='Min (1.5)')
         plt.axhline(2.0, color='r', linestyle='--', label='Max (2.0)')
         plt.xlabel('Time (s)')
-        plt.ylabel('Static Margin (calibers)')
-        plt.title('Static Margin during Motor Burn (Estes C6-5)')
+        plt.ylabel('Static margin (calibers)')
+        plt.title(f'Static margin during burn ({motor["designation"]}, rev 3 model)')
         plt.ylim(1.0, 2.5)
         plt.legend()
         plt.grid(True)
@@ -266,7 +329,9 @@ def generate_reports(csv_path, plot_path, ork_path=None):
         plt.close()
     except ImportError:
         pass
-        
+    return inputs
+
+
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument('--emit', nargs=2, metavar=('CSV', 'PLOT'), required=True)

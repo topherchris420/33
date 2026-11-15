@@ -15,8 +15,17 @@
 // ignition servo PWM pin, and driving it from the deploy ISR corrupted the
 // servo signal. Keep this pin clear of every assignment in docs/WIRING.md.
 const int DEPLOY_OUTPUT_PIN = 33;
-const float DEPLOY_ACCEL_THRESHOLD_G = 15.0;
+// Launch-detection threshold, re-derived for the Phase 1 militarized design
+// point (design_point.json, MIL-DEV-010): the G64W motor produces about
+// 4.8 g initial and 2.8 g sustained acceleration on the 1.9 kg round, so
+// the historical 15 g one-shot threshold could never fire from a rail
+// launch. The new threshold is 2.0 g SUSTAINED for 150 ms (enforced in
+// main.cpp), which is above the static-on-rail reading (<= 1 g along the
+// axis) and below the motor's initial acceleration.
+const float DEPLOY_ACCEL_THRESHOLD_G = 2.0;
 const float DEPLOY_ACCEL_THRESHOLD_MS2 = DEPLOY_ACCEL_THRESHOLD_G * 9.80665f;
+// Sustain time the acceleration must hold before the deploy output may fire.
+const unsigned long DEPLOY_ACCEL_SUSTAIN_MS = 150;
 static const gpio_num_t DEPLOY_GPIO = (gpio_num_t)DEPLOY_OUTPUT_PIN;
 static volatile bool fins_deployed = false;
 static esp_timer_handle_t deploy_timer = nullptr;

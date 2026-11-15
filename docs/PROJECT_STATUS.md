@@ -5,18 +5,18 @@ Project 33 is a bench-validation prototype. Every status below names the class o
 ## Claim status
 
 <!-- evidence:claims-table -->
-**Record state:** 8 claims · 3 contradicted · 4 unresolved · 1 supported within stated limits · 0 accepted physical measurements · 20 open discrepancies of 27 · 5 of 5 predictions not measured.
+**Record state:** 8 claims · 1 contradicted · 2 unresolved · 5 supported within stated limits · 0 accepted physical measurements · 7 open discrepancies of 27 · 8 of 8 predictions not measured.
 
 | Claim | Subject | Status | Strongest accepted evidence | Failing or disputed requirements | Open discrepancies |
 |---|---|---|---|---|---|
-| [C1](claims/C1.md) | Folding-fin mechanism model | **CONTRADICTED** | MODEL ONLY | R-C1-CLOSURE NOT SATISFIED | D-002, D-004, D-005 |
-| [C2](claims/C2.md) | Deployment timing | **UNRESOLVED** | IMPLEMENTATION ONLY | none failing | D-017, D-018, D-024, D-025 |
+| [C1](claims/C1.md) | Folding-fin mechanism model | **SUPPORTED WITHIN STATED LIMITS** | MODEL ONLY | none failing | none |
+| [C2](claims/C2.md) | Deployment timing | **UNRESOLVED** | IMPLEMENTATION ONLY | none failing | D-018, D-024 |
 | [C3](claims/C3.md) | CAD generator software | **SUPPORTED WITHIN STATED LIMITS** | IMPLEMENTATION ONLY | none failing | none |
-| [C4](claims/C4.md) | Material mass accounting | **UNRESOLVED** | MODEL ONLY | none failing | D-010, D-022 |
-| [C5](claims/C5.md) | Static-stability model | **UNRESOLVED** | MODEL ONLY | R-C5-WINDOW MODELS DISAGREE | D-006, D-007, D-008, D-009, D-023 |
-| [C6](claims/C6.md) | Spring margin consistency | **CONTRADICTED** | MODEL ONLY | R-C6-MARGIN NOT SATISFIED | D-009, D-010, D-011 |
-| [C7](claims/C7.md) | Deployment reliability evidence | **UNRESOLVED** | MODEL ONLY | none failing | D-010, D-013 |
-| [C8](claims/C8.md) | Structural claim boundaries | **CONTRADICTED** | MODEL ONLY | R-C8-MODULUS NOT SATISFIED | D-009, D-010, D-015 |
+| [C4](claims/C4.md) | Material mass accounting | **UNRESOLVED** | MODEL ONLY | none failing | D-022 |
+| [C5](claims/C5.md) | Static-stability model | **SUPPORTED WITHIN STATED LIMITS** | MODEL ONLY | none failing | D-023 |
+| [C6](claims/C6.md) | Spring margin consistency | **SUPPORTED WITHIN STATED LIMITS** | MODEL ONLY | none failing | none |
+| [C7](claims/C7.md) | Deployment reliability evidence | **SUPPORTED WITHIN STATED LIMITS** | MODEL ONLY | none failing | none |
+| [C8](claims/C8.md) | Structural claim boundaries | **CONTRADICTED** | MODEL ONLY | R-C8-MODULUS NOT SATISFIED | none |
 
 <!-- /evidence:claims-table -->
 

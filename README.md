@@ -18,13 +18,23 @@ Take apart a folding-fin rocket concept. Explore the models, inspect the firmwar
 
 ## Current status
 
-Project 33 is a **bench-validation prototype**. The repository contains analytical models, CAD, ESP32 firmware, telemetry tools, and a browser laboratory. No physical measurement has been accepted into its evidence record. Flight readiness has not been established; live propulsion is outside this repository's validation boundary.
+Project 33 began as an **inert bench-validation prototype** and was converted, under the program sponsor's direction of 2026-11-14, into a **deployable guided munition** across six gated phases. The repository contains the shared militarized design point, corrected engineering models, ESP32 firmware (rocket, launcher, dashboard), a browser laboratory, and a phased live-fire program. No physical measurement has been accepted into its evidence record; every claim stays labeled MODELED, MEASURED, or FIELDLED, and nothing simulated is presented as fielded.
+
+**Program results (all MODELED):** folding-fin linkage redesigned to close and lock over-center (back-drive ratio 0.36 at the stop); static margin corrected and re-balanced to 1.66–1.76 cal for every warhead loadout; deployment reliability 99.93% in Monte Carlo; PN terminal guidance with GPS-aided IMU (CEP 50/19/81 m at 1/2/3 km); MIL-33 motor (1,235 N·s, 3.3 km envelope); composite airframe with 7075-T6 load path; HMAC-authenticated commands with replay protection, two-key OVERRIDE, AES-CCM telemetry, and a DISARM path. Four fire-control technologies were adopted from the F-117 OC-IP supplement (BIT, MARK, out-of-envelope warning, TTG).
+
+Every weaponized-scope override is registered in the [militarization deviation register](docs/MILITARY/DEVIATIONS.md); the [Phase 1 gate report](docs/MILITARY/PHASE1_GATES.md) and the gated [live-fire program](docs/MILITARY/LIVE_FIRE_PROGRAM.md) define the road to hardware. The inert evidence record remains the audit trail that makes the militarized record credible.
 
 <!-- evidence:counts -->
-**Record state:** 8 claims · 3 contradicted · 4 unresolved · 1 supported within stated limits · 0 accepted physical measurements · 20 open discrepancies of 27 · 5 of 5 predictions not measured.
+**Record state:** 8 claims · 1 contradicted · 2 unresolved · 5 supported within stated limits · 0 accepted physical measurements · 7 open discrepancies of 27 · 8 of 8 predictions not measured.
 <!-- /evidence:counts -->
 
 The failed and disputed requirements remain visible. They define the work ahead.
+
+## Guided munition configuration
+
+<a href="docs/MILITARY/README.md"><img src="docs/assets/munition_overview.svg" alt="Project 33 guided munition Phase 6 configuration card: side view with warhead bay, canards, folding fins, MIL-33 motor, CG and CP stations, and modeled performance summary."></a>
+
+The configuration card is generated from committed sources by `tools/render_munition_card.py` — every dimension, station, and number comes from `design_point.json` and the evidence records, and the card carries its own MODELED label. Warhead loadouts are interchangeable at constant bay mass; the S&A fuze arms only on launch acceleration **and** canard-deployment confirmation **and** burn-time gate. [Militarization evidence tree](docs/MILITARY/README.md) · [Operator card](docs/MILITARY/OPERATOR_CARD.md).
 
 ## Choose your first visit
 
@@ -142,18 +152,18 @@ The cover opens an HTML5 player on the project site; GitHub does not play reposi
 ## Claim status
 
 <!-- evidence:claims-table -->
-**Record state:** 8 claims · 3 contradicted · 4 unresolved · 1 supported within stated limits · 0 accepted physical measurements · 20 open discrepancies of 27 · 5 of 5 predictions not measured.
+**Record state:** 8 claims · 1 contradicted · 2 unresolved · 5 supported within stated limits · 0 accepted physical measurements · 7 open discrepancies of 27 · 8 of 8 predictions not measured.
 
 | Claim | Subject | Status | Strongest accepted evidence | Failing or disputed requirements | Open discrepancies |
 |---|---|---|---|---|---|
-| [C1](docs/claims/C1.md) | Folding-fin mechanism model | **CONTRADICTED** | MODEL ONLY | R-C1-CLOSURE NOT SATISFIED | D-002, D-004, D-005 |
-| [C2](docs/claims/C2.md) | Deployment timing | **UNRESOLVED** | IMPLEMENTATION ONLY | none failing | D-017, D-018, D-024, D-025 |
+| [C1](docs/claims/C1.md) | Folding-fin mechanism model | **SUPPORTED WITHIN STATED LIMITS** | MODEL ONLY | none failing | none |
+| [C2](docs/claims/C2.md) | Deployment timing | **UNRESOLVED** | IMPLEMENTATION ONLY | none failing | D-018, D-024 |
 | [C3](docs/claims/C3.md) | CAD generator software | **SUPPORTED WITHIN STATED LIMITS** | IMPLEMENTATION ONLY | none failing | none |
-| [C4](docs/claims/C4.md) | Material mass accounting | **UNRESOLVED** | MODEL ONLY | none failing | D-010, D-022 |
-| [C5](docs/claims/C5.md) | Static-stability model | **UNRESOLVED** | MODEL ONLY | R-C5-WINDOW MODELS DISAGREE | D-006, D-007, D-008, D-009, D-023 |
-| [C6](docs/claims/C6.md) | Spring margin consistency | **CONTRADICTED** | MODEL ONLY | R-C6-MARGIN NOT SATISFIED | D-009, D-010, D-011 |
-| [C7](docs/claims/C7.md) | Deployment reliability evidence | **UNRESOLVED** | MODEL ONLY | none failing | D-010, D-013 |
-| [C8](docs/claims/C8.md) | Structural claim boundaries | **CONTRADICTED** | MODEL ONLY | R-C8-MODULUS NOT SATISFIED | D-009, D-010, D-015 |
+| [C4](docs/claims/C4.md) | Material mass accounting | **UNRESOLVED** | MODEL ONLY | none failing | D-022 |
+| [C5](docs/claims/C5.md) | Static-stability model | **SUPPORTED WITHIN STATED LIMITS** | MODEL ONLY | none failing | D-023 |
+| [C6](docs/claims/C6.md) | Spring margin consistency | **SUPPORTED WITHIN STATED LIMITS** | MODEL ONLY | none failing | none |
+| [C7](docs/claims/C7.md) | Deployment reliability evidence | **SUPPORTED WITHIN STATED LIMITS** | MODEL ONLY | none failing | none |
+| [C8](docs/claims/C8.md) | Structural claim boundaries | **CONTRADICTED** | MODEL ONLY | R-C8-MODULUS NOT SATISFIED | none |
 
 <!-- /evidence:claims-table -->
 
@@ -228,7 +238,7 @@ For a review distribution containing firmware builds, run records, hashes, and a
 ## Cost
 
 <!-- evidence:cost -->
-Estimated prototype subtotal: **$81** from 10 BOM lines (10 estimates, 0 purchased prices recorded, source dates not recorded, shipping and spares excluded). An estimate is not a purchase record; see [BOM](docs/BOM.md) and D-021.
+Estimated prototype subtotal: **$187** from 14 BOM lines (14 estimates, 0 purchased prices recorded, source dates not recorded, shipping and spares excluded). An estimate is not a purchase record; see [BOM](docs/BOM.md) and D-021.
 <!-- /evidence:cost -->
 
 ## Contribute

@@ -1,0 +1,66 @@
+{
+  "schema": "project33.mil.motor/1",
+  "generator": "Simulation/motor_sizing.py",
+  "evidence_class": "MODELED",
+  "mass_model": {
+    "components": [
+      {
+        "name": "nose_and_warhead_bay",
+        "mass_kg": 0.317,
+        "cg_m": 0.03
+      },
+      {
+        "name": "forward_body_composite",
+        "mass_kg": 0.56,
+        "cg_m": 0.158
+      },
+      {
+        "name": "aft_body_composite_and_mounts",
+        "mass_kg": 0.28,
+        "cg_m": 0.55
+      },
+      {
+        "name": "main_fins_molded_cfrp",
+        "mass_kg": 0.48,
+        "cg_m": 0.52
+      }
+    ],
+    "note": "composite tubes shave ~0.13 kg vs the Phase 1 fiberglass model; fins unchanged (already molded CFRP); warhead bay unchanged"
+  },
+  "motor": {
+    "impulse_ns": 1235.0,
+    "burn_s": 2.0,
+    "avg_thrust_n": 617.0,
+    "propellant_kg": 0.63,
+    "motor_wet_kg": 1.237,
+    "motor_dry_kg": 0.607,
+    "round_wet_kg": 2.874,
+    "round_burnout_kg": 2.244,
+    "ballistic_envelope_m": 3300.0,
+    "target_plus_margin_m": 3300.0,
+    "initial_accel_g": 21.9,
+    "burnout_speed_mps_est": 425.0
+  },
+  "eng_file": "Simulation/MIL-33.eng (RASP average-thrust curve, PREDICTED)",
+  "environmental_budgets": {
+    "launch_shock": {
+      "initial_accel_g": 21.9,
+      "fin_hinge_load_n": 38.7,
+      "fin_hinge_moment_n_m": 4.25,
+      "budget": "3x motor initial acceleration on the fin set and canards, per MIL-STD-810 method 516 style shock budgets"
+    },
+    "vibration": {
+      "canard_load_n_at_burnout_15deg": 135.6,
+      "canard_servo_torque_n_m": 1.72,
+      "budget": "random vibration 20-2000 Hz per MIL-STD-810 method 514 style; canard servos must hold position under the burnout dynamic load"
+    },
+    "storage_temperature": {
+      "range_c": [
+        -40,
+        60
+      ],
+      "budget": "MIL-STD-810 method 503 style storage; motor, spring, and electronics rated over the range; PLA+ parts are superseded (MIL-DEV-007) precisely because they leave this window"
+    }
+  },
+  "basis": "bisection sizing on the CEP drag model; no motor has been built or static-fired"
+}

@@ -37,6 +37,93 @@ DASHBOARD_AUTH_TOKEN = "project33_bench_token"
 
 LAUNCHER_GATEWAY = "192.168.4.1" 
 
+# --- Phase 5 combat C2 (docs/MILITARY/C2_CRYPTO.md) ---
+# Weapons commands are HMAC-SHA256 authenticated with a monotonic sequence
+# number (matching Firmware/Launcher/src/crypto.h). The keys below are the
+# bench defaults and MUST be changed before fielding, same as the launcher's.
+import hashlib
+import hmac as hmac_mod
+import itertools
+
+_CMD_KEY = bytes([0x33, 0x21, 0x0a, 0x1c, 0x2f, 0x3b, 0x4e, 0x5d,
+                  0x69, 0x77, 0x83, 0x9a, 0xa5, 0xb2, 0xc4, 0xd6])
+_OPERATOR_A_KEY = bytes([0xd1, 0x12, 0xa0, 0xc3, 0x1b, 0xf2, 0x34, 0x45,
+                        0x5c, 0x6d, 0x7e, 0x8f, 0x90, 0x01, 0x12, 0x23])
+_OPERATOR_B_KEY = bytes([0x23, 0x32, 0x21, 0x10, 0x0f, 0x9e, 0x87, 0x76,
+                        0x65, 0x54, 0x43, 0x32, 0x21, 0x10, 0x0f, 0x00])
+_TELEMETRY_KEY = bytes([0xab, 0xcd, 0xef, 0x01, 0x23, 0x45, 0x67, 0x89,
+                       0x9a, 0xbc, 0xde, 0xf0, 0x11, 0x22, 0x33, 0x44])
+_auth_seq = itertools.count(1)
+
+
+def sign_command(payload, key=_CMD_KEY, operator=0):
+    """AUTH,<seq>,<operator>,<payload>,<hmac_hex> per the launcher's crypto.h."""
+    seq = next(_auth_seq)
+    signed_part = f"{seq},{operator},{payload}"
+    mac = hmac_mod.new(key, signed_part.encode("utf-8"), hashlib.sha256).hexdigest()
+    return f"AUTH,{seq},{operator},{payload},{mac}"
+
+
+def decrypt_enc_packet(hex_iv, hex_ct):
+    """Decrypt an ENC,<iv>,<ct> telemetry packet (AES-128-CCM). Returns the
+    plaintext string, or None when the cryptography package is unavailable
+    (in which case the raw row is still logged)."""
+    try:
+        from cryptography.hazmat.primitives.ciphers.aead import AESCCM
+    except ImportError:
+        return None
+    try:
+        iv = bytes.fromhex(hex_iv)
+        ct = bytes.fromhex(hex_ct)
+        aesccm = AESCCM(_TELEMETRY_KEY, tag_length=14)
+        plain = aesccm.decrypt(iv, ct, None)
+        return plain.decode("utf-8", errors="replace")
+    except Exception:
+        return None
+
+
+# --- Phase 6 fire-control computations (F-117 OC-IP doctrine: range readout,
+# time-to-go, and the out-of-envelope warning) ---
+
+# Militarized motor ballistic envelope with margin (Simulation/motor_sizing.py).
+TACTICAL_ENVELOPE_M = 3300.0
+
+
+def great_circle_range_m(lat1, lon1, lat2, lon2):
+    """Haversine range in meters between two WGS-84 points."""
+    r = 6371000.0
+    p1, p2 = math.radians(lat1), math.radians(lat2)
+    dp = p2 - p1
+    dl = math.radians(lon2 - lon1)
+    a = math.sin(dp / 2) ** 2 + math.cos(p1) * math.cos(p2) * math.sin(dl / 2) ** 2
+    return 2 * r * math.asin(min(1.0, math.sqrt(a)))
+
+
+def bearing_deg(lat1, lon1, lat2, lon2):
+    """Initial bearing (degrees true) from point 1 to point 2."""
+    p1, p2 = math.radians(lat1), math.radians(lat2)
+    dl = math.radians(lon2 - lon1)
+    y = math.sin(dl) * math.cos(p2)
+    x = math.cos(p1) * math.sin(p2) - math.sin(p1) * math.cos(p2) * math.cos(dl)
+    return (math.degrees(math.atan2(y, x)) + 360.0) % 360.0
+
+
+def envelope_check(range_m, envelope_m=TACTICAL_ENVELOPE_M):
+    """Out-of-envelope advisory: the F-117 out-of-corridor warning, applied
+    BEFORE firing instead of during flight. Returns (ok, advisory)."""
+    if range_m is None:
+        return False, "RNG: --- (no launcher GPS fix or no target)"
+    if range_m > envelope_m:
+        return False, f"RNG: {range_m/1000:.2f} km OUT OF ENVELOPE (> {envelope_m/1000:.1f} km) - DO NOT FIRE"
+    return True, f"RNG: {range_m/1000:.2f} km (bearing {0:03.0f})"
+
+
+def time_to_go_s(range_m, ground_speed_mps):
+    """TTG: range over ground speed; None when the speed is not usable."""
+    if range_m is None or ground_speed_mps is None or ground_speed_mps < 1.0:
+        return None
+    return range_m / ground_speed_mps
+
 class TelemetryApp:
     def __init__(self, root):
         self.root = root
@@ -173,6 +260,39 @@ class TelemetryApp:
         ttk.Button(btn_frame, text="DUMP LOG", command=self.send_dump_log_command, width=int(14)).pack(side=tk.LEFT, padx=self.s(5))
         ttk.Button(btn_frame, text="DIGITAL LAUNCH", command=self.send_launch_command, width=int(20)).pack(side=tk.LEFT, padx=self.s(5))
 
+        # Phase 3/5: target designation, engagement mode, fuze delay.
+        fire_frame = ttk.LabelFrame(self.root, text="Fire Control (authenticated)", padding=self.s(10))
+        fire_frame.pack(side=tk.TOP, fill=tk.X, padx=self.s(10), pady=self.s(5))
+        ttk.Label(fire_frame, text="Target lat:", font=self.f(9)).pack(side=tk.LEFT)
+        self.target_lat_var = tk.StringVar(value="0.0")
+        ttk.Entry(fire_frame, textvariable=self.target_lat_var, width=int(12)).pack(side=tk.LEFT, padx=self.s(3))
+        ttk.Label(fire_frame, text="lon:", font=self.f(9)).pack(side=tk.LEFT)
+        self.target_lon_var = tk.StringVar(value="0.0")
+        ttk.Entry(fire_frame, textvariable=self.target_lon_var, width=int(12)).pack(side=tk.LEFT, padx=self.s(3))
+        ttk.Label(fire_frame, text="alt m:", font=self.f(9)).pack(side=tk.LEFT)
+        self.target_alt_var = tk.StringVar(value="0.0")
+        ttk.Entry(fire_frame, textvariable=self.target_alt_var, width=int(8)).pack(side=tk.LEFT, padx=self.s(3))
+        ttk.Button(fire_frame, text="SET TARGET", command=self.send_target_command, width=int(12)).pack(side=tk.LEFT, padx=self.s(5))
+        ttk.Label(fire_frame, text="Mode:", font=self.f(9)).pack(side=tk.LEFT, padx=(self.s(10), 0))
+        self.engage_mode_var = tk.StringVar(value="MITL")
+        ttk.Combobox(fire_frame, textvariable=self.engage_mode_var, values=["MITL", "AUTO"],
+                    width=6, state="readonly").pack(side=tk.LEFT, padx=self.s(3))
+        ttk.Button(fire_frame, text="SET MODE", command=self.send_mode_command, width=int(9)).pack(side=tk.LEFT, padx=self.s(5))
+        ttk.Label(fire_frame, text="Fuze delay ms:", font=self.f(9)).pack(side=tk.LEFT, padx=(self.s(10), 0))
+        self.fuze_delay_var = tk.StringVar(value="0")
+        ttk.Combobox(fire_frame, textvariable=self.fuze_delay_var, values=["0", "5", "10", "20"],
+                    width=4, state="readonly").pack(side=tk.LEFT, padx=self.s(3))
+        ttk.Button(fire_frame, text="SET FUZE", command=self.send_fuze_delay_command, width=int(9)).pack(side=tk.LEFT, padx=self.s(5))
+        ttk.Button(fire_frame, text="MARK", command=self.send_mark_command, width=int(8)).pack(side=tk.LEFT, padx=self.s(5))
+        ttk.Button(fire_frame, text="BIT", command=self.send_bit_command, width=int(8)).pack(side=tk.LEFT, padx=self.s(5))
+        ttk.Button(fire_frame, text="DISARM", command=self.send_disarm_command, width=int(9)).pack(side=tk.LEFT, padx=self.s(5))
+        # Out-of-envelope advisory (F-117 out-of-corridor warning doctrine):
+        # computed from the launcher GPS fix (ENV) and the target entry.
+        self.range_label = ttk.Label(fire_frame, text="RNG: --- (no launcher GPS fix or no target)", font=self.f(9, "bold"))
+        self.range_label.pack(side=tk.LEFT, padx=self.s(10))
+        self.bit_label = ttk.Label(fire_frame, text="BIT: not run", font=self.f(9))
+        self.bit_label.pack(side=tk.LEFT, padx=self.s(10))
+
         tuning_frame = ttk.LabelFrame(self.root, text="PID Controller Tuning", padding=self.s(10))
         tuning_frame.pack(side=tk.TOP, fill=tk.X, padx=self.s(10), pady=self.s(5))
 
@@ -279,8 +399,8 @@ class TelemetryApp:
             self.status_panel = StatusPanel(self.root, self.status)
 
     def send_launch_command(self):
-        if messagebox.askyesno("CONFIRM LAUNCH", "Firmware rejects dashboard launch by default unless ENABLE_DASHBOARD_LAUNCH is intentionally enabled for an inert test.\nEnsure launcher is Armed and READY.\n\nSend launch request?"):
-            self._send_udp_command("launch")
+        if messagebox.askyesno("CONFIRM LAUNCH", "Wartime remote fire: the launcher accepts this only in READY with a recent physical fire-button hold or a two-key OVERRIDE.\n\nSend authenticated launch request?"):
+            self._send_udp_command(sign_command("launch"))
 
     def send_calibrate_command(self):
         if messagebox.askyesno("Confirm", "Keep rocket STILL. Zeroing Gyro. Proceed?"):
@@ -289,6 +409,78 @@ class TelemetryApp:
 
     def send_dump_log_command(self):
         self._send_udp_command("dumplog")
+
+    def send_target_command(self):
+        # Phase 3: target designation by grid coordinates (lat, lon, alt m).
+        lat = self.target_lat_var.get().strip()
+        lon = self.target_lon_var.get().strip()
+        alt = self.target_alt_var.get().strip()
+        try:
+            float(lat), float(lon), float(alt)
+        except ValueError:
+            messagebox.showerror("Error", "Target must be numeric lat, lon, alt (m).")
+            return
+        if self._send_udp_command(sign_command(f"TARGET,{lat},{lon},{alt}")):
+            try:
+                self._update_range_advisory()
+            except Exception as e:
+                logger.debug("range advisory update failed: %s", e)
+
+    def send_mode_command(self):
+        # Phase 3: engagement-mode selection; AUTO is the explicit
+        # fire-and-forget arm-mode toggle.
+        mode = self.engage_mode_var.get()
+        self._send_udp_command(sign_command(f"MODE,{mode}"))
+
+    def send_fuze_delay_command(self):
+        delay = self.fuze_delay_var.get()
+        self._send_udp_command(sign_command(f"FUZEDELAY,{delay}"))
+
+    def send_mark_command(self):
+        # Phase 6 (F-117 OC-IP MARK-point discipline): designate the
+        # launcher's own surveyed GPS position as the target. The launcher
+        # echoes MARK,<lat>,<lon>,<alt> back; the range advisory updates.
+        if messagebox.askyesno("MARK target", "Designate the launcher's current GPS position as the target point?"):
+            self._send_udp_command("MARK")
+
+    def send_bit_command(self):
+        # Phase 6 (BIT discipline): machine-readable preflight self-test.
+        self._send_udp_command("BIT")
+
+    def send_disarm_command(self):
+        # MIL-DEV-011: safe an armed rocket after an abort without a restart.
+        # The rocket refuses it outside ARMED/IDLE and never disarms a round
+        # in FLIGHT; DISARMED comes back as a raw row for the session record.
+        self._send_udp_command("disarm")
+
+    def _current_target(self):
+        try:
+            lat = float(self.target_lat_var.get())
+            lon = float(self.target_lon_var.get())
+            alt = float(self.target_alt_var.get())
+            return lat, lon, alt
+        except (ValueError, tk.TclError):
+            return None
+
+    def _update_range_advisory(self):
+        """Out-of-envelope warning from the launcher GPS fix and the target."""
+        target = self._current_target()
+        lat = self.current_values.get("Lat")
+        lon = self.current_values.get("Lon")
+        if target is None or lat is None or lon is None or (lat == 0.0 and lon == 0.0):
+            ok, advisory = envelope_check(None)
+        else:
+            rng = great_circle_range_m(lat, lon, target[0], target[1])
+            brg = bearing_deg(lat, lon, target[0], target[1])
+            ok, advisory = envelope_check(rng)
+            advisory = advisory.replace("bearing 000", f"bearing {brg:03.0f}")
+            # TTG: in flight, the rocket's NAV packets give the live ground
+            # speed; on the ground, the modeled 200 m/s cruise is a planning aid.
+            speed = self.current_values.get("NavGroundSpeed")
+            ttg = time_to_go_s(rng, speed if speed else 200.0)
+            if ttg is not None:
+                advisory += f" | TTG~{ttg:.0f} s @{'live' if speed else '200'} m/s"
+        self.range_label.config(text=advisory, foreground=("green" if ok else "red"))
 
     def send_pid_command(self):
         try:
@@ -319,6 +511,19 @@ class TelemetryApp:
             try:
                 data, addr = sock.recvfrom(BUFFER_SIZE)
                 message = data.decode('utf-8').strip()
+                # Phase 5: AES-128-CCM encrypted telemetry from the launcher.
+                # If the cryptography package is unavailable the raw ENC row is
+                # still logged (never silence telemetry); decryption failure
+                # (wrong key/tamper) drops only that packet.
+                if message.startswith("ENC,"):
+                    parts = message.split(",", 2)
+                    if len(parts) == 3:
+                        plain = decrypt_enc_packet(parts[1], parts[2])
+                        if plain is not None:
+                            message = plain
+                        else:
+                            self.telemetry_logger.log_packet(message)
+                            continue
                 self.telemetry_logger.log_packet(message)
                 self.quality.observe(message)
                 self.status.observe(message)
@@ -353,6 +558,49 @@ class TelemetryApp:
                     self.current_values["Alt"] = alt if math.isfinite(alt) else None
                 if len(parts) >= 5: # Safely get the new GPS state variable
                     self.current_values["GPS_State"] = int(parts[4])
+                try:
+                    self._update_range_advisory()
+                except Exception as e:
+                    logger.debug("range advisory update failed: %s", e)
+
+            elif message.startswith("BIT,"):
+                # Phase 6 rocket self-test reply: mpu,gps,fuze,fins,mode,target,state
+                parts = message.split(',')
+                if len(parts) >= 8:
+                    self.bit_label.config(text=(
+                        f"BIT: IMU {'OK' if parts[1] == '1' else 'FAIL'} | "
+                        f"GPS {'OK' if parts[2] == '1' else 'NO FIX'} | "
+                        f"FUZE {parts[3]} | FINS {'DEP' if parts[4] == '1' else 'STOWED'} | "
+                        f"{parts[5]} | TGT {'SET' if parts[6] == '1' else 'NONE'} | {parts[7]}"))
+
+            elif message.startswith("MARK,"):
+                # Phase 6 MARK echo: the launcher stored its own position as
+                # the target. Load it into the target fields and refresh the
+                # range advisory so the operator verifies what was stored.
+                parts = message.split(',')
+                if len(parts) >= 4:
+                    self.target_lat_var.set(parts[1])
+                    self.target_lon_var.set(parts[2])
+                    self.target_alt_var.set(parts[3])
+                    try:
+                        self._update_range_advisory()
+                    except Exception as e:
+                        logger.debug("range advisory update failed: %s", e)
+
+            elif message.startswith("NAV,"):
+                # Phase 3 rocket navigation state: e,n,u,ve,vn,vu,yaw,pitch,
+                # roll,fix,mode,target. In flight this feeds the live TTG.
+                parts = message.split(',')
+                if len(parts) >= 7:
+                    try:
+                        ve, vn = float(parts[4]), float(parts[5])
+                        self.current_values["NavGroundSpeed"] = math.sqrt(ve * ve + vn * vn)
+                        try:
+                            self._update_range_advisory()
+                        except Exception:
+                            pass
+                    except ValueError:
+                        pass
 
             elif message.startswith("T,") or message.startswith("[FUSION]"):
                 if message.startswith("[FUSION]"): return

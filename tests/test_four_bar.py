@@ -84,3 +84,42 @@ def test_parameter_study_emits_structured_result(tmp_path):
     for row in data['rows']:
         if not row['assemblable_over_range']:
             assert row['poses_closed'] < row['poses_evaluated']
+
+
+# --- Militarized linkage (Phase 1 redesign) -------------------------------
+
+def test_military_linkage_closes_over_the_full_stroke():
+    record = four_bar.military_linkage_record()
+    assert record['stroke']['stop_crank_deg'] is not None
+    assert record['closure']['worst_case_tolerance_closes_at_stop'] is True
+    assert record['closure']['radial_margin_at_stop_mm'] > 1.0
+
+
+def test_military_linkage_locks_over_center():
+    record = four_bar.military_linkage_record()
+    lock = record['lock']
+    # Toggle sits beyond the 90 deg stop by the designed margin.
+    assert lock['toggle_fin_deg'] > 90.0
+    assert 1.0 <= lock['over_center_margin_fin_deg'] <= 3.0
+    # Back-drive ratio at the stop: fin hinge torque reaching the crank.
+    assert 0.0 < lock['backdrive_ratio_at_stop'] < 0.6
+
+
+def test_military_linkage_transmission_over_power_stroke():
+    record = four_bar.military_linkage_record()
+    mu = record['transmission']
+    assert mu['mu_min_power_stroke_deg'] >= 40.0
+    assert mu['mu_max_power_stroke_deg'] <= 140.0
+
+
+def test_trace_deployment_self_checks_link_lengths():
+    dp = four_bar.load_design_point()
+    fb = dp['four_bar']
+    trace = four_bar.trace_deployment(fb['ground_mm'], fb['crank_mm'],
+                                      fb['coupler_mm'], fb['output_mm'],
+                                      fb['stowed_crank_deg'], fb['toggle_crank_deg'])
+    # The trace's internal asserts verify |BC| = coupler and |DC| = output
+    # at every pose; reaching here means every pose closed consistently.
+    assert len(trace) > 100
+    psis = [row[1] for row in trace]
+    assert max(psis) > 90.0  # the fin passes perpendicular before the toggle

@@ -31,6 +31,15 @@ Generated from `protocol/project33_protocol.json`.
 | `CMD_REJECT_IGNITE_NOT_ARMED` | `CMD_REJECT:ignite_not_armed` |
 | `CMD_REJECT_IGNITE_FINS_NOT_DEPLOYED` | `CMD_REJECT:ignite_fins_not_deployed` |
 | `CMD_REJECT_SENSOR_UNAVAILABLE` | `CMD_REJECT:sensor_unavailable` |
+| `CMD_REJECT_DISARM_NOT_ARMED` | `CMD_REJECT:disarm_not_armed` |
+| `CMD_DISARM` | `DISARM` |
+| `DISARMED` | `DISARMED` |
+| `DASHBOARD_DISARM` | `disarm` |
+| `FUZE_PREFIX` | `FUZE,` |
+| `FUZE_STATE_SAFE` | `SAFE` |
+| `FUZE_STATE_ARMED` | `ARMED` |
+| `FUZE_STATE_FUNCTION` | `FUNCTION` |
+| `CMD_FUZE_DELAY` | `FUZEDELAY` |
 
 ## Messages
 
@@ -40,6 +49,18 @@ Generated from `protocol/project33_protocol.json`.
 | Rocket -> Launcher | `IGNITED` | Rocket-side ignition acknowledgement |
 | Rocket -> Launcher | `DATA,<ax>,<ay>,<az>,<roll>,<rate>,<output>,<state>,<Kp>,<Kd>,<skew>` | Live rocket telemetry packet |
 | Rocket -> Launcher | `LOG,<ms>,<roll>,<rate>,<output>,<state>,<Kp>,<Kd>,<skew>` | Onboard ring-buffer log dump sample |
+| Rocket -> Launcher | `FUZE,<state>` | Warhead fuze state (SAFE / ARMED / FUNCTION); dual-event S&A arming chain telemetry |
+| Rocket -> Launcher | `NAV,<e_m>,<n_m>,<u_m>,<ve>,<vn>,<vu>,<yaw>,<pitch>,<roll>,<gps_fix>,<mode>,<target_valid>` | Phase 3 navigation and guidance state (ENU from launch point, GPS-aided IMU) |
+| Launcher -> Rocket | `FUZEDELAY,<ms>` | Set point-detonating fuze delay (0, 5, 10, or 20 ms); zero accepted in IDLE or ARMED |
+| Launcher -> Rocket | `TARGET,<lat>,<lon>,<alt_m>` | Phase 3 target designation by grid coordinates; accepted before flight only |
+| Launcher -> Rocket | `MODE,MITL | MODE,AUTO` | Engagement-mode selection: man-in-the-loop (default) or autonomous fire-and-forget on the locked target point; explicit pre-launch operator action |
+| Dashboard -> Launcher | `AUTH,<seq>,<operator>,<payload>,<hmac_hex>` | Phase 5 authenticated command wrapper: HMAC-SHA256 over seq,operator,payload with replay-window sequence numbers |
+| Dashboard -> Launcher | `OVERRIDE,enabler,<nonce_hex>,<hmacA_hex>,<hmacB_hex>` | Phase 5 wartime two-key OVERRIDE authorization (both operator keys must sign; valid 60 s) |
+| Launcher -> Dashboard | `ENC,<iv_hex>,<ct_hex>` | Phase 5 AES-128-CCM authenticated-encrypted telemetry downlink |
+| Dashboard -> Launcher -> Rocket | `BIT` | Phase 6 built-in test: rocket replies BIT,<mpu>,<gps>,<fuze>,<fins>,<mode>,<target>,<state> so the pre-fire checklist is machine-checkable |
+| Dashboard -> Launcher | `MARK` | Phase 6 MARK-point designation: store the launcher's own surveyed GPS position as the target; echoed to the dashboard as MARK,<lat>,<lon>,<alt> |
+| Dashboard -> Launcher -> Rocket | `DISARM` | MIL-DEV-011: safe an ARMED rocket after an abort without a restart; the rocket replies DISARMED, refuses outside ARMED/IDLE, and never disarms a round in FLIGHT |
+| Rocket -> Launcher | `DISARMED` | Rocket acknowledgement that it returned to IDLE and is safe |
 | Launcher -> Rocket | `ARM` | Arm rocket flight computer |
 | Launcher -> Rocket | `IGNITE` | Start rocket ignition state |
 | Launcher -> Rocket | `DUMPLOG` | Request rocket onboard ring-buffer dump |

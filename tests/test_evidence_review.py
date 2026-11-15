@@ -63,16 +63,18 @@ def test_project_record_states_what_is_and_is_not_established(tmp_path):
     assert counts["accepted_physical_measurements"] == 0
     assert counts["predictions_not_measured"] == counts["predictions_total"]
     claims = {c["id"]: c for c in review["claims"]}
-    # Unresolved claims stay unresolved; C6 and C8 are contradicted by their own records.
-    assert {k for k, c in claims.items() if c["status"] in ("open", "contradicted")} >= {"C2", "C6", "C7", "C8"}
+    # Phase 1 militarization resolved C1, C5, C6, and C7 at the analytical/
+    # simulated level (MODELED; no physical measurement). C2 and C4 remain
+    # open and C8 stays contradicted by its own record.
+    assert {k for k, c in claims.items() if c["status"] in ("open", "contradicted")} >= {"C2", "C4", "C8"}
     assert not any(c["has_accepted_physical_evidence"] for c in claims.values())
     requirements = {r["id"]: r for r in review["requirements"]}
-    assert requirements["R-C6-MARGIN"]["result"] == "not_satisfied"
-    assert requirements["R-C5-WINDOW"]["result"] == "conflicting"
-    assert requirements["R-C1-CLOSURE"]["result"] == "not_satisfied"
+    assert requirements["R-C6-MARGIN"]["result"] == "satisfied"
+    assert requirements["R-C5-WINDOW"]["result"] == "satisfied"
+    assert requirements["R-C1-CLOSURE"]["result"] == "satisfied"
     assert requirements["R-C2-JITTER"]["result"] == "not_measured"
     artifacts = {a["id"]: a for a in review["artifacts"]}
-    assert artifacts["reliability_failures"]["row_count"] == 0
+    assert artifacts["reliability_failures"]["row_count"] == 7
     assert artifacts["timing_fixture"]["class"] == "synthetic"
     assert artifacts["timing_fixture"]["origins_in_data"] == ["synthetic-fixture"]
     scopes = {s["id"]: s["state"] for s in review["scopes"]}

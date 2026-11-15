@@ -1,0 +1,27 @@
+{
+  "schema": "project33.mil.hinge_fos/1",
+  "generator": "structures/fea_lite.py",
+  "evidence_class": "MODELED",
+  "units": {
+    "stress": "MPa",
+    "force": "N",
+    "length": "mm"
+  },
+  "inputs": {
+    "pin_material": "7075-T6",
+    "yield_strength_MPa": 503.0,
+    "pin_diameter_mm": 3.0,
+    "fin_mass_kg": 0.12,
+    "axial_load_g": 65.7,
+    "hinge_gap_mm": 12.0,
+    "load_case_source": "Simulation/motor_sizing.py launch-shock budget (3x 21.9 g)"
+  },
+  "load_case": "double shear with central point-load bending, M = F L / 4",
+  "bending_stress_MPa": 87.53,
+  "shear_stress_MPa": 5.47,
+  "von_mises_stress_MPa": 88.04,
+  "factor_of_safety": 5.713,
+  "fos_requirement": 1.5,
+  "meets_requirement": true,
+  "basis": "closed-form calculation at the Phase 4 design loads; no load test performed"
+}

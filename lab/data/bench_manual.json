@@ -291,7 +291,7 @@
     },
     {
       "path": "docs/BOM.md",
-      "sha256": "a6ca86963ffe35d933470c1861484482d44bb63a56d02acb14c15c459da2ba4c"
+      "sha256": "76d0fd4a6ee0a4bf826b123010069788fcdf398700b8227a32d9c818694c5611"
     },
     {
       "path": "docs/CAD_ASSEMBLIES.md",
@@ -299,15 +299,15 @@
     },
     {
       "path": "docs/DEGRADED_MODES.md",
-      "sha256": "5490f5eb77b0bb961e97fba386a8952e726449bb36d3d48690bc558d0aa4c04e"
+      "sha256": "cd9ed3b075d8b5356f45e8bdcf58e658f4bb8bcbb637a88f0bd6e0e8add89fa2"
     },
     {
       "path": "docs/DISCREPANCIES.md",
-      "sha256": "d1d78acfd4d2699d2e3e0740686b260d8a3d15f8334b084987475296fe21475a"
+      "sha256": "455fe3b234d5e63f7b95fb6b88952fe47d131e1dc01b86f5155faf56ba614169"
     },
     {
       "path": "docs/EVIDENCE_OBSERVATORY.md",
-      "sha256": "972d757b52960a7d561e6f5c77b6d09109e9875759af3c5e2118e8d536fa09ec"
+      "sha256": "404757a92a0a0dda8b9d3005d5fc1c8bff7d440606f6e6883335c1c13477fdb1"
     },
     {
       "path": "docs/GROUND_STATUS.md",
@@ -327,11 +327,11 @@
     },
     {
       "path": "docs/PROJECT_STATUS.md",
-      "sha256": "581f3f064aeaedbfe4496cd718b01ec0802cb784b78f15cb44b68647c5fe0e28"
+      "sha256": "f1661c8d5b3e9bb4c82d08cb125aab4120c8a986724cef2224d0e7dfe8c77673"
     },
     {
       "path": "docs/PROTOCOL.md",
-      "sha256": "0a10d053d4714643bf828b7ee90eaa42ee82b25c283b72ff1a83931d903bb70e"
+      "sha256": "00f4baaabc496958b448a29d635c86f261f237efa1bee33339566c8ad3f013b5"
     },
     {
       "path": "docs/RELEASE_READINESS.md",
@@ -343,7 +343,7 @@
     },
     {
       "path": "docs/SAFETY.md",
-      "sha256": "801752872586acbea6ffc754926ff53d8d5b66a44059a3a0aa1c89433e63c95b"
+      "sha256": "4165bf74a13f6c011d4799c8f83deb9cd63c3fff8dcc6929923f8d6a425f973e"
     },
     {
       "path": "docs/TECHNOLOGY_INTEGRATION.md",
@@ -355,7 +355,7 @@
     },
     {
       "path": "docs/TRACEABILITY.md",
-      "sha256": "84166f43f82d3f002b673d48a5d4f1b3a6da077dcb13444b5752039e70171fd7"
+      "sha256": "26bbc5d647c126d7f2b3b2a6e889ca3568298608e03493c05f114ebd69d88519"
     },
     {
       "path": "docs/USB_BENCH_MONITOR.md",
@@ -367,8 +367,8 @@
     },
     {
       "path": "docs/WIRING.md",
-      "sha256": "a707d10558f18decdf53708184fb0ae7ccd74da85953f5bb8c2e6422e260afcb"
+      "sha256": "095ecfd873973560e544d43bcf264652c3816faed111c3fef34214aff23c7562"
     }
   ],
-  "revision": "3b86d7bde5db354a2e32b18fb666c2c7e3c3857d473d6528586c921b19eb5b54"
+  "revision": "2fead7bc0747448b349a6cb3fc687850505ba09474cd2a3101f7a2555a6bdb72"
 }

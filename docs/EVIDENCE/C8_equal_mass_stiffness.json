@@ -1,0 +1,20 @@
+{
+  "cfrp": {
+    "modulus_GPa": 56.68,
+    "thickness_mm": 4.0,
+    "density": 1600.0
+  },
+  "aluminium_7075": {
+    "modulus_GPa": 71.7,
+    "thickness_mm": 2.28,
+    "density": 2810.0
+  },
+  "bending_stiffness_cfrp_N_m": 302.29333333333335,
+  "bending_stiffness_aluminium_N_m": 70.5925502841824,
+  "stiffness_ratio_cfrp_over_al": 4.28,
+  "conclusion": "At equal mass per unit area the CFRP section is stiffer in bending by the ratio above; the material-modulus comparison alone (56.68 vs 69 GPa) understates the structural trade.",
+  "schema": "project33.c8.equal_mass_stiffness/1",
+  "generator": "structures/fea_lite.py",
+  "evidence_class": "MODELED",
+  "basis": "closed-form plate bending at equal areal mass; no coupon was tested"
+}

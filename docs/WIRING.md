@@ -30,6 +30,20 @@ Pin assignments are aligned with the current firmware constants in `Firmware/Roc
 
 > The deploy output is latched HIGH by the hardware-timer ISR in `Firmware/Rocket/src/deploy_isr.cpp` when boost egress is detected while armed. It must stay on its own pin — it previously shared GPIO 5 with the ignition servo, which corrupted the servo PWM signal on deploy.
 
+### Warhead Fuze Output (Phase 2)
+| Function          | GPIO Pin | Notes                                                     |
+|-------------------|----------|-----------------------------------------------------------|
+| Fuze Fire Enable  | 32       | Dual-event S&A gate output; safe LOW at boot (see docs/MILITARY/FUZE.md) |
+
+> The fuze fire enable drives the energetic-interrupt S&A chain, not the initiator directly. It goes HIGH only after the dual-event arming conditions (launch acceleration AND canard-deployment confirmation AND flight-time gate) and an impact detection, plus the selected PD delay. `FUZE,<state>` telemetry is sent over the launcher link so an unarmed fuze is visible on the ground station.
+
+### Rocket GPS (Phase 3)
+| Function | GPIO Pin | Baud | Notes |
+|----------|----------|------|-------|
+| GPS RX   | 13       | 9600 | UART1, receive-only (TinyGPS++); the rocket's own fix is the guidance ENU origin |
+
+> The rocket-side GPS makes the flight computer a GPS-aided IMU: position and ground velocity come from the fix, attitude from the MPU6050 with the gravity-reference correction while on the rail. The target's ENU coordinates are locked against the first post-launch fix (`Guidance::setTargetFromGeo` in `Firmware/Rocket/src/guidance.h`). `NAV,...` telemetry at 5 Hz carries the navigation state to the ground station.
+
 ### I2C Bus (MPU6050)
 | Signal | GPIO Pin |
 |--------|----------|

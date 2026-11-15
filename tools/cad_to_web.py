@@ -206,7 +206,9 @@ def step_view(path):
         BRepGProp.VolumeProperties_s(shape, props)
         spacing = None
         if len(unique) == 2:
-            spacing = round(math.dist(unique[0]["axis_point"], unique[1]["axis_point"]), 6)
+            # B-rep measurement carries floating-point residue from the STEP
+            # tessellation; round to micrometres for the web view.
+            spacing = round(round(math.dist(unique[0]["axis_point"], unique[1]["axis_point"]), 3), 3)
         out_parts.append({
             "name": part["name"], "color": part["color"], "chain": part["chain"],
             "bbox_mm": [round(v, 5) for v in (xmin, ymin, zmin, xmax, ymax, zmax)],

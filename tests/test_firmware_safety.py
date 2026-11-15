@@ -24,9 +24,14 @@ def test_rocket_ignition_command_requires_armed_state():
 def test_launcher_udp_launch_requires_ready_state():
     launcher = _read("Firmware/Launcher/src/main.cpp")
 
-    assert 'if (currentState == READY) {' in launcher
+    assert 'currentState == READY' in launcher
     assert "udpLaunchTriggered = true;" in launcher
     assert 'sendToDashboard(Project33Protocol::CMD_REJECT_LAUNCH_NOT_READY)' in launcher
+    # Phase 5 wartime discipline: READY alone is not enough for a remote fire;
+    # it also needs a recent physical fire hold or a two-key OVERRIDE.
+    assert 'manualFireRecent(millis())' in launcher
+    assert 'LauncherCrypto::overrideValid(millis())' in launcher
+    assert 'launch_needs_fire_hold_or_override' in launcher
 
 def test_firmware_exposes_onboard_log_dump_command():
     rocket = _read("Firmware/Rocket/src/main.cpp")
@@ -62,6 +67,7 @@ def test_rocket_gpio_assignments_are_unique():
         "RIGHT_SERVO_PIN",
         "UP_SERVO_PIN",
         "DOWN_SERVO_PIN",
+        "FUZE_FIRE_PIN",
     ):
         pins[name] = int(_const(rocket, "int", name))
     pins["DEPLOY_OUTPUT_PIN"] = int(_const(isr_cpp, "int", "DEPLOY_OUTPUT_PIN"))
@@ -106,7 +112,14 @@ def test_deploy_trigger_uses_consistent_units_and_reachable_threshold():
 def test_deploy_trigger_requires_armed_state():
     rocket = _read("Firmware/Rocket/src/main.cpp")
 
-    assert 'sysState != "IDLE" && a.acceleration.x > DEPLOY_ACCEL_THRESHOLD_MS2' in rocket
+    # MIL-DEV-010: sustained launch detection. The deploy output may fire only
+    # when the rocket is not IDLE, the acceleration is above threshold, and it
+    # has held for the sustain time.
+    assert 'if (sysState != "IDLE") {' in rocket
+    assert "current_time - launchDetectStartMs >= DEPLOY_ACCEL_SUSTAIN_MS" in rocket
+    assert "a.acceleration.x > DEPLOY_ACCEL_THRESHOLD_MS2" in rocket
+    # A drop below the threshold resets the sustain timer.
+    assert "launchDetectActive = false;" in rocket
 
 
 def test_roll_filter_blends_accel_only_with_valid_gravity_reference():
@@ -168,6 +181,89 @@ def test_rejection_logging_does_not_reorder_or_weaken_gates():
 def test_launcher_reports_missing_altitude_as_nan_not_zero():
     launcher = _read("Firmware/Launcher/src/main.cpp")
     assert "float altOut = bmpHealthy ? filteredAlt : NAN;" in launcher
+
+
+def test_dashboard_launch_is_wartime_enabled_with_authentication():
+    # MIL-DEV-004: the remote-fire path is enabled, but every weapons command
+    # must be authenticated (HMAC + sequence number) and the two-key OVERRIDE
+    # discipline replaces the old default-off interlock.
+    launcher = _read("Firmware/Launcher/src/main.cpp")
+    assert "const bool ENABLE_DASHBOARD_LAUNCH = true;" in launcher
+    assert 'msg.startsWith("AUTH,")' in launcher
+    assert "LauncherCrypto::authenticate(msg, seq, payload)" in launcher
+    assert 'msg.startsWith("OVERRIDE,enabler,")' in launcher
+    assert "LauncherCrypto::authorizeOverride" in launcher
+
+
+def test_command_authentication_has_replay_protection():
+    # Monotonic sequence numbers with a sliding replay window: a captured
+    # command cannot be re-sent.
+    crypto_h = _read("Firmware/Launcher/src/crypto.h")
+    assert "REPLAY_WINDOW" in crypto_h
+    assert "seq <= lastSeq" in crypto_h
+    assert "hmacEqual" in crypto_h  # constant-time compare
+
+
+def test_telemetry_downlink_is_encrypted_with_aes_ccm():
+    launcher = _read("Firmware/Launcher/src/main.cpp")
+    crypto_h = _read("Firmware/Launcher/src/crypto.h")
+    assert "const bool ENABLE_TELEMETRY_CRYPTO = true;" in launcher
+    assert "LauncherCrypto::encryptTelemetry" in launcher
+    assert "mbedtls_ccm_encrypt_and_tag" in crypto_h
+    # Crypto failure must degrade to plain telemetry, never silence it.
+    assert "fall through to plain send" in launcher
+
+
+def test_fuze_sa_requires_all_three_arming_events():
+    # Phase 2 dual-event S&A (docs/MILITARY/FUZE.md): no single event can arm.
+    rocket = _read("Firmware/Rocket/src/main.cpp")
+    assert 'fuzeState == Project33Protocol::FUZE_STATE_SAFE' in rocket
+    assert 'sysState == "FLIGHT"' in rocket
+    assert "is_fins_deployed()" in rocket
+    assert "(current_time - flightStartMs) >= FUZE_FLIGHT_TIME_GATE_MS" in rocket
+    # Function requires an armed fuze plus a real impact deceleration.
+    assert "a.acceleration.x < FUZE_IMPACT_THRESHOLD_MS2" in rocket
+    # The fire output is safe LOW at boot and only rises after the PD delay.
+    assert "digitalWrite(FUZE_FIRE_PIN, LOW);" in rocket
+    assert "digitalWrite(FUZE_FIRE_PIN, HIGH);" in rocket
+    # The fuze delay set is closed and only settable before flight.
+    assert "delayVal == 0 || delayVal == 5 || delayVal == 10 || delayVal == 20" in rocket
+
+
+def test_fuze_state_is_telemetered():
+    rocket = _read("Firmware/Rocket/src/main.cpp")
+    assert "Project33Protocol::FUZE_PREFIX" in rocket
+    # A fuze that never arms must be visible on the ground station, not at the target.
+    assert "lastFuzeSent >= 1000" in rocket
+
+
+def test_guidance_uses_correct_pn_cross_order():
+    # The independent Python CEP model caught a sign error in the first cut
+    # (V x omega steers away from the target). The firmware must use omega x V.
+    guidance = _read("Firmware/Rocket/src/guidance.h")
+    assert "PN_GAIN * (w_n * nav.vel_u - w_u * nav.vel_n)" in guidance
+    assert "a_cmd = N * (omega x V)" in guidance or "omega x V" in guidance
+
+
+def test_engagement_mode_is_an_explicit_prelaunch_selection():
+    rocket = _read("Firmware/Rocket/src/main.cpp")
+    # AUTO (fire-and-forget) is accepted only before flight.
+    assert 'cmdBuffer == "MODE,MITL" || cmdBuffer == "MODE,AUTO"' in rocket
+    assert 'engageMode = cmdBuffer.substring(5)' in rocket
+    # MITL is the default.
+    assert 'String engageMode = "MITL";' in rocket
+    # Targets are only accepted before flight.
+    assert 'cmdBuffer.startsWith("TARGET,")' in rocket
+
+
+def test_guidance_starts_after_the_flight_time_gate():
+    rocket = _read("Firmware/Rocket/src/main.cpp")
+    assert "(current_time - flightStartMs) >= GUIDANCE_FLIGHT_TIME_GATE_MS" in rocket
+    # Rocket-side GPS is fed and the origin latched from the rocket's own fix.
+    assert "rocketGps.encode(SerialGPS.read())" in rocket
+    assert "Guidance::setTargetFromGeo" in rocket
+    # Navigation state is telemetered so the ground station sees the guidance.
+    assert '"NAV,"' in rocket
 
 
 def test_safety_gate_registry_matches_firmware_source():

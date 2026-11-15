@@ -1,6 +1,7 @@
 {
-  "schema": "project33.c5.static_margin_inputs/1",
+  "schema": "project33.c5.static_margin_inputs/2",
   "generator": "Simulation/static_margin.py",
+  "design_point_revision": "2026-11-14-phase1",
   "geometry_source": "Folding Stabilized Rocket.ork",
   "units": {
     "length": "m",
@@ -8,34 +9,45 @@
     "time": "s",
     "static_margin": "calibers"
   },
-  "geometry": {
-    "d_ref": 0.0762,
-    "L_n": 0.038099999999999995,
-    "X_f": 0.381,
-    "C_R": 0.13,
-    "C_T": 0.11,
-    "S": 0.18,
-    "L_f_sweeplength": 0.01
-  },
-  "dry_mass_kg": 1.185,
-  "dry_cg_m": 0.33581729957805906,
-  "motor_assumed": {
-    "designation": "Estes C6-5 (hard-coded)",
-    "wet_kg": 0.024,
-    "dry_kg": 0.011,
-    "cg_m": 0.52,
-    "burn_s": 1.8
-  },
-  "ork_motor_designation": "G64W",
-  "ork_nose_shape": "ellipsoid",
-  "nose_cp_coefficient_used": 0.466,
-  "formula_notes": [
-    "Fin CP term uses C_R/3*(C_R+2C_T)/(C_R+C_T) as the sweep term; the textbook Barrowman form uses the tip leading-edge sweep distance X_R in that position.",
-    "Fin normal-force term uses the sweep length where the textbook form uses the mid-chord line length.",
-    "Nose CP coefficient 0.466 is the ogive value.",
-    "Only body-tube override masses are summed for dry mass."
+  "formulation_corrections_vs_rev1": [
+    "fin CP sweep term uses the tip leading-edge sweep X_R (rev 1 used the root chord)",
+    "fin normal-force term uses the mid-chord line length (rev 1 used the sweep length)",
+    "ellipsoid nose CP derived by the Barrowman d(r^2)/dx weighting: X_N = L/3 from tip (rev 1 used the ogive 0.466L)",
+    "canards modeled (rev 1 ignored them)",
+    "motor is the G64W with certified data from thrustcurve.org (rev 1 hard-coded an Estes C6-5)",
+    "explicit component mass model from design_point.json replaces ambiguous tube overrides; nose override included"
   ],
-  "cp_m": 0.457464,
-  "sm_min_calibers": 1.5484,
-  "sm_max_calibers": 1.5742
+  "cp_terms": {
+    "nose": {
+      "cn": 2.0,
+      "x_m": 0.0127,
+      "cp_fraction": 0.3333
+    },
+    "canards": {
+      "cn": 3.1309,
+      "x_m": 0.18885
+    },
+    "main_fins": {
+      "cn": 56.6838,
+      "x_m": 0.48
+    },
+    "cn_total": 61.8147
+  },
+  "dry_mass_kg": 1.84,
+  "wet_mass_kg": 1.903,
+  "motor": {
+    "designation": "G64W",
+    "manufacturer": "AeroTech",
+    "wet_kg": 0.151,
+    "dry_kg": 0.088,
+    "propellant_kg": 0.063,
+    "burn_s": 2.1,
+    "data_source": "thrustcurve.org motor page for AeroTech G64W (NAR-certified), retrieved 2026-11-14"
+  },
+  "cp_m": 0.450134,
+  "cg_ignition_m": 0.32343,
+  "cg_burnout_m": 0.31619,
+  "sm_min_calibers": 1.6628,
+  "sm_max_calibers": 1.7578,
+  "basis": "analytical Barrowman model at the shared design point; no physical measurement"
 }

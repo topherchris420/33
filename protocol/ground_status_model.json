@@ -133,7 +133,7 @@
       "why": "The launcher still aborts without a link, but the reason then never reaches the dashboard CSV.",
       "source": [
         {"path": "Firmware/Launcher/src/main.cpp", "contains": "sendToDashboard(String(Project33Protocol::ABORT_PREFIX) + reason);"},
-        {"path": "Firmware/Launcher/src/main.cpp", "contains": "    if (dashboardConnected) {\n        udp.beginPacket(dashboardIP, udpPort);"}
+        {"path": "Firmware/Launcher/src/main.cpp", "contains": "    udp.beginPacket(dashboardIP, udpPort);\n    udp.println(msg);"}
       ]
     },
     {
@@ -197,15 +197,6 @@
     }
   ],
   "absent_capabilities": [
-    {
-      "id": "rocket_disarm",
-      "name": "Returning an armed rocket to IDLE without a restart",
-      "why": "The only IDLE assignment in the rocket firmware is its initial value, and the launcher's abort path sends the rocket nothing. See discrepancy D-025.",
-      "source": [
-        {"path": "Firmware/Rocket/src/main.cpp", "count": "sysState = \"IDLE\"", "equals": 1},
-        {"path": "protocol/project33_protocol.json", "absent": "DISARM"}
-      ]
-    },
     {
       "id": "launcher_state_report",
       "name": "The launcher reporting SAFE, ARMING, READY, or IGNITING to the dashboard",

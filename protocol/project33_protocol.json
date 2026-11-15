@@ -25,7 +25,16 @@
     "CMD_REJECT_ARM_NOT_IDLE": "CMD_REJECT:arm_not_idle",
     "CMD_REJECT_IGNITE_NOT_ARMED": "CMD_REJECT:ignite_not_armed",
     "CMD_REJECT_IGNITE_FINS_NOT_DEPLOYED": "CMD_REJECT:ignite_fins_not_deployed",
-    "CMD_REJECT_SENSOR_UNAVAILABLE": "CMD_REJECT:sensor_unavailable"
+    "CMD_REJECT_SENSOR_UNAVAILABLE": "CMD_REJECT:sensor_unavailable",
+    "CMD_REJECT_DISARM_NOT_ARMED": "CMD_REJECT:disarm_not_armed",
+    "CMD_DISARM": "DISARM",
+    "DISARMED": "DISARMED",
+    "DASHBOARD_DISARM": "disarm",
+    "FUZE_PREFIX": "FUZE,",
+    "FUZE_STATE_SAFE": "SAFE",
+    "FUZE_STATE_ARMED": "ARMED",
+    "FUZE_STATE_FUNCTION": "FUNCTION",
+    "CMD_FUZE_DELAY": "FUZEDELAY"
   },
   "messages": [
     {
@@ -47,6 +56,66 @@
       "direction": "Rocket -> Launcher",
       "format": "LOG,<ms>,<roll>,<rate>,<output>,<state>,<Kp>,<Kd>,<skew>",
       "purpose": "Onboard ring-buffer log dump sample"
+    },
+    {
+      "direction": "Rocket -> Launcher",
+      "format": "FUZE,<state>",
+      "purpose": "Warhead fuze state (SAFE / ARMED / FUNCTION); dual-event S&A arming chain telemetry"
+    },
+    {
+      "direction": "Rocket -> Launcher",
+      "format": "NAV,<e_m>,<n_m>,<u_m>,<ve>,<vn>,<vu>,<yaw>,<pitch>,<roll>,<gps_fix>,<mode>,<target_valid>",
+      "purpose": "Phase 3 navigation and guidance state (ENU from launch point, GPS-aided IMU)"
+    },
+    {
+      "direction": "Launcher -> Rocket",
+      "format": "FUZEDELAY,<ms>",
+      "purpose": "Set point-detonating fuze delay (0, 5, 10, or 20 ms); zero accepted in IDLE or ARMED"
+    },
+    {
+      "direction": "Launcher -> Rocket",
+      "format": "TARGET,<lat>,<lon>,<alt_m>",
+      "purpose": "Phase 3 target designation by grid coordinates; accepted before flight only"
+    },
+    {
+      "direction": "Launcher -> Rocket",
+      "format": "MODE,MITL | MODE,AUTO",
+      "purpose": "Engagement-mode selection: man-in-the-loop (default) or autonomous fire-and-forget on the locked target point; explicit pre-launch operator action"
+    },
+    {
+      "direction": "Dashboard -> Launcher",
+      "format": "AUTH,<seq>,<operator>,<payload>,<hmac_hex>",
+      "purpose": "Phase 5 authenticated command wrapper: HMAC-SHA256 over seq,operator,payload with replay-window sequence numbers"
+    },
+    {
+      "direction": "Dashboard -> Launcher",
+      "format": "OVERRIDE,enabler,<nonce_hex>,<hmacA_hex>,<hmacB_hex>",
+      "purpose": "Phase 5 wartime two-key OVERRIDE authorization (both operator keys must sign; valid 60 s)"
+    },
+    {
+      "direction": "Launcher -> Dashboard",
+      "format": "ENC,<iv_hex>,<ct_hex>",
+      "purpose": "Phase 5 AES-128-CCM authenticated-encrypted telemetry downlink"
+    },
+    {
+      "direction": "Dashboard -> Launcher -> Rocket",
+      "format": "BIT",
+      "purpose": "Phase 6 built-in test: rocket replies BIT,<mpu>,<gps>,<fuze>,<fins>,<mode>,<target>,<state> so the pre-fire checklist is machine-checkable"
+    },
+    {
+      "direction": "Dashboard -> Launcher",
+      "format": "MARK",
+      "purpose": "Phase 6 MARK-point designation: store the launcher's own surveyed GPS position as the target; echoed to the dashboard as MARK,<lat>,<lon>,<alt>"
+    },
+    {
+      "direction": "Dashboard -> Launcher -> Rocket",
+      "format": "DISARM",
+      "purpose": "MIL-DEV-011: safe an ARMED rocket after an abort without a restart; the rocket replies DISARMED, refuses outside ARMED/IDLE, and never disarms a round in FLIGHT"
+    },
+    {
+      "direction": "Rocket -> Launcher",
+      "format": "DISARMED",
+      "purpose": "Rocket acknowledgement that it returned to IDLE and is safe"
     },
     {
       "direction": "Launcher -> Rocket",

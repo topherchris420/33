@@ -75,10 +75,13 @@ def test_rocket_ready_is_only_sent_from_idle():
     assert 'if (sysState == "IDLE" && mpuHealthy && (current_time - lastReadySent >= 1000)) {' in rocket
 
 
-def test_discrepancy_for_the_missing_disarm_path_is_on_record():
+def test_discrepancy_for_the_disarm_path_is_on_record():
     items = json.loads(_read("evidence/discrepancies.json"))["discrepancies"]
     record = next(item for item in items if item["id"] == "D-025")
-    assert record["status"] == "open"
+    # MIL-DEV-011: the DISARM command is implemented; the discrepancy is
+    # resolved with the 6.1 bench validation still pending.
+    assert record["status"] == "resolved"
+    assert "DISARM command is implemented" in record["resolution"]
     assert {side["artifact"] for side in record["sides"]} == {"rocket_firmware", "launcher_firmware"}
 
 

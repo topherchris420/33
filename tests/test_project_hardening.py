@@ -25,11 +25,18 @@ def test_ci_uses_pinned_python_and_platformio_requirements():
     assert "platformio==" in _read("Firmware/requirements-platformio.txt")
 
 
-def test_launcher_dashboard_launch_is_disabled_by_default():
+def test_launcher_dashboard_launch_is_enabled_with_wartime_discipline():
+    # MIL-DEV-004: the remote-fire path is enabled (wartime), and the
+    # default-off interlock is replaced by the STRONGER discipline: READY-only
+    # plus a recent physical fire hold or a two-key OVERRIDE, with HMAC
+    # authentication and replay protection on weapons commands.
     launcher = _read("Firmware/Launcher/src/main.cpp")
     protocol = _read("protocol/project33_protocol.json")
 
-    assert "ENABLE_DASHBOARD_LAUNCH = false" in launcher
+    assert "ENABLE_DASHBOARD_LAUNCH = true" in launcher
+    assert 'msg.startsWith("AUTH,")' in launcher
+    assert "LauncherCrypto::authenticate" in launcher
+    assert "manualFireRecent(millis())" in launcher
     assert "CMD_REJECT_DASHBOARD_LAUNCH_DISABLED" in protocol
     assert "Project33Protocol::CMD_REJECT_DASHBOARD_LAUNCH_DISABLED" in launcher
 
@@ -56,7 +63,7 @@ def test_launcher_udp_requires_shared_secret_dashboard_hello():
     assert "isAuthenticatedDashboard(remote)" in launcher
     assert "if (!isAuthenticatedDashboard(remote))" in launcher
     assert 'msg == "HELLO"' not in launcher
-    assert "ENABLE_DASHBOARD_LAUNCH = false" in launcher
+    assert "ENABLE_DASHBOARD_LAUNCH = true" in launcher
 
 
 def test_launcher_wifi_credentials_use_ignored_config_header():
@@ -136,7 +143,10 @@ def test_public_docs_present_professional_status_and_boundaries():
     assert "bench-validation prototype" in readme
     assert "[Project Status](docs/PROJECT_STATUS.md)" in readme
     assert "[Roadmap](docs/ROADMAP.md)" in readme
-    assert "not a flight-tested system" in index
+    # The site states the honest boundary: the munition is designed, but the
+    # system is not flight-tested and makes no live-propulsion claim.
+    assert "not flight-tested" in index or "No physical measurement has been accepted" in index
+    assert "makes no live-propulsion claim" in index or "No physical measurement" in index
     assert "No flight-test claim" in status
     assert "Do not fabricate or imply flight" in status
     assert "Stage 2: Inert Bench Evidence" in roadmap

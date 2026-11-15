@@ -1,0 +1,52 @@
+{
+  "schema": "project33.c6.design_point/2",
+  "generator": "mechanism/spring_sizing.py",
+  "design_point_revision": "2026-11-14-phase1",
+  "units": {
+    "spring_rate": "N*m/rad",
+    "torque": "N*m",
+    "energy": "J",
+    "margin_fraction": "(k_supplied - k_min) / k_min"
+  },
+  "mechanism": {
+    "backdrive_ratio_at_stop": 0.363,
+    "backdrive_ratio_worst_case": 0.5081,
+    "crank_stroke_rad": 1.8117,
+    "preload_beyond_stop_rad": 0.5236
+  },
+  "hold_case": {
+    "v_max_m_s": 70.0,
+    "gust_alpha_deg": 15.0,
+    "fin_cn_at_gust": 0.953,
+    "fin_normal_force_n": 100.69,
+    "hinge_moment_n_m": 4.027,
+    "required_stop_torque_n_m": 4.093,
+    "k_lock_n_m_rad": 7.817
+  },
+  "deployment_case": {
+    "target_time_s": 0.08,
+    "fin_inertia_kg_m2": 0.001936,
+    "kinetic_energy_j": 1.493,
+    "aero_work_j": 1.951,
+    "friction_work_j": 0.236,
+    "energy_needed_j": 3.679,
+    "k_energy_n_m_rad": 2.131
+  },
+  "k_min_N_m_rad": 7.817,
+  "k_supplied_N_m_rad": 11.0,
+  "k_supplied_basis": "specified catalog-scale music-wire torsion spring; not a measured spring rate",
+  "margin_fraction": 0.407185,
+  "meets_20_pct_margin": true,
+  "spring_torques": {
+    "at_stowed_n_m": 25.69,
+    "at_stop_n_m": 5.76,
+    "stowage_note": "stowed preload is carried by the launch rail/canister; fins are spring-loaded toward deployment whenever unrestrained"
+  },
+  "model_assumptions": [
+    "spring drives the four-bar crank; fin loads reach the crank through the kinematic ratio dpsi/dt2 (virtual work)",
+    "lock case uses max flight dynamic pressure with a 15 deg gust angle of attack and a 1.4x tolerance growth on the back-drive ratio",
+    "deployment energy uses constant-acceleration kinematics to the stop in 80 ms plus conservative (C6-form) aerodynamic work",
+    "hinge friction assumed 0.15 N*m (sampled in the C7 Monte Carlo)"
+  ],
+  "basis": "analytical sizing at the shared design point; no spring has been measured"
+}

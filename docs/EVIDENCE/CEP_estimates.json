@@ -1,0 +1,99 @@
+{
+  "schema": "project33.mil.cep/1",
+  "generator": "Simulation/cep_model.py",
+  "evidence_class": "MODELED",
+  "trials": 400,
+  "seed": 33,
+  "guidance_law": "proportional navigation, N=3, identical to Firmware/Rocket/src/guidance.h (independent re-implementation)",
+  "error_budget": {
+    "gps_position_sigma_m": 2.5,
+    "gps_period_s": 0.2,
+    "gps_velocity_sigma_m_s": 0.3,
+    "gps_latency_s": [
+      0.3,
+      1.0
+    ],
+    "target_designation_cep_m": 10.0,
+    "attitude_bias_sigma_rad": 0.035,
+    "gyro_drift_deg_per_min": [
+      0.5,
+      4.0
+    ],
+    "wind_m_s": [
+      0,
+      8
+    ],
+    "servo_tau_s": 0.12,
+    "canard_authority_m_s2": 9.6,
+    "gravity_bias_fraction": 0.75,
+    "los_rate_deadband_rad_s": 0.002,
+    "motor_thrust_scatter": [
+      0.96,
+      1.04
+    ],
+    "launcher_aim_error_sigma_deg": 0.3
+  },
+  "G64W_inert_motor": {
+    "note": "committed Phase 6 inert-flight motor; the 1-3 km tactical envelope is beyond its reach",
+    "motor": {
+      "total_impulse_ns": 118.8,
+      "burn_s": 2.1,
+      "wet_kg": 0.151,
+      "dry_kg": 0.088
+    },
+    "masses_kg": [
+      1.903,
+      1.84
+    ],
+    "results": {
+      "300_m": {
+        "launch_elevation_deg": 44.8,
+        "aim_solution_error_m": 0.3,
+        "guided_trials": 400,
+        "cep_guided_m": 12.3,
+        "cep_ballistic_m": 15.1,
+        "guided_over_ballistic": 1.23
+      }
+    }
+  },
+  "PHASE4_MOTOR": {
+    "note": "PRELIMINARY military-class motor assumption for the 1-3 km envelope (800 N*s, 2.0 s, 0.75 kg wet); final sizing is the Phase 4 deliverable",
+    "motor": {
+      "total_impulse_ns": 800.0,
+      "burn_s": 2.0,
+      "wet_kg": 0.75,
+      "dry_kg": 0.35
+    },
+    "masses_kg": [
+      2.502,
+      2.102
+    ],
+    "results": {
+      "1000_m": {
+        "launch_elevation_deg": 13.0,
+        "aim_solution_error_m": 0.3,
+        "guided_trials": 400,
+        "cep_guided_m": 50.2,
+        "cep_ballistic_m": 57.1,
+        "guided_over_ballistic": 1.14
+      },
+      "2000_m": {
+        "launch_elevation_deg": 24.5,
+        "aim_solution_error_m": 0.1,
+        "guided_trials": 400,
+        "cep_guided_m": 19.2,
+        "cep_ballistic_m": 53.6,
+        "guided_over_ballistic": 2.79
+      },
+      "3000_m": {
+        "launch_elevation_deg": 40.0,
+        "aim_solution_error_m": 646.8,
+        "guided_trials": 400,
+        "cep_guided_m": 81.2,
+        "cep_ballistic_m": 649.7,
+        "guided_over_ballistic": 8.0
+      }
+    }
+  },
+  "basis": "numerical Monte Carlo; no round has flown; every error term is an assumed budget, not a measurement"
+}

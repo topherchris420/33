@@ -227,17 +227,19 @@ def openrocket_view(root):
     previous["source"] = {"path": ORK_PRE_RETUNE, "sha256": sha256(prior)}
     aft = [c for c in current["components"] if c["kind"] == "trapezoidfinset"]
     largest = max(aft, key=lambda c: _num(c["fields"], "height", 0.0))
-    script_xf = stability["geometry"]["X_f"]
+    script_xf = stability["cp_terms"]["main_fins"]["x_m"]
     observations = [{
         "id": "LAB-OBS-1",
-        "status": "candidate for human review; not entered in the discrepancy register",
+        "status": "resolved by the Phase 1 revision-3 static-margin parser; kept as history",
         "title": "Fin root leading-edge station: static-margin parser versus OpenRocket axial semantics",
         "detail": ("The largest-span fin set is positioned with method "
                    f"'{largest['axial_method']}' and offset {largest['axial_offset_m']} m in its parent tube. "
-                   "OpenRocket places a 'bottom'-referenced component so that its aft end aligns with the "
-                   "parent's aft end, which puts the root leading edge at "
-                   f"{largest['x_start_m']:.3f} m from the nose tip. Simulation/static_margin.py reads the "
-                   "<position> value without its type attribute and records X_f = "
+                   "OpenRocket places an 'absolute'-referenced component so its start (root leading edge) "
+                   f"sits at {largest['x_start_m']:.3f} m from the nose tip. The pre-Phase-1 parser read the "
+                   "raw <position> value without its type attribute and recorded a different X_f; the "
+                   "revision-3 parser applies OpenRocket axial-method semantics, and the militarized .ork "
+                   "positions both fin sets with unambiguous 'absolute' offsets. "
+                   f"Simulation/static_margin.py rev 3 now records the main-fin leading edge at "
                    f"{script_xf} m in docs/EVIDENCE/C5_static_margin_inputs.json."),
         "values_m": {"ork_semantics": largest["x_start_m"], "static_margin_inputs_X_f": script_xf,
                      "difference": round(largest["x_start_m"] - script_xf, 9)},
