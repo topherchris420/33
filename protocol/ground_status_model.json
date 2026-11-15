@@ -133,7 +133,7 @@
       "why": "The launcher still aborts without a link, but the reason then never reaches the dashboard CSV.",
       "source": [
         {"path": "Firmware/Launcher/src/main.cpp", "contains": "sendToDashboard(String(Project33Protocol::ABORT_PREFIX) + reason);"},
-        {"path": "Firmware/Launcher/src/main.cpp", "contains": "    if (dashboardConnected) {\n        udp.beginPacket(dashboardIP, udpPort);"}
+        {"path": "Firmware/Launcher/src/main.cpp", "contains": "    udp.beginPacket(dashboardIP, udpPort);\n    udp.println(msg);"}
       ]
     },
     {

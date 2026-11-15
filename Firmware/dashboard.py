@@ -37,6 +37,50 @@ DASHBOARD_AUTH_TOKEN = "project33_bench_token"
 
 LAUNCHER_GATEWAY = "192.168.4.1" 
 
+# --- Phase 5 combat C2 (docs/MILITARY/C2_CRYPTO.md) ---
+# Weapons commands are HMAC-SHA256 authenticated with a monotonic sequence
+# number (matching Firmware/Launcher/src/crypto.h). The keys below are the
+# bench defaults and MUST be changed before fielding, same as the launcher's.
+import hashlib
+import hmac as hmac_mod
+import itertools
+
+_CMD_KEY = bytes([0x33, 0x21, 0x0a, 0x1c, 0x2f, 0x3b, 0x4e, 0x5d,
+                  0x69, 0x77, 0x83, 0x9a, 0xa5, 0xb2, 0xc4, 0xd6])
+_OPERATOR_A_KEY = bytes([0xd1, 0x12, 0xa0, 0xc3, 0x1b, 0xf2, 0x34, 0x45,
+                        0x5c, 0x6d, 0x7e, 0x8f, 0x90, 0x01, 0x12, 0x23])
+_OPERATOR_B_KEY = bytes([0x23, 0x32, 0x21, 0x10, 0x0f, 0x9e, 0x87, 0x76,
+                        0x65, 0x54, 0x43, 0x32, 0x21, 0x10, 0x0f, 0x00])
+_TELEMETRY_KEY = bytes([0xab, 0xcd, 0xef, 0x01, 0x23, 0x45, 0x67, 0x89,
+                       0x9a, 0xbc, 0xde, 0xf0, 0x11, 0x22, 0x33, 0x44])
+_auth_seq = itertools.count(1)
+
+
+def sign_command(payload, key=_CMD_KEY, operator=0):
+    """AUTH,<seq>,<operator>,<payload>,<hmac_hex> per the launcher's crypto.h."""
+    seq = next(_auth_seq)
+    signed_part = f"{seq},{operator},{payload}"
+    mac = hmac_mod.new(key, signed_part.encode("utf-8"), hashlib.sha256).hexdigest()
+    return f"AUTH,{seq},{operator},{payload},{mac}"
+
+
+def decrypt_enc_packet(hex_iv, hex_ct):
+    """Decrypt an ENC,<iv>,<ct> telemetry packet (AES-128-CCM). Returns the
+    plaintext string, or None when the cryptography package is unavailable
+    (in which case the raw row is still logged)."""
+    try:
+        from cryptography.hazmat.primitives.ciphers.aead import AESCCM
+    except ImportError:
+        return None
+    try:
+        iv = bytes.fromhex(hex_iv)
+        ct = bytes.fromhex(hex_ct)
+        aesccm = AESCCM(_TELEMETRY_KEY, tag_length=14)
+        plain = aesccm.decrypt(iv, ct, None)
+        return plain.decode("utf-8", errors="replace")
+    except Exception:
+        return None
+
 class TelemetryApp:
     def __init__(self, root):
         self.root = root
@@ -173,6 +217,30 @@ class TelemetryApp:
         ttk.Button(btn_frame, text="DUMP LOG", command=self.send_dump_log_command, width=int(14)).pack(side=tk.LEFT, padx=self.s(5))
         ttk.Button(btn_frame, text="DIGITAL LAUNCH", command=self.send_launch_command, width=int(20)).pack(side=tk.LEFT, padx=self.s(5))
 
+        # Phase 3/5: target designation, engagement mode, fuze delay.
+        fire_frame = ttk.LabelFrame(self.root, text="Fire Control (authenticated)", padding=self.s(10))
+        fire_frame.pack(side=tk.TOP, fill=tk.X, padx=self.s(10), pady=self.s(5))
+        ttk.Label(fire_frame, text="Target lat:", font=self.f(9)).pack(side=tk.LEFT)
+        self.target_lat_var = tk.StringVar(value="0.0")
+        ttk.Entry(fire_frame, textvariable=self.target_lat_var, width=int(12)).pack(side=tk.LEFT, padx=self.s(3))
+        ttk.Label(fire_frame, text="lon:", font=self.f(9)).pack(side=tk.LEFT)
+        self.target_lon_var = tk.StringVar(value="0.0")
+        ttk.Entry(fire_frame, textvariable=self.target_lon_var, width=int(12)).pack(side=tk.LEFT, padx=self.s(3))
+        ttk.Label(fire_frame, text="alt m:", font=self.f(9)).pack(side=tk.LEFT)
+        self.target_alt_var = tk.StringVar(value="0.0")
+        ttk.Entry(fire_frame, textvariable=self.target_alt_var, width=int(8)).pack(side=tk.LEFT, padx=self.s(3))
+        ttk.Button(fire_frame, text="SET TARGET", command=self.send_target_command, width=int(12)).pack(side=tk.LEFT, padx=self.s(5))
+        ttk.Label(fire_frame, text="Mode:", font=self.f(9)).pack(side=tk.LEFT, padx=(self.s(10), 0))
+        self.engage_mode_var = tk.StringVar(value="MITL")
+        ttk.Combobox(fire_frame, textvariable=self.engage_mode_var, values=["MITL", "AUTO"],
+                    width=6, state="readonly").pack(side=tk.LEFT, padx=self.s(3))
+        ttk.Button(fire_frame, text="SET MODE", command=self.send_mode_command, width=int(9)).pack(side=tk.LEFT, padx=self.s(5))
+        ttk.Label(fire_frame, text="Fuze delay ms:", font=self.f(9)).pack(side=tk.LEFT, padx=(self.s(10), 0))
+        self.fuze_delay_var = tk.StringVar(value="0")
+        ttk.Combobox(fire_frame, textvariable=self.fuze_delay_var, values=["0", "5", "10", "20"],
+                    width=4, state="readonly").pack(side=tk.LEFT, padx=self.s(3))
+        ttk.Button(fire_frame, text="SET FUZE", command=self.send_fuze_delay_command, width=int(9)).pack(side=tk.LEFT, padx=self.s(5))
+
         tuning_frame = ttk.LabelFrame(self.root, text="PID Controller Tuning", padding=self.s(10))
         tuning_frame.pack(side=tk.TOP, fill=tk.X, padx=self.s(10), pady=self.s(5))
 
@@ -279,8 +347,8 @@ class TelemetryApp:
             self.status_panel = StatusPanel(self.root, self.status)
 
     def send_launch_command(self):
-        if messagebox.askyesno("CONFIRM LAUNCH", "Firmware rejects dashboard launch by default unless ENABLE_DASHBOARD_LAUNCH is intentionally enabled for an inert test.\nEnsure launcher is Armed and READY.\n\nSend launch request?"):
-            self._send_udp_command("launch")
+        if messagebox.askyesno("CONFIRM LAUNCH", "Wartime remote fire: the launcher accepts this only in READY with a recent physical fire-button hold or a two-key OVERRIDE.\n\nSend authenticated launch request?"):
+            self._send_udp_command(sign_command("launch"))
 
     def send_calibrate_command(self):
         if messagebox.askyesno("Confirm", "Keep rocket STILL. Zeroing Gyro. Proceed?"):
@@ -289,6 +357,28 @@ class TelemetryApp:
 
     def send_dump_log_command(self):
         self._send_udp_command("dumplog")
+
+    def send_target_command(self):
+        # Phase 3: target designation by grid coordinates (lat, lon, alt m).
+        lat = self.target_lat_var.get().strip()
+        lon = self.target_lon_var.get().strip()
+        alt = self.target_alt_var.get().strip()
+        try:
+            float(lat), float(lon), float(alt)
+        except ValueError:
+            messagebox.showerror("Error", "Target must be numeric lat, lon, alt (m).")
+            return
+        self._send_udp_command(sign_command(f"TARGET,{lat},{lon},{alt}"))
+
+    def send_mode_command(self):
+        # Phase 3: engagement-mode selection; AUTO is the explicit
+        # fire-and-forget arm-mode toggle.
+        mode = self.engage_mode_var.get()
+        self._send_udp_command(sign_command(f"MODE,{mode}"))
+
+    def send_fuze_delay_command(self):
+        delay = self.fuze_delay_var.get()
+        self._send_udp_command(sign_command(f"FUZEDELAY,{delay}"))
 
     def send_pid_command(self):
         try:
@@ -319,6 +409,19 @@ class TelemetryApp:
             try:
                 data, addr = sock.recvfrom(BUFFER_SIZE)
                 message = data.decode('utf-8').strip()
+                # Phase 5: AES-128-CCM encrypted telemetry from the launcher.
+                # If the cryptography package is unavailable the raw ENC row is
+                # still logged (never silence telemetry); decryption failure
+                # (wrong key/tamper) drops only that packet.
+                if message.startswith("ENC,"):
+                    parts = message.split(",", 2)
+                    if len(parts) == 3:
+                        plain = decrypt_enc_packet(parts[1], parts[2])
+                        if plain is not None:
+                            message = plain
+                        else:
+                            self.telemetry_logger.log_packet(message)
+                            continue
                 self.telemetry_logger.log_packet(message)
                 self.quality.observe(message)
                 self.status.observe(message)

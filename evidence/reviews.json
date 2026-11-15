@@ -17,12 +17,32 @@
           "review_figures_tool": "73d43e02f4f5b7820580b68f93f815fa975d58057cab476e2887b9d3c253e799"
         },
         "kind": "human",
-        "note": "Phase 4 militarization: MIL-33 motor (1235 Ns, 3.3 km envelope), composite airframe, militarized hinge FOS 5.71 at 65.7 g, metal-gear canard servos; .ork patched; G64W retained for Phase 6 inert flights.",
+        "note": "Phase 5 combat C2: authenticated command wrapper (HMAC + replay window), two-key OVERRIDE, AES-128-CCM telemetry, ENABLE_DASHBOARD_LAUNCH=true with strengthened fire discipline; safety gates G-04/G-05 restated, G-15..G-19 added.",
         "recorded": "2026-11-14",
         "recorded_by": "chief weapons engineer",
         "statement_sha256": "65065949e31276320709da806f467e63d39e5d0c92aa1ae57f1592ac581c8dec"
       },
       "history": [
+        {
+          "assumptions_sha256": "0971b7051b4b0f235fe03983b0b5d9f635622bc176dcf60c6c40c3804d498922",
+          "dependencies": {
+            "c1_closure_figure": "6eaf21321a2c3f8dc86af6c632a0336e9964676b62634251b3bcfda28f67d963",
+            "design_point": "0cbd6f6706b9b678f015c200ebdcebf7ab5f190e0be6ae765675c980b5f4a9e3",
+            "four_bar_cad_script": "a737c9b77ad1d9c644d452b57c6fc4c509c014d3221ec54a831a315e7145e525",
+            "four_bar_data": "b5db59c4d5fcbc09379e046279f2cf5e778cb0d93f71a0df3ac0baba2ff4b0eb",
+            "four_bar_military_data": "5c87e25267c9d428066d1c27b2e906a78d3b6abce112333485e31e2abd5d0edb",
+            "four_bar_plot": "5097fb03a463ccdeaaee248a93d88414d4ecce3cb76c2500aaec5a0c352790a7",
+            "four_bar_source": "38af9ad9d5daa4e715dcf76d056406aad1bc71f42441c1ac733cc044240e8cfd",
+            "four_bar_step": "eb06d83a91d84bcf620275dd6196c9c225e3f7cc4932597a1aeb49a663c25499",
+            "four_bar_tests": "e528d55487075bfdf96d96ec3c1862e16e249e07e2c4c3c2a8588d26b0edc230",
+            "review_figures_tool": "73d43e02f4f5b7820580b68f93f815fa975d58057cab476e2887b9d3c253e799"
+          },
+          "kind": "human",
+          "note": "Phase 4 militarization: MIL-33 motor (1235 Ns, 3.3 km envelope), composite airframe, militarized hinge FOS 5.71 at 65.7 g, metal-gear canard servos; .ork patched; G64W retained for Phase 6 inert flights.",
+          "recorded": "2026-11-14",
+          "recorded_by": "chief weapons engineer",
+          "statement_sha256": "65065949e31276320709da806f467e63d39e5d0c92aa1ae57f1592ac581c8dec"
+        },
         {
           "assumptions_sha256": "0971b7051b4b0f235fe03983b0b5d9f635622bc176dcf60c6c40c3804d498922",
           "dependencies": {
@@ -143,7 +163,7 @@
       "current": {
         "assumptions_sha256": "d2293d2d9b142e85ea659460925ac1b7b3fe4347d52e7b7613d5b4f8c95f7d37",
         "dependencies": {
-          "firmware_safety_tests": "834fad78ba960b01d9ec84f40ac6ace488554c048a4c3adab40a73ba86be357a",
+          "firmware_safety_tests": "0db8d57b66f7822e40646dfbf1d584d96dc9e17680f86f672c929a070e16a1dd",
           "rocket_firmware": "52b7f4da41ac7e10f8d8ac95209064dbee2882b55490ca72da8dd805a130391a",
           "timing_bench_sketch": "add4c75d552ef7640487daeb7eecf33def960ea100b510accad1590417658419",
           "timing_fixture": "8cf6f0fe7a94d49f4c3a872fdd400437addce23f03057ae8abe22bb778e69467",
@@ -152,12 +172,29 @@
           "timing_tests": "2012e20b2348325ddf94478678f8f8e053a5ad09e5b501ed9391797250fd8540"
         },
         "kind": "human",
-        "note": "Phase 4 militarization: MIL-33 motor (1235 Ns, 3.3 km envelope), composite airframe, militarized hinge FOS 5.71 at 65.7 g, metal-gear canard servos; .ork patched; G64W retained for Phase 6 inert flights.",
+        "note": "Phase 5 combat C2: authenticated command wrapper (HMAC + replay window), two-key OVERRIDE, AES-128-CCM telemetry, ENABLE_DASHBOARD_LAUNCH=true with strengthened fire discipline; safety gates G-04/G-05 restated, G-15..G-19 added.",
         "recorded": "2026-11-14",
         "recorded_by": "chief weapons engineer",
         "statement_sha256": "89c813e601f029d8c123406f34f8f6518a66ba74bad03982576bcb2f394c7af8"
       },
       "history": [
+        {
+          "assumptions_sha256": "d2293d2d9b142e85ea659460925ac1b7b3fe4347d52e7b7613d5b4f8c95f7d37",
+          "dependencies": {
+            "firmware_safety_tests": "834fad78ba960b01d9ec84f40ac6ace488554c048a4c3adab40a73ba86be357a",
+            "rocket_firmware": "52b7f4da41ac7e10f8d8ac95209064dbee2882b55490ca72da8dd805a130391a",
+            "timing_bench_sketch": "add4c75d552ef7640487daeb7eecf33def960ea100b510accad1590417658419",
+            "timing_fixture": "8cf6f0fe7a94d49f4c3a872fdd400437addce23f03057ae8abe22bb778e69467",
+            "timing_header": "e9743228cb3d7d938d266173d9014eba42612a06b985b951841a82f52f3b97ea",
+            "timing_source": "5038d4b4b943fed761edb9f6a907a9645d8a1b137e5e9dd0e7e625263a1b7bed",
+            "timing_tests": "2012e20b2348325ddf94478678f8f8e053a5ad09e5b501ed9391797250fd8540"
+          },
+          "kind": "human",
+          "note": "Phase 4 militarization: MIL-33 motor (1235 Ns, 3.3 km envelope), composite airframe, militarized hinge FOS 5.71 at 65.7 g, metal-gear canard servos; .ork patched; G64W retained for Phase 6 inert flights.",
+          "recorded": "2026-11-14",
+          "recorded_by": "chief weapons engineer",
+          "statement_sha256": "89c813e601f029d8c123406f34f8f6518a66ba74bad03982576bcb2f394c7af8"
+        },
         {
           "assumptions_sha256": "d2293d2d9b142e85ea659460925ac1b7b3fe4347d52e7b7613d5b4f8c95f7d37",
           "dependencies": {
@@ -504,12 +541,32 @@
           "stability_tests": "e8d78812fb388850b50ff02cfed18669bd0b3d7e6cdd7fb07952d2efba915d4d"
         },
         "kind": "human",
-        "note": "Phase 4: test updated for the MIL-33 motor designation in the .ork; claim unchanged.",
+        "note": "Phase 5 combat C2: authenticated command wrapper (HMAC + replay window), two-key OVERRIDE, AES-128-CCM telemetry, ENABLE_DASHBOARD_LAUNCH=true with strengthened fire discipline; safety gates G-04/G-05 restated, G-15..G-19 added.",
         "recorded": "2026-11-14",
         "recorded_by": "chief weapons engineer",
         "statement_sha256": "c26ccbdf5c5a97d6870612fd660a122ade4351839779699c9b73e4717e222ce5"
       },
       "history": [
+        {
+          "assumptions_sha256": "290343be6851ab7eb7ad05cca55fe141d6d99f448d2f2e7d5e03b86afa7e481c",
+          "dependencies": {
+            "crosscheck_data": "d6ac767808be0fa6f183f8abacae86f6a0298cab421df1f9aff8cc0815d0b659",
+            "crosscheck_source": "798850e2d7310cc4768781b569a726c279a34b49edae4cb7c348010b6fbe3fbe",
+            "design_point": "0cbd6f6706b9b678f015c200ebdcebf7ab5f190e0be6ae765675c980b5f4a9e3",
+            "divergence_log": "ec9345c71ad5d118a307b40346e82ca9c45110643b673c681e21dd97ff2d8d69",
+            "stability_data": "6fa213dbebb660edb00414093911e7adf97b0726051def483436f75e27b866cf",
+            "stability_inputs": "9f66d35b0e15144f94ae4a1381b92c76ea7ed87572add3b68d32c0755abe2f5d",
+            "stability_plot": "cf54d4d96660f66b5eeafd46891a8feef87eac66b9f2109161974677275bfa68",
+            "stability_record": "356c882c80f62ac5e7d811d86ad86849bb877b6dd869d933b8ad8e6c9c3b1af5",
+            "stability_source": "0a916be91d502f77cc44f32474208909c37675f03ab6c3893fe05c57af121850",
+            "stability_tests": "e8d78812fb388850b50ff02cfed18669bd0b3d7e6cdd7fb07952d2efba915d4d"
+          },
+          "kind": "human",
+          "note": "Phase 4: test updated for the MIL-33 motor designation in the .ork; claim unchanged.",
+          "recorded": "2026-11-14",
+          "recorded_by": "chief weapons engineer",
+          "statement_sha256": "c26ccbdf5c5a97d6870612fd660a122ade4351839779699c9b73e4717e222ce5"
+        },
         {
           "assumptions_sha256": "290343be6851ab7eb7ad05cca55fe141d6d99f448d2f2e7d5e03b86afa7e481c",
           "dependencies": {
@@ -667,12 +724,31 @@
           "spring_tests": "24e6e66c244c84fd95d3e462c07a0411ae34fc49ab589dfd84411ec68e8d6f38"
         },
         "kind": "human",
-        "note": "Phase 4 militarization: MIL-33 motor (1235 Ns, 3.3 km envelope), composite airframe, militarized hinge FOS 5.71 at 65.7 g, metal-gear canard servos; .ork patched; G64W retained for Phase 6 inert flights.",
+        "note": "Phase 5 combat C2: authenticated command wrapper (HMAC + replay window), two-key OVERRIDE, AES-128-CCM telemetry, ENABLE_DASHBOARD_LAUNCH=true with strengthened fire discipline; safety gates G-04/G-05 restated, G-15..G-19 added.",
         "recorded": "2026-11-14",
         "recorded_by": "chief weapons engineer",
         "statement_sha256": "0b85831c147b023d0167e30652820d44e128fafbcb02c5243a7c410bf670d570"
       },
       "history": [
+        {
+          "assumptions_sha256": "4b0bab9b5e3c59c22f5b941a3e9fb6a4fe8e41c2b8e3abefd3a864e87dddb993",
+          "dependencies": {
+            "design_point": "0cbd6f6706b9b678f015c200ebdcebf7ab5f190e0be6ae765675c980b5f4a9e3",
+            "four_bar_military_data": "5c87e25267c9d428066d1c27b2e906a78d3b6abce112333485e31e2abd5d0edb",
+            "four_bar_source": "38af9ad9d5daa4e715dcf76d056406aad1bc71f42441c1ac733cc044240e8cfd",
+            "spring_data": "9db0f75cf68ece3fed03cc87abbcda3f4c8af4edcb0c1a115679004f277208cc",
+            "spring_design_point": "c14c150cf8fa98f9aae264ba0c534e2a0beeba18567266d915416077482c9678",
+            "spring_design_point_mil": "8b57a8c47115781e334cad6e5423a7b7ac68a912b2edd6d9b731560af99a631d",
+            "spring_plot": "0708c30e661880a0bdf1c1f4c1b36644119670a76b1a63b9272786710a4c50ed",
+            "spring_source": "6dcfa9f9430827c6b70cd6a50964bdf3718e54471ad5006516c64b9ab78fdbe0",
+            "spring_tests": "24e6e66c244c84fd95d3e462c07a0411ae34fc49ab589dfd84411ec68e8d6f38"
+          },
+          "kind": "human",
+          "note": "Phase 4 militarization: MIL-33 motor (1235 Ns, 3.3 km envelope), composite airframe, militarized hinge FOS 5.71 at 65.7 g, metal-gear canard servos; .ork patched; G64W retained for Phase 6 inert flights.",
+          "recorded": "2026-11-14",
+          "recorded_by": "chief weapons engineer",
+          "statement_sha256": "0b85831c147b023d0167e30652820d44e128fafbcb02c5243a7c410bf670d570"
+        },
         {
           "assumptions_sha256": "4b0bab9b5e3c59c22f5b941a3e9fb6a4fe8e41c2b8e3abefd3a864e87dddb993",
           "dependencies": {
@@ -779,12 +855,29 @@
           "reliability_tests": "9a7fafce4bdedaa50a19a45438b3d66139a7f30ecfac6193ca43e021aa39f4be"
         },
         "kind": "human",
-        "note": "Phase 4 militarization: MIL-33 motor (1235 Ns, 3.3 km envelope), composite airframe, militarized hinge FOS 5.71 at 65.7 g, metal-gear canard servos; .ork patched; G64W retained for Phase 6 inert flights.",
+        "note": "Phase 5 combat C2: authenticated command wrapper (HMAC + replay window), two-key OVERRIDE, AES-128-CCM telemetry, ENABLE_DASHBOARD_LAUNCH=true with strengthened fire discipline; safety gates G-04/G-05 restated, G-15..G-19 added.",
         "recorded": "2026-11-14",
         "recorded_by": "chief weapons engineer",
         "statement_sha256": "d6e1f77db1d176a9f5cf569dc6fa78ec7ccc8b8ec216de391790f0a3e7bb6e78"
       },
       "history": [
+        {
+          "assumptions_sha256": "cc482d5fe8f8623c9febd561ac38da3e4ac0cb20eee0102bfb9310bd9b6bbd0e",
+          "dependencies": {
+            "design_point": "0cbd6f6706b9b678f015c200ebdcebf7ab5f190e0be6ae765675c980b5f4a9e3",
+            "four_bar_military_data": "5c87e25267c9d428066d1c27b2e906a78d3b6abce112333485e31e2abd5d0edb",
+            "four_bar_source": "38af9ad9d5daa4e715dcf76d056406aad1bc71f42441c1ac733cc044240e8cfd",
+            "reliability_failures": "22ca4e1df108ec9771859c8d03a0c1b74774658c5c37258abcdd2feb82fe70af",
+            "reliability_run_record": "2281b3e5eabf8bbdb69d72608eb786f219e0911b5fbc35cc72fe7ceadcb89076",
+            "reliability_source": "0be33ad9ec93fe96ab09e75223c619dac8f5c9195922a3ee4a44cc257a35cf96",
+            "reliability_tests": "9a7fafce4bdedaa50a19a45438b3d66139a7f30ecfac6193ca43e021aa39f4be"
+          },
+          "kind": "human",
+          "note": "Phase 4 militarization: MIL-33 motor (1235 Ns, 3.3 km envelope), composite airframe, militarized hinge FOS 5.71 at 65.7 g, metal-gear canard servos; .ork patched; G64W retained for Phase 6 inert flights.",
+          "recorded": "2026-11-14",
+          "recorded_by": "chief weapons engineer",
+          "statement_sha256": "d6e1f77db1d176a9f5cf569dc6fa78ec7ccc8b8ec216de391790f0a3e7bb6e78"
+        },
         {
           "assumptions_sha256": "cc482d5fe8f8623c9febd561ac38da3e4ac0cb20eee0102bfb9310bd9b6bbd0e",
           "dependencies": {

@@ -331,7 +331,7 @@
     },
     {
       "path": "docs/PROTOCOL.md",
-      "sha256": "eddae452143438dbfcc7f6c45ea6b4133385d6010b5fde62b835a8f564cec808"
+      "sha256": "e98582b98a2655d551d564886f892a4b65b892c7657b7427be0149c97a4097c3"
     },
     {
       "path": "docs/RELEASE_READINESS.md",
@@ -343,7 +343,7 @@
     },
     {
       "path": "docs/SAFETY.md",
-      "sha256": "72589c0515ee6b7cdab41d3942b18d48e5ff3a721fb86438c4b6a274448a817f"
+      "sha256": "ec629be363b8c6a74f12743fec9fe58a6c35a632512ecd0bc2027bf773a1e103"
     },
     {
       "path": "docs/TECHNOLOGY_INTEGRATION.md",
@@ -370,5 +370,5 @@
       "sha256": "095ecfd873973560e544d43bcf264652c3816faed111c3fef34214aff23c7562"
     }
   ],
-  "revision": "ef20c57132e047047cceb6b505a571663504aad2164a99be702c84fba141f0e8"
+  "revision": "867365c9727c97fb88db364baab21ac679966b011abee4464d57d4c9ecd355d5"
 }

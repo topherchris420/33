@@ -25,11 +25,18 @@ def test_ci_uses_pinned_python_and_platformio_requirements():
     assert "platformio==" in _read("Firmware/requirements-platformio.txt")
 
 
-def test_launcher_dashboard_launch_is_disabled_by_default():
+def test_launcher_dashboard_launch_is_enabled_with_wartime_discipline():
+    # MIL-DEV-004: the remote-fire path is enabled (wartime), and the
+    # default-off interlock is replaced by the STRONGER discipline: READY-only
+    # plus a recent physical fire hold or a two-key OVERRIDE, with HMAC
+    # authentication and replay protection on weapons commands.
     launcher = _read("Firmware/Launcher/src/main.cpp")
     protocol = _read("protocol/project33_protocol.json")
 
-    assert "ENABLE_DASHBOARD_LAUNCH = false" in launcher
+    assert "ENABLE_DASHBOARD_LAUNCH = true" in launcher
+    assert 'msg.startsWith("AUTH,")' in launcher
+    assert "LauncherCrypto::authenticate" in launcher
+    assert "manualFireRecent(millis())" in launcher
     assert "CMD_REJECT_DASHBOARD_LAUNCH_DISABLED" in protocol
     assert "Project33Protocol::CMD_REJECT_DASHBOARD_LAUNCH_DISABLED" in launcher
 
@@ -56,7 +63,7 @@ def test_launcher_udp_requires_shared_secret_dashboard_hello():
     assert "isAuthenticatedDashboard(remote)" in launcher
     assert "if (!isAuthenticatedDashboard(remote))" in launcher
     assert 'msg == "HELLO"' not in launcher
-    assert "ENABLE_DASHBOARD_LAUNCH = false" in launcher
+    assert "ENABLE_DASHBOARD_LAUNCH = true" in launcher
 
 
 def test_launcher_wifi_credentials_use_ignored_config_header():

@@ -50,6 +50,9 @@ Generated from `protocol/project33_protocol.json`.
 | Launcher -> Rocket | `FUZEDELAY,<ms>` | Set point-detonating fuze delay (0, 5, 10, or 20 ms); zero accepted in IDLE or ARMED |
 | Launcher -> Rocket | `TARGET,<lat>,<lon>,<alt_m>` | Phase 3 target designation by grid coordinates; accepted before flight only |
 | Launcher -> Rocket | `MODE,MITL | MODE,AUTO` | Engagement-mode selection: man-in-the-loop (default) or autonomous fire-and-forget on the locked target point; explicit pre-launch operator action |
+| Dashboard -> Launcher | `AUTH,<seq>,<operator>,<payload>,<hmac_hex>` | Phase 5 authenticated command wrapper: HMAC-SHA256 over seq,operator,payload with replay-window sequence numbers |
+| Dashboard -> Launcher | `OVERRIDE,enabler,<nonce_hex>,<hmacA_hex>,<hmacB_hex>` | Phase 5 wartime two-key OVERRIDE authorization (both operator keys must sign; valid 60 s) |
+| Launcher -> Dashboard | `ENC,<iv_hex>,<ct_hex>` | Phase 5 AES-128-CCM authenticated-encrypted telemetry downlink |
 | Launcher -> Rocket | `ARM` | Arm rocket flight computer |
 | Launcher -> Rocket | `IGNITE` | Start rocket ignition state |
 | Launcher -> Rocket | `DUMPLOG` | Request rocket onboard ring-buffer dump |

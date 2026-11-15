@@ -79,6 +79,21 @@
       "purpose": "Engagement-mode selection: man-in-the-loop (default) or autonomous fire-and-forget on the locked target point; explicit pre-launch operator action"
     },
     {
+      "direction": "Dashboard -> Launcher",
+      "format": "AUTH,<seq>,<operator>,<payload>,<hmac_hex>",
+      "purpose": "Phase 5 authenticated command wrapper: HMAC-SHA256 over seq,operator,payload with replay-window sequence numbers"
+    },
+    {
+      "direction": "Dashboard -> Launcher",
+      "format": "OVERRIDE,enabler,<nonce_hex>,<hmacA_hex>,<hmacB_hex>",
+      "purpose": "Phase 5 wartime two-key OVERRIDE authorization (both operator keys must sign; valid 60 s)"
+    },
+    {
+      "direction": "Launcher -> Dashboard",
+      "format": "ENC,<iv_hex>,<ct_hex>",
+      "purpose": "Phase 5 AES-128-CCM authenticated-encrypted telemetry downlink"
+    },
+    {
       "direction": "Launcher -> Rocket",
       "format": "ARM",
       "purpose": "Arm rocket flight computer"

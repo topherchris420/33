@@ -24,9 +24,14 @@ def test_rocket_ignition_command_requires_armed_state():
 def test_launcher_udp_launch_requires_ready_state():
     launcher = _read("Firmware/Launcher/src/main.cpp")
 
-    assert 'if (currentState == READY) {' in launcher
+    assert 'currentState == READY' in launcher
     assert "udpLaunchTriggered = true;" in launcher
     assert 'sendToDashboard(Project33Protocol::CMD_REJECT_LAUNCH_NOT_READY)' in launcher
+    # Phase 5 wartime discipline: READY alone is not enough for a remote fire;
+    # it also needs a recent physical fire hold or a two-key OVERRIDE.
+    assert 'manualFireRecent(millis())' in launcher
+    assert 'LauncherCrypto::overrideValid(millis())' in launcher
+    assert 'launch_needs_fire_hold_or_override' in launcher
 
 def test_firmware_exposes_onboard_log_dump_command():
     rocket = _read("Firmware/Rocket/src/main.cpp")
@@ -176,6 +181,37 @@ def test_rejection_logging_does_not_reorder_or_weaken_gates():
 def test_launcher_reports_missing_altitude_as_nan_not_zero():
     launcher = _read("Firmware/Launcher/src/main.cpp")
     assert "float altOut = bmpHealthy ? filteredAlt : NAN;" in launcher
+
+
+def test_dashboard_launch_is_wartime_enabled_with_authentication():
+    # MIL-DEV-004: the remote-fire path is enabled, but every weapons command
+    # must be authenticated (HMAC + sequence number) and the two-key OVERRIDE
+    # discipline replaces the old default-off interlock.
+    launcher = _read("Firmware/Launcher/src/main.cpp")
+    assert "const bool ENABLE_DASHBOARD_LAUNCH = true;" in launcher
+    assert 'msg.startsWith("AUTH,")' in launcher
+    assert "LauncherCrypto::authenticate(msg, seq, payload)" in launcher
+    assert 'msg.startsWith("OVERRIDE,enabler,")' in launcher
+    assert "LauncherCrypto::authorizeOverride" in launcher
+
+
+def test_command_authentication_has_replay_protection():
+    # Monotonic sequence numbers with a sliding replay window: a captured
+    # command cannot be re-sent.
+    crypto_h = _read("Firmware/Launcher/src/crypto.h")
+    assert "REPLAY_WINDOW" in crypto_h
+    assert "seq <= lastSeq" in crypto_h
+    assert "hmacEqual" in crypto_h  # constant-time compare
+
+
+def test_telemetry_downlink_is_encrypted_with_aes_ccm():
+    launcher = _read("Firmware/Launcher/src/main.cpp")
+    crypto_h = _read("Firmware/Launcher/src/crypto.h")
+    assert "const bool ENABLE_TELEMETRY_CRYPTO = true;" in launcher
+    assert "LauncherCrypto::encryptTelemetry" in launcher
+    assert "mbedtls_ccm_encrypt_and_tag" in crypto_h
+    # Crypto failure must degrade to plain telemetry, never silence it.
+    assert "fall through to plain send" in launcher
 
 
 def test_fuze_sa_requires_all_three_arming_events():
